@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Vision PoC</title>
+
+<style>
+body{
+  margin:0;
+  background:#111;
+  color:white;
+  font-family:Arial;
+}
+
+.header{
+  display:flex;
+  gap:10px;
+  padding:20px;
+}
+
+input{
+  padding:10px;
+  font-size:18px;
+}
+
+.drop{
+  border:2px dashed #666;
+  margin:20px;
+  height:120px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+video{
+  width:100%;
+  max-width:800px;
+  display:block;
+  margin:auto;
+}
+
+#overlay{
+  position:fixed;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  font-size:120px;
+  font-weight:bold;
+}
+
+.ok{
+  background:rgba(0,255,0,.5);
+}
+
+.ng{
+  background:rgba(255,0,0,.5);
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  <input id="partNo" placeholder="品番入力">
+  <button onclick="startCamera()">カメラ起動</button>
+  <button onclick="showOK()">OKテスト</button>
+  <button onclick="showNG()">NGテスト</button>
+</div>
+
+<div class="drop" id="drop">
+STLをドラッグ＆ドロップ
+</div>
+
+<video id="cam" autoplay playsinline></video>
+
+<div id="overlay"></div>
+
+<script>
+
+async function startCamera(){
+
+ const stream =
+ await navigator.mediaDevices.getUserMedia({
+   video:{
+     facingMode:"environment"
+   }
+ });
+
+ document.getElementById("cam").srcObject=stream;
+}
+
+function showOK(){
+
+ const o=document.getElementById("overlay");
+
+ o.className="ok";
+ o.innerHTML="OK";
+ o.style.display="flex";
+
+ setTimeout(()=>{
+   o.style.display="none";
+ },2000);
+}
+
+function showNG(){
+
+ const o=document.getElementById("overlay");
+
+ o.className="ng";
+ o.innerHTML="NG";
+ o.style.display="flex";
+
+ setTimeout(()=>{
+   o.style.display="none";
+ },2000);
+}
+
+document.getElementById("drop")
+.addEventListener("drop",(e)=>{
+
+ e.preventDefault();
+
+ const file=e.dataTransfer.files[0];
+
+ alert("STL読込 : "+file.name);
+});
+
+document.getElementById("drop")
+.addEventListener("dragover",(e)=>{
+ e.preventDefault();
+});
+
+</script>
+
+</body>
+</html>
