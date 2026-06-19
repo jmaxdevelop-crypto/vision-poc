@@ -1,41 +1,28 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Vision PoC Inspect v13 Sheet</title><style>
-:root{--cyan:#31d7ff;--red:#ff365f;--green:#37ff91}*{box-sizing:border-box}body{margin:0;background:#030812;color:#eef6ff;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;overflow:hidden}.topbar{position:fixed;left:0;right:0;top:0;z-index:20;background:#071225dd;border-bottom:1px solid #29436d;padding:10px;display:grid;grid-template-columns:200px 1fr auto auto 260px auto auto auto;gap:8px;align-items:center}input,button{border-radius:12px;border:1px solid #31517e;background:#071226;color:#eef6ff;padding:10px;font-size:15px}button{font-weight:800;background:#26395f}button.primary{background:linear-gradient(90deg,#2aa7ff,#39e0ff);color:#001225;border:0}.stage{position:fixed;inset:0;background:#000;display:flex;align-items:center;justify-content:center;overflow:hidden}video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.cadBox{position:absolute;left:50%;top:50%;width:100vmin;height:100vmin;transform:translate(-50%,-50%);pointer-events:none}.overlay{display:block;width:100%;height:100%;object-fit:contain;opacity:.82;filter:drop-shadow(0 0 8px rgba(49,215,255,.8));mix-blend-mode:screen}.point{position:absolute;width:42px;height:42px;border:4px solid var(--red);border-radius:50%;transform:translate(-50%,-50%);box-shadow:0 0 18px rgba(255,54,95,.9);pointer-events:none}.segLayer{position:absolute;inset:0;pointer-events:none}.hud{position:fixed;left:12px;right:12px;bottom:12px;z-index:30;background:#071225dd;border:1px solid #29436d;border-radius:18px;padding:12px}.big{font-size:26px;font-weight:900}.muted{color:#9fb4d9;font-size:13px}.okFlash,.ngFlash{position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;font-size:100px;font-weight:1000}.okFlash{background:rgba(0,255,90,.45)}.ngFlash{background:rgba(255,0,50,.45)}.controls{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}.sl{display:flex;gap:8px;align-items:center}.sl input{width:100%}.pointsText{color:#ffd4dc;margin-top:6px;font-weight:800}.warn{color:#ffb6c4}@media(max-width:700px){.topbar{grid-template-columns:1fr}.big{font-size:22px}.okFlash,.ngFlash{font-size:70px}}
-</style></head><body>
-<div class="topbar"><select id="masterSelect"><option value="">マスター選択</option></select><input id="partNo" placeholder="品番入力"><button id="loadBtn" class="primary">読込</button><button id="camBtn">カメラ起動</button><input id="gasUrl" placeholder="GAS URL"><button id="gasSaveBtn">URL保存</button><button id="gasLoadBtn">シート読込</button><input id="importInput" type="file" accept=".json,application/json"></div>
-<div class="stage"><video id="cam" autoplay playsinline muted></video><div id="cadBox" class="cadBox"><img id="cad" class="overlay"><svg id="segSvg" class="segLayer" viewBox="0 0 1 1" preserveAspectRatio="none"></svg><div id="pts"></div></div></div>
-<div class="hud"><div class="big" id="phase">上面検査</div><div class="muted" id="info">マスターJSON読込 → 品番読込 → カメラ起動</div><div class="pointsText" id="pointsText"></div><div class="controls"><button id="manualOk" class="primary">OK / 次へ</button><button id="manualNg">NG表示</button></div></div>
-<div id="ok" class="okFlash">OK</div><div id="ng" class="ngFlash">NG</div>
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Vision PoC v20 Inspect / 基準点方式</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#020711;color:#eef6ff;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;overflow:hidden}.topbar{position:fixed;left:0;right:0;top:0;z-index:5;background:rgba(5,12,25,.85);border-bottom:1px solid #29436d;padding:10px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}select,button{border:1px solid #31517e;border-radius:12px;background:#071226;color:#eef6ff;padding:10px 12px;font-size:15px}button{font-weight:800;background:linear-gradient(90deg,#2aa7ff,#39e0ff);color:#001225;border:0}.stage{position:fixed;inset:0;background:#000}video,canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.hud{position:fixed;left:10px;right:10px;bottom:10px;z-index:6;background:rgba(5,12,25,.78);border:1px solid #29436d;border-radius:16px;padding:12px}.big{font-size:20px;font-weight:900}.small{font-size:12px;color:#a9bde6}.pill{display:inline-block;margin:4px 6px 0 0;border-radius:999px;padding:6px 10px;font-weight:800}.base{background:#ffd84a;color:#1b1000}.inspect{background:#ff4a6a;color:#fff}.ok{background:#35ff8b;color:#00220d}.warn{background:#ff4a6a;color:#fff}.overlayMsg{position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:10;font-size:22vw;font-weight:1000;background:rgba(0,255,80,.38);color:#fff;text-shadow:0 0 20px #003}
+</style>
+</head>
+<body>
+<div class="stage"><video id="video" autoplay playsinline muted></video><canvas id="overlay" width="1280" height="720"></canvas></div>
+<div class="topbar"><select id="partSel"><option value="">品番選択</option></select><button id="camBtn">カメラ起動</button><button id="viewBtn">上面</button><button id="okBtn">この面OK</button></div>
+<div class="hud"><div class="big" id="title">未読込</div><div class="small">v20は自動判定ではなく、基準点と検査点をCADガイド表示する安定版。まず座標・共有・現場導線確認用。</div><div id="chips"></div></div><div class="overlayMsg" id="done">OK</div>
 <script>
-const DB_KEYS=['visionPocMasters.v13','visionPocMasters.v12','visionPocMasters.v11','visionPocMasters.v10','visionPocMasters.v9']; const $=id=>document.getElementById(id); let master=null,phase='top';
-function getDB(){for(const k of DB_KEYS){try{const v=localStorage.getItem(k); if(v)return JSON.parse(v)}catch(e){}} return {}} function saveDB(db){localStorage.setItem(DB_KEYS[0],JSON.stringify(db))} function setInfo(s){$('info').textContent=s}
-const GAS_URL_KEY='visionPocGasUrl.v13';
-function getGasUrl(){return localStorage.getItem(GAS_URL_KEY)||''}
-function setGasUrl(v){localStorage.setItem(GAS_URL_KEY,(v||'').trim())}
-async function loadMastersFromSheet(){
- const url=getGasUrl(); if(!url){alert('GAS URLを入れて保存してください');return}
- const res=await fetch(url+'?action=list&ts='+Date.now());
- const json=await res.json(); if(!json.ok) throw new Error(json.error||'GAS読込失敗');
- const db={};
- for(const r of json.rows||[]){try{db[r.partNo]=typeof r.master==='string'?JSON.parse(r.master):r.master}catch(e){console.warn('JSON parse skip',r,e)}}
- saveDB(db); populateMasterList(); setInfo('シート読込OK: '+Object.keys(db).length+'件。マスターを選択してください。');
-}
-
-function populateMasterList(){
- const db=getDB(); const keys=Object.keys(db).sort();
- $('masterSelect').innerHTML='<option value="">マスター選択</option>'+keys.map(k=>`<option value="${k}">${k}</option>`).join('');
-}
-$('masterSelect').addEventListener('change',()=>{ $('partNo').value=$('masterSelect').value; if($('masterSelect').value) loadPart($('masterSelect').value); });
-$('importInput').addEventListener('change',async e=>{const f=e.target.files?.[0];if(!f)return;saveDB(JSON.parse(await f.text()));populateMasterList();setInfo('JSON読込OK。リストから品番を選択。')});
-function loadPart(pn){const db=getDB();master=db[pn];if(!master){alert('マスターなし: '+pn);return}phase='top';showPhase();setInfo('読込OK: '+pn)}
-$('loadBtn').onclick=()=>{const pn=($('masterSelect').value||$('partNo').value).trim(); if(!pn){alert('マスターを選択してください');return} $('partNo').value=pn; loadPart(pn)};
-$('camBtn').onclick=async()=>{try{const stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:1920},height:{ideal:1080}},audio:false});$('cam').srcObject=stream}catch(e){alert('カメラ起動失敗: '+e.message)}};
-function currentView(){const side=master?.sideChoice==='side'?'side':'front';return phase==='top'?'top':side} function viewName(v){return v==='top'?'上面':v==='front'?'正面':'側面'}
-function showPhase(){if(!master)return;const v=currentView();$('cad').src=master[v];$('phase').textContent=viewName(v)+'検査';applyOverlay();drawPoints();setTimeout(drawPoints,80)}
-function applyOverlay(){drawPoints()}
-function drawPoints(){const box=$('pts'), svg=$('segSvg');box.innerHTML='';svg.innerHTML='';if(!master)return;const v=currentView();const pts=(master.points||[]).filter(p=>p.view===v); pts.forEach((p,idx)=>{const el=document.createElement('div');el.className='point';el.style.left=(p.x*100)+'%';el.style.top=(p.y*100)+'%';el.title=p.name;box.appendChild(el); (p.segments||[]).forEach(s=>{const line=document.createElementNS('http://www.w3.org/2000/svg','line');line.setAttribute('x1',s[0]);line.setAttribute('y1',s[1]);line.setAttribute('x2',s[2]);line.setAttribute('y2',s[3]);line.setAttribute('stroke','#ff365f');line.setAttribute('stroke-width','0.006');line.setAttribute('stroke-linecap','round');line.setAttribute('opacity','0.85');svg.appendChild(line)})}); $('pointsText').innerHTML=pts.length?('重点確認: '+pts.map(p=>p.name).join(' / ')):'<span class="warn">重点ポイントなし</span>'}
-new ResizeObserver(drawPoints).observe($('cadBox'));
-function flash(id,text){const el=$(id);el.textContent=text;el.style.display='flex';setTimeout(()=>el.style.display='none',900)} $('manualOk').onclick=()=>{if(!master){alert('先に品番を読込');return} if(phase==='top'){flash('ok','上面OK');phase='side';setTimeout(showPhase,650)}else{flash('ok','最終OK');setInfo('上面＋'+viewName(currentView())+' OK')}}; $('manualNg').onclick=()=>flash('ng','NG');
-$('gasUrl').value=getGasUrl(); $('gasSaveBtn').onclick=()=>{setGasUrl($('gasUrl').value);setInfo('GAS URL保存OK')}; $('gasLoadBtn').onclick=()=>loadMastersFromSheet().catch(e=>{console.error(e);alert('シート読込エラー: '+e.message)});
-populateMasterList();
-setInfo('v13 Sheet：GAS URL保存 → シート読込 → マスター選択 → カメラ起動。');
-</script></body></html>
+const DB_KEY='visionPocV20FeatureMaster'; const $=id=>document.getElementById(id); let db={}, current=null, view='top', topOK=false;
+function getDB(){try{return JSON.parse(localStorage.getItem(DB_KEY)||'{}')}catch(e){return {}}}
+function loadList(){db=getDB(); const keys=Object.keys(db); $('partSel').innerHTML='<option value="">品番選択</option>'+keys.map(k=>`<option value="${k}">${k}</option>`).join(''); if(!keys.length){$('title').textContent='マスター未登録：master_v20で登録/JSON読込してください';}}
+$('partSel').onchange=()=>{current=db[$('partSel').value]; topOK=false; view='top'; draw();};
+$('viewBtn').onclick=()=>{view=view==='top'?'front':'top'; draw();};
+$('okBtn').onclick=()=>{if(!current)return; if(view==='top' && (current.points.front||[]).length){topOK=true; view='front'; draw();} else showOK();};
+async function startCam(){const s=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:1920},height:{ideal:1080}},audio:false}); $('video').srcObject=s;}
+$('camBtn').onclick=startCam;
+function map(p){const c=$('overlay'), W=c.width,H=c.height; const s=Math.min(W,H)*.82; return {x:W/2+(p.x-.5)*s,y:H/2+(p.y-.5)*s};}
+function draw(){const c=$('overlay'),ctx=c.getContext('2d'); c.width=innerWidth*devicePixelRatio; c.height=innerHeight*devicePixelRatio; ctx.clearRect(0,0,c.width,c.height); if(!current){loadList();return;} const segs=(current.segments&&current.segments[view])||[]; ctx.strokeStyle='rgba(49,215,255,.82)'; ctx.lineWidth=2*devicePixelRatio; ctx.beginPath(); segs.forEach(s=>{const a=map({x:s.x1,y:s.y1}),b=map({x:s.x2,y:s.y2}); ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y)}); ctx.stroke(); const pts=(current.points&&current.points[view])||[]; pts.forEach((p,i)=>{const m=map(p); ctx.beginPath(); ctx.arc(m.x,m.y,(p.type==='base'?10:14)*devicePixelRatio,0,Math.PI*2); ctx.fillStyle=p.type==='base'?'rgba(255,216,74,.9)':'rgba(255,74,106,.95)'; ctx.fill(); ctx.fillStyle='#fff'; ctx.font=`${14*devicePixelRatio}px system-ui`; ctx.fillText(p.name||p.type,m.x+14*devicePixelRatio,m.y-10*devicePixelRatio);}); $('viewBtn').textContent=view==='top'?'上面':'正面'; $('title').textContent=`${current.partNo} / ${view==='top'?'上面':'正面'}`; $('chips').innerHTML=pts.map(p=>`<span class="pill ${p.type==='base'?'base':'inspect'}">${p.type==='base'?'基準':'検査'} ${p.name}</span>`).join('');}
+function showOK(){const d=$('done');d.style.display='flex';setTimeout(()=>d.style.display='none',1600)}
+window.addEventListener('resize',draw); loadList(); draw();
+</script>
+</body></html>
