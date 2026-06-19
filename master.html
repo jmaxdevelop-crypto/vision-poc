@@ -3,27 +3,26 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Vision PoC Master v5 Render</title>
+<title>Vision PoC Master v8</title>
 <style>
-:root{--bg:#071225;--card:#101c34;--line:#29436d;--cyan:#31d7ff;--txt:#eef6ff;--muted:#9fb4d9}
-*{box-sizing:border-box}body{margin:0;background:linear-gradient(135deg,#071225,#111b34);color:var(--txt);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
-header{padding:18px 24px;border-bottom:1px solid #20375f;background:#081226cc;position:sticky;top:0;z-index:5}h1{margin:0;font-size:22px}.sub{color:var(--muted);font-size:13px;margin-top:4px}
-main{display:grid;grid-template-columns:460px 1fr;gap:24px;padding:24px;max-width:1400px;margin:auto}.card{background:rgba(16,28,52,.92);border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:0 12px 30px rgba(0,0,0,.25)}
-label{display:block;color:#bcd0f7;font-size:13px;margin:14px 0 6px}input,select{width:100%;padding:14px 16px;border-radius:14px;border:1px solid #31517e;background:#071226;color:var(--txt);font-size:18px}.drop{border:2px dashed #6d8dd0;border-radius:18px;height:210px;display:flex;align-items:center;justify-content:center;text-align:center;color:#cfe0ff;margin-top:18px;background:#17223c}.drop.drag{background:#22365f;border-color:var(--cyan)}
-input[type=file]{width:100%;font-size:16px;background:#071226;margin-top:10px}button{width:100%;border:0;border-radius:15px;padding:16px 18px;margin-top:14px;font-weight:800;font-size:18px;color:#001225;background:linear-gradient(90deg,#2aa7ff,#39e0ff);cursor:pointer}button.secondary{background:#26395f;color:#eef6ff}button.danger{background:#55273a;color:#fff}.status{margin-top:12px;color:#bcd0f7;font-size:13px;white-space:pre-line}.previewGrid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.panelTitle{display:inline-block;background:#071226;border-radius:999px;padding:10px 16px;margin-bottom:14px;color:#dff8ff}.canvasWrap{background:#030812;border:1px solid #27436f;border-radius:16px;padding:12px}.canvasWrap canvas{width:100%;height:auto;background:#020711;border-radius:12px;display:block}.cap{text-align:center;color:#bcd0f7;margin-top:8px}.list{margin-top:16px;border-top:1px solid #2a416b;padding-top:10px}.item{display:flex;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px solid #22365f;color:#d7e6ff}.smallbtn{width:auto;padding:8px 12px;font-size:13px;margin:0;border-radius:10px}.hidden{display:none!important}
-@media(max-width:900px){main{grid-template-columns:1fr;padding:12px}.previewGrid{grid-template-columns:1fr}}
+:root{--bg:#071225;--card:#101c34;--line:#29436d;--cyan:#31d7ff;--txt:#eef6ff;--muted:#9fb4d9;--red:#ff4b6e;--green:#3dff9b}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(135deg,#071225,#111b34);color:var(--txt);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}header{padding:18px 24px;border-bottom:1px solid #20375f;background:#081226cc;position:sticky;top:0;z-index:5}h1{margin:0;font-size:22px}.sub{color:var(--muted);font-size:13px;margin-top:4px}main{display:grid;grid-template-columns:420px 1fr;gap:20px;padding:20px;max-width:1500px;margin:auto}.card{background:rgba(16,28,52,.94);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 12px 30px rgba(0,0,0,.25)}label{display:block;color:#bcd0f7;font-size:13px;margin:12px 0 6px}input,select{width:100%;padding:12px 14px;border-radius:13px;border:1px solid #31517e;background:#071226;color:var(--txt);font-size:16px}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.drop{border:2px dashed #6d8dd0;border-radius:18px;height:150px;display:flex;align-items:center;justify-content:center;text-align:center;color:#cfe0ff;margin-top:14px;background:#17223c}.drop.drag{background:#22365f;border-color:var(--cyan)}button{width:100%;border:0;border-radius:14px;padding:13px 14px;margin-top:12px;font-weight:800;font-size:16px;color:#001225;background:linear-gradient(90deg,#2aa7ff,#39e0ff);cursor:pointer}button.secondary{background:#26395f;color:#eef6ff}button.danger{background:#55273a;color:#fff}button.good{background:linear-gradient(90deg,#30ff91,#75ffd4)}.status{margin-top:12px;color:#bcd0f7;font-size:13px;white-space:pre-line}.previewGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.canvasWrap{position:relative;background:#030812;border:1px solid #27436f;border-radius:16px;padding:10px}.canvasWrap canvas{width:100%;height:auto;background:#020711;border-radius:12px;display:block}.cap{text-align:center;color:#bcd0f7;margin-top:8px}.badge{position:absolute;left:18px;top:18px;background:#071226cc;border:1px solid #31517e;border-radius:999px;padding:7px 11px;font-size:12px}.point{position:absolute;width:24px;height:24px;border:3px solid var(--red);border-radius:50%;transform:translate(-50%,-50%);box-shadow:0 0 14px rgba(255,75,110,.8);pointer-events:none}.list{margin-top:16px;border-top:1px solid #2a416b;padding-top:10px}.item{display:flex;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px solid #22365f;color:#d7e6ff}.smallbtn{width:auto;padding:8px 12px;font-size:13px;margin:0;border-radius:10px}.hint{font-size:12px;color:#9fb4d9;margin-top:6px}.pointsBox{max-height:190px;overflow:auto;border:1px solid #29436d;border-radius:12px;padding:8px;margin-top:8px}.pill{display:inline-block;border:1px solid #31517e;border-radius:999px;padding:6px 10px;margin:3px;color:#dff8ff;background:#071226}.hidden{display:none!important}@media(max-width:1000px){main{grid-template-columns:1fr;padding:12px}.previewGrid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-<header><h1>Vision PoC Master v5 / レンダリング登録</h1><div class="sub">STLを上面・側面からレンダリングして、検査用のCAD線画画像として保存します。STL本体は保存しません。</div></header>
+<header><h1>Vision PoC Master v8 / CAD線画＋検査ポイント登録</h1><div class="sub">STLから上面・正面・側面を自動生成。検査面と重要ポイントを保存します。STL本体は保存しません。</div></header>
 <main>
 <section class="card">
-<label>品番</label><input id="partNo" placeholder="例：BRKT ASSY LH" />
-<label>品名・メモ</label><input id="memo" placeholder="例：上面＋側面検査" />
-<label>線画モード</label><select id="mode"><option value="normal">レンダ画像＋輪郭線</option><option value="wire">ワイヤーフレーム線画</option></select>
-<div id="drop" class="drop">STLをここにドラッグ＆ドロップ<br>または下のボタンで選択</div>
+<label>品番</label><input id="partNo" placeholder="例：BRKT-001-LH" />
+<label>品名・メモ</label><input id="memo" placeholder="例：ブラケットLH 上面＋正面検査" />
+<div class="row"><div><label>検査に使う側面</label><select id="sideChoice"><option value="front">正面</option><option value="side">側面</option></select></div><div><label>側面 厚み誇張</label><select id="thickBoost"><option value="1">x1</option><option value="4">x4</option><option value="10" selected>x10</option><option value="20">x20</option><option value="40">x40</option></select></div></div>
+<label>線画モード</label><select id="mode"><option value="edges">エッジ線のみ</option><option value="wire">ワイヤーフレーム</option><option value="solid">レンダ画像＋エッジ</option></select>
+<div id="drop" class="drop">STLをここにドラッグ＆ドロップ<br>または下から選択</div>
 <input id="fileInput" type="file" accept=".stl,model/stl" />
-<button id="saveBtn">この品番で登録</button>
+<button id="pointModeBtn" class="secondary">検査ポイント追加モード：OFF</button>
+<div class="hint">ポイント追加ON → 右の上面/正面/側面画像をクリック。穴・ナット欠品などの重要部位用。</div>
+<div id="points" class="pointsBox">検査ポイントなし</div>
+<button id="saveBtn" class="good">この品番で登録</button>
 <button id="exportBtn" class="secondary">マスターJSONを書き出し</button>
 <label>マスターJSON読込</label><input id="importInput" type="file" accept=".json,application/json" />
 <button id="clearBtn" class="danger">全マスター削除</button>
@@ -31,101 +30,40 @@ input[type=file]{width:100%;font-size:16px;background:#071226;margin-top:10px}bu
 <div id="list" class="list"></div>
 </section>
 <section class="card">
-<div class="panelTitle">STLからレンダリング線画 自動生成プレビュー</div>
 <div class="previewGrid">
-<div><div class="canvasWrap"><canvas id="topCanvas" width="512" height="512"></canvas></div><div class="cap">上面レンダ線画</div></div>
-<div><div class="canvasWrap"><canvas id="sideCanvas" width="512" height="512"></canvas></div><div class="cap">側面レンダ線画</div></div>
+<div class="canvasWrap" data-view="top"><span class="badge">上面</span><canvas id="topCanvas" width="640" height="640"></canvas><div id="topPts"></div><div class="cap">上面</div></div>
+<div class="canvasWrap" data-view="front"><span class="badge">正面</span><canvas id="frontCanvas" width="640" height="640"></canvas><div id="frontPts"></div><div class="cap">正面</div></div>
+<div class="canvasWrap" data-view="side"><span class="badge">側面</span><canvas id="sideCanvas" width="640" height="640"></canvas><div id="sidePts"></div><div class="cap">側面</div></div>
 </div>
 </section>
 </main>
 <script type="module">
 import * as THREE from 'https://esm.sh/three@0.160.0';
 import { STLLoader } from 'https://esm.sh/three@0.160.0/examples/jsm/loaders/STLLoader.js';
-
-const DB_KEY='visionPocMasters.render.v5';
-const $=id=>document.getElementById(id);
-const status=$('status'), drop=$('drop'), fileInput=$('fileInput'), topCanvas=$('topCanvas'), sideCanvas=$('sideCanvas');
-let current=null;
-
-function getDB(){ try{return JSON.parse(localStorage.getItem(DB_KEY)||'{}')}catch(e){return {}} }
-function setDB(db){ localStorage.setItem(DB_KEY, JSON.stringify(db)); }
-function log(s){ status.textContent=s; }
-function prevent(e){ e.preventDefault(); e.stopPropagation(); }
-['dragenter','dragover','dragleave','drop'].forEach(ev=>window.addEventListener(ev, prevent, false));
-drop.addEventListener('dragover',e=>{prevent(e);drop.classList.add('drag')});
-drop.addEventListener('dragleave',e=>{prevent(e);drop.classList.remove('drag')});
-drop.addEventListener('drop',e=>{prevent(e);drop.classList.remove('drag'); const f=e.dataTransfer.files?.[0]; if(f) loadFile(f);});
-fileInput.addEventListener('change',e=>{const f=e.target.files?.[0]; if(f) loadFile(f);});
-
-async function loadFile(file){
-  log('STL読込中: '+file.name);
-  try{
-    const buf=await file.arrayBuffer();
-    const geom=new STLLoader().parse(buf);
-    geom.computeVertexNormals(); geom.computeBoundingBox();
-    current={fileName:file.name, geometry:geom};
-    renderAll();
-    log('STL読込OK: '+file.name+'\nレンダリング線画を生成しました。');
-  }catch(err){ console.error(err); log('STL読込エラー: '+err.message); }
-}
-
-function normalizeGeometry(geometry){
-  const g=geometry.clone(); g.computeBoundingBox();
-  const box=g.boundingBox; const size=new THREE.Vector3(); box.getSize(size); const center=new THREE.Vector3(); box.getCenter(center);
-  const maxDim=Math.max(size.x,size.y,size.z)||1;
-  g.translate(-center.x,-center.y,-center.z); g.scale(2.0/maxDim,2.0/maxDim,2.0/maxDim);
-  return g;
-}
-
-function renderView(canvas, geometry, view){
-  const w=canvas.width,h=canvas.height;
-  const renderer=new THREE.WebGLRenderer({canvas, antialias:true, alpha:false, preserveDrawingBuffer:true});
-  renderer.setSize(w,h,false); renderer.setPixelRatio(1); renderer.setClearColor(0x020711,1);
-  const scene=new THREE.Scene();
-  const g=normalizeGeometry(geometry);
-  const mode=$('mode').value;
-  let obj;
-  if(mode==='wire'){
-    const wire=new THREE.WireframeGeometry(g);
-    obj=new THREE.LineSegments(wire,new THREE.LineBasicMaterial({color:0x35dcff}));
-  }else{
-    const mat=new THREE.MeshBasicMaterial({color:0x35dcff, side:THREE.DoubleSide});
-    const mesh=new THREE.Mesh(g,mat);
-    const edges=new THREE.LineSegments(new THREE.EdgesGeometry(g,18),new THREE.LineBasicMaterial({color:0xdaf9ff}));
-    scene.add(mesh); scene.add(edges); obj=mesh;
-  }
-  if(mode==='wire') scene.add(obj);
-  const cam=new THREE.OrthographicCamera(-1.25,1.25,1.25,-1.25,0.1,10);
-  if(view==='top'){ cam.position.set(0,0,4); cam.up.set(0,1,0); }
-  else { cam.position.set(0,-4,0); cam.up.set(0,0,1); }
-  cam.lookAt(0,0,0); scene.add(cam);
-  renderer.render(scene,cam);
-  renderer.dispose();
-  // Post edge enhance: convert cyan render to transparent-ish line style for saving/inspection.
-  const ctx=canvas.getContext('2d');
-  const img=ctx.getImageData(0,0,w,h); const d=img.data;
-  for(let i=0;i<d.length;i+=4){
-    const bright=(d[i]+d[i+1]+d[i+2])/3;
-    if(bright<18){ d[i]=2;d[i+1]=7;d[i+2]=17;d[i+3]=255; }
-    else { d[i]=49;d[i+1]=220;d[i+2]=255;d[i+3]=255; }
-  }
-  ctx.putImageData(img,0,0);
-}
-function renderAll(){ if(!current) return; renderView(topCanvas,current.geometry,'top'); renderView(sideCanvas,current.geometry,'side'); }
-$('mode').addEventListener('change',renderAll);
-
-$('saveBtn').onclick=()=>{
-  const partNo=$('partNo').value.trim(); const memo=$('memo').value.trim();
-  if(!partNo){alert('品番を入れて');return} if(!current){alert('STLを読み込んで');return}
-  const db=getDB();
-  db[partNo]={partNo,memo,fileName:current.fileName,top:topCanvas.toDataURL('image/png'),side:sideCanvas.toDataURL('image/png'),createdAt:new Date().toISOString(),mode:$('mode').value};
-  try{setDB(db); log('登録OK: '+partNo+'\n保存対象はシルエット画像のみです。'); renderList();}
-  catch(e){console.error(e); alert('保存容量エラー。登録数を減らすかJSON書き出し運用にしてください。');}
-};
-$('exportBtn').onclick=()=>{ const db=getDB(); const blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='vision-master-render-v5.json'; a.click(); URL.revokeObjectURL(a.href); };
-$('importInput').addEventListener('change',async e=>{ const f=e.target.files?.[0]; if(!f)return; const txt=await f.text(); const db=JSON.parse(txt); setDB(db); renderList(); log('JSON読込OK'); });
-$('clearBtn').onclick=()=>{ if(confirm('全マスターを削除しますか？')){localStorage.removeItem(DB_KEY); renderList(); log('全削除しました');}};
-function renderList(){ const db=getDB(); const keys=Object.keys(db); $('list').innerHTML='<b>登録済み: '+keys.length+'件</b>'+keys.map(k=>`<div class="item"><span>${k}<br><small>${db[k].memo||''}</small></span><button class="smallbtn danger" data-k="${k}">削除</button></div>`).join(''); document.querySelectorAll('.smallbtn[data-k]').forEach(b=>b.onclick=()=>{const db=getDB(); delete db[b.dataset.k]; setDB(db); renderList();}); }
-renderList();
+const DB_KEY='visionPocMasters.v8';
+const $=id=>document.getElementById(id); const status=$('status'), drop=$('drop'), fileInput=$('fileInput');
+const canvases={top:$('topCanvas'),front:$('frontCanvas'),side:$('sideCanvas')};
+let current=null, pointMode=false, points=[];
+function getDB(){try{return JSON.parse(localStorage.getItem(DB_KEY)||'{}')}catch(e){return {}}}
+function setDB(db){localStorage.setItem(DB_KEY,JSON.stringify(db))}
+function log(s){status.textContent=s}
+function prevent(e){e.preventDefault();e.stopPropagation()}
+['dragenter','dragover','dragleave','drop'].forEach(ev=>window.addEventListener(ev,prevent,false));
+drop.addEventListener('dragover',e=>{prevent(e);drop.classList.add('drag')}); drop.addEventListener('dragleave',e=>{prevent(e);drop.classList.remove('drag')});
+drop.addEventListener('drop',e=>{prevent(e);drop.classList.remove('drag');const f=e.dataTransfer.files?.[0];if(f)loadFile(f)}); fileInput.addEventListener('change',e=>{const f=e.target.files?.[0];if(f)loadFile(f)});
+async function loadFile(file){log('STL読込中: '+file.name);try{const buf=await file.arrayBuffer();const geom=new STLLoader().parse(buf);geom.computeVertexNormals();geom.computeBoundingBox();current={fileName:file.name,geometry:geom};points=[];renderAll();renderPoints();log('STL読込OK: '+file.name+'\n上面・正面・側面を生成しました。')}catch(err){console.error(err);log('STL読込エラー: '+err.message)}}
+function normalizeGeometry(geometry,view){const g=geometry.clone();g.computeBoundingBox();const box=g.boundingBox;const size=new THREE.Vector3();box.getSize(size);const center=new THREE.Vector3();box.getCenter(center);g.translate(-center.x,-center.y,-center.z);const boost=Number($('thickBoost').value); if(view==='front') g.scale(1,1,boost); if(view==='side') g.scale(1,boost,1); g.computeBoundingBox(); const b=g.boundingBox; const s=new THREE.Vector3();b.getSize(s); const maxDim=Math.max(s.x,s.y,s.z)||1; g.scale(2/maxDim,2/maxDim,2/maxDim); return g}
+function renderView(canvas,geometry,view){const w=canvas.width,h=canvas.height;const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:false,preserveDrawingBuffer:true});renderer.setSize(w,h,false);renderer.setPixelRatio(1);renderer.setClearColor(0x020711,1);const scene=new THREE.Scene();const g=normalizeGeometry(geometry,view);const mode=$('mode').value;if(mode==='solid'){scene.add(new THREE.Mesh(g,new THREE.MeshBasicMaterial({color:0x17485f,side:THREE.DoubleSide})));scene.add(new THREE.LineSegments(new THREE.EdgesGeometry(g,14),new THREE.LineBasicMaterial({color:0xdaf9ff})));}else if(mode==='wire'){scene.add(new THREE.LineSegments(new THREE.WireframeGeometry(g),new THREE.LineBasicMaterial({color:0x35dcff})));}else{scene.add(new THREE.LineSegments(new THREE.EdgesGeometry(g,10),new THREE.LineBasicMaterial({color:0x35dcff})));}
+const cam=new THREE.OrthographicCamera(-1.18,1.18,1.18,-1.18,0.1,10); if(view==='top'){cam.position.set(0,0,4);cam.up.set(0,1,0)} if(view==='front'){cam.position.set(0,-4,0);cam.up.set(0,0,1)} if(view==='side'){cam.position.set(4,0,0);cam.up.set(0,0,1)} cam.lookAt(0,0,0);scene.add(cam);renderer.render(scene,cam);renderer.dispose(); const ctx=canvas.getContext('2d');const img=ctx.getImageData(0,0,w,h);const d=img.data;for(let i=0;i<d.length;i+=4){const br=(d[i]+d[i+1]+d[i+2])/3;if(br<18){d[i]=2;d[i+1]=7;d[i+2]=17;d[i+3]=255}else{d[i]=49;d[i+1]=220;d[i+2]=255;d[i+3]=255}}ctx.putImageData(img,0,0)}
+function renderAll(){if(!current)return;renderView(canvases.top,current.geometry,'top');renderView(canvases.front,current.geometry,'front');renderView(canvases.side,current.geometry,'side')}
+$('mode').addEventListener('change',renderAll); $('thickBoost').addEventListener('change',renderAll);
+$('pointModeBtn').onclick=()=>{pointMode=!pointMode;$('pointModeBtn').textContent='検査ポイント追加モード：'+(pointMode?'ON':'OFF')};
+document.querySelectorAll('.canvasWrap').forEach(w=>w.addEventListener('click',e=>{if(!pointMode)return;const view=w.dataset.view;const r=w.getBoundingClientRect();const x=(e.clientX-r.left)/r.width;const y=(e.clientY-r.top)/r.height;const name=prompt('検査ポイント名', view==='top'?'穴A':'重要部位'); if(!name)return;const type=prompt('種別（穴/ナット/切欠き/自由）','穴')||'自由';points.push({view,x,y,name,type,tol:0.055});renderPoints()}));
+function renderPoints(){['top','front','side'].forEach(v=>{$(v+'Pts').innerHTML=''});points.forEach((p,i)=>{const el=document.createElement('div');el.className='point';el.title=p.name;el.style.left=(p.x*100)+'%';el.style.top=(p.y*100)+'%';$(p.view+'Pts').appendChild(el)});$('points').innerHTML=points.length?points.map((p,i)=>`<span class="pill">${i+1}. ${p.view==='top'?'上面':p.view==='front'?'正面':'側面'} / ${p.type} / ${p.name} <button class="smallbtn danger" data-i="${i}">削除</button></span>`).join(''):'検査ポイントなし';document.querySelectorAll('button[data-i]').forEach(b=>b.onclick=()=>{points.splice(Number(b.dataset.i),1);renderPoints()})}
+$('saveBtn').onclick=()=>{const partNo=$('partNo').value.trim();if(!partNo){alert('品番を入れて');return}if(!current){alert('STLを読み込んで');return}const db=getDB();db[partNo]={partNo,memo:$('memo').value.trim(),fileName:current.fileName,top:canvases.top.toDataURL('image/png'),front:canvases.front.toDataURL('image/png'),side:canvases.side.toDataURL('image/png'),sideChoice:$('sideChoice').value,points,createdAt:new Date().toISOString(),mode:$('mode').value,thickBoost:$('thickBoost').value};try{setDB(db);log('登録OK: '+partNo+'\ninspect_v8.htmlで同じブラウザなら読めます。別端末にはJSONを書き出して読み込ませてください。');renderList()}catch(e){console.error(e);alert('保存容量エラー。JSON書き出し運用にしてください。')}};
+$('exportBtn').onclick=()=>{const db=getDB();const blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='vision-master-v8.json';a.click();URL.revokeObjectURL(a.href)};
+$('importInput').addEventListener('change',async e=>{const f=e.target.files?.[0];if(!f)return;const db=JSON.parse(await f.text());setDB(db);renderList();log('JSON読込OK')});
+$('clearBtn').onclick=()=>{if(confirm('全マスター削除？')){localStorage.removeItem(DB_KEY);renderList();log('全削除しました')}};
+function renderList(){const db=getDB();const keys=Object.keys(db);$('list').innerHTML='<b>登録済み: '+keys.length+'件</b>'+keys.map(k=>`<div class="item"><span>${k}<br><small>${db[k].memo||''}</small></span><button class="smallbtn danger" data-k="${k}">削除</button></div>`).join('');document.querySelectorAll('button[data-k]').forEach(b=>b.onclick=()=>{const db=getDB();delete db[b.dataset.k];setDB(db);renderList()})}renderList();
 </script>
 </body></html>
