@@ -2,129 +2,130 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Vision PoC Master v4</title>
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Vision PoC Master v5 Render</title>
 <style>
-  :root{--bg:#071022;--card:#111b33;--line:#23365e;--txt:#eaf2ff;--mut:#9fb4dc;--acc:#35d8ff;--ok:#1ee87f;--bad:#ff4d66}
-  *{box-sizing:border-box} body{margin:0;background:linear-gradient(135deg,#050914,#111a33);color:var(--txt);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
-  header{padding:18px 24px;border-bottom:1px solid var(--line);font-weight:800;font-size:22px}
-  main{display:grid;grid-template-columns:420px 1fr;gap:22px;padding:22px;min-height:calc(100vh - 65px)}
-  .card{background:rgba(17,27,51,.9);border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
-  label{display:block;color:#bcd0ff;font-size:13px;margin:12px 0 6px} input,button{font:inherit}
-  input[type=text]{width:100%;padding:14px 16px;border-radius:14px;border:1px solid #34507f;background:#061022;color:#fff;font-size:18px}
-  .drop{height:190px;border:2px dashed #6f8ccd;border-radius:18px;display:flex;align-items:center;justify-content:center;text-align:center;color:#c7d7ff;margin-top:18px;background:rgba(255,255,255,.03)}
-  .drop.drag{border-color:var(--acc);background:rgba(53,216,255,.12)}
-  .fileRow{display:flex;gap:10px;align-items:center;margin:10px 0 16px}.fileRow input{flex:1;color:#fff}
-  button{width:100%;padding:15px 16px;border:0;border-radius:14px;background:linear-gradient(90deg,#2396ff,#35d8ff);font-weight:900;color:#001123;cursor:pointer;margin:8px 0;font-size:18px}
-  button.secondary{background:#25365f;color:#eaf2ff}.status{padding:12px;border-radius:12px;background:#071022;color:#c7d7ff;margin-top:12px;white-space:pre-wrap}
-  .previewTitle{display:inline-block;background:#071022;border-radius:18px;padding:10px 16px;margin-bottom:18px}.canvases{display:flex;gap:16px;flex-wrap:wrap}.box{flex:1;min-width:300px}.canvasBox{height:360px;background:#020712;border:1px solid #28406f;border-radius:16px;display:flex;align-items:center;justify-content:center}canvas{max-width:100%;max-height:100%}.cap{text-align:center;color:#bcd0ff;margin-top:10px}.list{font-size:14px;color:#c7d7ff;line-height:1.8}.warn{color:#ffd36b}
+:root{--bg:#071225;--card:#101c34;--line:#29436d;--cyan:#31d7ff;--txt:#eef6ff;--muted:#9fb4d9}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(135deg,#071225,#111b34);color:var(--txt);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+header{padding:18px 24px;border-bottom:1px solid #20375f;background:#081226cc;position:sticky;top:0;z-index:5}h1{margin:0;font-size:22px}.sub{color:var(--muted);font-size:13px;margin-top:4px}
+main{display:grid;grid-template-columns:460px 1fr;gap:24px;padding:24px;max-width:1400px;margin:auto}.card{background:rgba(16,28,52,.92);border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:0 12px 30px rgba(0,0,0,.25)}
+label{display:block;color:#bcd0f7;font-size:13px;margin:14px 0 6px}input,select{width:100%;padding:14px 16px;border-radius:14px;border:1px solid #31517e;background:#071226;color:var(--txt);font-size:18px}.drop{border:2px dashed #6d8dd0;border-radius:18px;height:210px;display:flex;align-items:center;justify-content:center;text-align:center;color:#cfe0ff;margin-top:18px;background:#17223c}.drop.drag{background:#22365f;border-color:var(--cyan)}
+input[type=file]{width:100%;font-size:16px;background:#071226;margin-top:10px}button{width:100%;border:0;border-radius:15px;padding:16px 18px;margin-top:14px;font-weight:800;font-size:18px;color:#001225;background:linear-gradient(90deg,#2aa7ff,#39e0ff);cursor:pointer}button.secondary{background:#26395f;color:#eef6ff}button.danger{background:#55273a;color:#fff}.status{margin-top:12px;color:#bcd0f7;font-size:13px;white-space:pre-line}.previewGrid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.panelTitle{display:inline-block;background:#071226;border-radius:999px;padding:10px 16px;margin-bottom:14px;color:#dff8ff}.canvasWrap{background:#030812;border:1px solid #27436f;border-radius:16px;padding:12px}.canvasWrap canvas{width:100%;height:auto;background:#020711;border-radius:12px;display:block}.cap{text-align:center;color:#bcd0f7;margin-top:8px}.list{margin-top:16px;border-top:1px solid #2a416b;padding-top:10px}.item{display:flex;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px solid #22365f;color:#d7e6ff}.smallbtn{width:auto;padding:8px 12px;font-size:13px;margin:0;border-radius:10px}.hidden{display:none!important}
+@media(max-width:900px){main{grid-template-columns:1fr;padding:12px}.previewGrid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-<header>Vision PoC Master v4｜STL→外形シルエット登録</header>
+<header><h1>Vision PoC Master v5 / レンダリング登録</h1><div class="sub">STLを上面・側面からレンダリングして、検査用のCAD線画画像として保存します。STL本体は保存しません。</div></header>
 <main>
 <section class="card">
-  <label>品番</label><input id="partNo" type="text" placeholder="例：BRKT ASSY LH">
-  <label>品名・メモ</label><input id="memo" type="text" placeholder="例：上面＋側面検査">
-  <div id="drop" class="drop">STLをここにドラッグ＆ドロップ<br>または下のボタンで選択</div>
-  <div class="fileRow"><input id="fileInput" type="file" accept=".stl,model/stl"></div>
-  <button id="saveBtn">この品番で登録</button>
-  <button id="exportBtn" class="secondary">マスターJSONを書き出し</button>
-  <label>マスターJSON読込</label><input id="importInput" type="file" accept=".json,application/json">
-  <button id="clearBtn" class="secondary">全マスター削除</button>
-  <div id="status" class="status">未読込</div>
-  <div class="list" id="list"></div>
+<label>品番</label><input id="partNo" placeholder="例：BRKT ASSY LH" />
+<label>品名・メモ</label><input id="memo" placeholder="例：上面＋側面検査" />
+<label>線画モード</label><select id="mode"><option value="normal">レンダ画像＋輪郭線</option><option value="wire">ワイヤーフレーム線画</option></select>
+<div id="drop" class="drop">STLをここにドラッグ＆ドロップ<br>または下のボタンで選択</div>
+<input id="fileInput" type="file" accept=".stl,model/stl" />
+<button id="saveBtn">この品番で登録</button>
+<button id="exportBtn" class="secondary">マスターJSONを書き出し</button>
+<label>マスターJSON読込</label><input id="importInput" type="file" accept=".json,application/json" />
+<button id="clearBtn" class="danger">全マスター削除</button>
+<div id="status" class="status">未読込</div>
+<div id="list" class="list"></div>
 </section>
 <section class="card">
-  <div class="previewTitle">STLから外形シルエット自動生成プレビュー</div>
-  <div class="canvases">
-    <div class="box"><div class="canvasBox"><canvas id="topCanvas" width="640" height="640"></canvas></div><div class="cap">上面シルエット</div></div>
-    <div class="box"><div class="canvasBox"><canvas id="sideCanvas" width="640" height="640"></canvas></div><div class="cap">側面シルエット</div></div>
-  </div>
-  <p class="warn">※v4はSTLの全メッシュ線ではなく、投影後の外形シルエット画像だけを保存します。localStorage容量超過対策済み。</p>
+<div class="panelTitle">STLからレンダリング線画 自動生成プレビュー</div>
+<div class="previewGrid">
+<div><div class="canvasWrap"><canvas id="topCanvas" width="512" height="512"></canvas></div><div class="cap">上面レンダ線画</div></div>
+<div><div class="canvasWrap"><canvas id="sideCanvas" width="512" height="512"></canvas></div><div class="cap">側面レンダ線画</div></div>
+</div>
 </section>
 </main>
 <script type="module">
+import * as THREE from 'https://esm.sh/three@0.160.0';
 import { STLLoader } from 'https://esm.sh/three@0.160.0/examples/jsm/loaders/STLLoader.js';
 
-const DB_KEY='visionPocMasters.v4';
-const loader=new STLLoader();
-const el=id=>document.getElementById(id);
-const drop=el('drop'), fileInput=el('fileInput'), status=el('status');
-const topCanvas=el('topCanvas'), sideCanvas=el('sideCanvas');
+const DB_KEY='visionPocMasters.render.v5';
+const $=id=>document.getElementById(id);
+const status=$('status'), drop=$('drop'), fileInput=$('fileInput'), topCanvas=$('topCanvas'), sideCanvas=$('sideCanvas');
 let current=null;
 
-window.addEventListener('dragover',e=>e.preventDefault());
-window.addEventListener('drop',e=>e.preventDefault());
-
-drop.addEventListener('dragover',e=>{e.preventDefault();drop.classList.add('drag')});
-drop.addEventListener('dragleave',()=>drop.classList.remove('drag'));
-drop.addEventListener('drop',e=>{e.preventDefault();drop.classList.remove('drag');const f=e.dataTransfer.files?.[0]; if(f) loadFile(f);});
+function getDB(){ try{return JSON.parse(localStorage.getItem(DB_KEY)||'{}')}catch(e){return {}} }
+function setDB(db){ localStorage.setItem(DB_KEY, JSON.stringify(db)); }
+function log(s){ status.textContent=s; }
+function prevent(e){ e.preventDefault(); e.stopPropagation(); }
+['dragenter','dragover','dragleave','drop'].forEach(ev=>window.addEventListener(ev, prevent, false));
+drop.addEventListener('dragover',e=>{prevent(e);drop.classList.add('drag')});
+drop.addEventListener('dragleave',e=>{prevent(e);drop.classList.remove('drag')});
+drop.addEventListener('drop',e=>{prevent(e);drop.classList.remove('drag'); const f=e.dataTransfer.files?.[0]; if(f) loadFile(f);});
 fileInput.addEventListener('change',e=>{const f=e.target.files?.[0]; if(f) loadFile(f);});
-el('saveBtn').onclick=saveCurrent;
-el('exportBtn').onclick=exportDB;
-el('importInput').addEventListener('change',importDB);
-el('clearBtn').onclick=()=>{ if(confirm('全マスターを削除しますか？')){localStorage.removeItem(DB_KEY); renderList(); status.textContent='全削除しました';}};
-
-function getDB(){try{return JSON.parse(localStorage.getItem(DB_KEY)||'{}')}catch{return {}}}
-function setDB(db){localStorage.setItem(DB_KEY,JSON.stringify(db));}
-function renderList(){const db=getDB(); const keys=Object.keys(db); el('list').innerHTML='<h3>登録済み</h3>'+ (keys.length?keys.map(k=>`・${k}：${db[k].memo||''}`).join('<br>'):'なし');}
 
 async function loadFile(file){
-  status.textContent='STL読込中：'+file.name;
-  const buf=await file.arrayBuffer();
-  const geom=loader.parse(buf);
-  geom.computeBoundingBox();
-  const top = makeSilhouette(geom,'top',topCanvas);
-  const side = makeSilhouette(geom,'side',sideCanvas);
-  current={fileName:file.name, top, side};
-  status.textContent='STL読込OK：'+file.name+'\n外形シルエット生成OK';
+  log('STL読込中: '+file.name);
+  try{
+    const buf=await file.arrayBuffer();
+    const geom=new STLLoader().parse(buf);
+    geom.computeVertexNormals(); geom.computeBoundingBox();
+    current={fileName:file.name, geometry:geom};
+    renderAll();
+    log('STL読込OK: '+file.name+'\nレンダリング線画を生成しました。');
+  }catch(err){ console.error(err); log('STL読込エラー: '+err.message); }
 }
 
-function makeSilhouette(geometry,view,canvas){
-  const pos=geometry.attributes.position.array;
-  const pts=[];
-  for(let i=0;i<pos.length;i+=3){
-    const x=pos[i], y=pos[i+1], z=pos[i+2];
-    pts.push(view==='top' ? [x,y] : [x,z]);
+function normalizeGeometry(geometry){
+  const g=geometry.clone(); g.computeBoundingBox();
+  const box=g.boundingBox; const size=new THREE.Vector3(); box.getSize(size); const center=new THREE.Vector3(); box.getCenter(center);
+  const maxDim=Math.max(size.x,size.y,size.z)||1;
+  g.translate(-center.x,-center.y,-center.z); g.scale(2.0/maxDim,2.0/maxDim,2.0/maxDim);
+  return g;
+}
+
+function renderView(canvas, geometry, view){
+  const w=canvas.width,h=canvas.height;
+  const renderer=new THREE.WebGLRenderer({canvas, antialias:true, alpha:false, preserveDrawingBuffer:true});
+  renderer.setSize(w,h,false); renderer.setPixelRatio(1); renderer.setClearColor(0x020711,1);
+  const scene=new THREE.Scene();
+  const g=normalizeGeometry(geometry);
+  const mode=$('mode').value;
+  let obj;
+  if(mode==='wire'){
+    const wire=new THREE.WireframeGeometry(g);
+    obj=new THREE.LineSegments(wire,new THREE.LineBasicMaterial({color:0x35dcff}));
+  }else{
+    const mat=new THREE.MeshBasicMaterial({color:0x35dcff, side:THREE.DoubleSide});
+    const mesh=new THREE.Mesh(g,mat);
+    const edges=new THREE.LineSegments(new THREE.EdgesGeometry(g,18),new THREE.LineBasicMaterial({color:0xdaf9ff}));
+    scene.add(mesh); scene.add(edges); obj=mesh;
   }
-  drawSilhouetteFromPoints(pts,canvas);
-  return canvas.toDataURL('image/png',0.75);
+  if(mode==='wire') scene.add(obj);
+  const cam=new THREE.OrthographicCamera(-1.25,1.25,1.25,-1.25,0.1,10);
+  if(view==='top'){ cam.position.set(0,0,4); cam.up.set(0,1,0); }
+  else { cam.position.set(0,-4,0); cam.up.set(0,0,1); }
+  cam.lookAt(0,0,0); scene.add(cam);
+  renderer.render(scene,cam);
+  renderer.dispose();
+  // Post edge enhance: convert cyan render to transparent-ish line style for saving/inspection.
+  const ctx=canvas.getContext('2d');
+  const img=ctx.getImageData(0,0,w,h); const d=img.data;
+  for(let i=0;i<d.length;i+=4){
+    const bright=(d[i]+d[i+1]+d[i+2])/3;
+    if(bright<18){ d[i]=2;d[i+1]=7;d[i+2]=17;d[i+3]=255; }
+    else { d[i]=49;d[i+1]=220;d[i+2]=255;d[i+3]=255; }
+  }
+  ctx.putImageData(img,0,0);
 }
+function renderAll(){ if(!current) return; renderView(topCanvas,current.geometry,'top'); renderView(sideCanvas,current.geometry,'side'); }
+$('mode').addEventListener('change',renderAll);
 
-function drawSilhouetteFromPoints(points,canvas){
-  const w=canvas.width,h=canvas.height,ctx=canvas.getContext('2d');
-  ctx.clearRect(0,0,w,h); ctx.fillStyle='#020712'; ctx.fillRect(0,0,w,h);
-  if(points.length<3) return;
-  const hull=convexHull(points);
-  const xs=hull.map(p=>p[0]), ys=hull.map(p=>p[1]);
-  const minX=Math.min(...xs),maxX=Math.max(...xs),minY=Math.min(...ys),maxY=Math.max(...ys);
-  const sx=(w*0.78)/(maxX-minX||1), sy=(h*0.78)/(maxY-minY||1), s=Math.min(sx,sy);
-  const cx=(minX+maxX)/2, cy=(minY+maxY)/2;
-  ctx.strokeStyle='#35d8ff'; ctx.lineWidth=5; ctx.lineJoin='round'; ctx.lineCap='round'; ctx.beginPath();
-  hull.forEach((p,i)=>{const X=w/2+(p[0]-cx)*s; const Y=h/2-(p[1]-cy)*s; if(i===0)ctx.moveTo(X,Y); else ctx.lineTo(X,Y);});
-  ctx.closePath(); ctx.stroke();
-}
-
-function convexHull(points){
-  const pts=[...points].sort((a,b)=>a[0]===b[0]?a[1]-b[1]:a[0]-b[0]);
-  const cross=(o,a,b)=>(a[0]-o[0])*(b[1]-o[1])-(a[1]-o[1])*(b[0]-o[0]);
-  const lower=[]; for(const p of pts){while(lower.length>=2&&cross(lower[lower.length-2],lower[lower.length-1],p)<=0)lower.pop(); lower.push(p)}
-  const upper=[]; for(let i=pts.length-1;i>=0;i--){const p=pts[i]; while(upper.length>=2&&cross(upper[upper.length-2],upper[upper.length-1],p)<=0)upper.pop(); upper.push(p)}
-  upper.pop(); lower.pop(); return lower.concat(upper);
-}
-
-function saveCurrent(){
-  const partNo=el('partNo').value.trim(); if(!partNo){alert('品番を入力して');return} if(!current){alert('STLを読んでから登録して');return}
+$('saveBtn').onclick=()=>{
+  const partNo=$('partNo').value.trim(); const memo=$('memo').value.trim();
+  if(!partNo){alert('品番を入れて');return} if(!current){alert('STLを読み込んで');return}
   const db=getDB();
-  db[partNo]={partNo,memo:el('memo').value.trim(),top:current.top,side:current.side,fileName:current.fileName,createdAt:new Date().toISOString()};
-  setDB(db); renderList(); status.textContent='登録OK：'+partNo+'\n保存内容：シルエット画像のみ（STL本体は保存しません）';
-}
-function exportDB(){
-  const blob=new Blob([JSON.stringify(getDB(),null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='vision-master.json'; a.click(); URL.revokeObjectURL(a.href);
-}
-async function importDB(e){const f=e.target.files?.[0]; if(!f)return; setDB(JSON.parse(await f.text())); renderList(); status.textContent='JSON読込OK：'+f.name;}
+  db[partNo]={partNo,memo,fileName:current.fileName,top:topCanvas.toDataURL('image/png'),side:sideCanvas.toDataURL('image/png'),createdAt:new Date().toISOString(),mode:$('mode').value};
+  try{setDB(db); log('登録OK: '+partNo+'\n保存対象はシルエット画像のみです。'); renderList();}
+  catch(e){console.error(e); alert('保存容量エラー。登録数を減らすかJSON書き出し運用にしてください。');}
+};
+$('exportBtn').onclick=()=>{ const db=getDB(); const blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='vision-master-render-v5.json'; a.click(); URL.revokeObjectURL(a.href); };
+$('importInput').addEventListener('change',async e=>{ const f=e.target.files?.[0]; if(!f)return; const txt=await f.text(); const db=JSON.parse(txt); setDB(db); renderList(); log('JSON読込OK'); });
+$('clearBtn').onclick=()=>{ if(confirm('全マスターを削除しますか？')){localStorage.removeItem(DB_KEY); renderList(); log('全削除しました');}};
+function renderList(){ const db=getDB(); const keys=Object.keys(db); $('list').innerHTML='<b>登録済み: '+keys.length+'件</b>'+keys.map(k=>`<div class="item"><span>${k}<br><small>${db[k].memo||''}</small></span><button class="smallbtn danger" data-k="${k}">削除</button></div>`).join(''); document.querySelectorAll('.smallbtn[data-k]').forEach(b=>b.onclick=()=>{const db=getDB(); delete db[b.dataset.k]; setDB(db); renderList();}); }
 renderList();
 </script>
-</body>
-</html>
+</body></html>
