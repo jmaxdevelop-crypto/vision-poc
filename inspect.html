@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<title>CAD照合PoC - 検査</title>
+<style>
+  :root{--bg:#050914;--panel:#0b1224;--line:#2c375b;--accent:#48d1ff;--ok:#00f060;--ng:#ff3b3b;--warn:#ffd23f;--text:#eef4ff;}
+  *{box-sizing:border-box} body{margin:0;background:#02050d;color:var(--text);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;overflow:hidden;}
+  #app{position:fixed;inset:0;display:grid;grid-template-rows:auto 1fr auto;background:#02050d}
+  header{z-index:5;display:flex;gap:8px;align-items:center;padding:10px;background:rgba(6,12,28,.92);border-bottom:1px solid var(--line)}
+  input,select,button{border-radius:12px;border:1px solid var(--line);padding:10px;background:#071022;color:var(--text);font-size:15px} input{width:150px} select{width:180px} button{font-weight:800;background:#1b8dff;color:white;border:none} button:disabled{opacity:.4}.ghost{background:#23304f}.stage{font-weight:900;padding:8px 12px;border-radius:999px;background:#1c2947;white-space:nowrap}.stage.ok{background:rgba(0,240,96,.25);color:#b8ffd0}
+  #view{position:relative;overflow:hidden;background:#000} video,#work,#overlay{position:absolute;inset:0;width:100%;height:100%;object-fit:contain} #work{display:none} #overlay{pointer-events:none}.hud{position:absolute;left:12px;right:12px;bottom:12px;z-index:4;background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.15);border-radius:18px;padding:12px}.score{font-size:28px;font-weight:900}.bar{height:12px;background:#222b3d;border-radius:999px;overflow:hidden;margin-top:8px}.bar>div{height:100%;width:0%;background:linear-gradient(90deg,#ff3b3b,#ffd23f,#00f060)}.msg{margin-top:6px;color:#c8d5ff;font-size:13px} footer{z-index:5;display:flex;gap:8px;padding:10px;background:rgba(6,12,28,.92);border-top:1px solid var(--line)} footer button{flex:1;padding:14px;font-size:16px}
+  #result{position:fixed;inset:0;z-index:20;display:none;align-items:center;justify-content:center;text-align:center;font-size:92px;font-weight:1000;letter-spacing:.08em}.resultOk{background:rgba(0,240,96,.72)}.resultNg{background:rgba(255,0,0,.65)}
+  #manualPanel{position:fixed;top:66px;right:10px;z-index:7;background:rgba(6,12,28,.9);border:1px solid var(--line);border-radius:16px;padding:10px;width:190px}.small{font-size:12px;color:#b9c9ff}.range{width:100%}
+</style>
+</head>
+<body>
+<div id="app">
+<header>
+  <span class="stage" id="stageLabel">上面</span>
+  <input id="partNo" placeholder="品番" />
+  <select id="partSelect"><option value="">登録品番</option></select>
+  <button id="loadBtn">読込</button>
+  <button id="camBtn">カメラ</button>
+</header>
+<div id="view">
+  <video id="cam" autoplay playsinline muted></video>
+  <canvas id="work"></canvas>
+  <canvas id="overlay"></canvas>
+  <div class="hud">
+    <div class="score">一致率 <span id="score">0</span>%</div>
+    <div class="bar"><div id="bar"></div></div>
+    <div class="msg" id="msg">マスターを読み込んでカメラ起動してください</div>
+  </div>
+  <div id="manualPanel">
+    <div class="small">CAD線画 位置調整</div>
+    <label class="small">Scale <input class="range" id="scale" type="range" min="0.3" max="2.2" step="0.01" value="1"></label>
+    <label class="small">X <input class="range" id="offX" type="range" min="-400" max="400" step="1" value="0"></label>
+    <label class="small">Y <input class="range" id="offY" type="range" min="-400" max="400" step="1" value="0"></label>
+    <label class="small">閾値 <input class="range" id="threshold" type="range" min="40" max="95" step="1" value="78"></label>
+  </div>
+</div>
+<footer>
+  <button class="ghost" id="resetBtn">リセット</button>
+  <button class="ghost" id="forceBtn">強制OK</button>
+  <button id="nextBtn" disabled>次へ</button>
+</footer>
+</div>
+<div id="result"></div>
+<script>
+const DB_KEY='visionPocMasters.v1';
+const cam=document.getElementById('cam'), overlay=document.getElementById('overlay'), work=document.getElementById('work');
+const octx=overlay.getContext('2d'), wctx=work.getContext('2d',{willReadFrequently:true});
+let master=null, stage='top', running=false, okTop=false, okSide=false, lastOkTime=0;
+let raf=null;
+
+function loadDB(){return JSON.parse(localStorage.getItem(DB_KEY)||'{}')}
+function fillSelect(){const sel=document.getElementById('partSelect'); const db=loadDB(); Object.keys(db).sort().forEach(k=>{const op=document.createElement('option');op.value=k;op.textContent=k;sel.appendChild(op);});}
+fillSelect();
+document.getElementById('partSelect').onchange=e=>{document.getElementById('partNo').value=e.target.value;};
+function msg(s){document.getElementById('msg').textContent=s}
+function currentSil(){return master ? master[stage] : null}
+
+document.getElementById('loadBtn').onclick=()=>{
+  const pn=document.getElementById('partNo').value.trim(); const db=loadDB();
+  if(!db[pn]){alert('登録が見つかりません。同じブラウザでmaster.htmlから登録してください。');return;}
+  master=db[pn]; stage='top'; okTop=false; okSide=false; updateStage(); resize(); msg(`読込OK：${pn} / 上面検査`);
+};
+document.getElementById('camBtn').onclick=startCamera;
+document.getElementById('resetBtn').onclick=()=>{stage='top';okTop=false;okSide=false;updateStage();hideResult();};
+document.getElementById('forceBtn').onclick=()=>acceptStage(true);
+document.getElementById('nextBtn').onclick=()=>{if(stage==='top'){stage='side';updateStage();}else acceptStage(true)};
+['scale','offX','offY','threshold'].forEach(id=>document.getElementById(id).oninput=drawOverlay);
+
+async function startCamera(){
+  try{
+    const stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:1280},height:{ideal:720}},audio:false});
+    cam.srcObject=stream; running=true; msg('カメラ起動OK。CAD線画に実物を合わせてください。'); loop();
+  }catch(e){alert('カメラ起動失敗: '+e.message)}
+}
+function resize(){
+  overlay.width=overlay.clientWidth*devicePixelRatio; overlay.height=overlay.clientHeight*devicePixelRatio;
+  work.width=320; work.height=240; drawOverlay();
+}
+window.addEventListener('resize',resize); setTimeout(resize,300);
+function updateStage(){
+  const l=document.getElementById('stageLabel'); l.textContent=stage==='top'?'上面':'側面'; l.className='stage';
+  document.getElementById('nextBtn').disabled=!(okTop||okSide);
+  drawOverlay();
+}
+function drawOverlay(){
+  octx.clearRect(0,0,overlay.width,overlay.height);
+  if(!master)return;
+  const sil=currentSil(); if(!sil)return;
+  const scaleBase=Math.min(overlay.width,overlay.height)*0.72*Number(document.getElementById('scale').value);
+  const ox=Number(document.getElementById('offX').value)*devicePixelRatio, oy=Number(document.getElementById('offY').value)*devicePixelRatio;
+  const cx=overlay.width/2+ox, cy=overlay.height/2+oy;
+  octx.lineWidth=2.5*devicePixelRatio;
+  octx.strokeStyle='rgba(72,209,255,.92)';
+  octx.shadowColor='rgba(72,209,255,.8)'; octx.shadowBlur=10*devicePixelRatio;
+  octx.beginPath();
+  for(const [a,b] of sil.lines){octx.moveTo(cx+a[0]*scaleBase,cy-a[1]*scaleBase);octx.lineTo(cx+b[0]*scaleBase,cy-b[1]*scaleBase)}
+  octx.stroke(); octx.shadowBlur=0;
+}
+function loop(){
+  if(!running)return;
+  if(cam.readyState>=2 && master){
+    wctx.drawImage(cam,0,0,work.width,work.height);
+    const score=estimateMatchScore();
+    setScore(score);
+    const th=Number(document.getElementById('threshold').value);
+    if(score>=th && Date.now()-lastOkTime>1200) acceptStage(false);
+  }
+  drawOverlay();
+  raf=requestAnimationFrame(loop);
+}
+function estimateMatchScore(){
+  // PoC用の簡易判定：中央付近のエッジ量＋明暗安定でスコア化。
+  // 次版でOpenCV.jsの輪郭一致に置換予定。
+  const img=wctx.getImageData(0,0,work.width,work.height).data;
+  let edge=0, count=0;
+  for(let y=30;y<work.height-30;y+=4){for(let x=30;x<work.width-30;x+=4){
+    const i=(y*work.width+x)*4; const g=(img[i]+img[i+1]+img[i+2])/3;
+    const j=(y*work.width+x+4)*4; const g2=(img[j]+img[j+1]+img[j+2])/3;
+    if(Math.abs(g-g2)>28)edge++; count++;
+  }}
+  const edgeScore=Math.min(100,edge/count*700);
+  return Math.round(edgeScore);
+}
+function setScore(v){document.getElementById('score').textContent=v;document.getElementById('bar').style.width=Math.min(100,v)+'%';}
+function acceptStage(force){
+  lastOkTime=Date.now();
+  if(stage==='top'){
+    okTop=true; flash('上面 OK','ok');
+    setTimeout(()=>{stage='side';updateStage();msg('上面OK。側面検査へ自動遷移しました。');hideResult();},900);
+  }else{
+    okSide=true; flash('最終 OK','ok'); msg('上面・側面 OK。検査完了。'); document.getElementById('stageLabel').className='stage ok';
+  }
+}
+function flash(text,type){const r=document.getElementById('result');r.textContent=text;r.className=type==='ok'?'resultOk':'resultNg';r.style.display='flex';}
+function hideResult(){document.getElementById('result').style.display='none'}
+</script>
+</body>
+</html>

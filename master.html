@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+<title>CAD照合PoC - マスター登録</title>
+<style>
+  :root{--bg:#0b1020;--panel:#131a2e;--line:#2c375b;--accent:#48d1ff;--ok:#28f06b;--ng:#ff3b3b;--text:#eef4ff;}
+  *{box-sizing:border-box} body{margin:0;background:linear-gradient(135deg,#08101f,#141b32);color:var(--text);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;min-height:100vh;}
+  header{padding:18px 22px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:12px;}
+  h1{margin:0;font-size:20px;letter-spacing:.08em} a{color:var(--accent);text-decoration:none;font-weight:700}
+  main{display:grid;grid-template-columns:360px 1fr;gap:18px;padding:18px;}
+  .card{background:rgba(19,26,46,.92);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+  label{display:block;margin-top:14px;font-size:13px;color:#b6c5ff} input,button,select{width:100%;border-radius:12px;border:1px solid var(--line);padding:12px;background:#071022;color:var(--text);font-size:16px} button{cursor:pointer;font-weight:800;border:none;background:linear-gradient(135deg,#1b8dff,#35e6ff);color:#001221;margin-top:12px} button.secondary{background:#23304f;color:#dce8ff;border:1px solid var(--line)}
+  .drop{height:180px;border:2px dashed #59709f;border-radius:18px;display:flex;align-items:center;justify-content:center;text-align:center;color:#b9c9ff;background:rgba(255,255,255,.03);margin-top:14px;padding:20px}.drop.dragover{border-color:var(--accent);background:rgba(72,209,255,.16);color:white}
+  .status{margin-top:12px;font-size:13px;color:#b9c9ff;line-height:1.6;white-space:pre-wrap}.list{margin-top:12px;display:grid;gap:8px}.item{display:flex;justify-content:space-between;gap:10px;padding:10px;border:1px solid var(--line);border-radius:12px;background:#0c1428}.item button{width:auto;margin:0;padding:8px 10px;font-size:13px}.danger{background:#3a1c27!important;color:#ffdbe4!important;border:1px solid #7a2b42!important}
+  #viewerWrap{position:relative;min-height:640px;overflow:hidden}.view-title{position:absolute;top:14px;left:14px;z-index:2;background:rgba(0,0,0,.5);padding:8px 12px;border-radius:999px;font-size:13px}.canvasRow{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}.mini{border:1px solid var(--line);border-radius:14px;background:#050914;width:100%;height:300px}.miniLabel{text-align:center;font-size:13px;color:#b9c9ff;margin-top:8px}
+</style>
+</head>
+<body>
+<header>
+  <h1>CAD照合PoC｜マスター登録</h1>
+  <a href="inspect.html">検査サイトへ →</a>
+</header>
+<main>
+  <section class="card">
+    <label>品番</label>
+    <input id="partNo" placeholder="例：ABC-123-LH" />
+    <label>品名・メモ</label>
+    <input id="memo" placeholder="例：BRKT ASSY LH" />
+    <div id="drop" class="drop">STLをここにドラッグ＆ドロップ<br>または下のボタンで選択</div>
+    <input id="fileInput" type="file" accept=".stl,model/stl" />
+    <button id="saveBtn">この品番で登録</button>
+    <button class="secondary" id="exportBtn">マスターJSONを書き出し</button>
+    <label>マスターJSON読込</label>
+    <input id="importInput" type="file" accept=".json,application/json" />
+    <button class="secondary" id="clearAllBtn">全マスター削除</button>
+    <div id="status" class="status">未読込</div>
+    <div class="list" id="list"></div>
+  </section>
+  <section class="card" id="viewerWrap">
+    <div class="view-title">STLから線画シルエット自動生成プレビュー</div>
+    <div style="height:52px"></div>
+    <div class="canvasRow">
+      <div><canvas id="topCanvas" class="mini"></canvas><div class="miniLabel">上面シルエット</div></div>
+      <div><canvas id="sideCanvas" class="mini"></canvas><div class="miniLabel">側面シルエット</div></div>
+    </div>
+  </section>
+</main>
+<script type="module">
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
+import { STLLoader } from 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/loaders/STLLoader.js';
+
+const DB_KEY='visionPocMasters.v1';
+const drop=document.getElementById('drop'), fileInput=document.getElementById('fileInput'), statusEl=document.getElementById('status');
+const partNoEl=document.getElementById('partNo'), memoEl=document.getElementById('memo');
+let current={fileName:null, dataUrl:null, geometry:null, top:null, side:null};
+
+window.addEventListener('dragover',e=>{e.preventDefault();});
+window.addEventListener('drop',e=>{e.preventDefault();});
+['dragenter','dragover'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add('dragover');}));
+['dragleave','drop'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove('dragover');}));
+drop.addEventListener('drop',e=>handleFile(e.dataTransfer.files?.[0]));
+fileInput.addEventListener('change',e=>handleFile(e.target.files?.[0]));
+
+function loadDB(){return JSON.parse(localStorage.getItem(DB_KEY)||'{}')}
+function saveDB(db){localStorage.setItem(DB_KEY,JSON.stringify(db));renderList();}
+function setStatus(s){statusEl.textContent=s;}
+
+async function handleFile(file){
+  if(!file) return;
+  if(!file.name.toLowerCase().endsWith('.stl')){alert('STLファイルを選んでください');return;}
+  const arrayBuffer=await file.arrayBuffer();
+  const dataUrl=await fileToDataURL(file);
+  const loader=new STLLoader();
+  const geometry=loader.parse(arrayBuffer);
+  geometry.computeBoundingBox(); geometry.computeVertexNormals();
+  const top=makeSilhouette(geometry,'top');
+  const side=makeSilhouette(geometry,'side');
+  current={fileName:file.name,dataUrl,geometry,top,side};
+  drawSilhouette('topCanvas',top); drawSilhouette('sideCanvas',side);
+  setStatus(`STL読込OK\n${file.name}\n上面線分: ${top.lines.length}\n側面線分: ${side.lines.length}`);
+}
+function fileToDataURL(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(file);});}
+
+function makeSilhouette(geometry,mode){
+  const pos=geometry.attributes.position.array;
+  const pts=[];
+  for(let i=0;i<pos.length;i+=3){
+    const x=pos[i], y=pos[i+1], z=pos[i+2];
+    pts.push(mode==='top'?[x,z]:[x,y]);
+  }
+  const xs=pts.map(p=>p[0]), ys=pts.map(p=>p[1]);
+  const minX=Math.min(...xs), maxX=Math.max(...xs), minY=Math.min(...ys), maxY=Math.max(...ys);
+  const scale=1/Math.max(maxX-minX||1,maxY-minY||1);
+  const norm=p=>[(p[0]-(minX+maxX)/2)*scale,(p[1]-(minY+maxY)/2)*scale];
+  const lines=[];
+  for(let i=0;i<pts.length;i+=3){
+    const a=norm(pts[i]), b=norm(pts[i+1]), c=norm(pts[i+2]);
+    lines.push([a,b],[b,c],[c,a]);
+  }
+  return {mode,lines,bounds:{minX,maxX,minY,maxY}};
+}
+function drawSilhouette(canvasId,sil){
+  const c=document.getElementById(canvasId), ctx=c.getContext('2d');
+  c.width=c.clientWidth*devicePixelRatio; c.height=c.clientHeight*devicePixelRatio;
+  ctx.clearRect(0,0,c.width,c.height); ctx.fillStyle='#050914'; ctx.fillRect(0,0,c.width,c.height);
+  ctx.strokeStyle='rgba(72,209,255,.86)'; ctx.lineWidth=1.2*devicePixelRatio;
+  const s=Math.min(c.width,c.height)*0.82;
+  const cx=c.width/2, cy=c.height/2;
+  ctx.beginPath();
+  for(const [a,b] of sil.lines){ctx.moveTo(cx+a[0]*s,cy-a[1]*s);ctx.lineTo(cx+b[0]*s,cy-b[1]*s)}
+  ctx.stroke();
+}
+
+document.getElementById('saveBtn').onclick=()=>{
+  const partNo=partNoEl.value.trim(); if(!partNo){alert('品番を入れてください');return;}
+  if(!current.dataUrl){alert('STLを読み込んでください');return;}
+  const db=loadDB();
+  db[partNo]={partNo,memo:memoEl.value.trim(),fileName:current.fileName,dataUrl:current.dataUrl,top:current.top,side:current.side,updatedAt:new Date().toISOString()};
+  saveDB(db); setStatus(`登録OK：${partNo}\n※同じブラウザのlocalStorageに保存しました。`);
+};
+
+document.getElementById('exportBtn').onclick=()=>{
+  const blob=new Blob([JSON.stringify(loadDB(),null,2)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='vision-master.json'; a.click(); URL.revokeObjectURL(a.href);
+};
+document.getElementById('importInput').onchange=async e=>{
+  const file=e.target.files?.[0]; if(!file)return;
+  const db=JSON.parse(await file.text()); saveDB(db); setStatus('マスターJSON読込OK');
+};
+document.getElementById('clearAllBtn').onclick=()=>{if(confirm('全マスターを削除しますか？')){localStorage.removeItem(DB_KEY);renderList();}};
+function renderList(){
+  const list=document.getElementById('list'); list.innerHTML=''; const db=loadDB();
+  for(const k of Object.keys(db).sort()){
+    const div=document.createElement('div'); div.className='item';
+    div.innerHTML=`<div><b>${k}</b><br><small>${db[k].memo||''} / ${db[k].fileName||''}</small></div>`;
+    const btn=document.createElement('button'); btn.className='danger'; btn.textContent='削除'; btn.onclick=()=>{const d=loadDB();delete d[k];saveDB(d)};
+    div.appendChild(btn); list.appendChild(div);
+  }
+}
+renderList();
+</script>
+</body>
+</html>
