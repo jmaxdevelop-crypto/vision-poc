@@ -1,29 +1,22 @@
 <!doctype html>
-<html lang="ja">
-<head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Vision PoC Inspect v4</title>
+<html lang="ja"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Vision PoC Inspect v5</title>
 <style>
-*{box-sizing:border-box} body{margin:0;background:#020712;color:#fff;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;overflow:hidden}.topbar{position:fixed;z-index:5;top:0;left:0;right:0;padding:12px;background:rgba(2,7,18,.8);display:flex;gap:8px;align-items:center}input,button,select{font:inherit;padding:10px;border-radius:10px;border:1px solid #34507f}input,select{background:#071022;color:#fff;min-width:120px}button{background:#35d8ff;color:#001123;font-weight:900;border:0}.stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#000}video{width:100%;height:100%;object-fit:cover}.overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}.overlay img{max-width:86vw;max-height:72vh;opacity:.55;filter:drop-shadow(0 0 6px #35d8ff)}.hud{position:fixed;left:12px;right:12px;bottom:12px;z-index:6;background:rgba(2,7,18,.82);border:1px solid #28406f;border-radius:16px;padding:14px;text-align:center}.mode{font-size:28px;font-weight:900}.score{font-size:18px;color:#bcd0ff}.okFlash{position:fixed;inset:0;z-index:10;display:none;align-items:center;justify-content:center;font-size:96px;font-weight:1000;background:rgba(0,255,100,.55)}.final{background:rgba(0,255,100,.72)}
-</style>
-</head>
+*{box-sizing:border-box}body{margin:0;background:#020711;color:#eef6ff;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;overflow:hidden}.top{position:fixed;top:0;left:0;right:0;z-index:5;background:rgba(3,8,18,.86);backdrop-filter:blur(8px);padding:10px;display:flex;gap:8px;align-items:center}input,select,button{padding:12px;border-radius:12px;border:1px solid #31517e;background:#071226;color:#fff;font-size:16px}button{background:#24c8ff;color:#001225;font-weight:900;border:0}.stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#000}video{width:100%;height:100%;object-fit:cover}.overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}.overlay img{max-width:86vw;max-height:72vh;opacity:.58;filter:drop-shadow(0 0 8px #00d9ff)}.hud{position:fixed;left:12px;bottom:12px;z-index:6;background:rgba(3,8,18,.75);border:1px solid #29436d;border-radius:16px;padding:12px;min-width:260px}.phase{font-size:24px;font-weight:900;color:#35dcff}.score{margin-top:4px;color:#cfe0ff}.okflash{position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:20;font-size:110px;font-weight:1000;background:rgba(0,255,90,.55);color:#fff}.small{font-size:12px;color:#9fb4d9}.file{font-size:13px}.hidden{display:none}</style></head>
 <body>
-<div class="topbar"><select id="partSelect"></select><button id="camBtn">カメラ起動</button><label style="font-size:13px">JSON<input id="jsonInput" type="file" accept=".json" style="width:170px"></label><button id="manualOk">手動OK</button></div>
-<div class="stage"><video id="cam" autoplay playsinline muted></video><div class="overlay"><img id="cad"></div></div>
-<div class="hud"><div id="mode" class="mode">上面検査</div><div id="score" class="score">品番を選択して開始</div></div><div id="flash" class="okFlash">OK</div>
+<div class="top"><select id="partSelect"><option value="">品番選択</option></select><input id="jsonInput" class="file" type="file" accept=".json,application/json"><button id="camBtn">カメラ起動</button><button id="manualBtn">手動OK</button></div>
+<div class="stage"><video id="video" autoplay playsinline muted></video><div class="overlay"><img id="cadImg"></div></div>
+<div class="hud"><div class="phase" id="phase">上面検査</div><div class="score" id="score">マスター未選択</div><div class="small">PoC: 現在はCAD線画オーバーレイ＋手動/簡易自動OK準備版</div></div><div class="okflash" id="okflash">OK</div>
 <script>
-const DB_KEY='visionPocMasters.v4'; const el=id=>document.getElementById(id); let db={}, part=null, phase='top', stream=null;
-function getDB(){try{return JSON.parse(localStorage.getItem(DB_KEY)||'{}')}catch{return {}}}
-function loadDB(){db=getDB(); const sel=el('partSelect'); sel.innerHTML=''; Object.keys(db).forEach(k=>{const o=document.createElement('option');o.value=k;o.textContent=k;sel.appendChild(o)}); if(sel.options.length){selectPart(sel.value)} else el('score').textContent='マスター未登録。master.htmlで登録、またはJSON読込。'}
-function selectPart(k){part=db[k]; phase='top'; updateOverlay();}
-function updateOverlay(){if(!part)return; el('cad').src=phase==='top'?part.top:part.side; el('mode').textContent=phase==='top'?'上面検査':'側面検査'; el('score').textContent=(part.partNo||'')+' / CAD線に実物を合わせてください';}
-el('partSelect').onchange=e=>selectPart(e.target.value);
-el('camBtn').onclick=async()=>{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:1920},height:{ideal:1080}},audio:false}); el('cam').srcObject=stream;};
-el('manualOk').onclick=passPhase;
-el('jsonInput').addEventListener('change',async e=>{const f=e.target.files?.[0]; if(!f)return; localStorage.setItem(DB_KEY,await f.text()); loadDB();});
-function passPhase(){ if(phase==='top'){flash('上面OK'); phase='side'; updateOverlay();} else {flash('最終OK',true);} }
-function flash(text,final=false){const f=el('flash');f.textContent=text;f.className='okFlash'+(final?' final':'');f.style.display='flex';setTimeout(()=>f.style.display='none',final?2200:900);}
+const DB_KEY='visionPocMasters.render.v5'; const $=id=>document.getElementById(id); let db={}, current=null, phase='top';
+function loadDB(){try{db=JSON.parse(localStorage.getItem(DB_KEY)||'{}')}catch(e){db={}} renderSelect();}
+function renderSelect(){ const sel=$('partSelect'); sel.innerHTML='<option value="">品番選択</option>'+Object.keys(db).map(k=>`<option value="${k}">${k}</option>`).join('');}
+function setPart(k){current=db[k]; phase='top'; updateOverlay();}
+function updateOverlay(){ if(!current){$('score').textContent='マスター未選択';return} $('phase').textContent=phase==='top'?'上面検査':'側面検査'; $('cadImg').src=phase==='top'?current.top:current.side; $('score').textContent=current.partNo+' / '+(phase==='top'?'上面を合わせてください':'側面を合わせてください');}
+function flash(text){const o=$('okflash'); o.textContent=text; o.style.display='flex'; setTimeout(()=>o.style.display='none',900);}
+function ok(){ if(!current)return; if(phase==='top'){flash('上面OK'); phase='side'; setTimeout(updateOverlay,800);} else {flash('最終OK'); $('score').textContent=current.partNo+' / 検査完了';}}
+$('partSelect').onchange=e=>setPart(e.target.value);
+$('manualBtn').onclick=ok;
+$('jsonInput').addEventListener('change',async e=>{const f=e.target.files?.[0]; if(!f)return; db=JSON.parse(await f.text()); localStorage.setItem(DB_KEY,JSON.stringify(db)); renderSelect(); $('score').textContent='JSON読込OK';});
+$('camBtn').onclick=async()=>{try{const s=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:1920},height:{ideal:1080}},audio:false}); $('video').srcObject=s;}catch(e){alert('カメラ起動失敗: '+e.message)}};
 loadDB();
-</script>
-</body>
-</html>
+</script></body></html>
