@@ -1,118 +1,80 @@
 <!doctype html>
-<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Vision PoC Master v13</title>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Vision PoC Master v15 Hybrid</title>
 <style>
-:root{--bg:#071225;--card:#101c34;--line:#29436d;--cyan:#31d7ff;--txt:#eef6ff;--muted:#9fb4d9;--red:#ff4268;--yellow:#ffe35b;--green:#3dff9b}
-*{box-sizing:border-box}body{margin:0;background:linear-gradient(135deg,#071225,#111b34);color:var(--txt);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}header{padding:16px 22px;border-bottom:1px solid #20375f;background:#081226cc;position:sticky;top:0;z-index:5}h1{margin:0;font-size:22px}.sub{color:var(--muted);font-size:13px;margin-top:4px}main{display:grid;grid-template-columns:420px 1fr;gap:18px;padding:18px;max-width:1700px;margin:auto}.card{background:rgba(16,28,52,.94);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 12px 30px rgba(0,0,0,.25)}label{display:block;color:#bcd0f7;font-size:13px;margin:12px 0 6px}input,select{width:100%;padding:12px 14px;border-radius:13px;border:1px solid #31517e;background:#071226;color:var(--txt);font-size:16px}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.drop{border:2px dashed #6d8dd0;border-radius:18px;height:136px;display:flex;align-items:center;justify-content:center;text-align:center;color:#cfe0ff;margin-top:14px;background:#17223c}.drop.drag{background:#22365f;border-color:var(--cyan)}button{width:100%;border:0;border-radius:14px;padding:12px 14px;margin-top:10px;font-weight:800;font-size:15px;color:#001225;background:linear-gradient(90deg,#2aa7ff,#39e0ff);cursor:pointer}button.secondary{background:#26395f;color:#eef6ff}button.danger{background:#55273a;color:#fff}button.good{background:linear-gradient(90deg,#30ff91,#75ffd4)}button.active{background:linear-gradient(90deg,#ffbd3c,#ffeb72);color:#201000;box-shadow:0 0 20px rgba(255,190,60,.35)}.status{margin-top:10px;color:#bcd0f7;font-size:13px;white-space:pre-line}.previewGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.canvasWrap{position:relative;background:#030812;border:1px solid #27436f;border-radius:16px;padding:10px;overflow:hidden}.canvasWrap:hover{border-color:#4edfff}.canvasWrap{cursor:crosshair}.canvasWrap.panning{cursor:grabbing}.zoomLayer{position:relative;transform-origin:center center}.canvasWrap canvas.base{width:100%;height:auto;background:#020711;border-radius:12px;display:block}.canvasWrap canvas.hover{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;border-radius:12px}.badge{position:absolute;left:18px;top:18px;background:#071226dd;border:1px solid #31517e;border-radius:999px;padding:7px 11px;font-size:12px;z-index:3}.zoomBadge{position:absolute;right:18px;top:18px;background:#071226dd;border:1px solid #31517e;border-radius:999px;padding:7px 11px;font-size:12px;z-index:3}.cap{text-align:center;color:#bcd0f7;margin-top:8px}.hint{font-size:12px;color:#9fb4d9;margin-top:6px}.cursorMsg{font-size:12px;color:#ffd98e;margin-top:8px}.pointsBox{max-height:260px;overflow:auto;border:1px solid #29436d;border-radius:12px;padding:8px;margin-top:8px}.pill{display:block;border:1px solid #31517e;border-radius:12px;padding:7px 9px;margin:4px 0;color:#dff8ff;background:#071226}.pill b{color:#fff}.list{margin-top:14px;border-top:1px solid #2a416b;padding-top:10px}.item{display:flex;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px solid #22365f;color:#d7e6ff}.smallbtn{width:auto;padding:7px 10px;font-size:12px;margin:0;border-radius:10px}.selectInfo{padding:10px;border:1px solid #51461d;background:#1e1a0b;border-radius:12px;margin-top:8px;color:#ffeaa0}.pointMark{position:absolute;width:22px;height:22px;border:3px solid var(--red);border-radius:50%;transform:translate(-50%,-50%);box-shadow:0 0 14px rgba(255,75,110,.8);pointer-events:none;z-index:4}@media(max-width:1100px){main{grid-template-columns:1fr;padding:12px}.previewGrid{grid-template-columns:1fr}}
-</style></head><body>
-<header><h1>Vision PoC Master v13 / 投影線画＋複数線分選択</h1><div class="sub">通常クリック＝閉ループ/連結線を選択。Shift＋クリック＝単線を複数追加/解除。Ctrl＋ホイール＝拡大縮小。ホイール長押しドラッグ＝パン。ESC＝選択解除、Enter＝登録確定。</div></header>
-<main><section class="card">
-<label>品番</label><input id="partNo" placeholder="例：BRKT-001-LH">
-<label>品名・メモ</label><input id="memo" placeholder="例：ブラケットLH 上面＋正面検査">
-<div class="row"><div><label>検査に使う側面</label><select id="sideChoice"><option value="front">正面</option><option value="side">側面</option></select></div><div><label>線画</label><select id="mode"><option value="edges">外形/折れ線エッジ</option><option value="wire">全メッシュ線</option></select></div></div>
-<label>線の太さ</label><select id="lineWidth"><option value="2">細い</option><option value="3" selected>標準</option><option value="5">太い</option></select>
-<div id="drop" class="drop">STLをここにドラッグ＆ドロップ<br>または下から選択</div><input id="fileInput" type="file" accept=".stl,model/stl">
-<button id="pointModeBtn" class="secondary">検査ポイント追加モード：OFF</button>
-<div id="pointHelp" class="hint">OFF中。ONにすると選択できます。Ctrl＋ホイールで拡大縮小。ホイール長押しドラッグでパン。</div>
-<div id="selectInfo" class="selectInfo">未選択</div>
-<div class="row"><button id="commitSelBtn" class="good">選択範囲を検査ポイント登録</button><button id="clearSelBtn" class="secondary">選択解除</button></div>
-<div id="points" class="pointsBox">検査ポイントなし</div>
-<button id="saveBtn" class="good">この品番で登録</button><button id="exportBtn" class="secondary">マスターJSONを書き出し</button>
-<label>マスターJSON読込</label><input id="importInput" type="file" accept=".json,application/json"><button id="clearBtn" class="danger">全マスター削除</button>
-<div id="status" class="status">未読込</div><div id="list" class="list"></div>
-</section><section class="card"><div class="previewGrid">
-<div class="canvasWrap" data-view="top"><span class="badge">上面</span><span class="zoomBadge" id="topZoom">100%</span><div class="zoomLayer" id="topLayer"><canvas class="base" id="topCanvas" width="760" height="760"></canvas><canvas class="hover" id="topHover" width="760" height="760"></canvas><div id="topPts"></div></div><div class="cap">上面</div><div class="cursorMsg" id="topHint">-</div></div>
-<div class="canvasWrap" data-view="front"><span class="badge">正面</span><span class="zoomBadge" id="frontZoom">100%</span><div class="zoomLayer" id="frontLayer"><canvas class="base" id="frontCanvas" width="760" height="760"></canvas><canvas class="hover" id="frontHover" width="760" height="760"></canvas><div id="frontPts"></div></div><div class="cap">正面</div><div class="cursorMsg" id="frontHint">-</div></div>
-<div class="canvasWrap" data-view="side"><span class="badge">側面</span><span class="zoomBadge" id="sideZoom">100%</span><div class="zoomLayer" id="sideLayer"><canvas class="base" id="sideCanvas" width="760" height="760"></canvas><canvas class="hover" id="sideHover" width="760" height="760"></canvas><div id="sidePts"></div></div><div class="cap">側面</div><div class="cursorMsg" id="sideHint">-</div></div>
-</div></section></main>
+:root{--bg:#071225;--card:#101c34;--line:#29436d;--cyan:#31d7ff;--txt:#eef6ff;--muted:#9fb4d9;--ok:#27f58a;--warn:#ffe45e;--bad:#ff516b}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(135deg,#071225,#111b34);color:var(--txt);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}header{padding:16px 22px;border-bottom:1px solid #20375f;background:#081226cc;position:sticky;top:0;z-index:5}h1{margin:0;font-size:22px}.sub{color:var(--muted);font-size:13px;margin-top:4px}main{display:grid;grid-template-columns:420px 1fr;gap:18px;padding:18px;max-width:1500px;margin:auto}.card{background:rgba(16,28,52,.94);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 12px 30px rgba(0,0,0,.25)}label{display:block;color:#bcd0f7;font-size:13px;margin:12px 0 6px}input,select{width:100%;padding:12px 14px;border-radius:13px;border:1px solid #31517e;background:#071226;color:var(--txt);font-size:16px}button{width:100%;border:0;border-radius:14px;padding:13px 15px;margin-top:12px;font-weight:800;font-size:16px;color:#001225;background:linear-gradient(90deg,#2aa7ff,#39e0ff);cursor:pointer}button.secondary{background:#26395f;color:#eef6ff}button.danger{background:#55273a;color:#fff}button.active{background:linear-gradient(90deg,#ffe45e,#ffb72a);color:#1b1200}.tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}.tabs button{margin:0}.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}.drop{border:2px dashed #6d8dd0;border-radius:16px;min-height:110px;display:flex;align-items:center;justify-content:center;text-align:center;color:#cfe0ff;margin-top:12px;background:#17223c}.drop.drag{background:#22365f;border-color:var(--cyan)}.status{margin-top:10px;color:#bcd0f7;font-size:13px;white-space:pre-line}.previewGrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.canvasWrap{position:relative;background:#030812;border:1px solid #27436f;border-radius:16px;padding:8px;overflow:hidden;min-height:520px;display:flex;align-items:center;justify-content:center}.canvasWrap canvas{background:#020711;border-radius:12px;display:block;max-width:100%;max-height:76vh}.cap{text-align:center;color:#bcd0f7;margin-top:8px}.badge{display:inline-block;border:1px solid #355783;background:#081226;border-radius:999px;padding:8px 12px;margin:0 6px 10px 0;color:#dff8ff}.list{margin-top:12px;border-top:1px solid #2a416b;padding-top:10px;max-height:230px;overflow:auto}.item{display:flex;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px solid #22365f;color:#d7e6ff}.smallbtn{width:auto;padding:7px 10px;font-size:12px;margin:0;border-radius:10px}.hidden{display:none!important}.hint{font-size:12px;color:#9fb4d9;line-height:1.6}.pill{font-size:12px;background:#071226;border:1px solid #31517e;border-radius:999px;padding:5px 9px;color:#bcd0f7}.pointList{margin-top:10px;font-size:13px}.point{padding:6px 8px;background:#071226;border:1px solid #26395f;border-radius:10px;margin-top:6px}.kbd{background:#020711;border:1px solid #365a8d;border-radius:6px;padding:1px 5px;color:#fff}@media(max-width:980px){main{grid-template-columns:1fr;padding:10px}.previewGrid{grid-template-columns:1fr}.canvasWrap{min-height:360px}}
+</style>
+</head>
+<body>
+<header><h1>Vision PoC Master v15 / CAD＋Teach ハイブリッド</h1><div class="sub">CAD(STL)も良品写真Teachも同じマスターに保存。Teachは矩形検査ポイント、CADは線画オーバーレイ用。</div></header>
+<main>
+<section class="card">
+<label>登録モード</label><div class="tabs"><button id="tabCad">CADモード</button><button id="tabTeach">Teach写真モード</button></div>
+<label>品番</label><input id="partNo" placeholder="例：BRKT-001-LH" />
+<label>品名・メモ</label><input id="memo" placeholder="例：上面＋正面、穴A/B検査" />
+<div id="cadBox">
+  <div class="drop" id="stlDrop">STLをドラッグ＆ドロップ<br>または下で選択</div>
+  <input id="stlInput" type="file" accept=".stl,model/stl" />
+  <div class="hint">CADモードはSTLから上面/正面の線画を生成。検査ポイントはTeach写真側の矩形登録が本命。</div>
+</div>
+<div id="teachBox" class="hidden">
+  <label>上面 良品写真</label><input id="topImgInput" type="file" accept="image/*" />
+  <label>正面 良品写真</label><input id="frontImgInput" type="file" accept="image/*" />
+  <div class="hint">写真上をドラッグして矩形選択 → 名前を入れて登録。<span class="kbd">Ctrl+ホイール</span>拡大、<span class="kbd">ホイール押しドラッグ</span>パン、<span class="kbd">ESC</span>選択解除。</div>
+</div>
+<label>表示/登録対象</label><div class="row"><button id="viewTop" class="secondary">上面</button><button id="viewFront" class="secondary">正面</button></div>
+<label>検査ポイント名</label><input id="pointName" placeholder="例：穴A / ナットB / 切欠きC" />
+<button id="addPointBtn">選択矩形を検査ポイント登録</button>
+<button id="clearSelBtn" class="secondary">選択解除（ESC）</button>
+<div id="points" class="pointList"></div>
+<button id="saveBtn">この品番で登録</button>
+<button id="exportBtn" class="secondary">マスターJSONを書き出し</button>
+<label>マスターJSON読込</label><input id="importInput" type="file" accept=".json,application/json" />
+<button id="clearBtn" class="danger">全マスター削除</button>
+<div id="status" class="status">未読込</div>
+<div id="list" class="list"></div>
+</section>
+<section class="card">
+<div><span class="badge" id="modeBadge">Teach</span><span class="badge" id="viewBadge">上面</span><span class="badge">矩形Teachポイント</span></div>
+<div class="previewGrid">
+<div><div class="canvasWrap"><canvas id="topCanvas" width="900" height="650"></canvas></div><div class="cap">上面</div></div>
+<div><div class="canvasWrap"><canvas id="frontCanvas" width="900" height="650"></canvas></div><div class="cap">正面</div></div>
+</div>
+</section>
+</main>
 <script type="module">
 import * as THREE from 'https://esm.sh/three@0.160.0';
 import { STLLoader } from 'https://esm.sh/three@0.160.0/examples/jsm/loaders/STLLoader.js';
-const DB_KEY='visionPocMasters.v13'; const LEGACY_KEYS=['visionPocMasters.v12','visionPocMasters.v11','visionPocMasters.v10','visionPocMasters.v9']; const $=id=>document.getElementById(id);
-const canvases={top:$('topCanvas'),front:$('frontCanvas'),side:$('sideCanvas')}; const hoverCanvases={top:$('topHover'),front:$('frontHover'),side:$('sideHover')}; const planes={top:'xy',front:'xz',side:'yz'};
-let current=null, pointMode=false, points=[], segments={top:[],front:[],side:[]}, zoom={top:1,front:1,side:1}, pan={top:{x:0,y:0},front:{x:0,y:0},side:{x:0,y:0}}; let pending=null; let panState=null;
-function getDB(){for(const k of [DB_KEY,...LEGACY_KEYS]){try{const v=localStorage.getItem(k); if(v) return JSON.parse(v)}catch(e){}} return {}}
-function setDB(db){localStorage.setItem(DB_KEY,JSON.stringify(db))} function log(s){$('status').textContent=s} function prevent(e){e.preventDefault();e.stopPropagation()}
-['dragenter','dragover','dragleave','drop'].forEach(ev=>window.addEventListener(ev,prevent,false)); $('drop').addEventListener('dragover',e=>{$('drop').classList.add('drag');prevent(e)}); $('drop').addEventListener('dragleave',e=>{$('drop').classList.remove('drag');prevent(e)}); $('drop').addEventListener('drop',e=>{prevent(e);$('drop').classList.remove('drag');const f=e.dataTransfer.files?.[0]; if(f)loadFile(f)}); $('fileInput').addEventListener('change',e=>{const f=e.target.files?.[0]; if(f)loadFile(f)});
-async function loadFile(file){log('STL読込中: '+file.name); try{const buf=await file.arrayBuffer(); const geom=new STLLoader().parse(buf); geom.computeVertexNormals(); geom.computeBoundingBox(); current={fileName:file.name,geometry:geom}; points=[]; pending=null; renderAll(); renderPoints(); drawAllHover(); log('STL読込OK: '+file.name+'\n通常クリック=閉ループ/連結、Shift+クリック=単線追加/解除。ESC=選択解除、Enter=登録。')}catch(err){console.error(err);log('STL読込エラー: '+err.message)}}
-function makeLineGeometry(g){ if($('mode').value==='wire') return new THREE.WireframeGeometry(g); let e=new THREE.EdgesGeometry(g,8); const count=e.getAttribute('position')?.count||0; if(count<2) e=new THREE.WireframeGeometry(g); return e }
-function projectPoint(x,y,z,plane){ if(plane==='xz')return[x,z]; if(plane==='yz')return[y,z]; return[x,y] }
-function drawProjection(view){ const canvas=canvases[view], geometry=current.geometry, plane=planes[view], ctx=canvas.getContext('2d'); const w=canvas.width,h=canvas.height,pad=56; ctx.fillStyle='#020711';ctx.fillRect(0,0,w,h); segments[view]=[]; const eg=makeLineGeometry(geometry), pos=eg.getAttribute('position'); if(!pos||pos.count<2){$(view+'Hint').textContent='線データなし';return}
- let pts=[]; for(let i=0;i<pos.count;i++) pts.push(projectPoint(pos.getX(i),pos.getY(i),pos.getZ(i),plane)); let minU=Infinity,maxU=-Infinity,minV=Infinity,maxV=-Infinity; for(const [u,v] of pts){minU=Math.min(minU,u);maxU=Math.max(maxU,u);minV=Math.min(minV,v);maxV=Math.max(maxV,v)} let spanU=maxU-minU, spanV=maxV-minV; if(spanU<1e-6)spanU=1; if(spanV<1e-6)spanV=1; const scale=Math.min((w-pad*2)/spanU,(h-pad*2)/spanV); const cx=(minU+maxU)/2, cy=(minV+maxV)/2; const map=([u,v])=>[w/2+(u-cx)*scale,h/2-(v-cy)*scale];
- ctx.strokeStyle='#31dcff'; ctx.lineWidth=Number($('lineWidth').value||3); ctx.lineCap='round'; ctx.lineJoin='round'; for(let i=0;i<pts.length;i+=2){const a=map(pts[i]),b=map(pts[i+1]); segments[view].push([a[0],a[1],b[0],b[1]]); ctx.beginPath();ctx.moveTo(a[0],a[1]);ctx.lineTo(b[0],b[1]);ctx.stroke()} $(view+'Hint').textContent='線分 '+segments[view].length+'本'}
-function renderAll(){if(!current)return; ['top','front','side'].forEach(drawProjection); renderPoints()} $('mode').addEventListener('change',()=>{renderAll();pending=null;drawAllHover()}); $('lineWidth').addEventListener('change',()=>{renderAll();drawAllHover()});
-function distToSeg(px,py,s){const[x1,y1,x2,y2]=s;const vx=x2-x1,vy=y2-y1,wx=px-x1,wy=py-y1,c1=vx*wx+vy*wy,c2=vx*vx+vy*vy;let t=c2?c1/c2:0;t=Math.max(0,Math.min(1,t));const x=x1+t*vx,y=y1+t*vy;return Math.hypot(px-x,py-y)}
-function findNearest(view,x,y){let best=-1,bd=18/zoom[view];segments[view].forEach((s,i)=>{const d=distToSeg(x,y,s);if(d<bd){bd=d;best=i}});return best}
-function keyPt(x,y){return Math.round(x/3)+','+Math.round(y/3)}
-function connectedSet(view,start){ if(start<0)return[]; const segs=segments[view]; const map=new Map(); segs.forEach((s,i)=>{const a=keyPt(s[0],s[1]),b=keyPt(s[2],s[3]); if(!map.has(a))map.set(a,[]); if(!map.has(b))map.set(b,[]); map.get(a).push(i); map.get(b).push(i)}); const seen=new Set([start]), stack=[start]; while(stack.length){const i=stack.pop(),s=segs[i]; for(const k of [keyPt(s[0],s[1]),keyPt(s[2],s[3])]){for(const ni of map.get(k)||[]){if(!seen.has(ni)&&seen.size<700){seen.add(ni);stack.push(ni)}}}} return [...seen] }
-function bboxFor(view,idxs){const ss=idxs.map(i=>segments[view][i]).filter(Boolean); let minX=Infinity,minY=Infinity,maxX=-Infinity,maxY=-Infinity; for(const s of ss){minX=Math.min(minX,s[0],s[2]);minY=Math.min(minY,s[1],s[3]);maxX=Math.max(maxX,s[0],s[2]);maxY=Math.max(maxY,s[1],s[3])} return {ss,bbox:{minX,minY,maxX,maxY},cx:(minX+maxX)/2,cy:(minY+maxY)/2} }
-function clearHover(view){const c=hoverCanvases[view];c.getContext('2d').clearRect(0,0,c.width,c.height)} function drawAllHover(){['top','front','side'].forEach(v=>drawHover(v,null))}
-function drawHover(view,preview){const c=hoverCanvases[view],ctx=c.getContext('2d');ctx.clearRect(0,0,c.width,c.height); if(pending&&pending.view===view) drawSelection(ctx,pending.indices.map(i=>segments[view][i]),'#ffe35b',7,true); if(preview&&preview.indices.length) drawSelection(ctx,preview.indices.map(i=>segments[view][i]),'#ff315c',6,false)}
-function drawSelection(ctx,ss,color,lw,box){ctx.strokeStyle=color;ctx.lineWidth=lw;ctx.lineCap='round';ctx.lineJoin='round';let minX=Infinity,minY=Infinity,maxX=-Infinity,maxY=-Infinity; for(const s of ss){if(!s)continue;ctx.beginPath();ctx.moveTo(s[0],s[1]);ctx.lineTo(s[2],s[3]);ctx.stroke(); minX=Math.min(minX,s[0],s[2]);minY=Math.min(minY,s[1],s[3]);maxX=Math.max(maxX,s[0],s[2]);maxY=Math.max(maxY,s[1],s[3])} if(box&&isFinite(minX)){ctx.strokeStyle='#fff16d';ctx.lineWidth=3;ctx.strokeRect(minX-8,minY-8,(maxX-minX)+16,(maxY-minY)+16)}}
-function canvasPoint(e,view){const canvas=canvases[view], r=canvas.getBoundingClientRect();return{x:(e.clientX-r.left)/r.width*canvas.width,y:(e.clientY-r.top)/r.height*canvas.height}}
-function updateSelectInfo(){ if(!pending){$('selectInfo').textContent='未選択';return} const name=pending.view==='top'?'上面':pending.view==='front'?'正面':'側面'; $('selectInfo').textContent=`選択中：${name} / 線分 ${pending.indices.length}本（${pending.mode}）\nShift＋クリックで単線を追加/解除。通常クリックで閉ループ/連結選択に置換。ESCで解除、Enterで登録。`; }
-function applyViewTransform(view){
-  const p=pan[view];
-  $(view+'Layer').style.transform=`translate(${p.x}px, ${p.y}px) scale(${zoom[view]})`;
-  $(view+'Zoom').textContent=Math.round(zoom[view]*100)+'%';
-}
-document.querySelectorAll('.canvasWrap').forEach(w=>{
- const view=w.dataset.view;
- applyViewTransform(view);
- w.addEventListener('wheel',e=>{
-  if(!e.ctrlKey)return;
-  prevent(e);
-  const dir=e.deltaY<0?1.12:1/1.12;
-  zoom[view]=Math.max(.5,Math.min(12,zoom[view]*dir));
-  applyViewTransform(view);
- });
- w.addEventListener('mousedown',e=>{
-  if(e.button!==1)return;
-  prevent(e);
-  panState={view,startX:e.clientX,startY:e.clientY,baseX:pan[view].x,baseY:pan[view].y};
-  w.classList.add('panning');
- });
- w.addEventListener('auxclick',e=>{ if(e.button===1) prevent(e); });
- w.addEventListener('mousemove',e=>{
-  if(panState&&panState.view===view){
-    prevent(e);
-    pan[view].x=panState.baseX+(e.clientX-panState.startX);
-    pan[view].y=panState.baseY+(e.clientY-panState.startY);
-    applyViewTransform(view);
-    $(view+'Hint').textContent='パン中';
-    return;
-  }
-  const p=canvasPoint(e,view), best=findNearest(view,p.x,p.y);
-  let idxs=[];
-  if(best>=0) idxs=e.shiftKey?[best]:connectedSet(view,best);
-  drawHover(view,{indices:idxs});
-  $(view+'Hint').textContent=(best>=0?(e.shiftKey?'単線候補':'閉ループ/連結候補'):'近くに線なし');
- });
- w.addEventListener('mouseleave',()=>{ if(!panState) drawHover(view,null); });
- w.addEventListener('click',e=>{
-  if(!pointMode || e.button!==0)return;
-  const p=canvasPoint(e,view), best=findNearest(view,p.x,p.y);
-  if(best<0){alert('近くに線がありません');return}
-  if(e.shiftKey){
-    if(!pending||pending.view!==view) pending={view,indices:[],mode:'単線複数'};
-    if(!pending.indices.includes(best)) pending.indices.push(best);
-    else pending.indices=pending.indices.filter(i=>i!==best);
-  } else {
-    pending={view,indices:connectedSet(view,best),mode:'閉ループ/連結'};
-  }
-  updateSelectInfo(); drawAllHover();
- });
-});
-document.addEventListener('mouseup',e=>{
- if(panState){
-  document.querySelectorAll('.canvasWrap').forEach(w=>w.classList.remove('panning'));
-  panState=null;
- }
-});
-$('pointModeBtn').onclick=()=>{pointMode=!pointMode;$('pointModeBtn').textContent='検査ポイント追加モード：'+(pointMode?'ON':'OFF');$('pointModeBtn').classList.toggle('active',pointMode);$('pointHelp').textContent=pointMode?'ON中：通常クリックで閉ループ/連結選択。Shift＋クリックで単線を複数追加。最後に登録ボタンで確定。':'OFF中。ONにすると選択できます。Ctrl＋ホイールで拡大縮小。ホイール長押しドラッグでパン。'};
-$('clearSelBtn').onclick=()=>{pending=null;updateSelectInfo();drawAllHover()}; $('commitSelBtn').onclick=commitSelection; function commitSelection(){if(!pending||!pending.indices.length){alert('選択範囲がありません');return} const view=pending.view, c=canvases[view]; const info=bboxFor(view,pending.indices); const name=prompt('検査ポイント名',view==='top'?'穴A':'重要部位'); if(!name)return; const type=prompt('種別（穴/ナット/切欠き/自由）','穴')||'自由'; points.push({view,name,type,tol:.055,selection:pending.mode,segments:info.ss.map(s=>s.map((v,i)=>i%2===0?v/c.width:v/c.height)),bbox:{minX:info.bbox.minX/c.width,minY:info.bbox.minY/c.height,maxX:info.bbox.maxX/c.width,maxY:info.bbox.maxY/c.height},x:info.cx/c.width,y:info.cy/c.height}); pending=null;updateSelectInfo();drawAllHover();renderPoints()} document.addEventListener('keydown',e=>{if(e.key==='Escape'){pending=null;updateSelectInfo();drawAllHover()} if(e.key==='Enter'&&pending&&pending.indices.length){e.preventDefault();commitSelection()}});
-function renderPoints(){['top','front','side'].forEach(v=>{$(v+'Pts').innerHTML=''}); points.forEach((p,i)=>{const el=document.createElement('div');el.className='pointMark';el.title=p.name;el.style.left=(p.x*100)+'%';el.style.top=(p.y*100)+'%';$(p.view+'Pts').appendChild(el)}); $('points').innerHTML=points.length?points.map((p,i)=>`<span class="pill"><b>${i+1}. ${p.view==='top'?'上面':p.view==='front'?'正面':'側面'}</b> / ${p.type} / ${p.name} / ${p.selection} / 線${p.segments?.length||0}本 <button class="smallbtn danger" data-i="${i}">削除</button></span>`).join(''):'検査ポイントなし'; document.querySelectorAll('button[data-i]').forEach(b=>b.onclick=()=>{points.splice(Number(b.dataset.i),1);renderPoints()}) }
-$('saveBtn').onclick=()=>{const partNo=$('partNo').value.trim(); if(!partNo){alert('品番を入れて');return} if(!current){alert('STLを読み込んで');return} const db=getDB(); db[partNo]={version:13,partNo,memo:$('memo').value.trim(),fileName:current.fileName,top:canvases.top.toDataURL('image/png'),front:canvases.front.toDataURL('image/png'),side:canvases.side.toDataURL('image/png'),sideChoice:$('sideChoice').value,points,createdAt:new Date().toISOString(),mode:$('mode').value}; try{setDB(db);log('登録OK: '+partNo+'\ninspect_render_v13.htmlで使えます。');renderList()}catch(e){console.error(e);alert('保存容量エラー。JSON書き出し運用にしてください。')}};
-$('exportBtn').onclick=()=>{const db=getDB();const blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='vision-master-v13.json';a.click();URL.revokeObjectURL(a.href)}; $('importInput').addEventListener('change',async e=>{const f=e.target.files?.[0];if(!f)return;const db=JSON.parse(await f.text());setDB(db);renderList();log('JSON読込OK')}); $('clearBtn').onclick=()=>{if(confirm('全マスター削除？')){localStorage.removeItem(DB_KEY);renderList();log('全削除しました')}};
-function renderList(){const db=getDB();const keys=Object.keys(db);$('list').innerHTML='<b>登録済み: '+keys.length+'件</b>'+keys.map(k=>`<div class="item"><span>${k}<br><small>${db[k].memo||''}</small></span><button class="smallbtn danger" data-k="${k}">削除</button></div>`).join('');document.querySelectorAll('button[data-k]').forEach(b=>b.onclick=()=>{const db=getDB();delete db[b.dataset.k];setDB(db);renderList()})} renderList(); updateSelectInfo();
-</script></body></html>
+const DB_KEY='visionPocMasters.hybrid.v15';
+const $=id=>document.getElementById(id); const status=$('status');
+let mode='teach', view='top';
+let data={type:'teach', partNo:'', memo:'', images:{top:null,front:null}, cad:{top:null,front:null}, points:{top:[],front:[]}};
+let state={top:{scale:1,panX:0,panY:0,select:null,img:null},front:{scale:1,panX:0,panY:0,select:null,img:null}};
+const canv={top:$('topCanvas'),front:$('frontCanvas')}; const ctx={top:canv.top.getContext('2d'),front:canv.front.getContext('2d')};
+function log(s){status.textContent=s} function getDB(){try{return JSON.parse(localStorage.getItem(DB_KEY)||'{}')}catch(e){return {}}} function setDB(db){localStorage.setItem(DB_KEY,JSON.stringify(db))}
+function prevent(e){e.preventDefault();e.stopPropagation()} ['dragenter','dragover','dragleave','drop'].forEach(ev=>window.addEventListener(ev,prevent,false));
+function setMode(m){mode=m;$('cadBox').classList.toggle('hidden',m!=='cad');$('teachBox').classList.toggle('hidden',m!=='teach');$('tabCad').classList.toggle('active',m==='cad');$('tabTeach').classList.toggle('active',m==='teach');$('modeBadge').textContent=m==='cad'?'CAD':'Teach'; data.type=m; drawAll()} $('tabCad').onclick=()=>setMode('cad'); $('tabTeach').onclick=()=>setMode('teach');
+function setView(v){view=v;$('viewTop').classList.toggle('active',v==='top');$('viewFront').classList.toggle('active',v==='front');$('viewBadge').textContent=v==='top'?'上面':'正面'} $('viewTop').onclick=()=>setView('top'); $('viewFront').onclick=()=>setView('front');
+setMode('teach'); setView('top');
+function loadImgFile(file,key){const r=new FileReader(); r.onload=()=>{const img=new Image(); img.onload=()=>{state[key].img=img; data.images[key]=r.result; state[key].scale=1;state[key].panX=0;state[key].panY=0; draw(key); log((key==='top'?'上面':'正面')+'写真読込OK: '+file.name)}; img.src=r.result}; r.readAsDataURL(file)}
+$('topImgInput').onchange=e=>{const f=e.target.files?.[0]; if(f) loadImgFile(f,'top')}; $('frontImgInput').onchange=e=>{const f=e.target.files?.[0]; if(f) loadImgFile(f,'front')};
+const stlDrop=$('stlDrop'); stlDrop.addEventListener('dragover',e=>{prevent(e);stlDrop.classList.add('drag')}); stlDrop.addEventListener('dragleave',e=>{prevent(e);stlDrop.classList.remove('drag')}); stlDrop.addEventListener('drop',e=>{prevent(e);stlDrop.classList.remove('drag'); const f=e.dataTransfer.files?.[0]; if(f) loadSTL(f)}); $('stlInput').onchange=e=>{const f=e.target.files?.[0]; if(f) loadSTL(f)};
+async function loadSTL(file){log('STL読込中: '+file.name); try{const buf=await file.arrayBuffer(); const geom=new STLLoader().parse(buf); geom.computeBoundingBox(); data.cad.top=renderProjectedEdges(geom,'top'); data.cad.front=renderProjectedEdges(geom,'front'); const ti=new Image(); ti.onload=()=>{state.top.img=ti; draw('top')}; ti.src=data.cad.top; const fi=new Image(); fi.onload=()=>{state.front.img=fi; draw('front')}; fi.src=data.cad.front; log('CAD線画生成OK: '+file.name)}catch(e){console.error(e);log('STLエラー: '+e.message)}}
+function renderProjectedEdges(geometry,v){const c=document.createElement('canvas'); c.width=900;c.height=650; const x=c.getContext('2d'); x.fillStyle='#020711';x.fillRect(0,0,c.width,c.height); const pos=geometry.attributes.position.array; let pts=[]; for(let i=0;i<pos.length;i+=9){for(let j=0;j<9;j+=3){const X=pos[i+j],Y=pos[i+j+1],Z=pos[i+j+2]; pts.push(v==='top'?[X,Y]:[X,Z]);}} let minX=Infinity,minY=Infinity,maxX=-Infinity,maxY=-Infinity; pts.forEach(p=>{minX=Math.min(minX,p[0]);maxX=Math.max(maxX,p[0]);minY=Math.min(minY,p[1]);maxY=Math.max(maxY,p[1])}); const sx=(c.width*0.82)/((maxX-minX)||1), sy=(c.height*0.82)/((maxY-minY)||1), s=Math.min(sx,sy); const tx=(c.width-(maxX-minX)*s)/2-minX*s, ty=(c.height+(maxY-minY)*s)/2+minY*s; function map(X,Y){return [X*s+tx, -Y*s+ty]} x.strokeStyle='#39e0ff';x.lineWidth=2;x.beginPath(); for(let i=0;i<pos.length;i+=9){let p=[]; for(let j=0;j<9;j+=3){const X=pos[i+j],Y=pos[i+j+1],Z=pos[i+j+2]; p.push(map(...(v==='top'?[X,Y]:[X,Z])))} x.moveTo(p[0][0],p[0][1]);x.lineTo(p[1][0],p[1][1]);x.lineTo(p[2][0],p[2][1]);x.closePath()} x.stroke(); return c.toDataURL('image/png')}
+function drawAll(){draw('top');draw('front');renderPoints()}
+function draw(key){const c=canv[key],x=ctx[key],s=state[key]; x.clearRect(0,0,c.width,c.height); x.fillStyle='#020711';x.fillRect(0,0,c.width,c.height); if(s.img){const fit=Math.min(c.width/s.img.width,c.height/s.img.height)*0.96*s.scale; const w=s.img.width*fit,h=s.img.height*fit; const ox=(c.width-w)/2+s.panX, oy=(c.height-h)/2+s.panY; s.draw={ox,oy,w,h,fit}; x.drawImage(s.img,ox,oy,w,h);} x.strokeStyle='rgba(255,228,94,.95)'; x.lineWidth=3; for(const p of data.points[key]){drawRect(x,p,'rgba(255,228,94,.95)',3)} if(s.select){drawRect(x,s.select,'rgba(255,81,107,.95)',4)} }
+function drawRect(x,r,color,lw){x.save();x.strokeStyle=color;x.lineWidth=lw;x.setLineDash([8,6]);x.strokeRect(r.x,r.y,r.w,r.h);x.setLineDash([]);x.font='18px system-ui';x.fillStyle=color;x.fillText(r.name||'選択',r.x+6,Math.max(22,r.y-8));x.restore()}
+function canvasMouse(c,e){const r=c.getBoundingClientRect();return {x:(e.clientX-r.left)*c.width/r.width,y:(e.clientY-r.top)*c.height/r.height}}
+for(const key of ['top','front']){const c=canv[key]; let dragging=false,panning=false,start=null; c.addEventListener('mousedown',e=>{setView(key); const p=canvasMouse(c,e); if(e.button===1){panning=true;start={x:e.clientX,y:e.clientY,px:state[key].panX,py:state[key].panY}; e.preventDefault();return} dragging=true; start=p; state[key].select={x:p.x,y:p.y,w:0,h:0,name:''}; draw(key)}); window.addEventListener('mousemove',e=>{if(panning){state[key].panX=start.px+(e.clientX-start.x);state[key].panY=start.py+(e.clientY-start.y);draw(key);return} if(dragging){const p=canvasMouse(c,e); state[key].select={x:Math.min(start.x,p.x),y:Math.min(start.y,p.y),w:Math.abs(p.x-start.x),h:Math.abs(p.y-start.y),name:''}; draw(key)}}); window.addEventListener('mouseup',()=>{dragging=false;panning=false}); c.addEventListener('wheel',e=>{if(e.ctrlKey){e.preventDefault(); const old=state[key].scale; state[key].scale=Math.max(.25,Math.min(8,old*(e.deltaY<0?1.12:.88))); draw(key)}},{passive:false});}
+function addPoint(){const key=view; const sel=state[key].select; if(!sel||sel.w<8||sel.h<8){alert('矩形をドラッグ選択して');return} const name=$('pointName').value.trim()||('検査点'+(data.points[key].length+1)); data.points[key].push({...sel,name,kind:'rect'}); state[key].select=null; $('pointName').value=''; draw(key); renderPoints()} $('addPointBtn').onclick=addPoint; $('clearSelBtn').onclick=()=>{state[view].select=null;draw(view)}; window.addEventListener('keydown',e=>{if(e.key==='Escape'){$('clearSelBtn').click()} if(e.key==='Enter'&&document.activeElement.tagName!=='INPUT')addPoint()});
+function renderPoints(){let html='<b>検査ポイント</b>'; for(const k of ['top','front']){html+=`<div class="pill">${k==='top'?'上面':'正面'} ${data.points[k].length}件</div>`; data.points[k].forEach((p,i)=>{html+=`<div class="point">${k==='top'?'上面':'正面'} / ${p.name} <button class="smallbtn danger" data-k="${k}" data-i="${i}">削除</button></div>`})} $('points').innerHTML=html; document.querySelectorAll('button[data-k]').forEach(b=>b.onclick=()=>{data.points[b.dataset.k].splice(+b.dataset.i,1);drawAll()})}
+$('saveBtn').onclick=()=>{const partNo=$('partNo').value.trim(); if(!partNo){alert('品番を入れて');return} data.partNo=partNo; data.memo=$('memo').value.trim(); data.type=mode; if(mode==='teach'&&!data.images.top){alert('Teachは最低でも上面写真を入れて');return} if(mode==='cad'&&!data.cad.top){alert('CADはSTLを入れて');return} const save=JSON.parse(JSON.stringify(data)); const db=getDB(); db[partNo]=save; try{setDB(db);log('登録OK: '+partNo);renderList()}catch(e){alert('保存容量エラー。JSON書き出し運用にしてください。');console.error(e)}};
+$('exportBtn').onclick=()=>{const db=getDB(); const blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='vision-master-v15.json'; a.click(); URL.revokeObjectURL(a.href)};
+$('importInput').onchange=async e=>{const f=e.target.files?.[0]; if(!f)return; const db=JSON.parse(await f.text()); setDB(db); renderList(); log('JSON読込OK')}; $('clearBtn').onclick=()=>{if(confirm('全マスター削除？')){localStorage.removeItem(DB_KEY);renderList();log('削除しました')}};
+function renderList(){const db=getDB(),ks=Object.keys(db); $('list').innerHTML='<b>登録済み: '+ks.length+'件</b>'+ks.map(k=>`<div class="item"><span>${k}<br><small>${db[k].type||''} ${db[k].memo||''}</small></span><button class="smallbtn danger" data-del="${k}">削除</button></div>`).join(''); document.querySelectorAll('button[data-del]').forEach(b=>b.onclick=()=>{const db=getDB();delete db[b.dataset.del];setDB(db);renderList()})} renderList(); drawAll();
+</script>
+</body></html>
