@@ -1,110 +1,53 @@
 <!doctype html>
-<html lang="ja">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Vision PoC Master v16 Hybrid</title>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Vision PoC Master v18 Edge Teach</title>
 <style>
 :root{--bg:#071225;--card:#101c34;--line:#29436d;--cyan:#31d7ff;--txt:#eef6ff;--muted:#9fb4d9;--ok:#27f58a;--warn:#ffe45e;--bad:#ff516b}
-*{box-sizing:border-box}body{margin:0;background:linear-gradient(135deg,#071225,#111b34);color:var(--txt);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}header{padding:16px 22px;border-bottom:1px solid #20375f;background:#081226cc;position:sticky;top:0;z-index:5}h1{margin:0;font-size:22px}.sub{color:var(--muted);font-size:13px;margin-top:4px}main{display:grid;grid-template-columns:420px 1fr;gap:18px;padding:18px;max-width:1500px;margin:auto}.card{background:rgba(16,28,52,.94);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 12px 30px rgba(0,0,0,.25)}label{display:block;color:#bcd0f7;font-size:13px;margin:12px 0 6px}input,select{width:100%;padding:12px 14px;border-radius:13px;border:1px solid #31517e;background:#071226;color:var(--txt);font-size:16px}button{width:100%;border:0;border-radius:14px;padding:13px 15px;margin-top:12px;font-weight:800;font-size:16px;color:#001225;background:linear-gradient(90deg,#2aa7ff,#39e0ff);cursor:pointer}button.secondary{background:#26395f;color:#eef6ff}button.danger{background:#55273a;color:#fff}button.active{background:linear-gradient(90deg,#ffe45e,#ffb72a);color:#1b1200}.tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}.tabs button{margin:0}.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}.drop{border:2px dashed #6d8dd0;border-radius:16px;min-height:110px;display:flex;align-items:center;justify-content:center;text-align:center;color:#cfe0ff;margin-top:12px;background:#17223c}.drop.drag{background:#22365f;border-color:var(--cyan)}.status{margin-top:10px;color:#bcd0f7;font-size:13px;white-space:pre-line}.previewGrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.canvasWrap{position:relative;background:#030812;border:1px solid #27436f;border-radius:16px;padding:8px;overflow:hidden;min-height:520px;display:flex;align-items:center;justify-content:center}.canvasWrap canvas{background:#020711;border-radius:12px;display:block;max-width:100%;max-height:76vh}.cap{text-align:center;color:#bcd0f7;margin-top:8px}.badge{display:inline-block;border:1px solid #355783;background:#081226;border-radius:999px;padding:8px 12px;margin:0 6px 10px 0;color:#dff8ff}.list{margin-top:12px;border-top:1px solid #2a416b;padding-top:10px;max-height:230px;overflow:auto}.item{display:flex;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px solid #22365f;color:#d7e6ff}.smallbtn{width:auto;padding:7px 10px;font-size:12px;margin:0;border-radius:10px}.hidden{display:none!important}.hint{font-size:12px;color:#9fb4d9;line-height:1.6}.pill{font-size:12px;background:#071226;border:1px solid #31517e;border-radius:999px;padding:5px 9px;color:#bcd0f7}.pointList{margin-top:10px;font-size:13px}.point{padding:6px 8px;background:#071226;border:1px solid #26395f;border-radius:10px;margin-top:6px}.kbd{background:#020711;border:1px solid #365a8d;border-radius:6px;padding:1px 5px;color:#fff}@media(max-width:980px){main{grid-template-columns:1fr;padding:10px}.previewGrid{grid-template-columns:1fr}.canvasWrap{min-height:360px}}
-</style>
-</head>
-<body>
-<header><h1>Vision PoC Master v16 / CAD＋Teach ハイブリッド</h1><div class="sub">CAD(STL)も良品写真Teachも同じマスターに保存。Teachは矩形検査ポイント、CADは線画オーバーレイ用。</div></header>
-<main>
-<section class="card">
-<label>登録モード</label><div class="tabs"><button id="tabCad">CADモード</button><button id="tabTeach">Teach写真モード</button></div>
-<label>品番</label><input id="partNo" placeholder="例：BRKT-001-LH" />
-<label>品名・メモ</label><input id="memo" placeholder="例：上面＋正面、穴A/B検査" />
-<div id="cadBox">
-  <div class="drop" id="stlDrop">STLをドラッグ＆ドロップ<br>または下で選択</div>
-  <input id="stlInput" type="file" accept=".stl,model/stl" />
-  <div class="hint">CADモードはSTLから上面/正面の線画を生成。検査ポイントはTeach写真側の矩形登録が本命。</div>
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(135deg,#071225,#111b34);color:var(--txt);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}header{padding:16px 22px;border-bottom:1px solid #20375f;background:#081226cc;position:sticky;top:0;z-index:5}h1{margin:0;font-size:22px}.sub{color:var(--muted);font-size:13px;margin-top:4px}main{display:grid;grid-template-columns:410px 1fr;gap:18px;padding:18px;max-width:1500px;margin:auto}.card{background:rgba(16,28,52,.94);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 12px 30px rgba(0,0,0,.25)}label{display:block;color:#bcd0f7;font-size:13px;margin:12px 0 6px}input,select{width:100%;padding:12px 14px;border-radius:13px;border:1px solid #31517e;background:#071226;color:var(--txt);font-size:16px}button{width:100%;border:0;border-radius:14px;padding:13px 15px;margin-top:12px;font-weight:800;font-size:16px;color:#001225;background:linear-gradient(90deg,#2aa7ff,#39e0ff);cursor:pointer}button.secondary{background:#26395f;color:#eef6ff}button.danger{background:#55273a;color:#fff}button.active{background:linear-gradient(90deg,#ffe45e,#ffb72a);color:#1b1200}.tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}.tabs button{margin:0}.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}.hint{font-size:12px;color:#9fb4d9;line-height:1.6}.status{margin-top:10px;color:#bcd0f7;font-size:13px;white-space:pre-line}.previewGrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.canvasWrap{position:relative;background:#030812;border:1px solid #27436f;border-radius:16px;padding:8px;overflow:hidden;min-height:520px;display:flex;align-items:center;justify-content:center}.canvasWrap canvas{background:#020711;border-radius:12px;display:block;max-width:100%;max-height:76vh;touch-action:none}.cap{text-align:center;color:#bcd0f7;margin-top:8px}.badge{display:inline-block;border:1px solid #355783;background:#081226;border-radius:999px;padding:8px 12px;margin:0 6px 10px 0;color:#dff8ff}.list{margin-top:12px;border-top:1px solid #2a416b;padding-top:10px;max-height:230px;overflow:auto}.item{display:flex;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px solid #22365f;color:#d7e6ff}.smallbtn{width:auto;padding:7px 10px;font-size:12px;margin:0;border-radius:10px}.hidden{display:none!important}.point{padding:6px 8px;background:#071226;border:1px solid #26395f;border-radius:10px;margin-top:6px;font-size:13px}.kbd{background:#020711;border:1px solid #365a8d;border-radius:6px;padding:1px 5px;color:#fff}@media(max-width:980px){main{grid-template-columns:1fr;padding:10px}.previewGrid{grid-template-columns:1fr}.canvasWrap{min-height:360px}}
+</style></head><body>
+<header><h1>Vision PoC Master v18 / エッジ特徴Teach</h1><div class="sub">矩形内の平均色ではなく、エッジ形状テンプレートを保存。顔を映してOK問題の対策版。</div></header>
+<main><section class="card">
+<label>登録モード</label><div class="tabs"><button id="tabTeach">Teach写真</button><button id="tabCad" class="secondary">CAD補助</button></div>
+<label>品番</label><input id="partNo" placeholder="例：BRKT-001-LH">
+<label>品名・メモ</label><input id="memo" placeholder="例：上面＋正面、穴A/B検査">
+<div id="teachBox">
+<label>上面 良品写真</label><input id="topImgInput" type="file" accept="image/*">
+<label>正面 良品写真</label><input id="frontImgInput" type="file" accept="image/*">
+<div class="hint">写真上をドラッグして矩形選択 → 名前を入れて登録。登録時に矩形内の<b>エッジ特徴</b>をテンプレート化します。</div>
 </div>
-<div id="teachBox" class="hidden">
-  <label>上面 良品写真</label><input id="topImgInput" type="file" accept="image/*" />
-  <label>正面 良品写真</label><input id="frontImgInput" type="file" accept="image/*" />
-  <div class="hint">写真上をドラッグして矩形選択 → 名前を入れて登録。<span class="kbd">Ctrl+ホイール</span>拡大、<span class="kbd">ホイール押しドラッグ</span>パン、<span class="kbd">ESC</span>選択解除。</div>
-</div>
+<div id="cadBox" class="hidden"><div class="hint">CADモードは今回v18では表示用補助です。まずTeachのエッジ比較を優先。</div></div>
 <label>表示/登録対象</label><div class="row"><button id="viewTop" class="secondary">上面</button><button id="viewFront" class="secondary">正面</button></div>
-<label>検査ポイント名</label><input id="pointName" placeholder="例：穴A / ナットB / 切欠きC" />
-<button id="addPointBtn">選択矩形を検査ポイント登録</button>
+<label>検査ポイント名</label><input id="pointName" placeholder="例：穴A / ナットB / 切欠きC">
+<button id="addPointBtn">選択矩形をエッジ検査ポイント登録</button>
 <button id="clearSelBtn" class="secondary">選択解除（ESC）</button>
-<div id="points" class="pointList"></div>
+<div id="points"></div>
 <button id="saveBtn">この品番で登録</button>
 <button id="exportBtn" class="secondary">マスターJSONを書き出し</button>
-<label>マスターJSON読込</label><input id="importInput" type="file" accept=".json,application/json" />
+<label>マスターJSON読込</label><input id="importInput" type="file" accept=".json,application/json">
 <button id="clearBtn" class="danger">全マスター削除</button>
-<div id="status" class="status">未読込</div>
-<div id="list" class="list"></div>
-</section>
-<section class="card">
-<div><span class="badge" id="modeBadge">Teach</span><span class="badge" id="viewBadge">上面</span><span class="badge">矩形Teachポイント</span></div>
-<div class="previewGrid">
-<div><div class="canvasWrap"><canvas id="topCanvas" width="900" height="650"></canvas></div><div class="cap">上面</div></div>
-<div><div class="canvasWrap"><canvas id="frontCanvas" width="900" height="650"></canvas></div><div class="cap">正面</div></div>
-</div>
-</section>
-</main>
-<script type="module">
-import * as THREE from 'https://esm.sh/three@0.160.0';
-import { STLLoader } from 'https://esm.sh/three@0.160.0/examples/jsm/loaders/STLLoader.js';
-const DB_KEY='visionPocMasters.hybrid.v15';
+<div id="status" class="status">未読込</div><div id="list" class="list"></div>
+</section><section class="card"><div><span class="badge" id="modeBadge">Teach</span><span class="badge" id="viewBadge">上面</span><span class="badge">矩形エッジ特徴</span></div><div class="previewGrid"><div><div class="canvasWrap"><canvas id="topCanvas" width="900" height="650"></canvas></div><div class="cap">上面</div></div><div><div class="canvasWrap"><canvas id="frontCanvas" width="900" height="650"></canvas></div><div class="cap">正面</div></div></div></section></main>
+<script>
+const DB_KEY='visionPocMasters.hybrid.v18';
 const $=id=>document.getElementById(id); const status=$('status');
 let mode='teach', view='top';
-let data={type:'teach', partNo:'', memo:'', images:{top:null,front:null}, cad:{top:null,front:null}, points:{top:[],front:[]}};
-let state={top:{scale:1,panX:0,panY:0,select:null,img:null},front:{scale:1,panX:0,panY:0,select:null,img:null}};
-const canv={top:$('topCanvas'),front:$('frontCanvas')}; const ctx={top:canv.top.getContext('2d'),front:canv.front.getContext('2d')};
+let data={type:'teach-edge',partNo:'',memo:'',images:{top:null,front:null},points:{top:[],front:[]}};
+let state={top:{img:null,select:null,drag:false,start:null},front:{img:null,select:null,drag:false,start:null}};
+const canv={top:$('topCanvas'),front:$('frontCanvas')}, ctx={top:canv.top.getContext('2d'),front:canv.front.getContext('2d')};
 function log(s){status.textContent=s} function getDB(){try{return JSON.parse(localStorage.getItem(DB_KEY)||'{}')}catch(e){return {}}} function setDB(db){localStorage.setItem(DB_KEY,JSON.stringify(db))}
-function prevent(e){e.preventDefault();e.stopPropagation()} ['dragenter','dragover','dragleave','drop'].forEach(ev=>window.addEventListener(ev,prevent,false));
-function setMode(m){mode=m;$('cadBox').classList.toggle('hidden',m!=='cad');$('teachBox').classList.toggle('hidden',m!=='teach');$('tabCad').classList.toggle('active',m==='cad');$('tabTeach').classList.toggle('active',m==='teach');$('modeBadge').textContent=m==='cad'?'CAD':'Teach'; data.type=m; drawAll()} $('tabCad').onclick=()=>setMode('cad'); $('tabTeach').onclick=()=>setMode('teach');
-function setView(v){view=v;$('viewTop').classList.toggle('active',v==='top');$('viewFront').classList.toggle('active',v==='front');$('viewBadge').textContent=v==='top'?'上面':'正面'} $('viewTop').onclick=()=>setView('top'); $('viewFront').onclick=()=>setView('front');
-setMode('teach'); setView('top');
-function compressImage(img,maxSize=900,quality=0.65){
-  const scale=Math.min(1, maxSize/Math.max(img.naturalWidth,img.naturalHeight));
-  const w=Math.max(1,Math.round(img.naturalWidth*scale));
-  const h=Math.max(1,Math.round(img.naturalHeight*scale));
-  const c=document.createElement('canvas'); c.width=w; c.height=h;
-  const x=c.getContext('2d');
-  x.fillStyle='#fff'; x.fillRect(0,0,w,h);
-  x.drawImage(img,0,0,w,h);
-  return c.toDataURL('image/jpeg',quality);
-}
-function loadImgFile(file,key){
-  const r=new FileReader();
-  r.onload=()=>{
-    const original=new Image();
-    original.onload=()=>{
-      const compressed=compressImage(original,900,0.65);
-      const img=new Image();
-      img.onload=()=>{
-        state[key].img=img;
-        data.images[key]=compressed;
-        state[key].scale=1;state[key].panX=0;state[key].panY=0;
-        draw(key);
-        const kb=Math.round(compressed.length*0.75/1024);
-        log((key==='top'?'上面':'正面')+'写真読込OK: '+file.name+'\n保存用に長辺900px/JPEG圧縮しました（約'+kb+'KB）');
-      };
-      img.src=compressed;
-    };
-    original.src=r.result;
-  };
-  r.readAsDataURL(file);
-}
-$('topImgInput').onchange=e=>{const f=e.target.files?.[0]; if(f) loadImgFile(f,'top')}; $('frontImgInput').onchange=e=>{const f=e.target.files?.[0]; if(f) loadImgFile(f,'front')};
-const stlDrop=$('stlDrop'); stlDrop.addEventListener('dragover',e=>{prevent(e);stlDrop.classList.add('drag')}); stlDrop.addEventListener('dragleave',e=>{prevent(e);stlDrop.classList.remove('drag')}); stlDrop.addEventListener('drop',e=>{prevent(e);stlDrop.classList.remove('drag'); const f=e.dataTransfer.files?.[0]; if(f) loadSTL(f)}); $('stlInput').onchange=e=>{const f=e.target.files?.[0]; if(f) loadSTL(f)};
-async function loadSTL(file){log('STL読込中: '+file.name); try{const buf=await file.arrayBuffer(); const geom=new STLLoader().parse(buf); geom.computeBoundingBox(); data.cad.top=renderProjectedEdges(geom,'top'); data.cad.front=renderProjectedEdges(geom,'front'); const ti=new Image(); ti.onload=()=>{state.top.img=ti; draw('top')}; ti.src=data.cad.top; const fi=new Image(); fi.onload=()=>{state.front.img=fi; draw('front')}; fi.src=data.cad.front; log('CAD線画生成OK: '+file.name)}catch(e){console.error(e);log('STLエラー: '+e.message)}}
-function renderProjectedEdges(geometry,v){const c=document.createElement('canvas'); c.width=900;c.height=650; const x=c.getContext('2d'); x.fillStyle='#020711';x.fillRect(0,0,c.width,c.height); const pos=geometry.attributes.position.array; let pts=[]; for(let i=0;i<pos.length;i+=9){for(let j=0;j<9;j+=3){const X=pos[i+j],Y=pos[i+j+1],Z=pos[i+j+2]; pts.push(v==='top'?[X,Y]:[X,Z]);}} let minX=Infinity,minY=Infinity,maxX=-Infinity,maxY=-Infinity; pts.forEach(p=>{minX=Math.min(minX,p[0]);maxX=Math.max(maxX,p[0]);minY=Math.min(minY,p[1]);maxY=Math.max(maxY,p[1])}); const sx=(c.width*0.82)/((maxX-minX)||1), sy=(c.height*0.82)/((maxY-minY)||1), s=Math.min(sx,sy); const tx=(c.width-(maxX-minX)*s)/2-minX*s, ty=(c.height+(maxY-minY)*s)/2+minY*s; function map(X,Y){return [X*s+tx, -Y*s+ty]} x.strokeStyle='#39e0ff';x.lineWidth=2;x.beginPath(); for(let i=0;i<pos.length;i+=9){let p=[]; for(let j=0;j<9;j+=3){const X=pos[i+j],Y=pos[i+j+1],Z=pos[i+j+2]; p.push(map(...(v==='top'?[X,Y]:[X,Z])))} x.moveTo(p[0][0],p[0][1]);x.lineTo(p[1][0],p[1][1]);x.lineTo(p[2][0],p[2][1]);x.closePath()} x.stroke(); return c.toDataURL('image/png')}
-function drawAll(){draw('top');draw('front');renderPoints()}
-function draw(key){const c=canv[key],x=ctx[key],s=state[key]; x.clearRect(0,0,c.width,c.height); x.fillStyle='#020711';x.fillRect(0,0,c.width,c.height); if(s.img){const fit=Math.min(c.width/s.img.width,c.height/s.img.height)*0.96*s.scale; const w=s.img.width*fit,h=s.img.height*fit; const ox=(c.width-w)/2+s.panX, oy=(c.height-h)/2+s.panY; s.draw={ox,oy,w,h,fit}; x.drawImage(s.img,ox,oy,w,h);} x.strokeStyle='rgba(255,228,94,.95)'; x.lineWidth=3; for(const p of data.points[key]){drawRect(x,p,'rgba(255,228,94,.95)',3)} if(s.select){drawRect(x,s.select,'rgba(255,81,107,.95)',4)} }
-function drawRect(x,r,color,lw){x.save();x.strokeStyle=color;x.lineWidth=lw;x.setLineDash([8,6]);x.strokeRect(r.x,r.y,r.w,r.h);x.setLineDash([]);x.font='18px system-ui';x.fillStyle=color;x.fillText(r.name||'選択',r.x+6,Math.max(22,r.y-8));x.restore()}
-function canvasMouse(c,e){const r=c.getBoundingClientRect();return {x:(e.clientX-r.left)*c.width/r.width,y:(e.clientY-r.top)*c.height/r.height}}
-for(const key of ['top','front']){const c=canv[key]; let dragging=false,panning=false,start=null; c.addEventListener('mousedown',e=>{setView(key); const p=canvasMouse(c,e); if(e.button===1){panning=true;start={x:e.clientX,y:e.clientY,px:state[key].panX,py:state[key].panY}; e.preventDefault();return} dragging=true; start=p; state[key].select={x:p.x,y:p.y,w:0,h:0,name:''}; draw(key)}); window.addEventListener('mousemove',e=>{if(panning){state[key].panX=start.px+(e.clientX-start.x);state[key].panY=start.py+(e.clientY-start.y);draw(key);return} if(dragging){const p=canvasMouse(c,e); state[key].select={x:Math.min(start.x,p.x),y:Math.min(start.y,p.y),w:Math.abs(p.x-start.x),h:Math.abs(p.y-start.y),name:''}; draw(key)}}); window.addEventListener('mouseup',()=>{dragging=false;panning=false}); c.addEventListener('wheel',e=>{if(e.ctrlKey){e.preventDefault(); const old=state[key].scale; state[key].scale=Math.max(.25,Math.min(8,old*(e.deltaY<0?1.12:.88))); draw(key)}},{passive:false});}
-function addPoint(){const key=view; const sel=state[key].select; if(!sel||sel.w<8||sel.h<8){alert('矩形をドラッグ選択して');return} const name=$('pointName').value.trim()||('検査点'+(data.points[key].length+1)); data.points[key].push({...sel,name,kind:'rect'}); state[key].select=null; $('pointName').value=''; draw(key); renderPoints()} $('addPointBtn').onclick=addPoint; $('clearSelBtn').onclick=()=>{state[view].select=null;draw(view)}; window.addEventListener('keydown',e=>{if(e.key==='Escape'){$('clearSelBtn').click()} if(e.key==='Enter'&&document.activeElement.tagName!=='INPUT')addPoint()});
-function renderPoints(){let html='<b>検査ポイント</b>'; for(const k of ['top','front']){html+=`<div class="pill">${k==='top'?'上面':'正面'} ${data.points[k].length}件</div>`; data.points[k].forEach((p,i)=>{html+=`<div class="point">${k==='top'?'上面':'正面'} / ${p.name} <button class="smallbtn danger" data-k="${k}" data-i="${i}">削除</button></div>`})} $('points').innerHTML=html; document.querySelectorAll('button[data-k]').forEach(b=>b.onclick=()=>{data.points[b.dataset.k].splice(+b.dataset.i,1);drawAll()})}
-$('saveBtn').onclick=()=>{const partNo=$('partNo').value.trim(); if(!partNo){alert('品番を入れて');return} data.partNo=partNo; data.memo=$('memo').value.trim(); data.type=mode; if(mode==='teach'&&!data.images.top){alert('Teachは最低でも上面写真を入れて');return} if(mode==='cad'&&!data.cad.top){alert('CADはSTLを入れて');return} const save=JSON.parse(JSON.stringify(data)); const db=getDB(); db[partNo]=save; try{setDB(db);log('登録OK: '+partNo);renderList()}catch(e){alert('保存容量エラー。JSON書き出し運用にしてください。');console.error(e)}};
-$('exportBtn').onclick=()=>{const db=getDB(); const blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='vision-master-v15.json'; a.click(); URL.revokeObjectURL(a.href)};
-$('importInput').onchange=async e=>{const f=e.target.files?.[0]; if(!f)return; const db=JSON.parse(await f.text()); setDB(db); renderList(); log('JSON読込OK')}; $('clearBtn').onclick=()=>{if(confirm('全マスター削除？')){localStorage.removeItem(DB_KEY);renderList();log('削除しました')}};
-function renderList(){const db=getDB(),ks=Object.keys(db); $('list').innerHTML='<b>登録済み: '+ks.length+'件</b>'+ks.map(k=>`<div class="item"><span>${k}<br><small>${db[k].type||''} ${db[k].memo||''}</small></span><button class="smallbtn danger" data-del="${k}">削除</button></div>`).join(''); document.querySelectorAll('button[data-del]').forEach(b=>b.onclick=()=>{const db=getDB();delete db[b.dataset.del];setDB(db);renderList()})} renderList(); drawAll();
-</script>
-</body></html>
+function setMode(m){mode=m;$('teachBox').classList.toggle('hidden',m!=='teach');$('cadBox').classList.toggle('hidden',m!=='cad');$('tabTeach').classList.toggle('active',m==='teach');$('tabCad').classList.toggle('active',m==='cad');$('modeBadge').textContent=m==='teach'?'Teach':'CAD'; data.type=m==='teach'?'teach-edge':'cad-edge'} $('tabTeach').onclick=()=>setMode('teach'); $('tabCad').onclick=()=>setMode('cad');
+function setView(v){view=v;$('viewTop').classList.toggle('active',v==='top');$('viewFront').classList.toggle('active',v==='front');$('viewBadge').textContent=v==='top'?'上面':'正面'} $('viewTop').onclick=()=>setView('top'); $('viewFront').onclick=()=>setView('front'); setMode('teach');setView('top');
+function compressImage(img,maxSize=900,quality=0.72){const scale=Math.min(1,maxSize/Math.max(img.naturalWidth,img.naturalHeight));const w=Math.max(1,Math.round(img.naturalWidth*scale)),h=Math.max(1,Math.round(img.naturalHeight*scale));const c=document.createElement('canvas');c.width=900;c.height=650;const x=c.getContext('2d');x.fillStyle='#020711';x.fillRect(0,0,c.width,c.height);const s=Math.min(c.width/w,c.height/h);const dw=w*s,dh=h*s;x.drawImage(img,(c.width-dw)/2,(c.height-dh)/2,dw,dh);return c.toDataURL('image/jpeg',quality)}
+function loadImgFile(file,key){const r=new FileReader();r.onload=()=>{const original=new Image();original.onload=()=>{const url=compressImage(original,900,0.72);const img=new Image();img.onload=()=>{state[key].img=img;data.images[key]=url;draw(key);log((key==='top'?'上面':'正面')+'写真OK: '+file.name+'\n矩形をドラッグして検査ポイントを登録してください。')};img.src=url};original.src=r.result};r.readAsDataURL(file)}
+$('topImgInput').onchange=e=>{const f=e.target.files?.[0];if(f)loadImgFile(f,'top')};$('frontImgInput').onchange=e=>{const f=e.target.files?.[0];if(f)loadImgFile(f,'front')};
+function draw(key){const c=canv[key],x=ctx[key];x.clearRect(0,0,c.width,c.height);x.fillStyle='#020711';x.fillRect(0,0,c.width,c.height);const img=state[key].img;if(img)x.drawImage(img,0,0,c.width,c.height);for(const p of data.points[key]){x.strokeStyle='#27f58a';x.lineWidth=3;x.setLineDash([9,6]);x.strokeRect(p.x,p.y,p.w,p.h);x.setLineDash([]);x.fillStyle='#27f58a';x.font='18px system-ui';x.fillText(p.name,p.x+6,Math.max(22,p.y-6))}const s=state[key].select;if(s){x.strokeStyle='#ffe45e';x.lineWidth=4;x.setLineDash([7,5]);x.strokeRect(s.x,s.y,s.w,s.h);x.setLineDash([])}} function drawAll(){draw('top');draw('front');renderPoints()}
+function getPos(e,c){const r=c.getBoundingClientRect();return{x:(e.clientX-r.left)*c.width/r.width,y:(e.clientY-r.top)*c.height/r.height}}
+for(const key of ['top','front']){const c=canv[key];c.addEventListener('pointerdown',e=>{setView(key);const p=getPos(e,c);state[key].drag=true;state[key].start=p;state[key].select={x:p.x,y:p.y,w:1,h:1};draw(key)});c.addEventListener('pointermove',e=>{if(!state[key].drag)return;const p=getPos(e,c),s=state[key].start;state[key].select={x:Math.min(s.x,p.x),y:Math.min(s.y,p.y),w:Math.abs(p.x-s.x),h:Math.abs(p.y-s.y)};draw(key)});window.addEventListener('pointerup',()=>{state[key].drag=false})}
+function edgeTemplateFromRect(key,rect,size=48){const img=state[key].img;if(!img)return null;const src=document.createElement('canvas');src.width=900;src.height=650;const sx=src.getContext('2d');sx.drawImage(img,0,0,900,650);const small=document.createElement('canvas');small.width=size;small.height=size;const s=small.getContext('2d');s.drawImage(src,rect.x,rect.y,rect.w,rect.h,0,0,size,size);const id=s.getImageData(0,0,size,size);return makeEdgeVector(id,size,size)}
+function makeEdgeVector(imgData,w,h){const d=imgData.data,gray=new Float32Array(w*h);for(let i=0,j=0;i<d.length;i+=4,j++)gray[j]=0.299*d[i]+0.587*d[i+1]+0.114*d[i+2];const v=[];let sum=0;for(let y=1;y<h-1;y++){for(let x=1;x<w-1;x++){const i=y*w+x;const gx=-gray[i-w-1]-2*gray[i-1]-gray[i+w-1]+gray[i-w+1]+2*gray[i+1]+gray[i+w+1];const gy=-gray[i-w-1]-2*gray[i-w]-gray[i-w+1]+gray[i+w-1]+2*gray[i+w]+gray[i+w+1];const mag=Math.sqrt(gx*gx+gy*gy);const bit=mag>55?1:0;v.push(bit);sum+=bit}}return {w,h,threshold:55,density:sum/v.length,vec:v.join('')}}
+function addPoint(){const key=view,sel=state[key].select;if(!sel||sel.w<12||sel.h<12){alert('矩形をドラッグ選択して');return}const name=$('pointName').value.trim()||('検査点'+(data.points[key].length+1));const tpl=edgeTemplateFromRect(key,sel,48);if(!tpl){alert('写真を入れて');return}data.points[key].push({name,kind:'edge-rect',x:Math.round(sel.x),y:Math.round(sel.y),w:Math.round(sel.w),h:Math.round(sel.h),template:tpl});state[key].select=null;$('pointName').value='';drawAll();log(name+' を登録しました。エッジ密度 '+Math.round(tpl.density*100)+'%')} $('addPointBtn').onclick=addPoint; $('clearSelBtn').onclick=()=>{state[view].select=null;draw(view)};window.addEventListener('keydown',e=>{if(e.key==='Escape')$('clearSelBtn').click();if(e.key==='Enter'&&document.activeElement.tagName!=='INPUT')addPoint()});
+function renderPoints(){let html='<b>検査ポイント</b>';for(const k of ['top','front']){html+=`<div class="point">${k==='top'?'上面':'正面'}：${data.points[k].length}件</div>`;data.points[k].forEach((p,i)=>{html+=`<div class="point">${k==='top'?'上面':'正面'} / ${p.name} <button class="smallbtn danger" data-k="${k}" data-i="${i}">削除</button></div>`})}$('points').innerHTML=html;document.querySelectorAll('button[data-k]').forEach(b=>b.onclick=()=>{data.points[b.dataset.k].splice(+b.dataset.i,1);drawAll()})}
+$('saveBtn').onclick=()=>{const partNo=$('partNo').value.trim();if(!partNo){alert('品番を入れて');return}data.partNo=partNo;data.memo=$('memo').value.trim();if(!data.images.top){alert('最低でも上面写真を入れて');return}const db=getDB();db[partNo]=JSON.parse(JSON.stringify(data));try{setDB(db);log('登録OK: '+partNo);renderList()}catch(e){console.error(e);alert('保存容量エラー。登録点数/画像を減らすかJSON書き出し運用へ。')}};
+$('exportBtn').onclick=()=>{const blob=new Blob([JSON.stringify(getDB(),null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='vision-master-v18.json';a.click();URL.revokeObjectURL(a.href)};$('importInput').onchange=async e=>{const f=e.target.files?.[0];if(!f)return;setDB(JSON.parse(await f.text()));renderList();log('JSON読込OK')};$('clearBtn').onclick=()=>{if(confirm('全マスター削除？')){localStorage.removeItem(DB_KEY);renderList();log('削除しました')}};
+function renderList(){const db=getDB(),ks=Object.keys(db);$('list').innerHTML='<b>登録済み: '+ks.length+'件</b>'+ks.map(k=>`<div class="item"><span>${k}<br><small>${db[k].type||''} ${db[k].memo||''}</small></span><button class="smallbtn danger" data-del="${k}">削除</button></div>`).join('');document.querySelectorAll('button[data-del]').forEach(b=>b.onclick=()=>{const db=getDB();delete db[b.dataset.del];setDB(db);renderList()})}renderList();drawAll();
+</script></body></html>
