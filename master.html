@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Vision PoC Master v15 Hybrid</title>
+<title>Vision PoC Master v16 Hybrid</title>
 <style>
 :root{--bg:#071225;--card:#101c34;--line:#29436d;--cyan:#31d7ff;--txt:#eef6ff;--muted:#9fb4d9;--ok:#27f58a;--warn:#ffe45e;--bad:#ff516b}
 *{box-sizing:border-box}body{margin:0;background:linear-gradient(135deg,#071225,#111b34);color:var(--txt);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}header{padding:16px 22px;border-bottom:1px solid #20375f;background:#081226cc;position:sticky;top:0;z-index:5}h1{margin:0;font-size:22px}.sub{color:var(--muted);font-size:13px;margin-top:4px}main{display:grid;grid-template-columns:420px 1fr;gap:18px;padding:18px;max-width:1500px;margin:auto}.card{background:rgba(16,28,52,.94);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 12px 30px rgba(0,0,0,.25)}label{display:block;color:#bcd0f7;font-size:13px;margin:12px 0 6px}input,select{width:100%;padding:12px 14px;border-radius:13px;border:1px solid #31517e;background:#071226;color:var(--txt);font-size:16px}button{width:100%;border:0;border-radius:14px;padding:13px 15px;margin-top:12px;font-weight:800;font-size:16px;color:#001225;background:linear-gradient(90deg,#2aa7ff,#39e0ff);cursor:pointer}button.secondary{background:#26395f;color:#eef6ff}button.danger{background:#55273a;color:#fff}button.active{background:linear-gradient(90deg,#ffe45e,#ffb72a);color:#1b1200}.tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}.tabs button{margin:0}.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}.drop{border:2px dashed #6d8dd0;border-radius:16px;min-height:110px;display:flex;align-items:center;justify-content:center;text-align:center;color:#cfe0ff;margin-top:12px;background:#17223c}.drop.drag{background:#22365f;border-color:var(--cyan)}.status{margin-top:10px;color:#bcd0f7;font-size:13px;white-space:pre-line}.previewGrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.canvasWrap{position:relative;background:#030812;border:1px solid #27436f;border-radius:16px;padding:8px;overflow:hidden;min-height:520px;display:flex;align-items:center;justify-content:center}.canvasWrap canvas{background:#020711;border-radius:12px;display:block;max-width:100%;max-height:76vh}.cap{text-align:center;color:#bcd0f7;margin-top:8px}.badge{display:inline-block;border:1px solid #355783;background:#081226;border-radius:999px;padding:8px 12px;margin:0 6px 10px 0;color:#dff8ff}.list{margin-top:12px;border-top:1px solid #2a416b;padding-top:10px;max-height:230px;overflow:auto}.item{display:flex;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px solid #22365f;color:#d7e6ff}.smallbtn{width:auto;padding:7px 10px;font-size:12px;margin:0;border-radius:10px}.hidden{display:none!important}.hint{font-size:12px;color:#9fb4d9;line-height:1.6}.pill{font-size:12px;background:#071226;border:1px solid #31517e;border-radius:999px;padding:5px 9px;color:#bcd0f7}.pointList{margin-top:10px;font-size:13px}.point{padding:6px 8px;background:#071226;border:1px solid #26395f;border-radius:10px;margin-top:6px}.kbd{background:#020711;border:1px solid #365a8d;border-radius:6px;padding:1px 5px;color:#fff}@media(max-width:980px){main{grid-template-columns:1fr;padding:10px}.previewGrid{grid-template-columns:1fr}.canvasWrap{min-height:360px}}
 </style>
 </head>
 <body>
-<header><h1>Vision PoC Master v15 / CAD＋Teach ハイブリッド</h1><div class="sub">CAD(STL)も良品写真Teachも同じマスターに保存。Teachは矩形検査ポイント、CADは線画オーバーレイ用。</div></header>
+<header><h1>Vision PoC Master v16 / CAD＋Teach ハイブリッド</h1><div class="sub">CAD(STL)も良品写真Teachも同じマスターに保存。Teachは矩形検査ポイント、CADは線画オーバーレイ用。</div></header>
 <main>
 <section class="card">
 <label>登録モード</label><div class="tabs"><button id="tabCad">CADモード</button><button id="tabTeach">Teach写真モード</button></div>
@@ -60,7 +60,37 @@ function prevent(e){e.preventDefault();e.stopPropagation()} ['dragenter','dragov
 function setMode(m){mode=m;$('cadBox').classList.toggle('hidden',m!=='cad');$('teachBox').classList.toggle('hidden',m!=='teach');$('tabCad').classList.toggle('active',m==='cad');$('tabTeach').classList.toggle('active',m==='teach');$('modeBadge').textContent=m==='cad'?'CAD':'Teach'; data.type=m; drawAll()} $('tabCad').onclick=()=>setMode('cad'); $('tabTeach').onclick=()=>setMode('teach');
 function setView(v){view=v;$('viewTop').classList.toggle('active',v==='top');$('viewFront').classList.toggle('active',v==='front');$('viewBadge').textContent=v==='top'?'上面':'正面'} $('viewTop').onclick=()=>setView('top'); $('viewFront').onclick=()=>setView('front');
 setMode('teach'); setView('top');
-function loadImgFile(file,key){const r=new FileReader(); r.onload=()=>{const img=new Image(); img.onload=()=>{state[key].img=img; data.images[key]=r.result; state[key].scale=1;state[key].panX=0;state[key].panY=0; draw(key); log((key==='top'?'上面':'正面')+'写真読込OK: '+file.name)}; img.src=r.result}; r.readAsDataURL(file)}
+function compressImage(img,maxSize=900,quality=0.65){
+  const scale=Math.min(1, maxSize/Math.max(img.naturalWidth,img.naturalHeight));
+  const w=Math.max(1,Math.round(img.naturalWidth*scale));
+  const h=Math.max(1,Math.round(img.naturalHeight*scale));
+  const c=document.createElement('canvas'); c.width=w; c.height=h;
+  const x=c.getContext('2d');
+  x.fillStyle='#fff'; x.fillRect(0,0,w,h);
+  x.drawImage(img,0,0,w,h);
+  return c.toDataURL('image/jpeg',quality);
+}
+function loadImgFile(file,key){
+  const r=new FileReader();
+  r.onload=()=>{
+    const original=new Image();
+    original.onload=()=>{
+      const compressed=compressImage(original,900,0.65);
+      const img=new Image();
+      img.onload=()=>{
+        state[key].img=img;
+        data.images[key]=compressed;
+        state[key].scale=1;state[key].panX=0;state[key].panY=0;
+        draw(key);
+        const kb=Math.round(compressed.length*0.75/1024);
+        log((key==='top'?'上面':'正面')+'写真読込OK: '+file.name+'\n保存用に長辺900px/JPEG圧縮しました（約'+kb+'KB）');
+      };
+      img.src=compressed;
+    };
+    original.src=r.result;
+  };
+  r.readAsDataURL(file);
+}
 $('topImgInput').onchange=e=>{const f=e.target.files?.[0]; if(f) loadImgFile(f,'top')}; $('frontImgInput').onchange=e=>{const f=e.target.files?.[0]; if(f) loadImgFile(f,'front')};
 const stlDrop=$('stlDrop'); stlDrop.addEventListener('dragover',e=>{prevent(e);stlDrop.classList.add('drag')}); stlDrop.addEventListener('dragleave',e=>{prevent(e);stlDrop.classList.remove('drag')}); stlDrop.addEventListener('drop',e=>{prevent(e);stlDrop.classList.remove('drag'); const f=e.dataTransfer.files?.[0]; if(f) loadSTL(f)}); $('stlInput').onchange=e=>{const f=e.target.files?.[0]; if(f) loadSTL(f)};
 async function loadSTL(file){log('STL読込中: '+file.name); try{const buf=await file.arrayBuffer(); const geom=new STLLoader().parse(buf); geom.computeBoundingBox(); data.cad.top=renderProjectedEdges(geom,'top'); data.cad.front=renderProjectedEdges(geom,'front'); const ti=new Image(); ti.onload=()=>{state.top.img=ti; draw('top')}; ti.src=data.cad.top; const fi=new Image(); fi.onload=()=>{state.front.img=fi; draw('front')}; fi.src=data.cad.front; log('CAD線画生成OK: '+file.name)}catch(e){console.error(e);log('STLエラー: '+e.message)}}
