@@ -2,258 +2,280 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<title>CAD Vision PoC</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+<title>Vision PoC - CAD Line Overlay</title>
 <style>
-  *{box-sizing:border-box} body{margin:0;background:#05070b;color:#fff;font-family:Arial,'Hiragino Kaku Gothic ProN',Meiryo,sans-serif;overflow:hidden}
-  #app{width:100vw;height:100vh;position:relative;background:#070b12}
-  #topbar{position:absolute;z-index:20;top:0;left:0;right:0;height:74px;background:linear-gradient(180deg,rgba(0,0,0,.82),rgba(0,0,0,.35));display:flex;gap:10px;align-items:center;padding:10px}
-  input{height:46px;border:1px solid #34435c;border-radius:10px;background:#0c1420;color:#fff;font-size:18px;padding:0 12px;min-width:150px;flex:1}
-  button{height:46px;border:0;border-radius:10px;background:#174eff;color:#fff;font-weight:bold;font-size:14px;padding:0 12px}
-  button.secondary{background:#243246} button.warn{background:#a36b00}
-  #stage{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#0a0f18}
-  video,#silhouetteOverlay,#workCanvas{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
-  #silhouetteOverlay{pointer-events:none;opacity:.48;mix-blend-mode:screen;filter:drop-shadow(0 0 10px #00eaff)}
-  #workCanvas{display:none}
-  #drop{position:absolute;z-index:30;left:16px;right:16px;bottom:16px;height:110px;border:2px dashed #59708f;border-radius:18px;background:rgba(10,18,30,.82);display:flex;align-items:center;justify-content:center;text-align:center;color:#cbd7e8;font-size:18px;line-height:1.5}
-  #drop.ready{border-color:#28d97b;color:#d8ffe9;background:rgba(0,70,30,.55)}
-  #status{position:absolute;z-index:25;left:12px;right:12px;top:84px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
-  .card{background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:10px;font-size:14px}.big{font-size:22px;font-weight:900}.oktxt{color:#3cff8a}.ngtxt{color:#ff6b6b}.waittxt{color:#ffd166}
-  #meterWrap{position:absolute;z-index:25;left:14px;right:14px;bottom:140px;height:18px;background:rgba(255,255,255,.15);border-radius:99px;overflow:hidden;border:1px solid rgba(255,255,255,.25)}
-  #meter{height:100%;width:0%;background:linear-gradient(90deg,#ff4141,#ffd34a,#36ff86);transition:width .12s}
-  #fullOverlay{position:absolute;z-index:100;inset:0;display:none;align-items:center;justify-content:center;text-align:center;font-size:110px;font-weight:1000;letter-spacing:.08em;text-shadow:0 0 28px rgba(0,0,0,.55)}
-  #fullOverlay.ok{display:flex;background:rgba(0,230,90,.63)} #fullOverlay.ng{display:flex;background:rgba(255,0,0,.58)}
-  #preview{position:absolute;z-index:26;right:14px;bottom:166px;width:150px;height:150px;border:1px solid rgba(255,255,255,.25);border-radius:12px;background:#000;object-fit:contain}
-  .hidden{display:none!important}
+  :root{--bg:#0b0f14;--panel:#121922;--line:#00ff88;--warn:#ff3355;--txt:#f4f7fb;--muted:#8fa1b3;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--txt);font-family:Arial,"Hiragino Sans","Meiryo",sans-serif;overflow:hidden;}
+  #app{height:100vh;display:grid;grid-template-rows:auto 1fr auto;}
+  header{display:flex;gap:10px;align-items:center;padding:10px;background:#081018;border-bottom:1px solid #263445;flex-wrap:wrap;}
+  input,button{font-size:16px;padding:11px 14px;border-radius:8px;border:1px solid #3a4a5d;background:#fff;color:#111;}
+  button{cursor:pointer;font-weight:700;}
+  button.primary{background:#0b84ff;color:#fff;border-color:#0b84ff;}
+  button.ghost{background:#1a2532;color:#fff;}
+  .status{font-weight:700;padding:9px 12px;border-radius:999px;background:#1d2a38;color:#cde0f5;}
+  .status.ok{background:#063d25;color:#7cffb4;}
+  .status.ng{background:#3d0614;color:#ff9aac;}
+  main{position:relative;overflow:hidden;background:#05080c;}
+  video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#000;}
+  #overlayCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;}
+  #hud{position:absolute;left:12px;bottom:12px;background:rgba(0,0,0,.6);padding:12px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.15);min-width:240px;}
+  #score{font-size:34px;font-weight:900;letter-spacing:.03em;}
+  #drop{position:absolute;inset:18%;display:flex;align-items:center;justify-content:center;text-align:center;border:2px dashed #6e8194;border-radius:18px;background:rgba(8,16,24,.86);font-size:24px;font-weight:900;color:#dcecff;z-index:5;}
+  #drop.hide{display:none;}
+  #bigOverlay{position:fixed;inset:0;display:none;align-items:center;justify-content:center;font-size:18vw;font-weight:1000;z-index:20;color:#fff;text-shadow:0 8px 30px rgba(0,0,0,.5);}
+  #bigOverlay.ok{display:flex;background:rgba(0,220,80,.72);}
+  #bigOverlay.ng{display:flex;background:rgba(255,0,40,.72);}
+  footer{display:flex;gap:8px;align-items:center;padding:8px 10px;background:#081018;border-top:1px solid #263445;color:#9db0c4;font-size:13px;}
+  #hidden3d{display:none;}
 </style>
 </head>
 <body>
 <div id="app">
-  <div id="topbar">
+  <header>
     <input id="partNo" placeholder="品番入力" />
-    <button onclick="startCamera()">カメラ</button>
-    <button class="secondary" onclick="manualNext()">面切替</button>
-    <button class="warn" onclick="resetAll()">リセット</button>
-  </div>
+    <button class="primary" id="camBtn">カメラ起動</button>
+    <button class="ghost" id="topBtn">上面</button>
+    <button class="ghost" id="sideBtn">側面</button>
+    <button id="resetBtn">リセット</button>
+    <span id="phase" class="status">STL待ち</span>
+  </header>
 
-  <div id="stage">
+  <main id="stage">
     <video id="video" autoplay playsinline muted></video>
-    <canvas id="silhouetteOverlay"></canvas>
-    <canvas id="workCanvas"></canvas>
-  </div>
+    <canvas id="overlayCanvas"></canvas>
+    <div id="drop">STLをドラッグ＆ドロップ<br><small>上面・側面シルエットを自動生成します</small></div>
+    <div id="hud">
+      <div>VIEW: <b id="viewLabel">TOP</b></div>
+      <div id="score">--%</div>
+      <div>上面: <b id="topState">未</b> / 側面: <b id="sideState">未</b></div>
+      <div style="color:#9db0c4;margin-top:4px;">CAD線画に実物を合わせる</div>
+    </div>
+  </main>
 
-  <div id="status">
-    <div class="card"><div>検査面</div><div id="viewName" class="big waittxt">上面</div></div>
-    <div class="card"><div>一致率</div><div id="score" class="big">0%</div></div>
-    <div class="card"><div>上面</div><div id="topState" class="big waittxt">WAIT</div></div>
-    <div class="card"><div>側面</div><div id="sideState" class="big waittxt">WAIT</div></div>
-  </div>
-
-  <canvas id="preview"></canvas>
-  <div id="meterWrap"><div id="meter"></div></div>
-
-  <div id="drop">STLをここにドラッグ＆ドロップ<br>STLから上面・側面シルエットを自動生成します</div>
-  <div id="fullOverlay"></div>
+  <footer>
+    PoC v3 / STL→CAD線画 / 動画フレーム簡易マッチング / 上面OK後に側面へ自動遷移
+  </footer>
 </div>
-
-<script type="importmap">
-{
-  "imports": {
-    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
-    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
-  }
-}
-</script>
+<div id="bigOverlay"></div>
+<div id="hidden3d"></div>
 
 <script type="module">
-import * as THREE from 'three';
-import { STLLoader } from 'three/addons/loaders/STLLoader.js';
+import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
+import { STLLoader } from 'https://unpkg.com/three@0.160.0/examples/jsm/loaders/STLLoader.js';
 
-const drop = document.getElementById('drop');
 const video = document.getElementById('video');
-const overlay = document.getElementById('silhouetteOverlay');
-const octx = overlay.getContext('2d');
-const work = document.getElementById('workCanvas');
-const wctx = work.getContext('2d', { willReadFrequently:true });
-const preview = document.getElementById('preview');
-const pctx = preview.getContext('2d', { willReadFrequently:true });
+const overlay = document.getElementById('overlayCanvas');
+const octx = overlay.getContext('2d', { willReadFrequently:true });
+const drop = document.getElementById('drop');
+const phaseEl = document.getElementById('phase');
+const scoreEl = document.getElementById('score');
+const viewLabel = document.getElementById('viewLabel');
+const topState = document.getElementById('topState');
+const sideState = document.getElementById('sideState');
+const big = document.getElementById('bigOverlay');
 
 let silhouettes = { top:null, side:null };
 let currentView = 'top';
-let topOK=false, sideOK=false;
-let running=false;
-let lastOKAt=0;
-let threshold = 72; // PoC用。現場で調整
+let topOK = false, sideOK = false;
+let running = false;
+let lastOkTime = 0;
+let threshold = 0.62; // PoC用。現場では調整。
 
-window.startCamera = async function(){
+const work = document.createElement('canvas');
+work.width = 240; work.height = 180;
+const wctx = work.getContext('2d', { willReadFrequently:true });
+
+function setPhase(text, cls=''){
+  phaseEl.textContent = text;
+  phaseEl.className = 'status ' + cls;
+}
+
+function resize(){
+  overlay.width = overlay.clientWidth * devicePixelRatio;
+  overlay.height = overlay.clientHeight * devicePixelRatio;
+}
+window.addEventListener('resize', resize); resize();
+
+async function startCamera(){
   try{
-    const stream = await navigator.mediaDevices.getUserMedia({ video:{ facingMode:{ideal:'environment'}, width:{ideal:1920}, height:{ideal:1080}}, audio:false });
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video:{ facingMode:{ideal:'environment'}, width:{ideal:1920}, height:{ideal:1080} }, audio:false
+    });
     video.srcObject = stream;
     running = true;
-    fitCanvases();
-    loop();
-  }catch(e){ alert('カメラ起動失敗: ' + e.message); }
+    setPhase(silhouettes.top ? '上面検査中' : 'カメラOK/STL待ち');
+    requestAnimationFrame(loop);
+  }catch(e){
+    alert('カメラ起動失敗: ' + e.message);
+  }
 }
 
-window.manualNext = function(){
-  currentView = currentView === 'top' ? 'side' : 'top';
-  updateViewUI();
-  drawOverlay();
+document.getElementById('camBtn').onclick = startCamera;
+document.getElementById('topBtn').onclick = ()=>switchView('top');
+document.getElementById('sideBtn').onclick = ()=>switchView('side');
+document.getElementById('resetBtn').onclick = ()=>{
+  topOK=false; sideOK=false; topState.textContent='未'; sideState.textContent='未'; switchView('top');
+};
+
+function switchView(v){
+  currentView = v;
+  viewLabel.textContent = v==='top' ? 'TOP' : 'SIDE';
+  if(v==='top') setPhase(topOK ? '上面OK済' : '上面検査中');
+  if(v==='side') setPhase(sideOK ? '側面OK済' : '側面検査中');
 }
 
-window.resetAll = function(){
-  topOK=false; sideOK=false; currentView='top'; lastOKAt=0;
-  updateViewUI(); showFlash('', '');
-}
-
-drop.addEventListener('dragover', e=>{e.preventDefault(); drop.classList.add('ready');});
-drop.addEventListener('dragleave', ()=>drop.classList.remove('ready'));
+['dragenter','dragover'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault(); drop.style.borderColor='#00ff88';}));
+['dragleave','drop'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault(); drop.style.borderColor='#6e8194';}));
 drop.addEventListener('drop', async e=>{
-  e.preventDefault(); drop.classList.remove('ready');
+  e.preventDefault();
   const file = e.dataTransfer.files[0];
-  if(!file || !file.name.toLowerCase().endsWith('.stl')) return alert('STLファイルをドロップしてください');
-  drop.textContent = 'STL解析中… ' + file.name;
+  if(!file) return;
+  if(!file.name.toLowerCase().endsWith('.stl')){ alert('STLを入れてね'); return; }
+  setPhase('STL解析中');
   const buf = await file.arrayBuffer();
-  const loader = new STLLoader();
-  const geo = loader.parse(buf);
-  silhouettes.top = renderSilhouette(geo, 'top');
-  silhouettes.side = renderSilhouette(geo, 'side');
-  drop.classList.add('hidden');
-  currentView='top'; topOK=false; sideOK=false;
-  updateViewUI(); drawOverlay();
+  await buildSilhouettes(buf);
+  drop.classList.add('hide');
+  switchView('top');
+  setPhase('上面検査中');
 });
 
-function fitCanvases(){
-  const r = document.getElementById('stage').getBoundingClientRect();
-  [overlay, work].forEach(c=>{c.width=r.width; c.height=r.height;});
-  drawOverlay();
+async function buildSilhouettes(arrayBuffer){
+  const loader = new STLLoader();
+  const geo = loader.parse(arrayBuffer);
+  geo.computeBoundingBox();
+  geo.computeVertexNormals();
+  const mesh = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({color:0xffffff}));
+  centerAndScale(mesh);
+  silhouettes.top = renderSilhouette(mesh, 'top');
+  silhouettes.side = renderSilhouette(mesh, 'side');
 }
-window.addEventListener('resize', fitCanvases);
 
-function renderSilhouette(geometry, view){
-  geometry.computeBoundingBox();
-  const box = geometry.boundingBox;
+function centerAndScale(mesh){
+  const box = new THREE.Box3().setFromObject(mesh);
   const center = new THREE.Vector3(); box.getCenter(center);
+  mesh.position.sub(center);
   const size = new THREE.Vector3(); box.getSize(size);
-  geometry.translate(-center.x, -center.y, -center.z);
+  const maxDim = Math.max(size.x,size.y,size.z) || 1;
+  mesh.scale.setScalar(2.6/maxDim);
+}
 
+function renderSilhouette(mesh, view){
+  const W=512,H=512;
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x000000);
-  const mat = new THREE.MeshBasicMaterial({ color:0xffffff, side:THREE.DoubleSide });
-  const mesh = new THREE.Mesh(geometry.clone(), mat);
-  scene.add(mesh);
-
-  const maxDim = Math.max(size.x, size.y, size.z) || 1;
-  const cam = new THREE.OrthographicCamera(-maxDim*.65, maxDim*.65, maxDim*.65, -maxDim*.65, 0.1, maxDim*5);
-  if(view === 'top') cam.position.set(0,0,maxDim*2.2);       // XY投影
-  else cam.position.set(0,-maxDim*2.2,0);                    // XZ投影
+  const clone = mesh.clone();
+  scene.add(clone);
+  const renderer = new THREE.WebGLRenderer({alpha:true, antialias:false, preserveDrawingBuffer:true});
+  renderer.setSize(W,H,false);
+  renderer.setClearColor(0x000000,0);
+  const cam = new THREE.OrthographicCamera(-1.7,1.7,1.7,-1.7,0.1,10);
+  if(view==='top') cam.position.set(0,0,5);       // XY投影
+  else cam.position.set(0,-5,0);                 // XZ投影
   cam.lookAt(0,0,0);
-  cam.updateProjectionMatrix();
+  renderer.render(scene,cam);
 
-  const renderer = new THREE.WebGLRenderer({ antialias:true, preserveDrawingBuffer:true });
-  renderer.setSize(512,512);
-  renderer.render(scene, cam);
-
-  const c = document.createElement('canvas'); c.width=512; c.height=512;
-  const ctx = c.getContext('2d');
+  const c=document.createElement('canvas'); c.width=W; c.height=H;
+  const ctx=c.getContext('2d', {willReadFrequently:true});
   ctx.drawImage(renderer.domElement,0,0);
   renderer.dispose();
 
-  // シルエットを水色線＋半透明面に加工
-  const img = ctx.getImageData(0,0,512,512);
-  const data = img.data;
-  for(let i=0;i<data.length;i+=4){
-    const v=data[i];
-    if(v>10){ data[i]=0; data[i+1]=230; data[i+2]=255; data[i+3]=95; }
-    else { data[i+3]=0; }
+  // アルファ境界から輪郭線を作る
+  const img=ctx.getImageData(0,0,W,H);
+  const out=ctx.createImageData(W,H);
+  const d=img.data, od=out.data;
+  for(let y=1;y<H-1;y++){
+    for(let x=1;x<W-1;x++){
+      const i=(y*W+x)*4;
+      const a=d[i+3];
+      if(a<20) continue;
+      const edge = d[i-4+3]<20 || d[i+4+3]<20 || d[i-W*4+3]<20 || d[i+W*4+3]<20;
+      if(edge){ od[i]=0; od[i+1]=255; od[i+2]=136; od[i+3]=255; }
+    }
   }
-  ctx.putImageData(img,0,0);
-  // 外周っぽく太線補助
-  ctx.globalCompositeOperation='source-over';
-  ctx.strokeStyle='rgba(0,255,255,.95)'; ctx.lineWidth=3; ctx.strokeRect(8,8,496,496);
+  ctx.clearRect(0,0,W,H);
+  ctx.putImageData(out,0,0);
   return c;
 }
 
-function drawOverlay(){
-  octx.clearRect(0,0,overlay.width,overlay.height);
-  const s = silhouettes[currentView]; if(!s) return;
-  const scale = Math.min(overlay.width, overlay.height) * .78;
-  const x = (overlay.width-scale)/2;
-  const y = (overlay.height-scale)/2;
-  octx.drawImage(s,x,y,scale,scale);
-}
-
 function loop(){
-  if(!running) return;
+  resize();
+  drawOverlay();
+  if(running && silhouettes[currentView] && video.readyState>=2){
+    const score = matchFrame(silhouettes[currentView]);
+    scoreEl.textContent = Math.round(score*100) + '%';
+    if(score >= threshold && performance.now()-lastOkTime > 1800){
+      handleOK(score);
+    }
+  }
   requestAnimationFrame(loop);
-  if(!silhouettes[currentView] || video.readyState < 2) return;
-  const now = performance.now();
-  if(now - lastOKAt < 1200) return;
-  const score = calcMatchScore();
-  document.getElementById('score').textContent = score.toFixed(0)+'%';
-  document.getElementById('meter').style.width = Math.max(0,Math.min(100,score))+'%';
-  if(score >= threshold){
-    if(currentView === 'top' && !topOK){
-      topOK = true; updateViewUI(); flashOK('上面 OK');
-      lastOKAt = now;
-      setTimeout(()=>{ currentView='side'; updateViewUI(); drawOverlay(); }, 900);
-    } else if(currentView === 'side' && !sideOK){
-      sideOK = true; updateViewUI(); flashOK('最終 OK');
-      lastOKAt = now;
+}
+
+function drawOverlay(){
+  const W=overlay.width,H=overlay.height;
+  octx.clearRect(0,0,W,H);
+  const sil = silhouettes[currentView];
+  if(!sil) return;
+  const s = Math.min(W,H)*0.72;
+  const x=(W-s)/2, y=(H-s)/2;
+  octx.save();
+  octx.globalAlpha=0.78;
+  octx.drawImage(sil,x,y,s,s);
+  octx.restore();
+  // 中央ガイド
+  octx.strokeStyle='rgba(255,255,255,.35)'; octx.lineWidth=2*devicePixelRatio;
+  octx.setLineDash([8*devicePixelRatio,8*devicePixelRatio]);
+  octx.strokeRect(x,y,s,s);
+  octx.setLineDash([]);
+}
+
+function matchFrame(sil){
+  // PoC簡易：カメラ中心領域のエッジ量とCAD線の重なりを評価
+  wctx.clearRect(0,0,work.width,work.height);
+  wctx.drawImage(video,0,0,work.width,work.height);
+  const v = wctx.getImageData(0,0,work.width,work.height);
+
+  const sc=document.createElement('canvas'); sc.width=work.width; sc.height=work.height;
+  const sctx=sc.getContext('2d',{willReadFrequently:true});
+  sctx.drawImage(sil,0,0,work.width,work.height);
+  const sdata=sctx.getImageData(0,0,work.width,work.height).data;
+
+  const d=v.data;
+  let hit=0,total=0;
+  for(let y=1;y<work.height-1;y+=2){
+    for(let x=1;x<work.width-1;x+=2){
+      const i=(y*work.width+x)*4;
+      if(sdata[i+3] < 80) continue;
+      total++;
+      const gx = Math.abs(d[i+4]-d[i-4]) + Math.abs(d[i+5]-d[i-3]) + Math.abs(d[i+6]-d[i-2]);
+      const gy = Math.abs(d[i+work.width*4]-d[i-work.width*4]) + Math.abs(d[i+work.width*4+1]-d[i-work.width*4+1]) + Math.abs(d[i+work.width*4+2]-d[i-work.width*4+2]);
+      if(gx+gy > 90) hit++;
     }
+  }
+  if(total===0) return 0;
+  const raw = hit/total;
+  // 見た目用に少し伸ばす
+  return Math.min(1, raw*2.2);
+}
+
+function handleOK(score){
+  lastOkTime = performance.now();
+  if(currentView==='top' && !topOK){
+    topOK=true; topState.textContent='OK';
+    flash('上面 OK','ok');
+    setTimeout(()=>switchView('side'),900);
+  }else if(currentView==='side' && !sideOK){
+    sideOK=true; sideState.textContent='OK';
+    flash('最終 OK','ok');
+    setPhase('検査完了','ok');
   }
 }
 
-function calcMatchScore(){
-  // PoC簡易版: 中央ROIの明暗輪郭量とCADシルエットの重なりを比較
-  const N=150;
-  preview.width=N; preview.height=N;
-  pctx.clearRect(0,0,N,N);
-  pctx.drawImage(video,0,0,N,N);
-  const cam = pctx.getImageData(0,0,N,N);
-
-  const refC = document.createElement('canvas'); refC.width=N; refC.height=N;
-  const rctx = refC.getContext('2d');
-  rctx.drawImage(silhouettes[currentView],0,0,N,N);
-  const ref = rctx.getImageData(0,0,N,N);
-
-  let hit=0, refCnt=0, camCnt=0;
-  const cd=cam.data, rd=ref.data;
-  for(let y=1;y<N-1;y++){
-    for(let x=1;x<N-1;x++){
-      const i=(y*N+x)*4;
-      const g=(cd[i]+cd[i+1]+cd[i+2])/3;
-      const gx=Math.abs(g-((cd[i+4]+cd[i+5]+cd[i+6])/3));
-      const gy=Math.abs(g-((cd[i+N*4]+cd[i+N*4+1]+cd[i+N*4+2])/3));
-      const camEdge = (gx+gy)>42;
-      const refOn = rd[i+3]>20;
-      if(refOn) refCnt++;
-      if(camEdge) camCnt++;
-      if(refOn && camEdge) hit++;
-    }
-  }
-  if(refCnt===0 || camCnt===0) return 0;
-  // 重なり率。ただし初期PoC用に甘め補正
-  const precision = hit / camCnt;
-  const recall = hit / refCnt;
-  return Math.sqrt(precision*recall)*180;
+function flash(text, cls){
+  big.textContent=text; big.className=cls;
+  setTimeout(()=>{big.className=''; big.textContent='';},750);
 }
 
-function updateViewUI(){
-  document.getElementById('viewName').textContent = currentView==='top'?'上面':'側面';
-  document.getElementById('topState').textContent = topOK?'OK':'WAIT';
-  document.getElementById('sideState').textContent = sideOK?'OK':'WAIT';
-  document.getElementById('topState').className = 'big ' + (topOK?'oktxt':'waittxt');
-  document.getElementById('sideState').className = 'big ' + (sideOK?'oktxt':'waittxt');
-}
-function flashOK(text){ showFlash(text,'ok'); }
-function showFlash(text,cls){
-  const f=document.getElementById('fullOverlay');
-  if(!text){f.className=''; f.style.display='none'; return;}
-  f.textContent=text; f.className=cls;
-  setTimeout(()=>{f.className=''; f.style.display='none';},800);
-}
-updateViewUI(); fitCanvases();
 </script>
 </body>
 </html>
