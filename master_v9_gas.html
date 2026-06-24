@@ -74,7 +74,16 @@ $('saveBtn').onclick=async()=>{
   const partNo=$('partNo').value.trim(); if(!partNo){alert('品番を入れて');return}
   if(!masterImg){alert('マスター画像を選んで');return}
   const topData=compressImage(masterImg,700,0.55);
-  const payload={partNo,memo:$('memo').value.trim(),topData,frontData:'',points,useFront:false};
+  const saveScale = Math.min(1, 700 / masterImg.width);
+
+const pointsForSave = points.map(p => ({
+  ...p,
+  x: p.x * saveScale,
+  y: p.y * saveScale,
+  w: p.w * saveScale,
+  h: p.h * saveScale
+}));
+  const payload={partNo,memo:$('memo').value.trim(),topData,frontData:'',points: pointsForSave,,useFront:false};
   log('保存中...');
   const res=await fetch(gas,{method:'POST',body:JSON.stringify(payload)});
   const js=await res.json();
