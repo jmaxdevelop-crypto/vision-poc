@@ -103,9 +103,22 @@ function normalizePointsToImage(rawPoints,img){
   const maxY=Math.max(...pts.map(p=>p._raw.y+p._raw.h));
   let mode='image-raw';
   let out=pts;
-  // Master画面(canvas 1100x760等)上で登録した座標は、画像fit分の余白を引かないとInspectで右下へ飛ぶ。
-  const looksCanvas=(canvasW && canvasH && (Math.abs(img.width-canvasW)>2 || Math.abs(img.height-canvasH)>2) && maxX<=canvasW*1.02 && maxY<=canvasH*1.02);
-  if(looksCanvas){
+
+  // raw座標がすでにmaster画像サイズ内なら「画像座標」と判断して変換しない。
+  // 旧版は 1100x760 canvas 内に収まるだけで canvas-fit-to-image 扱いし、
+  // portrait画像の左右余白 ox を引いて x がマイナス→0にクリップされて左端へ飛んでいた。
+  const alreadyImageCoord = maxX<=img.width*1.02 && maxY<=img.height*1.02;
+
+  // Master画面(canvas 1100x760等)上で登録した座標だけ、画像fit分の余白を引いて画像座標へ戻す。
+  // ただし raw が画像座標内に収まっている場合は絶対に変換しない。
+  const looksCanvas=(!alreadyImageCoord && canvasW && canvasH &&
+    (Math.abs(img.width-canvasW)>2 || Math.abs(img.height-canvasH)>2) &&
+    maxX<=canvasW*1.02 && maxY<=canvasH*1.02);
+
+  if(alreadyImageCoord){
+    mode='image-raw';
+    out=pts.map(p=>({...p,x:p._raw.x,y:p._raw.y,w:p._raw.w,h:p._raw.h}));
+  }else if(looksCanvas){
     mode='canvas-fit-to-image';
     out=pts.map(p=>({
       ...p,
