@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>ぴろえんす RANSAC 検査ポイント PoC v6</title>
+<style>
+:root{--bg:#071225;--card:#101c34;--line:#29436d;--txt:#eef6ff;--muted:#9fb4d9;--cyan:#35dcff;--green:#35f078;--red:#ff4b5f;--blue:#3f7cff;--yellow:#ffd84d}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(135deg,#071225,#111b34);color:var(--txt);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}header{padding:14px 18px;border-bottom:1px solid #20375f;background:#081226cc;position:sticky;top:0;z-index:5}h1{font-size:20px;margin:0}.sub{font-size:12px;color:var(--muted);margin-top:4px}main{display:grid;grid-template-columns:340px 1fr;gap:14px;padding:14px;max-width:1550px;margin:auto}.card{background:rgba(16,28,52,.94);border:1px solid var(--line);border-radius:14px;padding:14px;box-shadow:0 12px 30px #0005}label{display:block;font-size:12px;color:#c8d8fa;margin:12px 0 5px}input[type=file],input[type=range],input[type=text],select{width:100%;padding:8px;border-radius:10px;border:1px solid #31517e;background:#071226;color:var(--txt)}button{width:100%;border:0;border-radius:11px;padding:11px 12px;margin-top:9px;background:linear-gradient(90deg,#2aa7ff,#39e0ff);font-weight:800;color:#001225;cursor:pointer}button.secondary{background:#26395f;color:#eef6ff}button.danger{background:#62283a;color:white}.status{font-size:12px;color:#c6d8ff;white-space:pre-line;line-height:1.45}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.box{background:#020711;border:1px solid #27436f;border-radius:12px;padding:10px;position:relative}.box h3{font-size:13px;margin:0 0 6px;color:#dff8ff}.box canvas{width:100%;height:auto;background:#111;border-radius:8px;display:block}.big{grid-column:1/-1}.metrics{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:10px}.metric{background:#071226;border:1px solid #29436d;border-radius:10px;padding:9px;text-align:center}.metric b{display:block;font-size:24px}.metric small{color:#aabde0}.decision{font-size:88px;font-weight:1000;text-align:center;border-radius:16px;padding:22px 12px;margin-bottom:12px;letter-spacing:.10em;line-height:1;box-shadow:0 10px 24px rgba(0,0,0,.25)}.decision::before{content:"総合判定";display:block;font-size:16px;letter-spacing:.12em;margin-bottom:10px;color:#c8d8fa}.decision.wait{background:#26395f;color:#dce8ff;border:2px solid #405b8d}.decision.ok{background:#0f3d25;color:#35f078;border:3px solid #35f078}.decision.ng{background:#451520;color:#ff4b5f;border:3px solid #ff4b5f}.roiList{margin-top:10px;border-top:1px solid #2a416b;padding-top:8px;max-height:220px;overflow:auto}.roiItem{display:flex;justify-content:space-between;gap:8px;border-bottom:1px solid #20375f;padding:6px 0;font-size:12px}.hint{font-size:12px;color:#9fb4d9;margin-top:8px}.on{outline:2px solid var(--yellow);background:#ffd84d!important;color:#111!important}.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:#cfe0ff;margin-top:7px}.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px}@media(max-width:900px){main{grid-template-columns:1fr}.grid{grid-template-columns:1fr}.metrics{grid-template-columns:1fr 1fr}.decision{font-size:56px}}
+</style>
+</head>
+<body>
+<header><h1>ぴろえんす v6 / RANSAC + 検査ポイント</h1><div class="sub">PCAなし。RANSACの位置合わせ信頼度を判定に入れ、検査ポイントは「あること確認／ないこと確認」を選択できます。</div></header>
+<main>
+<section class="card">
+  <label>マスター画像</label><input id="masterFile" type="file" accept="image/*">
+  <label>検査画像</label><input id="inspectFile" type="file" accept="image/*">
+  <button id="runBtn">RANSAC + 検査</button>
+  <div class="row"><button id="roiBtn" class="secondary">検査ポイント登録</button><button id="clearRoiBtn" class="danger">検査ポイント全削除</button></div>
+  <label>検査ポイント名</label><input id="roiName" type="text" placeholder="例：左先端 / 刻印 / 穴A">
+  <label>検査内容</label><select id="roiType"><option value="present">あることを確認</option><option value="absent">ないことを確認</option></select>
+  <label>検査ポイントNGしきい値（差異率%） <span id="roiThrVal">12</span></label><input id="roiThr" type="range" min="1" max="60" value="12">
+  <label>輪郭/エッジしきい値 <span id="edgeVal">100</span></label><input id="edgeThr" type="range" min="40" max="220" value="100">
+  <label>差分許容px <span id="tolVal">6</span></label><input id="tol" type="range" min="1" max="20" value="6">
+  <label>最大処理幅px <span id="maxVal">700</span></label><input id="maxW" type="range" min="300" max="1200" value="700" step="50">
+  <label>特徴点数 <span id="featVal">1500</span></label><input id="features" type="range" min="300" max="3000" value="1500" step="100">
+  <label>位置合わせ 最小一致点数 <span id="minInliersVal">30</span></label><input id="minInliers" type="range" min="5" max="100" value="30" step="5">
+  <label>位置合わせ 最小一致率% <span id="minInlierRatioVal">60</span></label><input id="minInlierRatio" type="range" min="10" max="95" value="60" step="5">
+  <label>倍率ガード</label><select id="scaleGuard"><option value="0.80-1.25">0.80 - 1.25</option><option value="0.90-1.10">0.90 - 1.10</option><option value="0.70-1.40">0.70 - 1.40</option><option value="off">OFF</option></select>
+  <div id="status" class="status">OpenCV.js読み込み待ち...</div>
+  <div id="roiList" class="roiList"></div>
+  <div class="hint">検査ポイント登録：ボタンON → マスター画像上でドラッグ。黄色い枠が出たら選択中。Ctrl+Zで直前の選択を戻せます。</div>
+</section>
+<section class="card">
+  <div id="decision" class="decision wait">WAIT</div>
+  <div class="metrics">
+    <div class="metric"><small>方式</small><b id="method">--</b></div>
+    <div class="metric"><small>検査ポイント</small><b id="roiScore">--</b></div>
+    <div class="metric"><small>差異率</small><b id="missingScore">--</b></div>
+    <div class="metric"><small>倍率</small><b id="scaleScore">--</b></div>
+    <div class="metric"><small>位置合わせ</small><b id="matchScore">--</b></div>
+  </div>
+  <div class="grid">
+    <div class="box"><h3>マスター（検査ポイント登録）</h3><canvas id="masterCanvas" width="640" height="420"></canvas></div>
+    <div class="box"><h3>検査画像</h3><canvas id="inspectCanvas" width="640" height="420"></canvas></div>
+    <div class="box"><h3>特徴点マッチ</h3><canvas id="matchCanvas" width="640" height="420"></canvas></div>
+    <div class="box"><h3>射影補正後</h3><canvas id="warpCanvas" width="640" height="420"></canvas></div>
+    <div class="box big"><h3>検査ポイント差異結果（緑=一致 / 赤=差異 / 黄=検査ポイント）</h3><canvas id="resultCanvas" width="1100" height="620"></canvas><div class="legend"><span><i class="dot" style="background:#38f078"></i>一致</span><span><i class="dot" style="background:#ff4b5f"></i>差異あり</span><span><i class="dot" style="background:#ffd84d"></i>検査ポイント枠</span></div></div>
+  </div>
+</section>
+</main>
+<script async src="https://docs.opencv.org/4.9.0/opencv.js" onload="cvReady()"></script>
+<script>
+const $=id=>document.getElementById(id);
+let cvLoaded=false, masterImg=null, inspectImg=null, rois=[];
+let roiMode=false, dragStart=null, dragCurrent=null;
+['roiThr','edgeThr','tol','maxW','features','minInliers','minInlierRatio'].forEach(id=>$(id).oninput=()=>updateVals());
+function updateVals(){ $('roiThrVal').textContent=$('roiThr').value; $('edgeVal').textContent=$('edgeThr').value; $('tolVal').textContent=$('tol').value; $('maxVal').textContent=$('maxW').value; $('featVal').textContent=$('features').value; $('minInliersVal').textContent=$('minInliers').value; $('minInlierRatioVal').textContent=$('minInlierRatio').value; }
+updateVals();
+function log(s){$('status').textContent=s}
+function cvReady(){cv['onRuntimeInitialized']=()=>{cvLoaded=true;log('OpenCV.js 読込OK')};}
+function loadImage(file){return new Promise((res,rej)=>{const img=new Image(); img.onload=()=>res(img); img.onerror=rej; img.src=URL.createObjectURL(file);})}
+$('masterFile').onchange=async e=>{masterImg=await loadImage(e.target.files[0]); drawImageFit($('masterCanvas'),masterImg,true); log('マスター読込OK')};
+$('inspectFile').onchange=async e=>{inspectImg=await loadImage(e.target.files[0]); drawImageFit($('inspectCanvas'),inspectImg,false); log('検査画像読込OK')};
+$('roiBtn').onclick=()=>{roiMode=!roiMode;$('roiBtn').classList.toggle('on',roiMode);$('roiBtn').textContent=roiMode?'登録中（ドラッグで範囲指定）':'検査ポイント登録'};
+$('clearRoiBtn').onclick=()=>{rois=[];dragStart=null;dragCurrent=null;renderRois();drawImageFit($('masterCanvas'),masterImg,true)};
+$('runBtn').onclick=run;
+function drawImageFit(canvas,img,drawRoi=false){const ctx=canvas.getContext('2d');ctx.clearRect(0,0,canvas.width,canvas.height);ctx.fillStyle='#111';ctx.fillRect(0,0,canvas.width,canvas.height);if(!img)return;const r=Math.min(canvas.width/img.width,canvas.height/img.height),w=img.width*r,h=img.height*r,ox=(canvas.width-w)/2,oy=(canvas.height-h)/2;ctx.drawImage(img,ox,oy,w,h);if(drawRoi)drawRois(ctx,canvas,img)}
+function fitParams(canvas,img){const r=Math.min(canvas.width/img.width,canvas.height/img.height),w=img.width*r,h=img.height*r,ox=(canvas.width-w)/2,oy=(canvas.height-h)/2;return{r,ox,oy,w,h}}
+function eventToImg(canvas,e,img){const rect=canvas.getBoundingClientRect();const x=(e.clientX-rect.left)*canvas.width/rect.width,y=(e.clientY-rect.top)*canvas.height/rect.height;const f=fitParams(canvas,img);return{x:(x-f.ox)/f.r,y:(y-f.oy)/f.r}}
+const mc=$('masterCanvas');
+mc.addEventListener('mousedown',e=>{if(!roiMode||!masterImg)return;dragStart=eventToImg(mc,e,masterImg);dragCurrent=dragStart;drawImageFit(mc,masterImg,true)});
+mc.addEventListener('mousemove',e=>{if(!roiMode||!masterImg||!dragStart)return;dragCurrent=eventToImg(mc,e,masterImg);drawImageFit(mc,masterImg,true)});
+mc.addEventListener('mouseleave',e=>{if(dragStart){dragStart=null;dragCurrent=null;drawImageFit(mc,masterImg,true)}});
+mc.addEventListener('mouseup',e=>{if(!roiMode||!masterImg||!dragStart)return;const p=eventToImg(mc,e,masterImg);const x=Math.min(dragStart.x,p.x),y=Math.min(dragStart.y,p.y),w=Math.abs(p.x-dragStart.x),h=Math.abs(p.y-dragStart.y);dragStart=null;dragCurrent=null;if(w<8||h<8){drawImageFit(mc,masterImg,true);return;}rois.push({name:$('roiName').value.trim()||'検査ポイント'+(rois.length+1),type:$('roiType').value,x,y,w,h});renderRois();drawImageFit(mc,masterImg,true)});
+window.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'){const tag=(document.activeElement&&document.activeElement.tagName)||'';if(tag==='INPUT'||tag==='TEXTAREA')return;e.preventDefault();if(rois.length){rois.pop();renderRois();drawImageFit(mc,masterImg,true);log('直前の検査ポイントを取り消しました');}}});
+function drawRois(ctx,canvas,img){const f=fitParams(canvas,img);ctx.save();ctx.translate(f.ox,f.oy);ctx.scale(f.r,f.r);ctx.strokeStyle='#ffd84d';ctx.lineWidth=4/f.r;ctx.font=`${16/f.r}px sans-serif`;ctx.fillStyle='#ffd84d';rois.forEach(r=>{ctx.strokeRect(r.x,r.y,r.w,r.h);ctx.fillText(r.name,r.x,r.y-6)});if(dragStart&&dragCurrent){const x=Math.min(dragStart.x,dragCurrent.x),y=Math.min(dragStart.y,dragCurrent.y),w=Math.abs(dragCurrent.x-dragStart.x),h=Math.abs(dragCurrent.y-dragStart.y);ctx.save();ctx.setLineDash([10/f.r,6/f.r]);ctx.lineDashOffset=-(Date.now()/45)%(16/f.r);ctx.strokeStyle='#35dcff';ctx.fillStyle='rgba(53,220,255,.16)';ctx.lineWidth=5/f.r;ctx.fillRect(x,y,w,h);ctx.strokeRect(x,y,w,h);ctx.setLineDash([]);ctx.fillStyle='#35dcff';ctx.fillText('選択中',x,y-8);ctx.restore();requestAnimationFrame(()=>{if(dragStart)drawImageFit(canvas,img,true)});}ctx.restore()}
+function renderRois(){ $('roiList').innerHTML='<b>検査ポイント: '+rois.length+'件</b>'+rois.map((r,i)=>`<div class="roiItem"><span>${i+1}. ${r.name}<br><small>${r.type==='absent'?'ないこと確認':'あること確認'} / ${Math.round(r.x)},${Math.round(r.y)} / ${Math.round(r.w)}x${Math.round(r.h)}</small></span><button class="danger" onclick="rois.splice(${i},1);renderRois();drawImageFit(document.getElementById('masterCanvas'),masterImg,true)">削除</button></div>`).join('')}
+function matFromImage(img){const maxW=+$('maxW').value;const scale=Math.min(1,maxW/img.width);const c=document.createElement('canvas');c.width=Math.round(img.width*scale);c.height=Math.round(img.height*scale);const x=c.getContext('2d');x.drawImage(img,0,0,c.width,c.height);let src=cv.imread(c);let gray=new cv.Mat();cv.cvtColor(src,gray,cv.COLOR_RGBA2GRAY);return{src,gray,scale,w:c.width,h:c.height,canvas:c}}
+function edgeMask(gray){let blur=new cv.Mat(),edges=new cv.Mat();cv.GaussianBlur(gray,blur,new cv.Size(3,3),0);let t=+$('edgeThr').value;cv.Canny(blur,edges,t,t*2);blur.delete();return edges}
+function detectAndMatch(m,i){let orb=new cv.ORB(+$('features').value);let kp1=new cv.KeyPointVector(),kp2=new cv.KeyPointVector(),des1=new cv.Mat(),des2=new cv.Mat();orb.detectAndCompute(m.gray,new cv.Mat(),kp1,des1);orb.detectAndCompute(i.gray,new cv.Mat(),kp2,des2);if(des1.empty()||des2.empty())throw new Error('特徴点が少なすぎます');let matcher=new cv.BFMatcher(cv.NORM_HAMMING,true);let matches=new cv.DMatchVector();matcher.match(des1,des2,matches);let arr=[];for(let k=0;k<matches.size();k++)arr.push(matches.get(k));arr.sort((a,b)=>a.distance-b.distance);arr=arr.slice(0,Math.min(120,arr.length));let srcPts=[],dstPts=[];for(const mt of arr){let p1=kp1.get(mt.queryIdx).pt,p2=kp2.get(mt.trainIdx).pt;srcPts.push(p1.x,p1.y);dstPts.push(p2.x,p2.y)}let srcMat=cv.matFromArray(arr.length,1,cv.CV_32FC2,srcPts);let dstMat=cv.matFromArray(arr.length,1,cv.CV_32FC2,dstPts);let mask=new cv.Mat();let H=cv.findHomography(dstMat,srcMat,cv.RANSAC,5,mask); // inspect -> master
+let inliers=0;for(let k=0;k<mask.rows;k++)if(mask.data[k])inliers++;drawMatches(m,i,kp1,kp2,arr,mask);orb.delete();kp1.delete();kp2.delete();des1.delete();des2.delete();matcher.delete();matches.delete();srcMat.delete();dstMat.delete();mask.delete();if(H.empty())throw new Error('Homography推定失敗');return{H,inliers,total:arr.length}}
+function drawMatches(m,i,kp1,kp2,matches,mask){const c=$('matchCanvas'),ctx=c.getContext('2d');ctx.clearRect(0,0,c.width,c.height);ctx.fillStyle='#111';ctx.fillRect(0,0,c.width,c.height);const half=c.width/2;ctx.drawImage(m.canvas,0,0,half,c.height);ctx.drawImage(i.canvas,half,0,half,c.height);const sx1=half/m.w,sy1=c.height/m.h,sx2=half/i.w,sy2=c.height/i.h;ctx.lineWidth=1;matches.forEach((mt,idx)=>{let p1=kp1.get(mt.queryIdx).pt,p2=kp2.get(mt.trainIdx).pt;let ok=mask.data[idx];ctx.strokeStyle=ok?'#38f078':'rgba(255,75,95,.35)';ctx.beginPath();ctx.moveTo(p1.x*sx1,p1.y*sy1);ctx.lineTo(half+p2.x*sx2,p2.y*sy2);ctx.stroke()})}
+function homographyScale(H){let d=H.data64F||H.data32F;let a=d[0],b=d[1],c=d[3],e=d[4];return Math.sqrt(Math.abs(a*e-b*c))}
+function run(){if(!cvLoaded){alert('OpenCV.js読み込み中');return}if(!masterImg||!inspectImg){alert('画像を2枚選んで');return}try{setDecision('WAIT','wait');let m=matFromImage(masterImg),i=matFromImage(inspectImg);let {H,inliers,total}=detectAndMatch(m,i);let warped=new cv.Mat();cv.warpPerspective(i.src,warped,H,new cv.Size(m.w,m.h));drawMatToCanvas($('warpCanvas'),warped);let scale=homographyScale(H);let [smin,smax]=$('scaleGuard').value==='off'?[0,999]:$('scaleGuard').value.split('-').map(Number);let scaleOk=scale>=smin&&scale<=smax;let res=compareRois(m,warped,H,scale);$('method').textContent='RANSAC';$('matchScore').textContent=`${inliers}/${total}`;$('scaleScore').textContent=scale.toFixed(3);$('roiScore').textContent=res.ok+'/'+Math.max(1,rois.length);$('missingScore').textContent=(res.maxDiff*100).toFixed(1)+'%';let ok=scaleOk && res.allOk && rois.length>0;setDecision(ok?'OK':'NG',ok?'ok':'ng');log(`RANSAC完了\n特徴点 inlier=${inliers}/${total}\n倍率=${scale.toFixed(3)} ${scaleOk?'OK':'NG'}\n検査ポイント=${res.ok}/${rois.length}\n※検査ポイント無しの場合は判定NG扱い`);m.src.delete();m.gray.delete();i.src.delete();i.gray.delete();H.delete();warped.delete()}catch(e){console.error(e);setDecision('NG','ng');log('解析エラー: '+e.message)}}
+function drawMatToCanvas(canvas,mat){let c=document.createElement('canvas');cv.imshow(c,mat);let ctx=canvas.getContext('2d');ctx.clearRect(0,0,canvas.width,canvas.height);ctx.fillStyle='#111';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.drawImage(c,0,0,canvas.width,canvas.height)}
+function setDecision(t,cls){const d=$('decision');d.className='decision '+cls;d.textContent=t}
+function hasNearbyEdge(edge, x, y, w, h, tol){
+  for(let dy=-tol;dy<=tol;dy++){
+    for(let dx=-tol;dx<=tol;dx++){
+      let nx=x+dx, ny=y+dy;
+      if(nx>=0&&ny>=0&&nx<w&&ny<h&&edge.ucharPtr(ny,nx)[0]) return true;
+    }
+  }
+  return false;
+}
+function compareRois(m,warped,H,scale){
+  let mGray=m.gray;
+  let wGray=new cv.Mat();
+  cv.cvtColor(warped,wGray,cv.COLOR_RGBA2GRAY);
+  let mEdge=edgeMask(mGray), wEdge=edgeMask(wGray);
+  let result=$('resultCanvas'),ctx=result.getContext('2d');
+  ctx.clearRect(0,0,result.width,result.height);
+  ctx.fillStyle='#111';ctx.fillRect(0,0,result.width,result.height);
+  let tmp=document.createElement('canvas');cv.imshow(tmp,warped);
+  const r=Math.min(result.width/m.w,result.height/m.h),ox=(result.width-m.w*r)/2,oy=(result.height-m.h*r)/2;
+  ctx.drawImage(tmp,ox,oy,m.w*r,m.h*r);
+  let tol=+$('tol').value,thr=+$('roiThr').value/100;
+  let okCount=0,maxDiff=0;
+  ctx.save();ctx.translate(ox,oy);ctx.scale(r,r);
+  rois.forEach(roi=>{
+    let x=Math.max(0,Math.round(roi.x*m.scale)),y=Math.max(0,Math.round(roi.y*m.scale)),w=Math.min(m.w-x,Math.round(roi.w*m.scale)),h=Math.min(m.h-y,Math.round(roi.h*m.scale));
+    let mode=roi.type||'present';
+    let diff=0, ok=false, mismatch=0, denom=0;
+    if(mode==='present'){
+      // あること確認：マスター側のエッジが検査側に存在するか
+      for(let yy=y;yy<y+h;yy++){
+        for(let xx=x;xx<x+w;xx++){
+          if(mEdge.ucharPtr(yy,xx)[0]){
+            denom++;
+            if(!hasNearbyEdge(wEdge,xx,yy,m.w,m.h,tol)) mismatch++;
+          }
+        }
+      }
+      diff=denom?mismatch/denom:1;
+      ok=diff<=thr;
+    }else{
+      // ないこと確認：マスターに無い余分なエッジが検査側に出ていないか
+      for(let yy=y;yy<y+h;yy++){
+        for(let xx=x;xx<x+w;xx++){
+          if(wEdge.ucharPtr(yy,xx)[0]){
+            if(!hasNearbyEdge(mEdge,xx,yy,m.w,m.h,tol)) mismatch++;
+            denom++;
+          }
+        }
+      }
+      // 余分エッジが少しでもまとまって出たら差異率を高めに出す。
+      diff=denom?mismatch/denom:0;
+      ok=diff<=thr;
+    }
+    maxDiff=Math.max(maxDiff,diff);
+    if(ok)okCount++;
+    ctx.strokeStyle=ok?'#35f078':'#ff4b5f';ctx.lineWidth=4/r;ctx.strokeRect(x,y,w,h);
+    ctx.fillStyle=ctx.strokeStyle;ctx.font=`${18/r}px sans-serif`;
+    const label=(mode==='absent'?'無い確認':'ある確認');
+    ctx.fillText(`${roi.name} ${label} 差異${(diff*100).toFixed(1)}%`,x,y-8);
+    // 差異点を描画
+    for(let yy=y;yy<y+h;yy+=2){
+      for(let xx=x;xx<x+w;xx+=2){
+        if(mode==='present'){
+          if(mEdge.ucharPtr(yy,xx)[0]){
+            const found=hasNearbyEdge(wEdge,xx,yy,m.w,m.h,tol);
+            ctx.fillStyle=found?'#35f078':'#ff4b5f';ctx.fillRect(xx,yy,2,2);
+          }
+        }else{
+          if(wEdge.ucharPtr(yy,xx)[0]){
+            const extra=!hasNearbyEdge(mEdge,xx,yy,m.w,m.h,tol);
+            if(extra){ctx.fillStyle='#ff4b5f';ctx.fillRect(xx,yy,2,2);} 
+          }
+        }
+      }
+    }
+  });
+  ctx.restore();
+  mEdge.delete();wEdge.delete();wGray.delete();
+  return{ok:okCount,allOk:okCount===rois.length,maxDiff};
+}
+</script>
+</body>
+</html>
