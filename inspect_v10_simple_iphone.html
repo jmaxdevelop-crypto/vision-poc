@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>ぴろえんす Inspect v10 Simple</title>
+<style>
+:root{--bg:#06101f;--panel:rgba(5,12,26,.88);--txt:#eef6ff;--muted:#9fb4d9;--green:#35f078;--red:#ff4b5f;--yellow:#ffd84d;--cyan:#35dcff;--line:#29436d}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;width:100%;height:100%;background:#000;color:var(--txt);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;overflow:hidden}.app{position:fixed;inset:0;background:#000}.topbar{position:absolute;z-index:10;left:0;right:0;top:0;padding:10px max(10px,env(safe-area-inset-left)) 10px max(10px,env(safe-area-inset-right));background:linear-gradient(180deg,rgba(0,0,0,.88),rgba(0,0,0,.30),transparent);display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}.brand{font-weight:900;letter-spacing:.06em;font-size:14px;color:#dff8ff}.selectRow{display:flex;gap:8px;align-items:center}.selectRow select{flex:1;min-width:0;padding:11px 12px;border-radius:12px;border:1px solid #31517e;background:#071226;color:var(--txt);font-size:15px}.selectRow button,.cameraBtn{border:0;border-radius:12px;padding:11px 14px;background:linear-gradient(90deg,#2aa7ff,#39e0ff);font-weight:900;color:#001225;font-size:14px}.cameraBtn{white-space:nowrap}.photoInput{display:none}.canvasWrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#020711}canvas{width:100%;height:100%;object-fit:contain;display:block}.empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;color:#aabde0;padding:24px;font-size:15px;line-height:1.7}.resultBanner{position:absolute;z-index:12;left:12px;right:12px;top:88px;border-radius:18px;padding:18px 14px;text-align:center;font-size:72px;font-weight:1000;letter-spacing:.14em;line-height:1;box-shadow:0 18px 40px rgba(0,0,0,.45);display:none}.resultBanner::before{content:'総合判定';display:block;font-size:13px;letter-spacing:.16em;margin-bottom:8px;color:#d9e9ff}.resultBanner.ok{display:block;background:rgba(9,65,37,.92);border:3px solid var(--green);color:var(--green)}.resultBanner.ng{display:block;background:rgba(73,18,31,.94);border:3px solid var(--red);color:var(--red)}.bottom{position:absolute;z-index:10;left:0;right:0;bottom:0;padding:10px max(10px,env(safe-area-inset-left)) max(12px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-right));background:linear-gradient(0deg,rgba(0,0,0,.92),rgba(0,0,0,.46),transparent)}.status{background:rgba(7,18,38,.86);border:1px solid var(--line);border-radius:14px;padding:10px 12px;color:#c6d8ff;font-size:12px;line-height:1.45;white-space:pre-line;max-height:160px;overflow:auto}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:7px}.stat{background:rgba(7,18,38,.82);border:1px solid var(--line);border-radius:12px;padding:8px;text-align:center}.stat small{display:block;color:#aabde0;font-size:10px}.stat b{display:block;font-size:18px;margin-top:2px}.okText{color:var(--green)}.ngText{color:var(--red)}.waitText{color:var(--yellow)}.loading{position:absolute;z-index:15;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:#dff8ff}.loading.on{display:flex}@media(max-width:480px){.topbar{grid-template-columns:1fr}.resultBanner{font-size:58px;top:118px}.brand{display:none}.selectRow select{font-size:14px}.stats{grid-template-columns:repeat(3,1fr)}.stat b{font-size:16px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="topbar">
+    <div class="brand">ぴろえんす Inspect</div>
+    <div class="selectRow">
+      <select id="partSelect"><option>品番読込中...</option></select>
+      <button id="reloadBtn" type="button">更新</button>
+      <label class="cameraBtn" for="inspectFile">撮影</label>
+      <input id="inspectFile" class="photoInput" type="file" accept="image/*" capture="environment">
+    </div>
+  </div>
+  <div class="canvasWrap"><canvas id="viewCanvas" width="1100" height="760"></canvas></div>
+  <div id="empty" class="empty">品番を選択して「撮影」を押してください。<br>撮影後、自動で検査します。</div>
+  <div id="banner" class="resultBanner">WAIT</div>
+  <div id="loading" class="loading">解析中...</div>
+  <div class="bottom">
+    <div class="stats">
+      <div class="stat"><small>位置合わせ</small><b id="alignStat">--</b></div>
+      <div class="stat"><small>外形差異</small><b id="outerStat">--</b></div>
+      <div class="stat"><small>検査点</small><b id="pointStat">--</b></div>
+    </div>
+    <div id="status" class="status">OpenCV.js読み込み待ち...</div>
+  </div>
+</div>
+<script async src="https://docs.opencv.org/4.9.0/opencv.js" onload="cvReady()"></script>
+<script>
+// =====================================================
+// ★ここにGASの /exec URLを貼ってください
+// 例: const GAS_URL = 'https://script.google.com/macros/s/xxxxxxx/exec';
+// =====================================================
+const GAS_URL = ''; // ←ここを今井さんのGAS URLに置き換え
+
+// 固定設定：現場用なので画面には出さない
+const CONFIG = {
+  edgeThr: 100,
+  tol: 6,
+  maxW: 700,
+  features: 1500,
+  minInliers: 30,
+  minInlierRatio: 0.60,
+  scaleMin: 0.80,
+  scaleMax: 1.25,
+  outerThr: 0.06,
+  defaultPointThr: 0.12
+};
+
+const $=id=>document.getElementById(id);
+let cvLoaded=false, parts=[], currentPart=null, masterImg=null, inspectImg=null, points=[];
+
+function log(s){ $('status').textContent=s; }
+function setLoading(on){ $('loading').classList.toggle('on',!!on); }
+function setBanner(state){ const b=$('banner'); b.className='resultBanner '+(state==='OK'?'ok':state==='NG'?'ng':''); b.textContent=state; }
+function setStat(id,text,cls=''){ const el=$(id); el.textContent=text; el.className=cls; }
+function cvReady(){ cv['onRuntimeInitialized']=()=>{ cvLoaded=true; log('OpenCV.js 読込OK'); init(); }; }
+function loadImageFromDataUrl(dataUrl){ return new Promise((res,rej)=>{ const img=new Image(); img.onload=()=>res(img); img.onerror=rej; img.src=dataUrl; }); }
+function loadImageFromFile(file){ return new Promise((res,rej)=>{ const img=new Image(); img.onload=()=>res(img); img.onerror=rej; img.src=URL.createObjectURL(file); }); }
+function drawImageFit(canvas,img){ const ctx=canvas.getContext('2d'); ctx.clearRect(0,0,canvas.width,canvas.height); ctx.fillStyle='#05070b'; ctx.fillRect(0,0,canvas.width,canvas.height); if(!img)return; const r=Math.min(canvas.width/img.width,canvas.height/img.height); const w=img.width*r,h=img.height*r,ox=(canvas.width-w)/2,oy=(canvas.height-h)/2; ctx.drawImage(img,ox,oy,w,h); }
+function drawMatFit(canvas,mat){ const tmp=document.createElement('canvas'); cv.imshow(tmp,mat); drawImageFit(canvas,tmp); }
+async function init(){ if(!GAS_URL){ log('GAS_URL未設定です。HTML内の const GAS_URL に /exec URLを貼ってください。'); return; } await loadParts(); }
+async function loadParts(){ try{ log('品番一覧読込中...'); const res=await fetch(GAS_URL+'?action=list'); const js=await res.json(); if(!js.ok) throw new Error(js.error||'list失敗'); parts=js.parts||[]; $('partSelect').innerHTML=parts.map(p=>`<option value="${escapeHtml(p.partNo)}">${escapeHtml(p.partNo)}${p.memo?' - '+escapeHtml(p.memo):''}</option>`).join('') || '<option value="">登録なし</option>'; log('品番一覧OK: '+parts.length+'件'); if(parts.length) await loadSelectedPart(); }catch(e){ console.error(e); log('品番一覧エラー: '+e.message); } }
+async function loadSelectedPart(){ const partNo=$('partSelect').value; if(!partNo)return; try{ setLoading(true); log('マスター読込中...'); setBanner('WAIT'); const res=await fetch(GAS_URL+'?action=get&partNo='+encodeURIComponent(partNo)); const js=await res.json(); if(!js.ok) throw new Error(js.error||'get失敗'); currentPart=js.part; masterImg=await loadImageFromDataUrl(currentPart.topData); points=normalizePointsToImage(currentPart.points||[], masterImg); drawImageFit($('viewCanvas'),masterImg); $('empty').style.display='none'; setStat('alignStat','--'); setStat('outerStat','--'); setStat('pointStat',points.length?('0/'+points.length):'外形のみ'); log('マスター読込OK: '+partNo+'\n検査ポイント: '+points.length+'件\n撮影してください。'); }catch(e){ console.error(e); log('マスター読込エラー: '+e.message); }finally{ setLoading(false); } }
+function normalizePointsToImage(rawPoints,img){ const pts=(rawPoints||[]).map(p=>({...p})); if(!img || !pts.length)return pts; const maxX=Math.max(...pts.map(p=>(+p.x||0)+(+p.w||0))); const maxY=Math.max(...pts.map(p=>(+p.y||0)+(+p.h||0))); if(maxX>img.width*1.05 || maxY>img.height*1.05){ const s=Math.min(img.width/maxX, img.height/maxY); return pts.map(p=>({...p,x:p.x*s,y:p.y*s,w:p.w*s,h:p.h*s})); } return pts; }
+function escapeHtml(s){ return String(s??'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m])); }
+$('reloadBtn').onclick=loadParts;
+$('partSelect').onchange=loadSelectedPart;
+$('inspectFile').onchange=async e=>{ const f=e.target.files&&e.target.files[0]; if(!f)return; inspectImg=await loadImageFromFile(f); drawImageFit($('viewCanvas'),inspectImg); $('empty').style.display='none'; await runInspect(); e.target.value=''; };
+
+function matFromImage(img,maxW){ const scale=Math.min(1,maxW/img.width); const c=document.createElement('canvas'); c.width=Math.round(img.width*scale); c.height=Math.round(img.height*scale); const x=c.getContext('2d'); x.drawImage(img,0,0,c.width,c.height); let src=cv.imread(c); let gray=new cv.Mat(); cv.cvtColor(src,gray,cv.COLOR_RGBA2GRAY); return{src,gray,scale,w:c.width,h:c.height,canvas:c}; }
+function edgeMask(gray,edgeThr){ let blur=new cv.Mat(),edges=new cv.Mat(); cv.GaussianBlur(gray,blur,new cv.Size(3,3),0); cv.Canny(blur,edges,edgeThr,edgeThr*2); blur.delete(); return edges; }
+function hasNearbyEdge(edge,x,y,w,h,tol){ for(let dy=-tol;dy<=tol;dy++){ for(let dx=-tol;dx<=tol;dx++){ let nx=x+dx,ny=y+dy; if(nx>=0&&ny>=0&&nx<w&&ny<h&&edge.ucharPtr(ny,nx)[0]) return true; } } return false; }
+function detectAndMatch(m,i,features){ let orb=new cv.ORB(features); let kp1=new cv.KeyPointVector(),kp2=new cv.KeyPointVector(),des1=new cv.Mat(),des2=new cv.Mat(); orb.detectAndCompute(m.gray,new cv.Mat(),kp1,des1); orb.detectAndCompute(i.gray,new cv.Mat(),kp2,des2); if(des1.empty()||des2.empty()) throw new Error('特徴点が少なすぎます'); let matcher=new cv.BFMatcher(cv.NORM_HAMMING,true); let matches=new cv.DMatchVector(); matcher.match(des1,des2,matches); let arr=[]; for(let k=0;k<matches.size();k++)arr.push(matches.get(k)); arr.sort((a,b)=>a.distance-b.distance); arr=arr.slice(0,Math.min(120,arr.length)); let srcPts=[],dstPts=[]; for(const mt of arr){ let p1=kp1.get(mt.queryIdx).pt,p2=kp2.get(mt.trainIdx).pt; srcPts.push(p1.x,p1.y); dstPts.push(p2.x,p2.y); } let srcMat=cv.matFromArray(arr.length,1,cv.CV_32FC2,srcPts); let dstMat=cv.matFromArray(arr.length,1,cv.CV_32FC2,dstPts); let mask=new cv.Mat(); let H=cv.findHomography(dstMat,srcMat,cv.RANSAC,5,mask); let inliers=0; for(let k=0;k<mask.rows;k++) if(mask.data[k]) inliers++; orb.delete(); kp1.delete(); kp2.delete(); des1.delete(); des2.delete(); matcher.delete(); matches.delete(); srcMat.delete(); dstMat.delete(); mask.delete(); if(H.empty()) throw new Error('位置合わせ失敗'); return{H,inliers,total:arr.length}; }
+function homographyScale(H){ let d=H.data64F||H.data32F; let a=d[0],b=d[1],c=d[3],e=d[4]; return Math.sqrt(Math.abs(a*e-b*c)); }
+function compareAll(m,warped,points){ let wGray=new cv.Mat(); cv.cvtColor(warped,wGray,cv.COLOR_RGBA2GRAY); let mEdge=edgeMask(m.gray,CONFIG.edgeThr), wEdge=edgeMask(wGray,CONFIG.edgeThr); let result=$('viewCanvas'),ctx=result.getContext('2d'); ctx.clearRect(0,0,result.width,result.height); ctx.fillStyle='#05070b'; ctx.fillRect(0,0,result.width,result.height); const r=Math.min(result.width/m.w,result.height/m.h), ox=(result.width-m.w*r)/2, oy=(result.height-m.h*r)/2; let tmp=document.createElement('canvas'); cv.imshow(tmp,warped); ctx.drawImage(tmp,ox,oy,m.w*r,m.h*r); let outerMismatch=0,outerDenom=0; ctx.save(); ctx.translate(ox,oy); ctx.scale(r,r); for(let yy=0;yy<m.h;yy+=2){ for(let xx=0;xx<m.w;xx+=2){ if(mEdge.ucharPtr(yy,xx)[0]){ outerDenom++; const found=hasNearbyEdge(wEdge,xx,yy,m.w,m.h,CONFIG.tol); if(!found)outerMismatch++; ctx.fillStyle=found?'rgba(53,240,120,.32)':'rgba(255,75,95,.85)'; ctx.fillRect(xx,yy,2,2); } } } let okCount=0,maxPointDiff=0,details=[]; for(const roi of points){ let x=Math.max(0,Math.round(roi.x*m.scale)), y=Math.max(0,Math.round(roi.y*m.scale)), w=Math.min(m.w-x,Math.round(roi.w*m.scale)), h=Math.min(m.h-y,Math.round(roi.h*m.scale)); let mode=roi.type||'present', thr=((roi.threshold??(CONFIG.defaultPointThr*100))/100); let mismatch=0,denom=0,diff=0,ok=false; if(mode==='present'){ for(let yy=y;yy<y+h;yy++)for(let xx=x;xx<x+w;xx++)if(mEdge.ucharPtr(yy,xx)[0]){denom++; if(!hasNearbyEdge(wEdge,xx,yy,m.w,m.h,CONFIG.tol))mismatch++;} diff=denom?mismatch/denom:1; ok=diff<=thr; }else{ for(let yy=y;yy<y+h;yy++)for(let xx=x;xx<x+w;xx++)if(wEdge.ucharPtr(yy,xx)[0]){denom++; if(!hasNearbyEdge(mEdge,xx,yy,m.w,m.h,CONFIG.tol))mismatch++;} diff=denom?mismatch/denom:0; ok=diff<=thr; } if(ok)okCount++; maxPointDiff=Math.max(maxPointDiff,diff); details.push({...roi,diff,ok}); ctx.strokeStyle=ok?'#35f078':'#ff4b5f'; ctx.lineWidth=5/r; ctx.strokeRect(x,y,w,h); ctx.fillStyle=ctx.strokeStyle; ctx.font=`${18/r}px sans-serif`; ctx.fillText(`${roi.name||'検査点'} ${(diff*100).toFixed(1)}%`,x,y-8); }
+  ctx.restore(); mEdge.delete(); wEdge.delete(); wGray.delete(); return{outerDiff:outerDenom?outerMismatch/outerDenom:1, pointOk:okCount, pointAllOk:okCount===points.length, maxPointDiff, details}; }
+async function runInspect(){ if(!cvLoaded){alert('OpenCV.js読み込み中');return} if(!masterImg||!inspectImg){alert('品番と写真を確認してください');return} try{ setLoading(true); setBanner('WAIT'); log('解析中...'); const m=matFromImage(masterImg,CONFIG.maxW), i=matFromImage(inspectImg,CONFIG.maxW); const {H,inliers,total}=detectAndMatch(m,i,CONFIG.features); let warped=new cv.Mat(); cv.warpPerspective(i.src,warped,H,new cv.Size(m.w,m.h)); const scale=homographyScale(H); const scaleOk=scale>=CONFIG.scaleMin&&scale<=CONFIG.scaleMax; const alignOk=inliers>=CONFIG.minInliers && (inliers/Math.max(1,total))>=CONFIG.minInlierRatio && scaleOk; const res=compareAll(m,warped,points); const outerOk=res.outerDiff<=CONFIG.outerThr; const pointsOk=(points.length===0)||res.pointAllOk; const ok=alignOk && outerOk && pointsOk; setBanner(ok?'OK':'NG'); setStat('alignStat',`${inliers}/${total}`,alignOk?'okText':'ngText'); setStat('outerStat',(res.outerDiff*100).toFixed(1)+'%',outerOk?'okText':'ngText'); setStat('pointStat',points.length?`${res.pointOk}/${points.length}`:'外形のみ',pointsOk?'okText':'ngText'); log(`品番: ${currentPart?.partNo||''}\n総合: ${ok?'OK':'NG'}\n位置合わせ: ${alignOk?'OK':'NG'} (${inliers}/${total}, 倍率${scale.toFixed(3)})\n外形差異率: ${(res.outerDiff*100).toFixed(1)}% ${outerOk?'OK':'NG'}\n検査ポイント: ${points.length?res.pointOk+'/'+points.length:'なし（外形のみ）'}`); m.src.delete(); m.gray.delete(); i.src.delete(); i.gray.delete(); H.delete(); warped.delete(); }catch(e){ console.error(e); setBanner('NG'); setStat('alignStat','NG','ngText'); log('解析エラー: '+e.message); }finally{ setLoading(false); } }
+</script>
+</body>
+</html>
