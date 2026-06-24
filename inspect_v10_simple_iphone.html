@@ -6,7 +6,7 @@
 <title>ぴろえんす Inspect v10 Simple</title>
 <style>
 :root{--bg:#06101f;--panel:rgba(5,12,26,.88);--txt:#eef6ff;--muted:#9fb4d9;--green:#35f078;--red:#ff4b5f;--yellow:#ffd84d;--cyan:#35dcff;--line:#29436d}
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;width:100%;height:100%;background:#000;color:var(--txt);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;overflow:hidden}.app{position:fixed;inset:0;background:#000}.topbar{position:absolute;z-index:10;left:0;right:0;top:0;padding:10px max(10px,env(safe-area-inset-left)) 10px max(10px,env(safe-area-inset-right));background:linear-gradient(180deg,rgba(0,0,0,.88),rgba(0,0,0,.30),transparent);display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}.brand{font-weight:900;letter-spacing:.06em;font-size:14px;color:#dff8ff}.selectRow{display:flex;gap:8px;align-items:center}.selectRow select{flex:1;min-width:0;padding:11px 12px;border-radius:12px;border:1px solid #31517e;background:#071226;color:var(--txt);font-size:15px}.selectRow button,.cameraBtn{border:0;border-radius:12px;padding:11px 14px;background:linear-gradient(90deg,#2aa7ff,#39e0ff);font-weight:900;color:#001225;font-size:14px}.cameraBtn{white-space:nowrap}.photoInput{display:none}.canvasWrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#020711}canvas{width:100%;height:100%;object-fit:contain;display:block}.empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;color:#aabde0;padding:24px;font-size:15px;line-height:1.7}.resultBanner{position:absolute;z-index:12;left:12px;right:12px;top:88px;border-radius:18px;padding:18px 14px;text-align:center;font-size:72px;font-weight:1000;letter-spacing:.14em;line-height:1;box-shadow:0 18px 40px rgba(0,0,0,.45);display:none}.resultBanner::before{content:'総合判定';display:block;font-size:13px;letter-spacing:.16em;margin-bottom:8px;color:#d9e9ff}.resultBanner.ok{display:block;background:rgba(9,65,37,.92);border:3px solid var(--green);color:var(--green)}.resultBanner.ng{display:block;background:rgba(73,18,31,.94);border:3px solid var(--red);color:var(--red)}.bottom{position:absolute;z-index:10;left:0;right:0;bottom:0;padding:10px max(10px,env(safe-area-inset-left)) max(12px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-right));background:linear-gradient(0deg,rgba(0,0,0,.92),rgba(0,0,0,.46),transparent)}.status{background:rgba(7,18,38,.86);border:1px solid var(--line);border-radius:14px;padding:10px 12px;color:#c6d8ff;font-size:12px;line-height:1.45;white-space:pre-line;max-height:160px;overflow:auto}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:7px}.stat{background:rgba(7,18,38,.82);border:1px solid var(--line);border-radius:12px;padding:8px;text-align:center}.stat small{display:block;color:#aabde0;font-size:10px}.stat b{display:block;font-size:18px;margin-top:2px}.okText{color:var(--green)}.ngText{color:var(--red)}.waitText{color:var(--yellow)}.loading{position:absolute;z-index:15;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:#dff8ff}.loading.on{display:flex}@media(max-width:480px){.topbar{grid-template-columns:1fr}.resultBanner{font-size:58px;top:118px}.brand{display:none}.selectRow select{font-size:14px}.stats{grid-template-columns:repeat(3,1fr)}.stat b{font-size:16px}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;width:100%;min-height:100%;background:#000;color:var(--txt);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;overflow-x:hidden;overflow-y:auto}.app{position:relative;width:100%;height:100dvh;min-height:100vh;background:#000;overflow:hidden}.topbar{position:absolute;z-index:10;left:0;right:0;top:0;padding:10px max(10px,env(safe-area-inset-left)) 10px max(10px,env(safe-area-inset-right));background:linear-gradient(180deg,rgba(0,0,0,.88),rgba(0,0,0,.30),transparent);display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}.brand{font-weight:900;letter-spacing:.06em;font-size:14px;color:#dff8ff}.selectRow{display:flex;gap:8px;align-items:center}.selectRow select{flex:1;min-width:0;padding:11px 12px;border-radius:12px;border:1px solid #31517e;background:#071226;color:var(--txt);font-size:15px}.selectRow button,.cameraBtn{border:0;border-radius:12px;padding:11px 14px;background:linear-gradient(90deg,#2aa7ff,#39e0ff);font-weight:900;color:#001225;font-size:14px}.cameraBtn{white-space:nowrap}.photoInput{display:none}.canvasWrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#020711}canvas{width:100%;height:100%;object-fit:contain;display:block}.empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;color:#aabde0;padding:24px;font-size:15px;line-height:1.7}.resultBanner{position:absolute;z-index:12;left:12px;right:12px;top:88px;border-radius:18px;padding:18px 14px;text-align:center;font-size:72px;font-weight:1000;letter-spacing:.14em;line-height:1;box-shadow:0 18px 40px rgba(0,0,0,.45);display:none}.resultBanner::before{content:'総合判定';display:block;font-size:13px;letter-spacing:.16em;margin-bottom:8px;color:#d9e9ff}.resultBanner.ok{display:block;background:rgba(9,65,37,.92);border:3px solid var(--green);color:var(--green)}.resultBanner.ng{display:block;background:rgba(73,18,31,.94);border:3px solid var(--red);color:var(--red)}.bottom{position:absolute;z-index:10;left:0;right:0;bottom:0;padding:10px max(10px,env(safe-area-inset-left)) max(12px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-right));background:linear-gradient(0deg,rgba(0,0,0,.92),rgba(0,0,0,.46),transparent)}.status{background:rgba(7,18,38,.86);border:1px solid var(--line);border-radius:14px;padding:10px 12px;color:#c6d8ff;font-size:12px;line-height:1.45;white-space:pre-line;max-height:160px;overflow:auto}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:7px}.stat{background:rgba(7,18,38,.82);border:1px solid var(--line);border-radius:12px;padding:8px;text-align:center}.stat small{display:block;color:#aabde0;font-size:10px}.stat b{display:block;font-size:18px;margin-top:2px}.okText{color:var(--green)}.ngText{color:var(--red)}.waitText{color:var(--yellow)}.loading{position:absolute;z-index:15;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:#dff8ff}.loading.on{display:flex}.debugPanel{min-height:100dvh;background:#050b16;padding:18px max(14px,env(safe-area-inset-left)) max(28px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-right));border-top:1px solid #20385f}.debugHead{display:flex;align-items:end;justify-content:space-between;gap:10px;margin-bottom:12px}.debugHead h2{margin:0;font-size:20px;letter-spacing:.08em}.debugHint{color:#9fb4d9;font-size:12px}.debugGrid{display:grid;grid-template-columns:1fr;gap:10px}.debugCard{background:rgba(7,18,38,.88);border:1px solid var(--line);border-radius:14px;padding:12px}.debugCard h3{margin:0 0 8px;font-size:14px;color:#dff8ff}.debugPre{margin:0;white-space:pre-wrap;word-break:break-word;color:#c6d8ff;font-size:12px;line-height:1.5}.debugCanvasWrap{background:#020711;border:1px solid #20385f;border-radius:12px;overflow:hidden}.debugCanvasWrap canvas{width:100%;height:auto;display:block}.debugBadge{display:inline-block;padding:3px 8px;border-radius:999px;border:1px solid #31517e;color:#9fb4d9;font-size:11px;margin-left:6px}@media(max-width:480px){.topbar{grid-template-columns:1fr}.resultBanner{font-size:58px;top:118px}.brand{display:none}.selectRow select{font-size:14px}.stats{grid-template-columns:repeat(3,1fr)}.stat b{font-size:16px}}
 </style>
 </head>
 <body>
@@ -33,6 +33,21 @@
     <div id="status" class="status">OpenCV.js読み込み待ち...</div>
   </div>
 </div>
+<section id="debugPanel" class="debugPanel">
+  <div class="debugHead">
+    <div>
+      <h2>DEBUG PANEL <span id="debugState" class="debugBadge">WAIT</span></h2>
+      <div class="debugHint">通常画面はそのまま。ここは下へスクロールした時だけ見る開発用。</div>
+    </div>
+  </div>
+  <div class="debugGrid">
+    <div class="debugCard"><h3>画像・Canvas座標</h3><pre id="debugImage" class="debugPre">未解析</pre></div>
+    <div class="debugCard"><h3>位置合わせ / Homography</h3><pre id="debugAlign" class="debugPre">未解析</pre></div>
+    <div class="debugCard"><h3>検査ポイント変換</h3><pre id="debugPoints" class="debugPre">未解析</pre></div>
+    <div class="debugCard"><h3>プロセスログ</h3><pre id="debugLog" class="debugPre">待機中</pre></div>
+    <div class="debugCard"><h3>デバッグ重ね画像</h3><div class="debugCanvasWrap"><canvas id="debugCanvas" width="1100" height="760"></canvas></div></div>
+  </div>
+</section>
 <script async src="https://docs.opencv.org/4.9.0/opencv.js" onload="cvReady()"></script>
 <script>
 // =====================================================
@@ -52,16 +67,22 @@ const CONFIG = {
   scaleMin: 0.80,
   scaleMax: 1.25,
   outerThr: 0.06,
-  defaultPointThr: 0.12
+  defaultPointThr: 0.12,
+  pointCanvasW: 1100,
+  pointCanvasH: 760
 };
 
 const $=id=>document.getElementById(id);
 let cvLoaded=false, parts=[], currentPart=null, masterImg=null, inspectImg=null, points=[];
+let DEBUG={image:{},align:{},points:[],logs:[]};
 
 function log(s){ $('status').textContent=s; }
 function setLoading(on){ $('loading').classList.toggle('on',!!on); }
 function setBanner(state){ const b=$('banner'); b.className='resultBanner '+(state==='OK'?'ok':state==='NG'?'ng':''); b.textContent=state; }
 function setStat(id,text,cls=''){ const el=$(id); el.textContent=text; el.className=cls; }
+function dbg(msg,obj){ const line=new Date().toLocaleTimeString('ja-JP')+'  '+msg+(obj?'\n'+safeJson(obj):''); DEBUG.logs.push(line); if(DEBUG.logs.length>40) DEBUG.logs.shift(); renderDebug(); }
+function safeJson(obj){ try{return JSON.stringify(obj,(k,v)=>typeof v==='number'?Math.round(v*1000)/1000:v,2)}catch(e){return String(obj)} }
+function renderDebug(){ $('debugState').textContent=($('banner').textContent||'WAIT'); $('debugImage').textContent=safeJson(DEBUG.image||{}); $('debugAlign').textContent=safeJson(DEBUG.align||{}); $('debugPoints').textContent=safeJson(DEBUG.points||[]); $('debugLog').textContent=(DEBUG.logs||[]).join('\n\n')||'待機中'; }
 function cvReady(){ cv['onRuntimeInitialized']=()=>{ cvLoaded=true; log('OpenCV.js 読込OK'); init(); }; }
 function loadImageFromDataUrl(dataUrl){ return new Promise((res,rej)=>{ const img=new Image(); img.onload=()=>res(img); img.onerror=rej; img.src=dataUrl; }); }
 function loadImageFromFile(file){ return new Promise((res,rej)=>{ const img=new Image(); img.onload=()=>res(img); img.onerror=rej; img.src=URL.createObjectURL(file); }); }
@@ -70,7 +91,46 @@ function drawMatFit(canvas,mat){ const tmp=document.createElement('canvas'); cv.
 async function init(){ if(!GAS_URL){ log('GAS_URL未設定です。HTML内の const GAS_URL に /exec URLを貼ってください。'); return; } await loadParts(); }
 async function loadParts(){ try{ log('品番一覧読込中...'); const res=await fetch(GAS_URL+'?action=list'); const js=await res.json(); if(!js.ok) throw new Error(js.error||'list失敗'); parts=js.parts||[]; $('partSelect').innerHTML=parts.map(p=>`<option value="${escapeHtml(p.partNo)}">${escapeHtml(p.partNo)}${p.memo?' - '+escapeHtml(p.memo):''}</option>`).join('') || '<option value="">登録なし</option>'; log('品番一覧OK: '+parts.length+'件'); if(parts.length) await loadSelectedPart(); }catch(e){ console.error(e); log('品番一覧エラー: '+e.message); } }
 async function loadSelectedPart(){ const partNo=$('partSelect').value; if(!partNo)return; try{ setLoading(true); log('マスター読込中...'); setBanner('WAIT'); const res=await fetch(GAS_URL+'?action=get&partNo='+encodeURIComponent(partNo)); const js=await res.json(); if(!js.ok) throw new Error(js.error||'get失敗'); currentPart=js.part; masterImg=await loadImageFromDataUrl(currentPart.topData); points=normalizePointsToImage(currentPart.points||[], masterImg); drawImageFit($('viewCanvas'),masterImg); $('empty').style.display='none'; setStat('alignStat','--'); setStat('outerStat','--'); setStat('pointStat',points.length?('0/'+points.length):'外形のみ'); log('マスター読込OK: '+partNo+'\n検査ポイント: '+points.length+'件\n撮影してください。'); }catch(e){ console.error(e); log('マスター読込エラー: '+e.message); }finally{ setLoading(false); } }
-function normalizePointsToImage(rawPoints,img){ const pts=(rawPoints||[]).map(p=>({...p})); if(!img || !pts.length)return pts; const maxX=Math.max(...pts.map(p=>(+p.x||0)+(+p.w||0))); const maxY=Math.max(...pts.map(p=>(+p.y||0)+(+p.h||0))); if(maxX>img.width*1.05 || maxY>img.height*1.05){ const s=Math.min(img.width/maxX, img.height/maxY); return pts.map(p=>({...p,x:p.x*s,y:p.y*s,w:p.w*s,h:p.h*s})); } return pts; }
+function normalizePointsToImage(rawPoints,img){
+  const pts=(rawPoints||[]).map((p,idx)=>({...p,_idx:idx,_raw:{x:+p.x||0,y:+p.y||0,w:+p.w||0,h:+p.h||0}}));
+  DEBUG.points=[];
+  if(!img || !pts.length){ renderDebug(); return pts; }
+  const canvasW=+(currentPart?.pointCanvasW||currentPart?.canvasW||currentPart?.viewW||CONFIG.pointCanvasW);
+  const canvasH=+(currentPart?.pointCanvasH||currentPart?.canvasH||currentPart?.viewH||CONFIG.pointCanvasH);
+  const r=Math.min(canvasW/img.width,canvasH/img.height);
+  const ox=(canvasW-img.width*r)/2, oy=(canvasH-img.height*r)/2;
+  const maxX=Math.max(...pts.map(p=>p._raw.x+p._raw.w));
+  const maxY=Math.max(...pts.map(p=>p._raw.y+p._raw.h));
+  let mode='image-raw';
+  let out=pts;
+  // Master画面(canvas 1100x760等)上で登録した座標は、画像fit分の余白を引かないとInspectで右下へ飛ぶ。
+  const looksCanvas=(canvasW && canvasH && (Math.abs(img.width-canvasW)>2 || Math.abs(img.height-canvasH)>2) && maxX<=canvasW*1.02 && maxY<=canvasH*1.02);
+  if(looksCanvas){
+    mode='canvas-fit-to-image';
+    out=pts.map(p=>({
+      ...p,
+      x:(p._raw.x-ox)/r,
+      y:(p._raw.y-oy)/r,
+      w:p._raw.w/r,
+      h:p._raw.h/r
+    }));
+  }else if(maxX>img.width*1.05 || maxY>img.height*1.05){
+    mode='simple-scale-to-image';
+    const s=Math.min(img.width/maxX, img.height/maxY);
+    out=pts.map(p=>({...p,x:p._raw.x*s,y:p._raw.y*s,w:p._raw.w*s,h:p._raw.h*s}));
+  }
+  out=out.map(p=>({
+    ...p,
+    x:Math.max(0,Math.min(img.width-1,+p.x||0)),
+    y:Math.max(0,Math.min(img.height-1,+p.y||0)),
+    w:Math.max(2,Math.min(img.width-(+p.x||0),+p.w||2)),
+    h:Math.max(2,Math.min(img.height-(+p.y||0),+p.h||2))
+  }));
+  DEBUG.image.pointNormalize={mode, masterImage:{w:img.width,h:img.height}, pointCanvas:{w:canvasW,h:canvasH}, fit:{r,ox,oy}, rawMax:{x:maxX,y:maxY}};
+  DEBUG.points=out.map(p=>({name:p.name||('検査点'+(p._idx+1)), raw:p._raw, normalized:{x:p.x,y:p.y,w:p.w,h:p.h}, mode}));
+  renderDebug();
+  return out;
+}
 function escapeHtml(s){ return String(s??'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m])); }
 $('reloadBtn').onclick=loadParts;
 $('partSelect').onchange=loadSelectedPart;
@@ -81,9 +141,62 @@ function edgeMask(gray,edgeThr){ let blur=new cv.Mat(),edges=new cv.Mat(); cv.Ga
 function hasNearbyEdge(edge,x,y,w,h,tol){ for(let dy=-tol;dy<=tol;dy++){ for(let dx=-tol;dx<=tol;dx++){ let nx=x+dx,ny=y+dy; if(nx>=0&&ny>=0&&nx<w&&ny<h&&edge.ucharPtr(ny,nx)[0]) return true; } } return false; }
 function detectAndMatch(m,i,features){ let orb=new cv.ORB(features); let kp1=new cv.KeyPointVector(),kp2=new cv.KeyPointVector(),des1=new cv.Mat(),des2=new cv.Mat(); orb.detectAndCompute(m.gray,new cv.Mat(),kp1,des1); orb.detectAndCompute(i.gray,new cv.Mat(),kp2,des2); if(des1.empty()||des2.empty()) throw new Error('特徴点が少なすぎます'); let matcher=new cv.BFMatcher(cv.NORM_HAMMING,true); let matches=new cv.DMatchVector(); matcher.match(des1,des2,matches); let arr=[]; for(let k=0;k<matches.size();k++)arr.push(matches.get(k)); arr.sort((a,b)=>a.distance-b.distance); arr=arr.slice(0,Math.min(120,arr.length)); let srcPts=[],dstPts=[]; for(const mt of arr){ let p1=kp1.get(mt.queryIdx).pt,p2=kp2.get(mt.trainIdx).pt; srcPts.push(p1.x,p1.y); dstPts.push(p2.x,p2.y); } let srcMat=cv.matFromArray(arr.length,1,cv.CV_32FC2,srcPts); let dstMat=cv.matFromArray(arr.length,1,cv.CV_32FC2,dstPts); let mask=new cv.Mat(); let H=cv.findHomography(dstMat,srcMat,cv.RANSAC,5,mask); let inliers=0; for(let k=0;k<mask.rows;k++) if(mask.data[k]) inliers++; orb.delete(); kp1.delete(); kp2.delete(); des1.delete(); des2.delete(); matcher.delete(); matches.delete(); srcMat.delete(); dstMat.delete(); mask.delete(); if(H.empty()) throw new Error('位置合わせ失敗'); return{H,inliers,total:arr.length}; }
 function homographyScale(H){ let d=H.data64F||H.data32F; let a=d[0],b=d[1],c=d[3],e=d[4]; return Math.sqrt(Math.abs(a*e-b*c)); }
-function compareAll(m,warped,points){ let wGray=new cv.Mat(); cv.cvtColor(warped,wGray,cv.COLOR_RGBA2GRAY); let mEdge=edgeMask(m.gray,CONFIG.edgeThr), wEdge=edgeMask(wGray,CONFIG.edgeThr); let result=$('viewCanvas'),ctx=result.getContext('2d'); ctx.clearRect(0,0,result.width,result.height); ctx.fillStyle='#05070b'; ctx.fillRect(0,0,result.width,result.height); const r=Math.min(result.width/m.w,result.height/m.h), ox=(result.width-m.w*r)/2, oy=(result.height-m.h*r)/2; let tmp=document.createElement('canvas'); cv.imshow(tmp,warped); ctx.drawImage(tmp,ox,oy,m.w*r,m.h*r); let outerMismatch=0,outerDenom=0; ctx.save(); ctx.translate(ox,oy); ctx.scale(r,r); for(let yy=0;yy<m.h;yy+=2){ for(let xx=0;xx<m.w;xx+=2){ if(mEdge.ucharPtr(yy,xx)[0]){ outerDenom++; const found=hasNearbyEdge(wEdge,xx,yy,m.w,m.h,CONFIG.tol); if(!found)outerMismatch++; ctx.fillStyle=found?'rgba(53,240,120,.32)':'rgba(255,75,95,.85)'; ctx.fillRect(xx,yy,2,2); } } } let okCount=0,maxPointDiff=0,details=[]; for(const roi of points){ let x=Math.max(0,Math.round(roi.x*m.scale)), y=Math.max(0,Math.round(roi.y*m.scale)), w=Math.min(m.w-x,Math.round(roi.w*m.scale)), h=Math.min(m.h-y,Math.round(roi.h*m.scale)); let mode=roi.type||'present', thr=((roi.threshold??(CONFIG.defaultPointThr*100))/100); let mismatch=0,denom=0,diff=0,ok=false; if(mode==='present'){ for(let yy=y;yy<y+h;yy++)for(let xx=x;xx<x+w;xx++)if(mEdge.ucharPtr(yy,xx)[0]){denom++; if(!hasNearbyEdge(wEdge,xx,yy,m.w,m.h,CONFIG.tol))mismatch++;} diff=denom?mismatch/denom:1; ok=diff<=thr; }else{ for(let yy=y;yy<y+h;yy++)for(let xx=x;xx<x+w;xx++)if(wEdge.ucharPtr(yy,xx)[0]){denom++; if(!hasNearbyEdge(mEdge,xx,yy,m.w,m.h,CONFIG.tol))mismatch++;} diff=denom?mismatch/denom:0; ok=diff<=thr; } if(ok)okCount++; maxPointDiff=Math.max(maxPointDiff,diff); details.push({...roi,diff,ok}); ctx.strokeStyle=ok?'#35f078':'#ff4b5f'; ctx.lineWidth=5/r; ctx.strokeRect(x,y,w,h); ctx.fillStyle=ctx.strokeStyle; ctx.font=`${18/r}px sans-serif`; ctx.fillText(`${roi.name||'検査点'} ${(diff*100).toFixed(1)}%`,x,y-8); }
-  ctx.restore(); mEdge.delete(); wEdge.delete(); wGray.delete(); return{outerDiff:outerDenom?outerMismatch/outerDenom:1, pointOk:okCount, pointAllOk:okCount===points.length, maxPointDiff, details}; }
-async function runInspect(){ if(!cvLoaded){alert('OpenCV.js読み込み中');return} if(!masterImg||!inspectImg){alert('品番と写真を確認してください');return} try{ setLoading(true); setBanner('WAIT'); log('解析中...'); const m=matFromImage(masterImg,CONFIG.maxW), i=matFromImage(inspectImg,CONFIG.maxW); const {H,inliers,total}=detectAndMatch(m,i,CONFIG.features); let warped=new cv.Mat(); cv.warpPerspective(i.src,warped,H,new cv.Size(m.w,m.h)); const scale=homographyScale(H); const scaleOk=scale>=CONFIG.scaleMin&&scale<=CONFIG.scaleMax; const alignOk=inliers>=CONFIG.minInliers && (inliers/Math.max(1,total))>=CONFIG.minInlierRatio && scaleOk; const res=compareAll(m,warped,points); const outerOk=res.outerDiff<=CONFIG.outerThr; const pointsOk=(points.length===0)||res.pointAllOk; const ok=alignOk && outerOk && pointsOk; setBanner(ok?'OK':'NG'); setStat('alignStat',`${inliers}/${total}`,alignOk?'okText':'ngText'); setStat('outerStat',(res.outerDiff*100).toFixed(1)+'%',outerOk?'okText':'ngText'); setStat('pointStat',points.length?`${res.pointOk}/${points.length}`:'外形のみ',pointsOk?'okText':'ngText'); log(`品番: ${currentPart?.partNo||''}\n総合: ${ok?'OK':'NG'}\n位置合わせ: ${alignOk?'OK':'NG'} (${inliers}/${total}, 倍率${scale.toFixed(3)})\n外形差異率: ${(res.outerDiff*100).toFixed(1)}% ${outerOk?'OK':'NG'}\n検査ポイント: ${points.length?res.pointOk+'/'+points.length:'なし（外形のみ）'}`); m.src.delete(); m.gray.delete(); i.src.delete(); i.gray.delete(); H.delete(); warped.delete(); }catch(e){ console.error(e); setBanner('NG'); setStat('alignStat','NG','ngText'); log('解析エラー: '+e.message); }finally{ setLoading(false); } }
+function compareAll(m,warped,points){ let wGray=new cv.Mat(); cv.cvtColor(warped,wGray,cv.COLOR_RGBA2GRAY); let mEdge=edgeMask(m.gray,CONFIG.edgeThr), wEdge=edgeMask(wGray,CONFIG.edgeThr); let result=$('viewCanvas'),ctx=result.getContext('2d'); ctx.clearRect(0,0,result.width,result.height); ctx.fillStyle='#05070b'; ctx.fillRect(0,0,result.width,result.height); const r=Math.min(result.width/m.w,result.height/m.h), ox=(result.width-m.w*r)/2, oy=(result.height-m.h*r)/2; let tmp=document.createElement('canvas'); cv.imshow(tmp,warped); ctx.drawImage(tmp,ox,oy,m.w*r,m.h*r); let outerMismatch=0,outerDenom=0; ctx.save(); ctx.translate(ox,oy); ctx.scale(r,r); for(let yy=0;yy<m.h;yy+=2){ for(let xx=0;xx<m.w;xx+=2){ if(mEdge.ucharPtr(yy,xx)[0]){ outerDenom++; const found=hasNearbyEdge(wEdge,xx,yy,m.w,m.h,CONFIG.tol); if(!found)outerMismatch++; ctx.fillStyle=found?'rgba(53,240,120,.32)':'rgba(255,75,95,.85)'; ctx.fillRect(xx,yy,2,2); } } } let okCount=0,maxPointDiff=0,details=[]; for(const roi of points){ let x=Math.max(0,Math.round(roi.x*m.scale)), y=Math.max(0,Math.round(roi.y*m.scale)), w=Math.min(m.w-x,Math.round(roi.w*m.scale)), h=Math.min(m.h-y,Math.round(roi.h*m.scale)); let mode=roi.type||'present', thr=((roi.threshold??(CONFIG.defaultPointThr*100))/100); let mismatch=0,denom=0,diff=0,ok=false; if(mode==='present'){ for(let yy=y;yy<y+h;yy++)for(let xx=x;xx<x+w;xx++)if(mEdge.ucharPtr(yy,xx)[0]){denom++; if(!hasNearbyEdge(wEdge,xx,yy,m.w,m.h,CONFIG.tol))mismatch++;} diff=denom?mismatch/denom:1; ok=diff<=thr; }else{ for(let yy=y;yy<y+h;yy++)for(let xx=x;xx<x+w;xx++)if(wEdge.ucharPtr(yy,xx)[0]){denom++; if(!hasNearbyEdge(mEdge,xx,yy,m.w,m.h,CONFIG.tol))mismatch++;} diff=denom?mismatch/denom:0; ok=diff<=thr; } if(ok)okCount++; maxPointDiff=Math.max(maxPointDiff,diff); details.push({name:roi.name||('検査点'+(roi._idx+1)), raw:roi._raw, normalized:{x:roi.x,y:roi.y,w:roi.w,h:roi.h}, process:{x,y,w,h}, diff, ok, threshold:thr}); ctx.strokeStyle=ok?'#35f078':'#ff4b5f'; ctx.lineWidth=5/r; ctx.strokeRect(x,y,w,h); ctx.fillStyle=ctx.strokeStyle; ctx.font=`${18/r}px sans-serif`; ctx.fillText(`${roi.name||'検査点'} ${(diff*100).toFixed(1)}%`,x,y-8); }
+  ctx.restore();
+  const dc=$('debugCanvas'); if(dc){ const dctx=dc.getContext('2d'); dctx.clearRect(0,0,dc.width,dc.height); dctx.drawImage(result,0,0,dc.width,dc.height); }
+  DEBUG.points=details;
+  mEdge.delete(); wEdge.delete(); wGray.delete(); return{outerDiff:outerDenom?outerMismatch/outerDenom:1, pointOk:okCount, pointAllOk:okCount===points.length, maxPointDiff, details}; }
+async function runInspect(){
+  if(!cvLoaded){alert('OpenCV.js読み込み中');return}
+  if(!masterImg||!inspectImg){alert('品番と写真を確認してください');return}
+  try{
+    setLoading(true); setBanner('WAIT'); log('解析中...');
+    const pointNormalizeInfo=DEBUG.image?.pointNormalize;
+    DEBUG={image:{pointNormalize:pointNormalizeInfo},align:{},points:DEBUG.points||[],logs:DEBUG.logs||[]};
+    dbg('解析開始');
+    const m=matFromImage(masterImg,CONFIG.maxW), i=matFromImage(inspectImg,CONFIG.maxW);
+    DEBUG.image={
+      partNo:currentPart?.partNo||'',
+      masterOriginal:{w:masterImg.width,h:masterImg.height},
+      inspectOriginal:{w:inspectImg.width,h:inspectImg.height},
+      processMaster:{w:m.w,h:m.h,scale:m.scale},
+      processInspect:{w:i.w,h:i.h,scale:i.scale},
+      viewCanvas:{w:$('viewCanvas').width,h:$('viewCanvas').height},
+      pointCount:points.length,
+      pointNormalize:DEBUG.image.pointNormalize||undefined
+    };
+    const {H,inliers,total}=detectAndMatch(m,i,CONFIG.features);
+    let warped=new cv.Mat();
+    cv.warpPerspective(i.src,warped,H,new cv.Size(m.w,m.h));
+    const scale=homographyScale(H);
+    const d=H.data64F||H.data32F;
+    const scaleOk=scale>=CONFIG.scaleMin&&scale<=CONFIG.scaleMax;
+    const alignOk=inliers>=CONFIG.minInliers && (inliers/Math.max(1,total))>=CONFIG.minInlierRatio && scaleOk;
+    DEBUG.align={
+      inliers,total,ratio:inliers/Math.max(1,total),scale,scaleOk,alignOk,
+      H:[d[0],d[1],d[2],d[3],d[4],d[5],d[6],d[7],d[8]],
+      note:'Hはinspect画像→master画像へwarpする変換。検査点はmaster画像座標で評価。'
+    };
+    const res=compareAll(m,warped,points);
+    const outerOk=res.outerDiff<=CONFIG.outerThr;
+    const pointsOk=(points.length===0)||res.pointAllOk;
+    const ok=alignOk && outerOk && pointsOk;
+    setBanner(ok?'OK':'NG');
+    setStat('alignStat',`${inliers}/${total}`,alignOk?'okText':'ngText');
+    setStat('outerStat',(res.outerDiff*100).toFixed(1)+'%',outerOk?'okText':'ngText');
+    setStat('pointStat',points.length?`${res.pointOk}/${points.length}`:'外形のみ',pointsOk?'okText':'ngText');
+    log(`品番: ${currentPart?.partNo||''}
+総合: ${ok?'OK':'NG'}
+位置合わせ: ${alignOk?'OK':'NG'} (${inliers}/${total}, 倍率${scale.toFixed(3)})
+外形差異率: ${(res.outerDiff*100).toFixed(1)}% ${outerOk?'OK':'NG'}
+検査ポイント: ${points.length?res.pointOk+'/'+points.length:'なし（外形のみ）'}`);
+    dbg('解析完了',{ok,outerDiff:res.outerDiff,pointOk:res.pointOk,points:res.details});
+    renderDebug();
+    m.src.delete(); m.gray.delete(); i.src.delete(); i.gray.delete(); H.delete(); warped.delete();
+  }catch(e){
+    console.error(e); setBanner('NG'); setStat('alignStat','NG','ngText'); log('解析エラー: '+e.message); dbg('解析エラー',{message:e.message,stack:e.stack});
+  }finally{ setLoading(false); }
+}
 </script>
 </body>
 </html>
