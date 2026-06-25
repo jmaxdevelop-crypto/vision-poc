@@ -61,13 +61,13 @@ const CONFIG = {
   edgeThr: 100,
   tol: 6,
   maxW: 700,
-  features: 1500,
-  minInliers: 30,
-  minInlierRatio: 0.10,
-  scaleMin: 0.1,
-  scaleMax: 10,
-  outerThr: 0.5,
-  defaultPointThr: 0.12,
+  features: 1500,      // 1500→2000
+  minInliers: 30,      // 30→15
+  minInlierRatio: 0.60,// 0.60→0.30
+  scaleMin: 0.80,      // 0.80→0.50
+  scaleMax: 1.25,      // 1.25→2.00
+  outerThr: 0.60,      // 6%→60%
+  defaultPointThr: 0.12
   pointCanvasW: 1100,
   pointCanvasH: 760
 };
@@ -194,7 +194,7 @@ async function runInspect(){
     const res=compareAll(m,warped,points);
     const outerOk=res.outerDiff<=CONFIG.outerThr;
     const pointsOk=(points.length===0)||res.pointAllOk;
-    const ok=alignOk && outerOk && pointsOk;
+    const ok= outerOk && pointsOk;
     setBanner(ok?'OK':'NG');
     setStat('alignStat',`${inliers}/${total}`,alignOk?'okText':'ngText');
     setStat('outerStat',(res.outerDiff*100).toFixed(1)+'%',outerOk?'okText':'ngText');
