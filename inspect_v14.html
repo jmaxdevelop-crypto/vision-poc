@@ -58,7 +58,7 @@ const GAS_URL = 'https://script.google.com/macros/s/AKfycbzhTwzLskVh0lRNegdW0Fnm
 
 // 固定設定：現場用なので画面には出さない
 const CONFIG = {
-  edgeThr: 100,
+  edgeThr: 60,
   tol: 6,
   maxW: 700,
   features: 1500,      // 1500→2000
@@ -182,7 +182,7 @@ $('partSelect').onchange=loadSelectedPart;
 $('inspectFile').onchange=async e=>{ const f=e.target.files&&e.target.files[0]; if(!f)return; inspectImg=await loadImageFromFile(f); drawImageFit($('viewCanvas'),inspectImg); $('empty').style.display='none'; await runInspect(); e.target.value=''; };
 
 function matFromImage(img,maxW){ const scale=Math.min(1,maxW/img.width); const c=document.createElement('canvas'); c.width=Math.round(img.width*scale); c.height=Math.round(img.height*scale); const x=c.getContext('2d'); x.drawImage(img,0,0,c.width,c.height); let src=cv.imread(c); let gray=new cv.Mat(); cv.cvtColor(src,gray,cv.COLOR_RGBA2GRAY); return{src,gray,scale,w:c.width,h:c.height,canvas:c}; }
-function edgeMask(gray,edgeThr){ let blur=new cv.Mat(),edges=new cv.Mat(); cv.GaussianBlur(gray,blur,new cv.Size(3,3),0); cv.Canny(blur,edges,edgeThr,edgeThr*2); blur.delete(); return edges; }
+function edgeMask(gray,edgeThr){ let blur=new cv.Mat(),edges=new cv.Mat(); cv.GaussianBlur(gray,blur,new cv.Size(3,3),0); blur,edges,edgeThr,edgeThr*2); blur.delete(); return edges; }
 function hasNearbyEdge(edge,x,y,w,h,tol){ for(let dy=-tol;dy<=tol;dy++){ for(let dx=-tol;dx<=tol;dx++){ let nx=x+dx,ny=y+dy; if(nx>=0&&ny>=0&&nx<w&&ny<h&&edge.ucharPtr(ny,nx)[0]) return true; } } return false; }
 function detectAndMatch(m,i,features){ let orb=new cv.ORB(features); let kp1=new cv.KeyPointVector(),kp2=new cv.KeyPointVector(),des1=new cv.Mat(),des2=new cv.Mat(); orb.detectAndCompute(m.gray,new cv.Mat(),kp1,des1); orb.detectAndCompute(i.gray,new cv.Mat(),kp2,des2); if(des1.empty()||des2.empty()) throw new Error('特徴点が少なすぎます'); let matcher=new cv.BFMatcher(cv.NORM_HAMMING,true); let matches=new cv.DMatchVector(); matcher.match(des1,des2,matches); let arr=[]; for(let k=0;k<matches.size();k++)arr.push(matches.get(k)); arr.sort((a,b)=>a.distance-b.distance); arr=arr.slice(0,Math.min(120,arr.length)); let srcPts=[],dstPts=[]; for(const mt of arr){ let p1=kp1.get(mt.queryIdx).pt,p2=kp2.get(mt.trainIdx).pt; srcPts.push(p1.x,p1.y); dstPts.push(p2.x,p2.y); } let srcMat=cv.matFromArray(arr.length,1,cv.CV_32FC2,srcPts); let dstMat=cv.matFromArray(arr.length,1,cv.CV_32FC2,dstPts); let mask=new cv.Mat(); let H=cv.findHomography(dstMat,srcMat,cv.RANSAC,5,mask); let inliers=0; for(let k=0;k<mask.rows;k++) if(mask.data[k]) inliers++; orb.delete(); kp1.delete(); kp2.delete(); des1.delete(); des2.delete(); matcher.delete(); matches.delete(); srcMat.delete(); dstMat.delete(); mask.delete(); if(H.empty()) throw new Error('位置合わせ失敗'); return{H,inliers,total:arr.length}; }
 function homographyScale(H){ let d=H.data64F||H.data32F; let a=d[0],b=d[1],c=d[3],e=d[4]; return Math.sqrt(Math.abs(a*e-b*c)); }
