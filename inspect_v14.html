@@ -58,7 +58,7 @@ const GAS_URL = 'https://script.google.com/macros/s/AKfycbzhTwzLskVh0lRNegdW0Fnm
 
 // 固定設定：現場用なので画面には出さない
 const CONFIG = {
-  edgeThr: 60,
+  edgeThr: 100,
   tol: 6,
   maxW: 700,
   features: 1500,      // 1500→2000
@@ -184,8 +184,8 @@ $('inspectFile').onchange=async e=>{ const f=e.target.files&&e.target.files[0]; 
 function matFromImage(img,maxW){ const scale=Math.min(1,maxW/img.width); const c=document.createElement('canvas'); c.width=Math.round(img.width*scale); c.height=Math.round(img.height*scale); const x=c.getContext('2d'); x.drawImage(img,0,0,c.width,c.height); let src=cv.imread(c); let gray=new cv.Mat(); cv.cvtColor(src,gray,cv.COLOR_RGBA2GRAY); return{src,gray,scale,w:c.width,h:c.height,canvas:c}; }
 function edgeMask(gray,edgeThr){
   let blur=new cv.Mat(),edges=new cv.Mat();
-  cv.GaussianBlur(gray,blur,new cv.Size(5,5),0);
-  cv.Canny(blur,edges,Math.round(edgeThr*0.5),Math.round(edgeThr*1.5));
+  cv.GaussianBlur(gray,blur,new cv.Size(3,3),0);
+  cv.Canny(blur,edges,edgeThr,edgeThr*2);
   blur.delete();
   return edges;
 }
