@@ -1,62 +1,78 @@
 <!doctype html>
 <html lang="ja"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>ぴろえんす Master v23 Drive保存 Camera Barcode</title><style>
+<title>ぴろえんす Master v24 Flow Mode UI</title><style>
 :root{--bg:#071225;--card:#101c34;--line:#29436d;--txt:#eef6ff;--muted:#9fb4d9;--cyan:#35dcff;--green:#35f078;--red:#ff4b5f;--yellow:#ffd84d}
 *{box-sizing:border-box}body{margin:0;background:linear-gradient(135deg,#071225,#111b34);color:var(--txt);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}header{padding:12px 16px;border-bottom:1px solid #20375f;background:#081226cc;position:sticky;top:0;z-index:5}h1{font-size:19px;margin:0}.sub{font-size:12px;color:var(--muted);margin-top:4px}main{display:grid;grid-template-columns:330px 1fr;gap:12px;padding:12px;max-width:1500px;margin:auto}.card{background:rgba(16,28,52,.94);border:1px solid var(--line);border-radius:14px;padding:12px;box-shadow:0 12px 30px #0005}label{display:block;font-size:12px;color:#c8d8fa;margin:10px 0 5px}input,select{width:100%;padding:8px;border-radius:10px;border:1px solid #31517e;background:#071226;color:var(--txt)}button{width:100%;border:0;border-radius:11px;padding:11px 12px;margin-top:9px;background:linear-gradient(90deg,#2aa7ff,#39e0ff);font-weight:800;color:#001225;cursor:pointer}button.secondary{background:#26395f;color:#eef6ff}button.danger{background:#62283a;color:white}.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.box{background:#020711;border:1px solid #27436f;border-radius:12px;padding:9px}.box h3{font-size:13px;margin:0 0 6px}.box canvas{width:100%;height:auto;background:#111;border-radius:8px;display:block}.big{grid-column:1/-1}.status{font-size:12px;color:#c6d8ff;white-space:pre-line;line-height:1.45;margin-top:10px}.roiList{margin-top:10px;border-top:1px solid #2a416b;padding-top:8px;max-height:220px;overflow:auto}.roiItem{display:flex;justify-content:space-between;gap:8px;border-bottom:1px solid #20375f;padding:6px 0;font-size:12px}.decision{font-size:76px;font-weight:1000;text-align:center;border-radius:16px;padding:18px 12px;margin-bottom:10px;letter-spacing:.10em;line-height:1}.decision::before{content:"総合判定";display:block;font-size:14px;letter-spacing:.12em;margin-bottom:8px;color:#c8d8fa}.decision.wait{background:#26395f;color:#dce8ff;border:2px solid #405b8d}.decision.ok{background:#0f3d25;color:#35f078;border:3px solid #35f078}.decision.ng{background:#451520;color:#ff4b5f;border:3px solid #ff4b5f}.metrics{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:10px}.metric{background:#071226;border:1px solid #29436d;border-radius:10px;padding:9px;text-align:center}.metric b{display:block;font-size:22px}.metric small{color:#aabde0}.on{outline:2px solid var(--yellow);background:#ffd84d!important;color:#111!important}.flowBlock{border:1px solid #20375f;background:rgba(7,18,38,.58);border-radius:12px;padding:10px;margin:0 0 12px}.flowTitle{font-size:13px;font-weight:900;color:#dff8ff;margin:0 0 8px;letter-spacing:.04em}.flowNote{font-size:11px;color:#9fb4d9;line-height:1.45;margin:4px 0 0}.primarySave{font-size:15px;padding:13px 12px;margin-top:12px}.hiddenGas{display:none}.barcodeBox{margin-top:8px;padding:9px;border:1px dashed #31517e;border-radius:10px;background:rgba(2,7,17,.55)}.barcodeBox input{font-family:ui-monospace,Consolas,monospace;font-size:13px}.barcodeState{font-size:11px;color:#9fb4d9;margin-top:5px;white-space:pre-line}.barcodeReady{outline:2px solid var(--yellow)!important;box-shadow:0 0 0 3px rgba(255,216,77,.18)}.scanOverlay{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:99;display:none;align-items:center;justify-content:center;padding:14px}.scanOverlay.on{display:flex}.scanBox{width:min(760px,100%);background:#081226;border:1px solid #31517e;border-radius:16px;padding:12px;box-shadow:0 20px 60px #000a}.scanHead{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:8px}.scanTitle{font-weight:900;color:#dff8ff}.scanClose{width:auto;margin:0;padding:8px 12px;background:#62283a;color:white}.scanStage{position:relative;background:#000;border-radius:12px;overflow:hidden;border:1px solid #20375f}.scanStage video{
     width:100%;
     max-height:70vh;
     display:block;
     background:#000;
-}.scanGuide{position:absolute;left:12%;right:12%;top:32%;height:36%;border:3px solid rgba(255,216,77,.9);border-radius:14px;box-shadow:0 0 0 9999px rgba(0,0,0,.18);pointer-events:none}.scanMsg{font-size:12px;color:#c6d8ff;line-height:1.55;margin-top:8px;white-space:pre-line}.scanHidden{display:none}.barcodeScanBtn{background:linear-gradient(90deg,#ffd84d,#ffef9e)!important;color:#111!important}@media(max-width:900px){main{grid-template-columns:1fr}.grid{grid-template-columns:1fr}.metrics{grid-template-columns:1fr 1fr}.decision{font-size:52px}}
+}.scanGuide{position:absolute;left:12%;right:12%;top:32%;height:36%;border:3px solid rgba(255,216,77,.9);border-radius:14px;box-shadow:0 0 0 9999px rgba(0,0,0,.18);pointer-events:none}.scanMsg{font-size:12px;color:#c6d8ff;line-height:1.55;margin-top:8px;white-space:pre-line}.scanHidden{display:none}.barcodeScanBtn{background:linear-gradient(90deg,#ffd84d,#ffef9e)!important;color:#111!important}.modeBtn{font-size:15px;padding:13px 10px}.modeBtn.active{outline:2px solid var(--yellow);background:linear-gradient(90deg,#ffd84d,#ffef9e)!important;color:#111!important}.modeArea{display:none}.modeArea.on{display:block}.workArea{display:none}.workArea.on{display:block}.modePlaceholder{border:1px dashed #31517e;border-radius:12px;padding:12px;color:#9fb4d9;font-size:12px;line-height:1.5;background:rgba(2,7,17,.42)}@media(max-width:900px){main{grid-template-columns:1fr}.grid{grid-template-columns:1fr}.metrics{grid-template-columns:1fr 1fr}.decision{font-size:52px}}
 </style></head>
 <body>
-<header><h1>ぴろえんす Master v22 / Drive画像保存・カメラ読取</h1><div class="sub">新規登録時にカメラでQR/バーコードを読み取り、文字列をそのままキーとして保存します。画像は圧縮してGoogle Driveへ保存。</div></header>
+<header><h1>ぴろえんす Master v24 / モード選択UI</h1><div class="sub">最初に「新規登録」または「登録済み修正」を選択。必要な入力だけ表示します。画像は圧縮してGoogle Driveへ保存。</div></header>
 <main>
 <section class="card">
 <input id="gasUrl" class="hiddenGas" type="hidden" value="https://script.google.com/macros/s/AKfycbzhTwzLskVh0lRNegdW0FnmL-dedZ6LIps2NP9mRrXsPp0aC93ziLRAMUTEmzFiiU_3/exec">
 
 <div class="flowBlock">
-  <div class="flowTitle">1. 新規マスター登録</div>
-  <button id="newMasterBtn" class="secondary" type="button">新規登録を開始 / 入力クリア</button>
-  <div class="barcodeBox">
-    <label>バーコード読取</label>
-    <input id="barcodeInput" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="新規登録後、ここにバーコードをスキャン">
-    <div class="row"><button id="cameraBarcodeBtn" class="barcodeScanBtn" type="button">カメラで読取</button><button id="manualBarcodeBtn" class="secondary" type="button">手入力確定</button></div>
-    <div id="barcodeState" class="barcodeState">新規登録を開始すると読取待ちになります。iPhoneはカメラ読取、USBリーダーはEnter付加推奨。</div>
+  <div class="flowTitle">1. 作業モードを選択</div>
+  <div class="row">
+    <button id="newMasterBtn" class="secondary modeBtn" type="button">新規登録</button>
+    <button id="editModeBtn" class="secondary modeBtn" type="button">登録済み修正</button>
   </div>
-  <div class="flowNote">新しいマスターは、バーコード文字列をそのままキーとして登録します。手入力で品番欄へ直接入力してもOKです。</div>
+  <div class="flowNote">最初にどちらかを選ぶと、次の作業だけ表示します。</div>
 </div>
 
-<div class="flowBlock">
-  <div class="flowTitle">2. 登録済みマスター修正</div>
-  <select id="registeredSelect"><option value="">登録一覧読込中...</option></select>
-  <button id="loadRegisteredBtn" class="secondary" type="button">選択マスターを読込</button>
-  <div class="flowNote">既存データを読み込んで検査ポイントを追加・削除・修正します。</div>
+<div id="modePlaceholder" class="modePlaceholder">新規登録または登録済み修正を選択してください。</div>
+
+<div id="newArea" class="modeArea">
+  <div class="flowBlock">
+    <div class="flowTitle">2. QR / バーコード読取</div>
+    <div class="barcodeBox">
+      <label>バーコード読取</label>
+      <input id="barcodeInput" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="カメラ読取、または手入力">
+      <div class="row"><button id="cameraBarcodeBtn" class="barcodeScanBtn" type="button">カメラで読取</button><button id="manualBarcodeBtn" class="secondary" type="button">手入力確定</button></div>
+      <div id="barcodeState" class="barcodeState">新規登録モードを選択すると読取待ちになります。</div>
+    </div>
+    <div class="flowNote">QRから品番キーを抽出してMaster登録します。QR全文はInspectログ側で保存します。</div>
+  </div>
 </div>
 
-<div class="flowBlock">
-  <div class="flowTitle">3. マスター基本情報</div>
-  <label>品番キー（QRから自動抽出 / 手入力可）</label><input id="partNo" placeholder="例：80239-7NA0A-RE">
-  <label>メモ</label><input id="memo" placeholder="例：カッター刃先検査">
-  <label>マスター画像</label><input id="masterFile" type="file" accept="image/*">
-  <div class="row"><button id="fitBtn" class="secondary" type="button">全体表示</button><button id="actualBtn" class="secondary" type="button">100%</button></div>
-  <div class="status" id="zoomStatus">倍率: --</div>
+<div id="editArea" class="modeArea">
+  <div class="flowBlock">
+    <div class="flowTitle">2. 登録済みマスター選択</div>
+    <select id="registeredSelect"><option value="">登録一覧読込中...</option></select>
+    <button id="loadRegisteredBtn" class="secondary" type="button">選択マスターを読込</button>
+    <div class="flowNote">既存データを読み込んで検査ポイントを追加・削除・修正します。</div>
+  </div>
 </div>
 
-<div class="flowBlock">
-  <div class="flowTitle">4. 検査ポイント設定</div>
-  <label>検査ポイント名</label><input id="pointName" placeholder="例：刃先 / 刻印 / 穴A">
-  <label>検査内容</label><select id="pointType"><option value="present">あることを確認</option><option value="absent">ないことを確認</option></select>
-  <label id="pointThrLabel">相関OKしきい値%</label><input id="pointThr" type="range" min="1" max="100" value="50"><span id="pointThrVal">50</span>%
-  <button id="pointBtn" class="secondary" type="button">検査ポイント登録</button>
-</div>
+<div id="workArea" class="workArea">
+  <div class="flowBlock">
+    <div class="flowTitle">3. マスター基本情報</div>
+    <label>品番キー（QRから自動抽出 / 手入力可）</label><input id="partNo" placeholder="例：80239-7NA0A-RE">
+    <label>メモ</label><input id="memo" placeholder="例：カッター刃先検査">
+    <label>マスター画像</label><input id="masterFile" type="file" accept="image/*">
+    <div class="row"><button id="fitBtn" class="secondary" type="button">全体表示</button><button id="actualBtn" class="secondary" type="button">100%</button></div>
+    <div class="status" id="zoomStatus">倍率: --</div>
+  </div>
 
-<div class="flowBlock">
-  <div class="flowTitle">5. 登録済み検査ポイント</div>
-  <div id="pointList" class="roiList"></div>
-</div>
+  <div class="flowBlock">
+    <div class="flowTitle">4. 検査ポイント設定</div>
+    <label>検査ポイント名</label><input id="pointName" placeholder="例：刃先 / 刻印 / 穴A">
+    <label>検査内容</label><select id="pointType"><option value="present">あることを確認</option><option value="absent">ないことを確認</option></select>
+    <label id="pointThrLabel">相関OKしきい値%</label><input id="pointThr" type="range" min="1" max="100" value="50"><span id="pointThrVal">50</span>%
+    <button id="pointBtn" class="secondary" type="button">検査ポイント登録</button>
+  </div>
 
-<button id="saveBtn" class="primarySave">スプレッドシートへ保存</button>
+  <div class="flowBlock">
+    <div class="flowTitle">5. 登録済み検査ポイント</div>
+    <div id="pointList" class="roiList"></div>
+  </div>
+
+  <button id="saveBtn" class="primarySave">スプレッドシートへ保存</button>
+</div>
 <div id="status" class="status">未読込</div>
 </section>
 <section class="card">
@@ -85,7 +101,7 @@
 
 const $=id=>document.getElementById(id);
 const DEFAULT_GAS_URL='https://script.google.com/macros/s/AKfycbzhTwzLskVh0lRNegdW0FnmL-dedZ6LIps2NP9mRrXsPp0aC93ziLRAMUTEmzFiiU_3/exec';
-const MASTER_VERSION='v23-master-partno-qr-20260630';
+const MASTER_VERSION='v24-master-mode-switch-20260701';
 let loadedTopFileId='';
 function log(s){$('status').textContent=s}
 function getGasUrl(){return ($('gasUrl')?.value || localStorage.getItem('PIROENS_GAS_URL') || DEFAULT_GAS_URL).trim()}
@@ -297,6 +313,30 @@ function renderPointList(points, listId='pointList'){const el=$(listId); if(!el)
 let masterImg=null, points=[], pointMode=false, dragStart=null, dragCurrent=null;
 let selectedIndex=-1, panning=false, panStart=null;
 $('gasUrl').value=DEFAULT_GAS_URL;
+let currentMode='';
+function setMode(mode){
+  currentMode=mode;
+  const isNew=mode==='new';
+  const isEdit=mode==='edit';
+  $('newMasterBtn').classList.toggle('active',isNew);
+  $('editModeBtn').classList.toggle('active',isEdit);
+  $('modePlaceholder').style.display='none';
+  $('newArea').classList.toggle('on',isNew);
+  $('editArea').classList.toggle('on',isEdit);
+  $('workArea').classList.toggle('on',isNew);
+  $('saveBtn').textContent=isNew?'新規マスター登録':'上書き保存';
+}
+function selectNewMode(){
+  setMode('new');
+  newMaster();
+}
+function selectEditMode(){
+  setMode('edit');
+  $('workArea').classList.remove('on');
+  $('saveBtn').textContent='上書き保存';
+  log('修正モード\n登録済みマスターを選択して「選択マスターを読込」を押してください。');
+}
+
 function updatePointThrUI(){const type=$('pointType').value; if(type==='absent'){ $('pointThrLabel').textContent='差異OKしきい値%'; if(+$('pointThr').value>60)$('pointThr').value=12; }else{ $('pointThrLabel').textContent='相関OKしきい値%'; if(+$('pointThr').value<30)$('pointThr').value=50; } $('pointThrVal').textContent=$('pointThr').value;}
 $('pointThr').oninput=updatePointThrUI;
 $('pointType').onchange=updatePointThrUI;
@@ -384,6 +424,8 @@ async function loadRegisteredMaster(){
     }));
     selectedIndex=-1; pointMode=false; $('pointBtn').classList.remove('on'); $('pointBtn').textContent='検査ポイント登録';
     renderPointList(points); fitView();
+    $('workArea').classList.add('on');
+    $('saveBtn').textContent='上書き保存';
     log('修正モードで読込OK: '+(part.partNo||partNo)+'\n検査ポイント: '+points.length+'件\n編集後「スプレッドシートへ保存」で上書き保存');
   }catch(e){console.error(e);log('登録済みマスター読込エラー: '+e.message);}
 }
@@ -392,7 +434,8 @@ function newMaster(){
 }
 function escapeHtml(s){return String(s??'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));}
 $('loadRegisteredBtn').onclick=loadRegisteredMaster;
-$('newMasterBtn').onclick=newMaster;
+$('newMasterBtn').onclick=selectNewMode;
+$('editModeBtn').onclick=selectEditMode;
 
 $('fitBtn').onclick=fitView;
 $('actualBtn').onclick=actualView;
@@ -475,5 +518,5 @@ $('saveBtn').onclick=async()=>{
 };
 renderPointList(points);
 loadRegisteredParts();
-log('起動OK '+MASTER_VERSION+'\nGAS URLはデフォルト設定済み\n画像は圧縮してDriveへ保存。SheetにはFile IDだけ保存します');
+log('起動OK '+MASTER_VERSION+'\nまず作業モードを選択してください。');
 </script></body></html>
