@@ -236,7 +236,21 @@ function resetMasterState(){
 function dbg(msg,obj){ const line=new Date().toLocaleTimeString('ja-JP')+'  '+msg+(obj?'\n'+safeJson(obj):''); DEBUG.logs.push(line); if(DEBUG.logs.length>40) DEBUG.logs.shift(); renderDebug(); }
 function safeJson(obj){ try{return JSON.stringify(obj,(k,v)=>typeof v==='number'?Math.round(v*1000)/1000:v,2)}catch(e){return String(obj)} }
 function renderDebug(){ $('debugState').textContent=($('banner').textContent||'WAIT'); $('debugImage').textContent=safeJson(DEBUG.image||{}); $('debugAlign').textContent=safeJson(DEBUG.align||{}); $('debugPoints').textContent=safeJson(DEBUG.points||[]); $('debugLog').textContent=(DEBUG.logs||[]).join('\n\n')||'待機中'; }
-function cvReady(){ cv['onRuntimeInitialized']=()=>{ cvLoaded=true; log('OpenCV.js 読込OK '+INSPECT_VERSION); init(); }; }
+function cvReady(){
+  const boot = () => {
+    cvLoaded = true;
+    log('OpenCV.js 読込OK '+INSPECT_VERSION);
+    init();
+  };
+
+  if (window.cv && cv.Mat) {
+    boot();
+  } else if (window.cv) {
+    cv['onRuntimeInitialized'] = boot;
+  } else {
+    log('OpenCV.js読込失敗');
+  }
+}
 function loadImageFromDataUrl(dataUrl){ return new Promise((res,rej)=>{ const img=new Image(); img.onload=()=>res(img); img.onerror=rej; img.src=dataUrl; }); }
 function loadImageFromFile(file){ return new Promise((res,rej)=>{ const img=new Image(); img.onload=()=>res(img); img.onerror=rej; img.src=URL.createObjectURL(file); }); }
 function drawImageFit(canvas,img){ const ctx=canvas.getContext('2d'); ctx.clearRect(0,0,canvas.width,canvas.height); ctx.fillStyle='#05070b'; ctx.fillRect(0,0,canvas.width,canvas.height); if(!img)return; const r=Math.min(canvas.width/img.width,canvas.height/img.height); const w=img.width*r,h=img.height*r,ox=(canvas.width-w)/2,oy=(canvas.height-h)/2; ctx.drawImage(img,ox,oy,w,h); }
