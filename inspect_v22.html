@@ -271,8 +271,7 @@ async function waitForOpenCV(timeoutMs=20000){
   startOpenCV();
   const start=Date.now();
   while(!cvLoaded && Date.now()-start<timeoutMs){
-    log('OpenCV.js準備中...
-解析開始まで待機しています。');
+    log('OpenCV.js準備中...解析開始まで待機しています。');
     await wait(150);
   }
   updateActionState();
