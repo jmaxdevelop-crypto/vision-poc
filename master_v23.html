@@ -1,16 +1,46 @@
 <!doctype html>
 <html lang="ja"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>ぴろえんす Master v25 Mobile UI</title><style>
+<title>ぴろえんす Master v28 Mobile Pinch & Undo</title><style>
 :root{--bg:#071225;--card:#101c34;--line:#29436d;--txt:#eef6ff;--muted:#9fb4d9;--cyan:#35dcff;--green:#35f078;--red:#ff4b5f;--yellow:#ffd84d}
 *{box-sizing:border-box}body{margin:0;background:linear-gradient(135deg,#071225,#111b34);color:var(--txt);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}header{padding:12px 16px;border-bottom:1px solid #20375f;background:#081226cc;position:sticky;top:0;z-index:5}h1{font-size:19px;margin:0}.sub{font-size:12px;color:var(--muted);margin-top:4px}main{display:grid;grid-template-columns:330px 1fr;gap:12px;padding:12px;max-width:1500px;margin:auto}.card{background:rgba(16,28,52,.94);border:1px solid var(--line);border-radius:14px;padding:12px;box-shadow:0 12px 30px #0005}label{display:block;font-size:12px;color:#c8d8fa;margin:10px 0 5px}input,select{width:100%;padding:8px;border-radius:10px;border:1px solid #31517e;background:#071226;color:var(--txt)}button{width:100%;border:0;border-radius:11px;padding:11px 12px;margin-top:9px;background:linear-gradient(90deg,#2aa7ff,#39e0ff);font-weight:800;color:#001225;cursor:pointer}button.secondary{background:#26395f;color:#eef6ff}button.danger{background:#62283a;color:white}.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.box{background:#020711;border:1px solid #27436f;border-radius:12px;padding:9px}.box h3{font-size:13px;margin:0 0 6px}.box canvas{width:100%;height:auto;background:#111;border-radius:8px;display:block}.big{grid-column:1/-1}.status{font-size:12px;color:#c6d8ff;white-space:pre-line;line-height:1.45;margin-top:10px}.roiList{margin-top:10px;border-top:1px solid #2a416b;padding-top:8px;max-height:220px;overflow:auto}.roiItem{display:flex;justify-content:space-between;gap:8px;border-bottom:1px solid #20375f;padding:6px 0;font-size:12px}.decision{font-size:76px;font-weight:1000;text-align:center;border-radius:16px;padding:18px 12px;margin-bottom:10px;letter-spacing:.10em;line-height:1}.decision::before{content:"総合判定";display:block;font-size:14px;letter-spacing:.12em;margin-bottom:8px;color:#c8d8fa}.decision.wait{background:#26395f;color:#dce8ff;border:2px solid #405b8d}.decision.ok{background:#0f3d25;color:#35f078;border:3px solid #35f078}.decision.ng{background:#451520;color:#ff4b5f;border:3px solid #ff4b5f}.metrics{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:10px}.metric{background:#071226;border:1px solid #29436d;border-radius:10px;padding:9px;text-align:center}.metric b{display:block;font-size:22px}.metric small{color:#aabde0}.on{outline:2px solid var(--yellow);background:#ffd84d!important;color:#111!important}.flowBlock{border:1px solid #20375f;background:rgba(7,18,38,.58);border-radius:12px;padding:10px;margin:0 0 12px}.flowTitle{font-size:13px;font-weight:900;color:#dff8ff;margin:0 0 8px;letter-spacing:.04em}.flowNote{font-size:11px;color:#9fb4d9;line-height:1.45;margin:4px 0 0}.primarySave{font-size:15px;padding:13px 12px;margin-top:12px}.hiddenGas{display:none}.barcodeBox{margin-top:8px;padding:9px;border:1px dashed #31517e;border-radius:10px;background:rgba(2,7,17,.55)}.barcodeBox input{font-family:ui-monospace,Consolas,monospace;font-size:13px}.barcodeState{font-size:11px;color:#9fb4d9;margin-top:5px;white-space:pre-line}.barcodeReady{outline:2px solid var(--yellow)!important;box-shadow:0 0 0 3px rgba(255,216,77,.18)}.scanOverlay{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:99;display:none;align-items:center;justify-content:center;padding:14px}.scanOverlay.on{display:flex}.scanBox{width:min(760px,100%);background:#081226;border:1px solid #31517e;border-radius:16px;padding:12px;box-shadow:0 20px 60px #000a}.scanHead{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:8px}.scanTitle{font-weight:900;color:#dff8ff}.scanClose{width:auto;margin:0;padding:8px 12px;background:#62283a;color:white}.scanStage{position:relative;background:#000;border-radius:12px;overflow:hidden;border:1px solid #20375f}.scanStage video{
     width:100%;
     max-height:70vh;
     display:block;
     background:#000;
-}.scanGuide{position:absolute;left:12%;right:12%;top:32%;height:36%;border:3px solid rgba(255,216,77,.9);border-radius:14px;box-shadow:0 0 0 9999px rgba(0,0,0,.18);pointer-events:none}.scanMsg{font-size:12px;color:#c6d8ff;line-height:1.55;margin-top:8px;white-space:pre-line}.scanHidden{display:none}.barcodeScanBtn{background:linear-gradient(90deg,#ffd84d,#ffef9e)!important;color:#111!important}.modeBtn{font-size:15px;padding:13px 10px}.modeBtn.active{outline:2px solid var(--yellow);background:linear-gradient(90deg,#ffd84d,#ffef9e)!important;color:#111!important}.modeArea{display:none}.modeArea.on{display:block}.workArea{display:none}.workArea.on{display:block}.modePlaceholder{border:1px dashed #31517e;border-radius:12px;padding:12px;color:#9fb4d9;font-size:12px;line-height:1.5;background:rgba(2,7,17,.42)}.mobileCanvasSlot{display:none}.canvasCard{min-height:200px}.canvasCard.mobileMoved{display:none}.canvasHint{font-size:11px;color:#9fb4d9;margin-top:6px;line-height:1.45}@media(max-width:900px){main{grid-template-columns:1fr}.grid{grid-template-columns:1fr}.metrics{grid-template-columns:1fr 1fr}.decision{font-size:52px}/* v25 fix: canvasCard自体をmobileCanvasSlotへ移動するため、中のdesktopCanvasSlotは隠さない */.desktopCanvasSlot{display:block}.mobileCanvasSlot{display:block;margin:0 0 12px}.mobileCanvasSlot .card{padding:0;border:0;background:transparent;box-shadow:none}.mobileCanvasSlot .box{border-color:#31517e}.box canvas{touch-action:none}.flowBlock{margin-bottom:10px}}
+}.scanGuide{position:absolute;left:12%;right:12%;top:32%;height:36%;border:3px solid rgba(255,216,77,.9);border-radius:14px;box-shadow:0 0 0 9999px rgba(0,0,0,.18);pointer-events:none}.scanMsg{font-size:12px;color:#c6d8ff;line-height:1.55;margin-top:8px;white-space:pre-line}.scanHidden{display:none}.barcodeScanBtn{background:linear-gradient(90deg,#ffd84d,#ffef9e)!important;color:#111!important}.modeBtn{font-size:15px;padding:13px 10px}.modeBtn.active{outline:2px solid var(--yellow);background:linear-gradient(90deg,#ffd84d,#ffef9e)!important;color:#111!important}.modeArea{display:none}.modeArea.on{display:block}.workArea{display:none}.workArea.on{display:block}.modePlaceholder{border:1px dashed #31517e;border-radius:12px;padding:12px;color:#9fb4d9;font-size:12px;line-height:1.5;background:rgba(2,7,17,.42)}.mobileCanvasSlot{display:none}.canvasCard{min-height:200px}.canvasCard.mobileMoved{display:none}.canvasHint{font-size:11px;color:#9fb4d9;margin-top:6px;line-height:1.45}
+/* v26: モバイルでは写真の直前に検査ポイント操作を置く */
+.mobilePointToolbar{display:none}.mobilePointToolbar .toolbarTitle{font-size:12px;font-weight:900;color:#dff8ff;margin-bottom:8px;letter-spacing:.04em}.mobilePointToolbar .toolbarRow{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:8px}.mobilePointToolbar .toolbarRow.one{grid-template-columns:1fr}.mobilePointToolbar .typeBtn{margin:0;padding:10px 7px;background:#26395f;color:#eef6ff;font-size:13px}.mobilePointToolbar .typeBtn.active{background:linear-gradient(90deg,#ffd84d,#ffef9e)!important;color:#111!important;outline:2px solid var(--yellow)}.mobilePointToolbar .toolbarAdd{margin:0;padding:13px 10px;font-size:15px}.mobilePointToolbar .toolbarHelp{font-size:11px;color:#9fb4d9;line-height:1.45;margin-top:8px}.mobilePointToolbar .toolbarThr{display:grid;grid-template-columns:1fr auto;align-items:center;gap:8px;margin-top:8px}.mobilePointToolbar .toolbarThr input{margin:0;padding:0}.mobilePointToolbar .toolbarThr b{min-width:46px;text-align:right;color:#ffd84d;font-size:13px}
+
+/* v27: モバイルの検査ポイント設定は画像の上にフローティング表示 */
+.imageBox{position:relative}
+.mobilePointOverlay{display:none}
+@media(max-width:900px){
+  .mobileImageEditing #pointSettingsBlock{display:none}
+  .mobilePointOverlay{display:block;position:absolute;z-index:20;left:10px;right:10px;bottom:10px;padding:10px;border:1px solid rgba(53,220,255,.78);border-radius:14px;background:rgba(4,14,30,.91);backdrop-filter:blur(10px);box-shadow:0 12px 32px rgba(0,0,0,.52)}
+  .mobilePointOverlay.collapsed{left:auto;right:10px;bottom:10px;padding:0;border:0;background:transparent;box-shadow:none;backdrop-filter:none}
+  .mobilePointOverlay .overlayHead{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+  .mobilePointOverlay .overlayTitle{font-size:12px;font-weight:900;letter-spacing:.05em;color:#dff8ff}
+  .mobilePointOverlay .overlayMin{width:auto;margin:0;padding:6px 9px;border-radius:9px;background:#26395f;color:#eef6ff;font-size:12px}
+  .mobilePointOverlay .toolbarRow{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:7px}
+  .mobilePointOverlay .toolbarRow.one{grid-template-columns:1fr}
+  .mobilePointOverlay .typeBtn{margin:0;padding:10px 7px;background:#26395f;color:#eef6ff;font-size:13px}
+  .mobilePointOverlay .typeBtn.active{background:linear-gradient(90deg,#ffd84d,#ffef9e)!important;color:#111!important;outline:2px solid var(--yellow)}
+  .mobilePointOverlay .toolbarAdd{margin:0;padding:12px 10px;font-size:15px}
+  .mobilePointOverlay .toolbarUndo{margin:0;padding:11px 10px;background:#26395f;color:#eef6ff;font-size:13px}
+  .mobilePointOverlay .toolbarUndo:disabled{opacity:.42;filter:grayscale(.5)}
+  .mobilePointOverlay .toolbarHelp{font-size:11px;color:#9fb4d9;line-height:1.35;margin-top:7px}
+  .mobilePointOverlay .toolbarThr{display:grid;grid-template-columns:1fr auto;align-items:center;gap:8px;margin-top:7px}
+  .mobilePointOverlay .toolbarThr input{margin:0;padding:0}
+  .mobilePointOverlay .toolbarThr b{min-width:46px;text-align:right;color:#ffd84d;font-size:13px}
+  .mobilePointOverlay.collapsed .overlayBody{display:none}
+  .mobilePointOverlay.collapsed .overlayHead{margin:0}
+  .mobilePointOverlay.collapsed .overlayTitle{display:none}
+  .mobilePointOverlay.collapsed .overlayMin{background:linear-gradient(90deg,#2aa7ff,#39e0ff);color:#001225;font-weight:900;padding:10px 13px}
+}
+@media(max-width:900px){main{grid-template-columns:1fr}.grid{grid-template-columns:1fr}.metrics{grid-template-columns:1fr 1fr}.decision{font-size:52px}.mobileImageEditing #pointSettingsBlock{display:none}.mobileImageEditing .canvasHint{margin-top:8px}/* v25 fix: canvasCard自体をmobileCanvasSlotへ移動するため、中のdesktopCanvasSlotは隠さない */.desktopCanvasSlot{display:block}.mobileCanvasSlot{display:block;margin:0 0 12px}.mobileCanvasSlot .card{padding:0;border:0;background:transparent;box-shadow:none}.mobileCanvasSlot .box{border-color:#31517e}.box canvas{touch-action:none}.flowBlock{margin-bottom:10px}}
 </style></head>
 <body>
-<header><h1>ぴろえんす Master v25 / モード選択UI・モバイル対応</h1><div class="sub">最初に「新規登録」または「登録済み修正」を選択。必要な入力だけ表示します。画像は圧縮してGoogle Driveへ保存。</div></header>
+<header><h1>ぴろえんす Master v28 / モバイル拡大縮小・UNDO対応</h1><div class="sub">最初に「新規登録」または「登録済み修正」を選択。必要な入力だけ表示します。画像は圧縮してGoogle Driveへ保存。</div></header>
 <main>
 <section class="card">
 <input id="gasUrl" class="hiddenGas" type="hidden" value="https://script.google.com/macros/s/AKfycbzhTwzLskVh0lRNegdW0FnmL-dedZ6LIps2NP9mRrXsPp0aC93ziLRAMUTEmzFiiU_3/exec">
@@ -60,7 +90,7 @@
 
   <div id="mobileCanvasSlot" class="mobileCanvasSlot"></div>
 
-  <div class="flowBlock">
+  <div id="pointSettingsBlock" class="flowBlock">
     <div class="flowTitle">4. 検査ポイント設定</div>
     <label>検査ポイント名</label><input id="pointName" placeholder="例：刃先 / 刻印 / 穴A">
     <label>検査内容</label><select id="pointType"><option value="present">あることを確認</option><option value="absent">ないことを確認</option></select>
@@ -81,7 +111,7 @@
   <div id="desktopCanvasSlot" class="desktopCanvasSlot">
     <div id="canvasContent">
       <div class="grid">
-        <div class="box big"><h3>マスター画像（ドラッグで検査ポイント登録）</h3><canvas id="masterCanvas" width="1000" height="650"></canvas><div class="canvasHint">PC: ドラッグで検査ポイント登録 / 右ドラッグでパン。モバイル: 検査ポイント登録ON後、画像上を指でドラッグ。</div></div>
+        <div id="imageBox" class="box big imageBox"><h3>マスター画像（ドラッグで検査ポイント登録）</h3><canvas id="masterCanvas" width="1000" height="650"></canvas><div class="canvasHint">PC: ドラッグで検査ポイント登録 / 右ドラッグでパン。モバイル: 2本指で拡大縮小 / 1本指で範囲ドラッグ。誤った範囲は「直前を取り消す」。</div></div>
       </div>
     </div>
   </div>
@@ -107,7 +137,7 @@
 
 const $=id=>document.getElementById(id);
 const DEFAULT_GAS_URL='https://script.google.com/macros/s/AKfycbzhTwzLskVh0lRNegdW0FnmL-dedZ6LIps2NP9mRrXsPp0aC93ziLRAMUTEmzFiiU_3/exec';
-const MASTER_VERSION='v25-master-mobile-touch-fix2-20260703';
+const MASTER_VERSION='v28-mobile-pinch-undo-20260703';
 let loadedTopFileId='';
 function log(s){$('status').textContent=s}
 function getGasUrl(){return ($('gasUrl')?.value || localStorage.getItem('PIROENS_GAS_URL') || DEFAULT_GAS_URL).trim()}
@@ -128,6 +158,71 @@ function updateCanvasPlacement(){
   }
   // 移動直後はSafariがCanvas幅を取り損ねることがあるため再描画。
   setTimeout(()=>{ if(typeof redrawMaster==='function') redrawMaster(); }, 0);
+  if(typeof refreshMobileImageEditor==='function') refreshMobileImageEditor();
+}
+
+function ensureMobilePointToolbar(){
+  const host=$('imageBox');
+  if(!host || $('mobilePointToolbar')) return;
+  const bar=document.createElement('div');
+  bar.id='mobilePointToolbar';
+  bar.className='mobilePointOverlay';
+  bar.innerHTML=`
+    <div class="overlayHead">
+      <div class="overlayTitle">検査ポイント設定</div>
+      <button id="mOverlayMin" class="overlayMin" type="button">閉じる</button>
+    </div>
+    <div class="overlayBody">
+      <input id="mPointName" type="text" placeholder="ポイント名（例：穴A / 刻印）">
+      <div class="toolbarRow">
+        <button id="mTypePresent" class="typeBtn" type="button">あること確認</button>
+        <button id="mTypeAbsent" class="typeBtn" type="button">ないこと確認</button>
+      </div>
+      <div class="toolbarThr"><input id="mPointThr" type="range" min="1" max="100" value="50"><b id="mPointThrVal">50%</b></div>
+      <div class="toolbarRow one"><button id="mPointToggle" class="toolbarAdd secondary" type="button">＋ この条件で範囲をドラッグ</button></div>
+      <div class="toolbarRow one"><button id="mPointUndo" class="toolbarUndo" type="button">↶ 直前の範囲を取り消す</button></div>
+      <div class="toolbarHelp">2本指で拡大縮小 / 1本指で範囲をドラッグ。誤った範囲は直前取り消しで戻せます。</div>
+    </div>`;
+  host.appendChild(bar);
+
+  const syncToMain=()=>{
+    const n=$('mPointName'), t=$('mPointThr');
+    if(n) $('pointName').value=n.value;
+    if(t){ $('pointThr').value=t.value; $('pointThrVal').textContent=t.value; }
+    updatePointThrUI();
+    refreshMobileImageEditor();
+  };
+  $('mPointName').addEventListener('input',syncToMain);
+  $('mPointThr').addEventListener('input',syncToMain);
+  $('mTypePresent').onclick=()=>{ $('pointType').value='present'; updatePointThrUI(); refreshMobileImageEditor(); };
+  $('mTypeAbsent').onclick=()=>{ $('pointType').value='absent'; updatePointThrUI(); refreshMobileImageEditor(); };
+  $('mPointToggle').onclick=()=>{ bar.classList.remove('collapsed'); setPointMode(!pointMode); };
+  $('mPointUndo').onclick=()=>undoLastPoint();
+  $('mOverlayMin').onclick=()=>{
+    const collapsed=bar.classList.toggle('collapsed');
+    $('mOverlayMin').textContent=collapsed?'検査ポイント':'閉じる';
+  };
+}
+
+function refreshMobileImageEditor(){
+  ensureMobilePointToolbar();
+  const mobile=window.matchMedia('(max-width:900px)').matches;
+  const active=!!(mobile && masterImg);
+  document.body.classList.toggle('mobileImageEditing',active);
+  const bar=$('mobilePointToolbar');
+  if(!bar)return;
+  bar.style.display=active?'block':'none';
+  if(pointMode){ bar.classList.remove('collapsed'); const min=$('mOverlayMin'); if(min) min.textContent='閉じる'; }
+  const n=$('mPointName'), t=$('mPointThr'), tv=$('mPointThrVal');
+  if(n && document.activeElement!==n) n.value=$('pointName').value||'';
+  if(t) t.value=$('pointThr').value;
+  if(tv) tv.textContent=($('pointThr').value||50)+'%';
+  $('mTypePresent')?.classList.toggle('active',$('pointType').value==='present');
+  $('mTypeAbsent')?.classList.toggle('active',$('pointType').value==='absent');
+  const b=$('mPointToggle');
+  if(b){ b.classList.toggle('on',pointMode); b.textContent=pointMode?'登録中：写真をドラッグ':'＋ この条件で範囲をドラッグ'; }
+  const undo=$('mPointUndo');
+  if(undo){ undo.disabled=!points.length; undo.textContent=points.length?'↶ 直前の範囲を取り消す（'+points.length+'件）':'↶ 直前の範囲を取り消す'; }
 }
 window.addEventListener('resize',updateCanvasPlacement);
 window.addEventListener('orientationchange',()=>setTimeout(updateCanvasPlacement,250));
@@ -334,7 +429,7 @@ function actualView(){if(!masterImg)return;const f=baseFit(mc,masterImg);view.zo
 function setDecision(t,cls){const d=$('decision');if(!d)return;d.className='decision '+cls;d.textContent=t}
 function pointTypeLabel(t){return t==='absent'?'ないこと確認':'あること確認'}
 function pointThrLabel(t,th){return t==='absent'?('差異OK '+(th??12)+'%'):('相関OK '+(th??50)+'%')}
-function renderPointList(points, listId='pointList'){const el=$(listId); if(!el)return; el.innerHTML='<b>検査ポイント: '+points.length+'件</b>'+points.map((r,i)=>`<div class="roiItem"><span>${i+1}. ${r.name}<br><small>${pointTypeLabel(r.type)} / ${pointThrLabel(r.type,r.threshold)}</small></span><button class="danger" data-del="${i}">削除</button></div>`).join(''); el.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{points.splice(+b.dataset.del,1); if(selectedIndex===+b.dataset.del)selectedIndex=-1; renderPointList(points); if(typeof redrawMaster==='function')redrawMaster();});}
+function renderPointList(points, listId='pointList'){const el=$(listId); if(!el)return; el.innerHTML='<b>検査ポイント: '+points.length+'件</b>'+points.map((r,i)=>`<div class="roiItem"><span>${i+1}. ${r.name}<br><small>${pointTypeLabel(r.type)} / ${pointThrLabel(r.type,r.threshold)}</small></span><button class="danger" data-del="${i}">削除</button></div>`).join(''); el.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{points.splice(+b.dataset.del,1); if(selectedIndex===+b.dataset.del)selectedIndex=-1; renderPointList(points); if(typeof redrawMaster==='function')redrawMaster();}); if(typeof refreshMobileImageEditor==='function')refreshMobileImageEditor();}
 let masterImg=null, points=[], pointMode=false, dragStart=null, dragCurrent=null;
 let selectedIndex=-1, panning=false, panStart=null;
 $('gasUrl').value=DEFAULT_GAS_URL;
@@ -362,7 +457,7 @@ function selectEditMode(){
   log('修正モード\n登録済みマスターを選択して「選択マスターを読込」を押してください。');
 }
 
-function updatePointThrUI(){const type=$('pointType').value; if(type==='absent'){ $('pointThrLabel').textContent='差異OKしきい値%'; if(+$('pointThr').value>60)$('pointThr').value=12; }else{ $('pointThrLabel').textContent='相関OKしきい値%'; if(+$('pointThr').value<30)$('pointThr').value=50; } $('pointThrVal').textContent=$('pointThr').value;}
+function updatePointThrUI(){const type=$('pointType').value; if(type==='absent'){ $('pointThrLabel').textContent='差異OKしきい値%'; if(+$('pointThr').value>60)$('pointThr').value=12; }else{ $('pointThrLabel').textContent='相関OKしきい値%'; if(+$('pointThr').value<30)$('pointThr').value=50; } $('pointThrVal').textContent=$('pointThr').value; if(typeof refreshMobileImageEditor==='function')refreshMobileImageEditor();}
 $('pointThr').oninput=updatePointThrUI;
 $('pointType').onchange=updatePointThrUI;
 updatePointThrUI();
@@ -410,7 +505,7 @@ $('masterFile').onchange=async e=>{
   updateCanvasPlacement();
   fitView();
   log('マスター画像読込OK\nモバイルでは画像上を指でドラッグして検査ポイント登録できます。');
-  setTimeout(()=>{ if(window.matchMedia('(max-width:900px)').matches && $('canvasCard')) $('canvasCard').scrollIntoView({behavior:'smooth',block:'start'}); },80);
+  setTimeout(()=>{ if(window.matchMedia('(max-width:900px)').matches){ refreshMobileImageEditor(); const target=$('imageBox')||$('mobileCanvasSlot'); if(target) target.scrollIntoView({behavior:'smooth',block:'start'}); } },80);
 };
 async function loadRegisteredParts(){
   const gas=getGasUrl();
@@ -455,15 +550,17 @@ async function loadRegisteredMaster(){
       w:+p.w||0,
       h:+p.h||0
     }));
-    selectedIndex=-1; pointMode=false; $('pointBtn').classList.remove('on'); $('pointBtn').textContent='検査ポイント登録';
+    selectedIndex=-1; setPointMode(false);
     renderPointList(points); fitView();
     $('workArea').classList.add('on');
+    updateCanvasPlacement();
+    refreshMobileImageEditor();
     $('saveBtn').textContent='上書き保存';
     log('修正モードで読込OK: '+(part.partNo||partNo)+'\n検査ポイント: '+points.length+'件\n編集後「スプレッドシートへ保存」で上書き保存');
   }catch(e){console.error(e);log('登録済みマスター読込エラー: '+e.message);}
 }
 function newMaster(){
-  $('partNo').value=''; $('memo').value=''; $('masterFile').value=''; loadedTopFileId=''; masterImg=null; points=[]; selectedIndex=-1; dragStart=null; dragCurrent=null; view={zoom:1,panX:0,panY:0}; renderPointList(points); redrawMaster(); log('新規登録モード\nバーコードを読み取ってください。'); focusBarcodeReader();
+  $('partNo').value=''; $('memo').value=''; $('masterFile').value=''; loadedTopFileId=''; masterImg=null; points=[]; selectedIndex=-1; dragStart=null; dragCurrent=null; view={zoom:1,panX:0,panY:0}; setPointMode(false); renderPointList(points); redrawMaster(); refreshMobileImageEditor(); log('新規登録モード\nバーコードを読み取ってください。'); focusBarcodeReader();
 }
 function escapeHtml(s){return String(s??'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));}
 $('loadRegisteredBtn').onclick=loadRegisteredMaster;
@@ -472,7 +569,13 @@ $('editModeBtn').onclick=selectEditMode;
 
 $('fitBtn').onclick=fitView;
 $('actualBtn').onclick=actualView;
-$('pointBtn').onclick=()=>{pointMode=!pointMode;$('pointBtn').classList.toggle('on',pointMode);$('pointBtn').textContent=pointMode?'登録中（ドラッグ）':'検査ポイント登録';};
+function setPointMode(on){
+  pointMode=!!on;
+  $('pointBtn').classList.toggle('on',pointMode);
+  $('pointBtn').textContent=pointMode?'登録中（ドラッグ）':'検査ポイント登録';
+  if(typeof refreshMobileImageEditor==='function')refreshMobileImageEditor();
+}
+$('pointBtn').onclick=()=>setPointMode(!pointMode);
 const mc=$('masterCanvas');
 function redrawMaster(){drawImageFit(mc,masterImg,drawPoints)}
 function drawPoints(ctx,canvas,img){if(!img)return;const f=fitParams(canvas,img);ctx.save();ctx.translate(f.ox,f.oy);ctx.scale(f.r,f.r);ctx.font=`${16/f.r}px sans-serif`;points.forEach((p,i)=>{const sel=i===selectedIndex;ctx.strokeStyle=sel?'#35dcff':'#ffd84d';ctx.lineWidth=(sel?6:4)/f.r;if(sel){ctx.setLineDash([12/f.r,8/f.r]);ctx.lineDashOffset=-(Date.now()/60)%(20/f.r);}else{ctx.setLineDash([]);}ctx.strokeRect(p.x,p.y,p.w,p.h);ctx.setLineDash([]);ctx.fillStyle=sel?'#35dcff':'#ffd84d';ctx.fillText(p.name,p.x,p.y-6)});if(dragStart&&dragCurrent){const x=Math.min(dragStart.x,dragCurrent.x),y=Math.min(dragStart.y,dragCurrent.y),w=Math.abs(dragCurrent.x-dragStart.x),h=Math.abs(dragCurrent.y-dragStart.y);ctx.setLineDash([10/f.r,6/f.r]);ctx.lineDashOffset=-(Date.now()/45)%(16/f.r);ctx.strokeStyle='#35dcff';ctx.fillStyle='rgba(53,220,255,.16)';ctx.lineWidth=5/f.r;ctx.fillRect(x,y,w,h);ctx.strokeRect(x,y,w,h);ctx.setLineDash([]);ctx.fillStyle='#35dcff';ctx.fillText('選択中',x,y-8);requestAnimationFrame(()=>{if(dragStart)redrawMaster();});}ctx.restore();}
@@ -484,19 +587,33 @@ window.addEventListener('mousemove',e=>{if(!masterImg)return;if(panning&&panStar
 window.addEventListener('mouseup',e=>{if(panning){panning=false;panStart=null;return;}if(!pointMode||!masterImg||!dragStart)return;const p=eventToImg(mc,e,masterImg);const x=Math.min(dragStart.x,p.x),y=Math.min(dragStart.y,p.y),w=Math.abs(p.x-dragStart.x),h=Math.abs(p.y-dragStart.y);dragStart=null;dragCurrent=null;if(w<8||h<8){redrawMaster();return}points.push({name:$('pointName').value.trim()||'検査ポイント'+(points.length+1),type:$('pointType').value,threshold:+$('pointThr').value,x,y,w,h});selectedIndex=points.length-1;renderPointList(points);redrawMaster();});
 
 function touchToClient(t){return {clientX:t.clientX,clientY:t.clientY};}
+function touchMid(a,b){return {clientX:(a.clientX+b.clientX)/2,clientY:(a.clientY+b.clientY)/2};}
+function touchDistance(a,b){return Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY);}
+let pinchGesture={active:false,lastDistance:0,lastMid:null};
+function cancelRoiDrag(){dragStart=null;dragCurrent=null;}
 function finishTouchRoi(t){
   if(!pointMode||!masterImg||!dragStart)return;
   const p=eventToImg(mc,touchToClient(t),masterImg);
   const x=Math.min(dragStart.x,p.x),y=Math.min(dragStart.y,p.y),w=Math.abs(p.x-dragStart.x),h=Math.abs(p.y-dragStart.y);
-  dragStart=null; dragCurrent=null;
+  cancelRoiDrag();
   if(w<8||h<8){redrawMaster();return;}
   points.push({name:$('pointName').value.trim()||'検査ポイント'+(points.length+1),type:$('pointType').value,threshold:+$('pointThr').value,x,y,w,h});
   selectedIndex=points.length-1;
   renderPointList(points);
   redrawMaster();
+  log('検査ポイントを追加しました。誤った場合は「直前の範囲を取り消す」で戻せます。');
 }
 mc.addEventListener('touchstart',e=>{
   if(!masterImg || !e.touches.length)return;
+  if(e.touches.length>=2){
+    e.preventDefault();
+    cancelRoiDrag();
+    pinchGesture.active=true;
+    pinchGesture.lastDistance=touchDistance(e.touches[0],e.touches[1]);
+    pinchGesture.lastMid=touchMid(e.touches[0],e.touches[1]);
+    redrawMaster();
+    return;
+  }
   if(pointMode){
     e.preventDefault();
     const p=eventToImg(mc,touchToClient(e.touches[0]),masterImg);
@@ -507,20 +624,56 @@ mc.addEventListener('touchstart',e=>{
   }
 },{passive:false});
 mc.addEventListener('touchmove',e=>{
-  if(!masterImg || !pointMode || !dragStart || !e.touches.length)return;
+  if(!masterImg || !e.touches.length)return;
+  if(e.touches.length>=2){
+    e.preventDefault();
+    const dist=touchDistance(e.touches[0],e.touches[1]);
+    const mid=touchMid(e.touches[0],e.touches[1]);
+    if(!pinchGesture.active){
+      cancelRoiDrag();
+      pinchGesture.active=true;
+      pinchGesture.lastDistance=dist;
+      pinchGesture.lastMid=mid;
+      redrawMaster();
+      return;
+    }
+    if(pinchGesture.lastDistance>0 && dist>0){
+      const factor=Math.max(0.65,Math.min(1.55,dist/pinchGesture.lastDistance));
+      zoomAt(mc,masterImg,mid.clientX,mid.clientY,factor);
+    }
+    pinchGesture.lastDistance=dist;
+    pinchGesture.lastMid=mid;
+    return;
+  }
+  if(pinchGesture.active){ e.preventDefault(); return; }
+  if(!pointMode || !dragStart)return;
   e.preventDefault();
   dragCurrent=eventToImg(mc,touchToClient(e.touches[0]),masterImg);
   redrawMaster();
 },{passive:false});
 mc.addEventListener('touchend',e=>{
-  if(!masterImg || !pointMode || !dragStart)return;
+  if(!masterImg)return;
+  if(pinchGesture.active){
+    e.preventDefault();
+    if(e.touches.length<2){ pinchGesture.active=false; pinchGesture.lastDistance=0; pinchGesture.lastMid=null; cancelRoiDrag(); redrawMaster(); }
+    return;
+  }
+  if(!pointMode || !dragStart)return;
   e.preventDefault();
   const t=(e.changedTouches&&e.changedTouches[0]);
   if(t)finishTouchRoi(t);
 },{passive:false});
-mc.addEventListener('touchcancel',e=>{dragStart=null;dragCurrent=null;redrawMaster();},{passive:false});
+mc.addEventListener('touchcancel',e=>{pinchGesture.active=false;pinchGesture.lastDistance=0;pinchGesture.lastMid=null;cancelRoiDrag();redrawMaster();},{passive:false});
+function undoLastPoint(){
+  if(!points.length){ log('取り消せる検査ポイントはありません。'); return; }
+  const removed=points.pop();
+  selectedIndex=-1;
+  renderPointList(points);
+  redrawMaster();
+  log('直前の検査ポイントを取り消しました: '+(removed.name||'検査ポイント'));
+}
 
-window.addEventListener('keydown',e=>{const tag=(document.activeElement&&document.activeElement.tagName)||'';if(tag==='INPUT'||tag==='TEXTAREA')return;if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'){e.preventDefault();points.pop();selectedIndex=-1;renderPointList(points);redrawMaster();log('直前の検査ポイントを取り消しました');}if(e.key==='Delete'||e.key==='Backspace'){if(selectedIndex>=0){e.preventDefault();points.splice(selectedIndex,1);selectedIndex=-1;renderPointList(points);redrawMaster();log('選択中の検査ポイントを削除しました');}}if(e.key==='Home'){e.preventDefault();fitView();}});
+window.addEventListener('keydown',e=>{const tag=(document.activeElement&&document.activeElement.tagName)||'';if(tag==='INPUT'||tag==='TEXTAREA')return;if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'){e.preventDefault();undoLastPoint();}if(e.key==='Delete'||e.key==='Backspace'){if(selectedIndex>=0){e.preventDefault();points.splice(selectedIndex,1);selectedIndex=-1;renderPointList(points);redrawMaster();log('選択中の検査ポイントを削除しました');}}if(e.key==='Home'){e.preventDefault();fitView();}});
 mc.addEventListener('dblclick',e=>{if(!masterImg)return;const p=eventToImg(mc,e,masterImg);const idx=hitPoint(p);if(idx<0)return;selectedIndex=idx;const r=points[idx];const name=prompt('検査ポイント名',r.name);if(name!==null)r.name=name.trim()||r.name;const type=prompt('検査内容: present / absent',r.type||'present');if(type!==null&&['present','absent'].includes(type.trim()))r.type=type.trim();const th=prompt((r.type==='absent'?'差異OKしきい値%':'相関OKしきい値%'),String(r.threshold??(r.type==='absent'?12:50)));if(th!==null&&!isNaN(+th))r.threshold=+th;renderPointList(points);redrawMaster();});
 $('saveBtn').onclick=async()=>{
   const gas=getGasUrl(); if(!gas){alert('GAS URLを入れて');return}
@@ -587,8 +740,10 @@ $('saveBtn').onclick=async()=>{
     log('保存エラー: '+e.message+'\n\n確認ポイント:\n1) GitHub Pages / http://localhost から開いているか\n2) GASが「全員」実行可でデプロイされているか\n3) POSTサイズが大きすぎないか（Drive保存でも送信時は圧縮画像を送ります）\n4) GAS側が v5 Drive保存版に差し替わっているか');
   }
 };
+ensureMobilePointToolbar();
 updateCanvasPlacement();
 renderPointList(points);
+refreshMobileImageEditor();
 loadRegisteredParts();
 log('起動OK '+MASTER_VERSION+'\nまず作業モードを選択してください。モバイルは検査ポイント登録ON後、画像上を指でドラッグできます。');
 </script></body></html>
