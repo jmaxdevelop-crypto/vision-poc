@@ -7,7 +7,7 @@
     max-height:70vh;
     display:block;
     background:#000;
-}.scanGuide{position:absolute;left:12%;right:12%;top:32%;height:36%;border:3px solid rgba(255,216,77,.9);border-radius:14px;box-shadow:0 0 0 9999px rgba(0,0,0,.18);pointer-events:none}.scanMsg{font-size:12px;color:#c6d8ff;line-height:1.55;margin-top:8px;white-space:pre-line}.scanHidden{display:none}.barcodeScanBtn{background:linear-gradient(90deg,#ffd84d,#ffef9e)!important;color:#111!important}.modeBtn{font-size:15px;padding:13px 10px}.modeBtn.active{outline:2px solid var(--yellow);background:linear-gradient(90deg,#ffd84d,#ffef9e)!important;color:#111!important}.modeArea{display:none}.modeArea.on{display:block}.workArea{display:none}.workArea.on{display:block}.modePlaceholder{border:1px dashed #31517e;border-radius:12px;padding:12px;color:#9fb4d9;font-size:12px;line-height:1.5;background:rgba(2,7,17,.42)}.mobileCanvasSlot{display:none}.canvasCard{min-height:200px}.canvasHint{font-size:11px;color:#9fb4d9;margin-top:6px;line-height:1.45}@media(max-width:900px){main{grid-template-columns:1fr}.grid{grid-template-columns:1fr}.metrics{grid-template-columns:1fr 1fr}.decision{font-size:52px}.desktopCanvasSlot{display:none}.mobileCanvasSlot{display:block;margin:0 0 12px}.mobileCanvasSlot .card{padding:0;border:0;background:transparent;box-shadow:none}.mobileCanvasSlot .box{border-color:#31517e}.box canvas{touch-action:none}.flowBlock{margin-bottom:10px}}
+}.scanGuide{position:absolute;left:12%;right:12%;top:32%;height:36%;border:3px solid rgba(255,216,77,.9);border-radius:14px;box-shadow:0 0 0 9999px rgba(0,0,0,.18);pointer-events:none}.scanMsg{font-size:12px;color:#c6d8ff;line-height:1.55;margin-top:8px;white-space:pre-line}.scanHidden{display:none}.barcodeScanBtn{background:linear-gradient(90deg,#ffd84d,#ffef9e)!important;color:#111!important}.modeBtn{font-size:15px;padding:13px 10px}.modeBtn.active{outline:2px solid var(--yellow);background:linear-gradient(90deg,#ffd84d,#ffef9e)!important;color:#111!important}.modeArea{display:none}.modeArea.on{display:block}.workArea{display:none}.workArea.on{display:block}.modePlaceholder{border:1px dashed #31517e;border-radius:12px;padding:12px;color:#9fb4d9;font-size:12px;line-height:1.5;background:rgba(2,7,17,.42)}.mobileCanvasSlot{display:none}.canvasCard{min-height:200px}.canvasHint{font-size:11px;color:#9fb4d9;margin-top:6px;line-height:1.45}@media(max-width:900px){main{grid-template-columns:1fr}.grid{grid-template-columns:1fr}.metrics{grid-template-columns:1fr 1fr}.decision{font-size:52px}/* v25 fix: canvasCard自体をmobileCanvasSlotへ移動するため、中のdesktopCanvasSlotは隠さない */.desktopCanvasSlot{display:block}.mobileCanvasSlot{display:block;margin:0 0 12px}.mobileCanvasSlot .card{padding:0;border:0;background:transparent;box-shadow:none}.mobileCanvasSlot .box{border-color:#31517e}.box canvas{touch-action:none}.flowBlock{margin-bottom:10px}}
 </style></head>
 <body>
 <header><h1>ぴろえんす Master v25 / モード選択UI・モバイル対応</h1><div class="sub">最初に「新規登録」または「登録済み修正」を選択。必要な入力だけ表示します。画像は圧縮してGoogle Driveへ保存。</div></header>
@@ -105,7 +105,7 @@
 
 const $=id=>document.getElementById(id);
 const DEFAULT_GAS_URL='https://script.google.com/macros/s/AKfycbzhTwzLskVh0lRNegdW0FnmL-dedZ6LIps2NP9mRrXsPp0aC93ziLRAMUTEmzFiiU_3/exec';
-const MASTER_VERSION='v25-master-mobile-touch-20260701';
+const MASTER_VERSION='v25-master-mobile-touch-fix1-20260703';
 let loadedTopFileId='';
 function log(s){$('status').textContent=s}
 function getGasUrl(){return ($('gasUrl')?.value || localStorage.getItem('PIROENS_GAS_URL') || DEFAULT_GAS_URL).trim()}
