@@ -7,7 +7,7 @@
     max-height:70vh;
     display:block;
     background:#000;
-}.scanGuide{position:absolute;left:12%;right:12%;top:32%;height:36%;border:3px solid rgba(255,216,77,.9);border-radius:14px;box-shadow:0 0 0 9999px rgba(0,0,0,.18);pointer-events:none}.scanMsg{font-size:12px;color:#c6d8ff;line-height:1.55;margin-top:8px;white-space:pre-line}.scanHidden{display:none}.barcodeScanBtn{background:linear-gradient(90deg,#ffd84d,#ffef9e)!important;color:#111!important}.modeBtn{font-size:15px;padding:13px 10px}.modeBtn.active{outline:2px solid var(--yellow);background:linear-gradient(90deg,#ffd84d,#ffef9e)!important;color:#111!important}.modeArea{display:none}.modeArea.on{display:block}.workArea{display:none}.workArea.on{display:block}.modePlaceholder{border:1px dashed #31517e;border-radius:12px;padding:12px;color:#9fb4d9;font-size:12px;line-height:1.5;background:rgba(2,7,17,.42)}.mobileCanvasSlot{display:none}.canvasCard{min-height:200px}.canvasHint{font-size:11px;color:#9fb4d9;margin-top:6px;line-height:1.45}@media(max-width:900px){main{grid-template-columns:1fr}.grid{grid-template-columns:1fr}.metrics{grid-template-columns:1fr 1fr}.decision{font-size:52px}/* v25 fix: canvasCard自体をmobileCanvasSlotへ移動するため、中のdesktopCanvasSlotは隠さない */.desktopCanvasSlot{display:block}.mobileCanvasSlot{display:block;margin:0 0 12px}.mobileCanvasSlot .card{padding:0;border:0;background:transparent;box-shadow:none}.mobileCanvasSlot .box{border-color:#31517e}.box canvas{touch-action:none}.flowBlock{margin-bottom:10px}}
+}.scanGuide{position:absolute;left:12%;right:12%;top:32%;height:36%;border:3px solid rgba(255,216,77,.9);border-radius:14px;box-shadow:0 0 0 9999px rgba(0,0,0,.18);pointer-events:none}.scanMsg{font-size:12px;color:#c6d8ff;line-height:1.55;margin-top:8px;white-space:pre-line}.scanHidden{display:none}.barcodeScanBtn{background:linear-gradient(90deg,#ffd84d,#ffef9e)!important;color:#111!important}.modeBtn{font-size:15px;padding:13px 10px}.modeBtn.active{outline:2px solid var(--yellow);background:linear-gradient(90deg,#ffd84d,#ffef9e)!important;color:#111!important}.modeArea{display:none}.modeArea.on{display:block}.workArea{display:none}.workArea.on{display:block}.modePlaceholder{border:1px dashed #31517e;border-radius:12px;padding:12px;color:#9fb4d9;font-size:12px;line-height:1.5;background:rgba(2,7,17,.42)}.mobileCanvasSlot{display:none}.canvasCard{min-height:200px}.canvasCard.mobileMoved{display:none}.canvasHint{font-size:11px;color:#9fb4d9;margin-top:6px;line-height:1.45}@media(max-width:900px){main{grid-template-columns:1fr}.grid{grid-template-columns:1fr}.metrics{grid-template-columns:1fr 1fr}.decision{font-size:52px}/* v25 fix: canvasCard自体をmobileCanvasSlotへ移動するため、中のdesktopCanvasSlotは隠さない */.desktopCanvasSlot{display:block}.mobileCanvasSlot{display:block;margin:0 0 12px}.mobileCanvasSlot .card{padding:0;border:0;background:transparent;box-shadow:none}.mobileCanvasSlot .box{border-color:#31517e}.box canvas{touch-action:none}.flowBlock{margin-bottom:10px}}
 </style></head>
 <body>
 <header><h1>ぴろえんす Master v25 / モード選択UI・モバイル対応</h1><div class="sub">最初に「新規登録」または「登録済み修正」を選択。必要な入力だけ表示します。画像は圧縮してGoogle Driveへ保存。</div></header>
@@ -78,11 +78,13 @@
 <div id="status" class="status">未読込</div>
 </section>
 <section id="canvasCard" class="card canvasCard">
-<div id="desktopCanvasSlot" class="desktopCanvasSlot">
-<div class="grid">
-<div class="box big"><h3>マスター画像（ドラッグで検査ポイント登録）</h3><canvas id="masterCanvas" width="1000" height="650"></canvas><div class="canvasHint">PC: ドラッグで検査ポイント登録 / 右ドラッグでパン。モバイル: 検査ポイント登録ON後、画像上を指でドラッグ。</div></div>
-</div>
-</div>
+  <div id="desktopCanvasSlot" class="desktopCanvasSlot">
+    <div id="canvasContent">
+      <div class="grid">
+        <div class="box big"><h3>マスター画像（ドラッグで検査ポイント登録）</h3><canvas id="masterCanvas" width="1000" height="650"></canvas><div class="canvasHint">PC: ドラッグで検査ポイント登録 / 右ドラッグでパン。モバイル: 検査ポイント登録ON後、画像上を指でドラッグ。</div></div>
+      </div>
+    </div>
+  </div>
 </section>
 </main>
 <div id="scanOverlay" class="scanOverlay">
@@ -105,21 +107,27 @@
 
 const $=id=>document.getElementById(id);
 const DEFAULT_GAS_URL='https://script.google.com/macros/s/AKfycbzhTwzLskVh0lRNegdW0FnmL-dedZ6LIps2NP9mRrXsPp0aC93ziLRAMUTEmzFiiU_3/exec';
-const MASTER_VERSION='v25-master-mobile-touch-fix1-20260703';
+const MASTER_VERSION='v25-master-mobile-touch-fix2-20260703';
 let loadedTopFileId='';
 function log(s){$('status').textContent=s}
 function getGasUrl(){return ($('gasUrl')?.value || localStorage.getItem('PIROENS_GAS_URL') || DEFAULT_GAS_URL).trim()}
 function saveGasUrl(){const u=getGasUrl(); if(u) localStorage.setItem('PIROENS_GAS_URL',u);}
 
 function updateCanvasPlacement(){
-  const card=$('canvasCard'), mobile=$('mobileCanvasSlot'), desktop=$('desktopCanvasSlot');
-  if(!card||!mobile||!desktop)return;
+  // カード自身を移動すると「親の中へ親を入れる」構造になり、iPhoneでCanvasが消える。
+  // 移動するのは中身(canvasContent)だけにする。
+  const card=$('canvasCard'), content=$('canvasContent'), mobile=$('mobileCanvasSlot'), desktop=$('desktopCanvasSlot');
+  if(!card||!content||!mobile||!desktop)return;
   const isMobile=window.matchMedia('(max-width:900px)').matches;
   if(isMobile){
-    if(card.parentElement!==mobile) mobile.appendChild(card);
+    if(content.parentElement!==mobile) mobile.appendChild(content);
+    card.classList.add('mobileMoved');
   }else{
-    if(card.parentElement!==desktop) desktop.appendChild(card);
+    if(content.parentElement!==desktop) desktop.appendChild(content);
+    card.classList.remove('mobileMoved');
   }
+  // 移動直後はSafariがCanvas幅を取り損ねることがあるため再描画。
+  setTimeout(()=>{ if(typeof redrawMaster==='function') redrawMaster(); }, 0);
 }
 window.addEventListener('resize',updateCanvasPlacement);
 window.addEventListener('orientationchange',()=>setTimeout(updateCanvasPlacement,250));
