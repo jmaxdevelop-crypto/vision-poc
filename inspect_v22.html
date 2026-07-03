@@ -732,9 +732,7 @@ async function runInspect(){
     const ready=await waitForOpenCV(20000);
     if(!ready){
       setLoading(false);
-      log('OpenCV.js準備タイムアウト。
-ページを再読み込みしてください。
-※ ./js/opencv.js がGitHub Pagesで読めるか確認。');
+      log('OpenCV.js準備タイムアウト。ページを再読み込みしてください。※ /js/opencv.js がGitHub Pagesで読めるか確認。');
       return;
     }
   }
