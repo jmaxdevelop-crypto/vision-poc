@@ -253,8 +253,7 @@ function startOpenCV(){
     if(cvLoaded)return;
     cvLoaded=true;
     cvStarting=false;
-    log('OpenCV.js 読込OK '+INSPECT_VERSION+'
-通常は「読取」でバーコード/QRを読んでください。');
+    log('OpenCV.js 読込OK '+INSPECT_VERSION+'通常は「読取」でバーコード/QRを読んでください。');
     updateActionState();
     if(!parts.length) loadParts();
   };
