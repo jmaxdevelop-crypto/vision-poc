@@ -1,16 +1,16 @@
 <!doctype html>
 <html lang="ja"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>ぴろえんす Master v24 Flow Mode UI</title><style>
+<title>ぴろえんす Master v25 Mobile UI</title><style>
 :root{--bg:#071225;--card:#101c34;--line:#29436d;--txt:#eef6ff;--muted:#9fb4d9;--cyan:#35dcff;--green:#35f078;--red:#ff4b5f;--yellow:#ffd84d}
 *{box-sizing:border-box}body{margin:0;background:linear-gradient(135deg,#071225,#111b34);color:var(--txt);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}header{padding:12px 16px;border-bottom:1px solid #20375f;background:#081226cc;position:sticky;top:0;z-index:5}h1{font-size:19px;margin:0}.sub{font-size:12px;color:var(--muted);margin-top:4px}main{display:grid;grid-template-columns:330px 1fr;gap:12px;padding:12px;max-width:1500px;margin:auto}.card{background:rgba(16,28,52,.94);border:1px solid var(--line);border-radius:14px;padding:12px;box-shadow:0 12px 30px #0005}label{display:block;font-size:12px;color:#c8d8fa;margin:10px 0 5px}input,select{width:100%;padding:8px;border-radius:10px;border:1px solid #31517e;background:#071226;color:var(--txt)}button{width:100%;border:0;border-radius:11px;padding:11px 12px;margin-top:9px;background:linear-gradient(90deg,#2aa7ff,#39e0ff);font-weight:800;color:#001225;cursor:pointer}button.secondary{background:#26395f;color:#eef6ff}button.danger{background:#62283a;color:white}.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.box{background:#020711;border:1px solid #27436f;border-radius:12px;padding:9px}.box h3{font-size:13px;margin:0 0 6px}.box canvas{width:100%;height:auto;background:#111;border-radius:8px;display:block}.big{grid-column:1/-1}.status{font-size:12px;color:#c6d8ff;white-space:pre-line;line-height:1.45;margin-top:10px}.roiList{margin-top:10px;border-top:1px solid #2a416b;padding-top:8px;max-height:220px;overflow:auto}.roiItem{display:flex;justify-content:space-between;gap:8px;border-bottom:1px solid #20375f;padding:6px 0;font-size:12px}.decision{font-size:76px;font-weight:1000;text-align:center;border-radius:16px;padding:18px 12px;margin-bottom:10px;letter-spacing:.10em;line-height:1}.decision::before{content:"総合判定";display:block;font-size:14px;letter-spacing:.12em;margin-bottom:8px;color:#c8d8fa}.decision.wait{background:#26395f;color:#dce8ff;border:2px solid #405b8d}.decision.ok{background:#0f3d25;color:#35f078;border:3px solid #35f078}.decision.ng{background:#451520;color:#ff4b5f;border:3px solid #ff4b5f}.metrics{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:10px}.metric{background:#071226;border:1px solid #29436d;border-radius:10px;padding:9px;text-align:center}.metric b{display:block;font-size:22px}.metric small{color:#aabde0}.on{outline:2px solid var(--yellow);background:#ffd84d!important;color:#111!important}.flowBlock{border:1px solid #20375f;background:rgba(7,18,38,.58);border-radius:12px;padding:10px;margin:0 0 12px}.flowTitle{font-size:13px;font-weight:900;color:#dff8ff;margin:0 0 8px;letter-spacing:.04em}.flowNote{font-size:11px;color:#9fb4d9;line-height:1.45;margin:4px 0 0}.primarySave{font-size:15px;padding:13px 12px;margin-top:12px}.hiddenGas{display:none}.barcodeBox{margin-top:8px;padding:9px;border:1px dashed #31517e;border-radius:10px;background:rgba(2,7,17,.55)}.barcodeBox input{font-family:ui-monospace,Consolas,monospace;font-size:13px}.barcodeState{font-size:11px;color:#9fb4d9;margin-top:5px;white-space:pre-line}.barcodeReady{outline:2px solid var(--yellow)!important;box-shadow:0 0 0 3px rgba(255,216,77,.18)}.scanOverlay{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:99;display:none;align-items:center;justify-content:center;padding:14px}.scanOverlay.on{display:flex}.scanBox{width:min(760px,100%);background:#081226;border:1px solid #31517e;border-radius:16px;padding:12px;box-shadow:0 20px 60px #000a}.scanHead{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:8px}.scanTitle{font-weight:900;color:#dff8ff}.scanClose{width:auto;margin:0;padding:8px 12px;background:#62283a;color:white}.scanStage{position:relative;background:#000;border-radius:12px;overflow:hidden;border:1px solid #20375f}.scanStage video{
     width:100%;
     max-height:70vh;
     display:block;
     background:#000;
-}.scanGuide{position:absolute;left:12%;right:12%;top:32%;height:36%;border:3px solid rgba(255,216,77,.9);border-radius:14px;box-shadow:0 0 0 9999px rgba(0,0,0,.18);pointer-events:none}.scanMsg{font-size:12px;color:#c6d8ff;line-height:1.55;margin-top:8px;white-space:pre-line}.scanHidden{display:none}.barcodeScanBtn{background:linear-gradient(90deg,#ffd84d,#ffef9e)!important;color:#111!important}.modeBtn{font-size:15px;padding:13px 10px}.modeBtn.active{outline:2px solid var(--yellow);background:linear-gradient(90deg,#ffd84d,#ffef9e)!important;color:#111!important}.modeArea{display:none}.modeArea.on{display:block}.workArea{display:none}.workArea.on{display:block}.modePlaceholder{border:1px dashed #31517e;border-radius:12px;padding:12px;color:#9fb4d9;font-size:12px;line-height:1.5;background:rgba(2,7,17,.42)}@media(max-width:900px){main{grid-template-columns:1fr}.grid{grid-template-columns:1fr}.metrics{grid-template-columns:1fr 1fr}.decision{font-size:52px}}
+}.scanGuide{position:absolute;left:12%;right:12%;top:32%;height:36%;border:3px solid rgba(255,216,77,.9);border-radius:14px;box-shadow:0 0 0 9999px rgba(0,0,0,.18);pointer-events:none}.scanMsg{font-size:12px;color:#c6d8ff;line-height:1.55;margin-top:8px;white-space:pre-line}.scanHidden{display:none}.barcodeScanBtn{background:linear-gradient(90deg,#ffd84d,#ffef9e)!important;color:#111!important}.modeBtn{font-size:15px;padding:13px 10px}.modeBtn.active{outline:2px solid var(--yellow);background:linear-gradient(90deg,#ffd84d,#ffef9e)!important;color:#111!important}.modeArea{display:none}.modeArea.on{display:block}.workArea{display:none}.workArea.on{display:block}.modePlaceholder{border:1px dashed #31517e;border-radius:12px;padding:12px;color:#9fb4d9;font-size:12px;line-height:1.5;background:rgba(2,7,17,.42)}.mobileCanvasSlot{display:none}.canvasCard{min-height:200px}.canvasHint{font-size:11px;color:#9fb4d9;margin-top:6px;line-height:1.45}@media(max-width:900px){main{grid-template-columns:1fr}.grid{grid-template-columns:1fr}.metrics{grid-template-columns:1fr 1fr}.decision{font-size:52px}.desktopCanvasSlot{display:none}.mobileCanvasSlot{display:block;margin:0 0 12px}.mobileCanvasSlot .card{padding:0;border:0;background:transparent;box-shadow:none}.mobileCanvasSlot .box{border-color:#31517e}.box canvas{touch-action:none}.flowBlock{margin-bottom:10px}}
 </style></head>
 <body>
-<header><h1>ぴろえんす Master v24 / モード選択UI</h1><div class="sub">最初に「新規登録」または「登録済み修正」を選択。必要な入力だけ表示します。画像は圧縮してGoogle Driveへ保存。</div></header>
+<header><h1>ぴろえんす Master v25 / モード選択UI・モバイル対応</h1><div class="sub">最初に「新規登録」または「登録済み修正」を選択。必要な入力だけ表示します。画像は圧縮してGoogle Driveへ保存。</div></header>
 <main>
 <section class="card">
 <input id="gasUrl" class="hiddenGas" type="hidden" value="https://script.google.com/macros/s/AKfycbzhTwzLskVh0lRNegdW0FnmL-dedZ6LIps2NP9mRrXsPp0aC93ziLRAMUTEmzFiiU_3/exec">
@@ -53,10 +53,12 @@
     <div class="flowTitle">3. マスター基本情報</div>
     <label>品番キー（QRから自動抽出 / 手入力可）</label><input id="partNo" placeholder="例：80239-7NA0A-RE">
     <label>メモ</label><input id="memo" placeholder="例：カッター刃先検査">
-    <label>マスター画像</label><input id="masterFile" type="file" accept="image/*">
+    <label>マスター画像</label><input id="masterFile" type="file" accept="image/*" capture="environment">
     <div class="row"><button id="fitBtn" class="secondary" type="button">全体表示</button><button id="actualBtn" class="secondary" type="button">100%</button></div>
     <div class="status" id="zoomStatus">倍率: --</div>
   </div>
+
+  <div id="mobileCanvasSlot" class="mobileCanvasSlot"></div>
 
   <div class="flowBlock">
     <div class="flowTitle">4. 検査ポイント設定</div>
@@ -75,9 +77,11 @@
 </div>
 <div id="status" class="status">未読込</div>
 </section>
-<section class="card">
+<section id="canvasCard" class="card canvasCard">
+<div id="desktopCanvasSlot" class="desktopCanvasSlot">
 <div class="grid">
-<div class="box big"><h3>マスター画像（ドラッグで検査ポイント登録）</h3><canvas id="masterCanvas" width="1000" height="650"></canvas></div>
+<div class="box big"><h3>マスター画像（ドラッグで検査ポイント登録）</h3><canvas id="masterCanvas" width="1000" height="650"></canvas><div class="canvasHint">PC: ドラッグで検査ポイント登録 / 右ドラッグでパン。モバイル: 検査ポイント登録ON後、画像上を指でドラッグ。</div></div>
+</div>
 </div>
 </section>
 </main>
@@ -101,11 +105,24 @@
 
 const $=id=>document.getElementById(id);
 const DEFAULT_GAS_URL='https://script.google.com/macros/s/AKfycbzhTwzLskVh0lRNegdW0FnmL-dedZ6LIps2NP9mRrXsPp0aC93ziLRAMUTEmzFiiU_3/exec';
-const MASTER_VERSION='v24-master-mode-switch-20260701';
+const MASTER_VERSION='v25-master-mobile-touch-20260701';
 let loadedTopFileId='';
 function log(s){$('status').textContent=s}
 function getGasUrl(){return ($('gasUrl')?.value || localStorage.getItem('PIROENS_GAS_URL') || DEFAULT_GAS_URL).trim()}
 function saveGasUrl(){const u=getGasUrl(); if(u) localStorage.setItem('PIROENS_GAS_URL',u);}
+
+function updateCanvasPlacement(){
+  const card=$('canvasCard'), mobile=$('mobileCanvasSlot'), desktop=$('desktopCanvasSlot');
+  if(!card||!mobile||!desktop)return;
+  const isMobile=window.matchMedia('(max-width:900px)').matches;
+  if(isMobile){
+    if(card.parentElement!==mobile) mobile.appendChild(card);
+  }else{
+    if(card.parentElement!==desktop) desktop.appendChild(card);
+  }
+}
+window.addEventListener('resize',updateCanvasPlacement);
+window.addEventListener('orientationchange',()=>setTimeout(updateCanvasPlacement,250));
 
 let scanStream=null, scanTimer=null, scanControls=null, scanBusy=false;
 
@@ -378,7 +395,15 @@ $('manualBarcodeBtn').onclick=()=>acceptBarcodeValue($('barcodeInput').value);
 $('scanCloseBtn').onclick=()=>stopCameraBarcodeScan(true);
 $('scanOverlay').addEventListener('click',e=>{if(e.target.id==='scanOverlay')stopCameraBarcodeScan(true);});
 
-$('masterFile').onchange=async e=>{masterImg=await loadImage(e.target.files[0]);fitView(); log('マスター画像読込OK');};
+$('masterFile').onchange=async e=>{
+  const f=e.target.files && e.target.files[0];
+  if(!f)return;
+  masterImg=await loadImage(f);
+  updateCanvasPlacement();
+  fitView();
+  log('マスター画像読込OK\nモバイルでは画像上を指でドラッグして検査ポイント登録できます。');
+  setTimeout(()=>{ if(window.matchMedia('(max-width:900px)').matches && $('canvasCard')) $('canvasCard').scrollIntoView({behavior:'smooth',block:'start'}); },80);
+};
 async function loadRegisteredParts(){
   const gas=getGasUrl();
   const sel=$('registeredSelect');
@@ -449,6 +474,44 @@ mc.addEventListener('wheel',e=>{if(!masterImg)return;if(e.ctrlKey){e.preventDefa
 mc.addEventListener('mousedown',e=>{if(!masterImg)return;if(e.button===1||e.button===2){panning=true;panStart={x:e.clientX,y:e.clientY,px:view.panX,py:view.panY};e.preventDefault();return;}if(e.button!==0)return;const p=eventToImg(mc,e,masterImg);if(pointMode){dragStart=p;dragCurrent=p;redrawMaster();}else{selectedIndex=hitPoint(p);redrawMaster();}});
 window.addEventListener('mousemove',e=>{if(!masterImg)return;if(panning&&panStart){view.panX=panStart.px+(e.clientX-panStart.x)*mc.width/mc.getBoundingClientRect().width;view.panY=panStart.py+(e.clientY-panStart.y)*mc.height/mc.getBoundingClientRect().height;redrawMaster();return;}if(pointMode&&dragStart){dragCurrent=eventToImg(mc,e,masterImg);redrawMaster();}});
 window.addEventListener('mouseup',e=>{if(panning){panning=false;panStart=null;return;}if(!pointMode||!masterImg||!dragStart)return;const p=eventToImg(mc,e,masterImg);const x=Math.min(dragStart.x,p.x),y=Math.min(dragStart.y,p.y),w=Math.abs(p.x-dragStart.x),h=Math.abs(p.y-dragStart.y);dragStart=null;dragCurrent=null;if(w<8||h<8){redrawMaster();return}points.push({name:$('pointName').value.trim()||'検査ポイント'+(points.length+1),type:$('pointType').value,threshold:+$('pointThr').value,x,y,w,h});selectedIndex=points.length-1;renderPointList(points);redrawMaster();});
+
+function touchToClient(t){return {clientX:t.clientX,clientY:t.clientY};}
+function finishTouchRoi(t){
+  if(!pointMode||!masterImg||!dragStart)return;
+  const p=eventToImg(mc,touchToClient(t),masterImg);
+  const x=Math.min(dragStart.x,p.x),y=Math.min(dragStart.y,p.y),w=Math.abs(p.x-dragStart.x),h=Math.abs(p.y-dragStart.y);
+  dragStart=null; dragCurrent=null;
+  if(w<8||h<8){redrawMaster();return;}
+  points.push({name:$('pointName').value.trim()||'検査ポイント'+(points.length+1),type:$('pointType').value,threshold:+$('pointThr').value,x,y,w,h});
+  selectedIndex=points.length-1;
+  renderPointList(points);
+  redrawMaster();
+}
+mc.addEventListener('touchstart',e=>{
+  if(!masterImg || !e.touches.length)return;
+  if(pointMode){
+    e.preventDefault();
+    const p=eventToImg(mc,touchToClient(e.touches[0]),masterImg);
+    dragStart=p; dragCurrent=p; redrawMaster();
+  }else{
+    const p=eventToImg(mc,touchToClient(e.touches[0]),masterImg);
+    selectedIndex=hitPoint(p); redrawMaster();
+  }
+},{passive:false});
+mc.addEventListener('touchmove',e=>{
+  if(!masterImg || !pointMode || !dragStart || !e.touches.length)return;
+  e.preventDefault();
+  dragCurrent=eventToImg(mc,touchToClient(e.touches[0]),masterImg);
+  redrawMaster();
+},{passive:false});
+mc.addEventListener('touchend',e=>{
+  if(!masterImg || !pointMode || !dragStart)return;
+  e.preventDefault();
+  const t=(e.changedTouches&&e.changedTouches[0]);
+  if(t)finishTouchRoi(t);
+},{passive:false});
+mc.addEventListener('touchcancel',e=>{dragStart=null;dragCurrent=null;redrawMaster();},{passive:false});
+
 window.addEventListener('keydown',e=>{const tag=(document.activeElement&&document.activeElement.tagName)||'';if(tag==='INPUT'||tag==='TEXTAREA')return;if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'){e.preventDefault();points.pop();selectedIndex=-1;renderPointList(points);redrawMaster();log('直前の検査ポイントを取り消しました');}if(e.key==='Delete'||e.key==='Backspace'){if(selectedIndex>=0){e.preventDefault();points.splice(selectedIndex,1);selectedIndex=-1;renderPointList(points);redrawMaster();log('選択中の検査ポイントを削除しました');}}if(e.key==='Home'){e.preventDefault();fitView();}});
 mc.addEventListener('dblclick',e=>{if(!masterImg)return;const p=eventToImg(mc,e,masterImg);const idx=hitPoint(p);if(idx<0)return;selectedIndex=idx;const r=points[idx];const name=prompt('検査ポイント名',r.name);if(name!==null)r.name=name.trim()||r.name;const type=prompt('検査内容: present / absent',r.type||'present');if(type!==null&&['present','absent'].includes(type.trim()))r.type=type.trim();const th=prompt((r.type==='absent'?'差異OKしきい値%':'相関OKしきい値%'),String(r.threshold??(r.type==='absent'?12:50)));if(th!==null&&!isNaN(+th))r.threshold=+th;renderPointList(points);redrawMaster();});
 $('saveBtn').onclick=async()=>{
@@ -516,7 +579,8 @@ $('saveBtn').onclick=async()=>{
     log('保存エラー: '+e.message+'\n\n確認ポイント:\n1) GitHub Pages / http://localhost から開いているか\n2) GASが「全員」実行可でデプロイされているか\n3) POSTサイズが大きすぎないか（Drive保存でも送信時は圧縮画像を送ります）\n4) GAS側が v5 Drive保存版に差し替わっているか');
   }
 };
+updateCanvasPlacement();
 renderPointList(points);
 loadRegisteredParts();
-log('起動OK '+MASTER_VERSION+'\nまず作業モードを選択してください。');
+log('起動OK '+MASTER_VERSION+'\nまず作業モードを選択してください。モバイルは検査ポイント登録ON後、画像上を指でドラッグできます。');
 </script></body></html>
