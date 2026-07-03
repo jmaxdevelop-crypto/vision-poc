@@ -90,7 +90,7 @@
   <div id="desktopCanvasSlot" class="desktopCanvasSlot">
     <div id="canvasContent">
       <div class="grid">
-        <div id="imageBox" class="box big imageBox"><h3>マスター画像（ドラッグで検査ポイント登録）</h3><canvas id="masterCanvas" width="1000" height="650"></canvas><div class="canvasHint">PC: ドラッグで検査ポイント登録 / 右ドラッグでパン。モバイル: 上の検査ポイント設定後、1本指で範囲ドラッグ。2本指で拡大縮小。誤った範囲は上の「直前を取り消す」。</div></div>
+        <div id="imageBox" class="box big imageBox"><h3>マスター画像（ドラッグで検査ポイント登録）</h3><canvas id="masterCanvas" width="1000" height="650"></canvas><div class="canvasHint">PC: ドラッグで検査ポイント登録 / 右ドラッグでパン。モバイル: 上の検査ポイント設定後、1本指で範囲ドラッグ。2本指で拡大縮小・平行移動。誤った範囲は上の「直前を取り消す」。</div></div>
       </div>
     </div>
   </div>
@@ -116,7 +116,7 @@
 
 const $=id=>document.getElementById(id);
 const DEFAULT_GAS_URL='https://script.google.com/macros/s/AKfycbzhTwzLskVh0lRNegdW0FnmL-dedZ6LIps2NP9mRrXsPp0aC93ziLRAMUTEmzFiiU_3/exec';
-const MASTER_VERSION='v29-mobile-panel-then-image-20260703';
+const MASTER_VERSION='v30-mobile-pinch-pan-20260703';
 let loadedTopFileId='';
 function log(s){$('status').textContent=s}
 function getGasUrl(){return ($('gasUrl')?.value || localStorage.getItem('PIROENS_GAS_URL') || DEFAULT_GAS_URL).trim()}
@@ -343,7 +343,7 @@ async function fetchJsonText(url,options={},timeoutMs=30000){
 function baseFit(canvas,img){const r=Math.min(canvas.width/img.width,canvas.height/img.height),w=img.width*r,h=img.height*r,ox=(canvas.width-w)/2,oy=(canvas.height-h)/2;return{r,w,h,ox,oy}}
 let view={zoom:1,panX:0,panY:0};
 function totalScale(canvas,img){const f=baseFit(canvas,img);return f.r*view.zoom}
-function updateZoomStatus(){const z=$('zoomStatus'); if(!z||!masterImg)return; const pct=Math.round(totalScale(mc,masterImg)*100); z.textContent='倍率: '+pct+'%　Ctrl+ホイール=拡大縮小 / ホイール押し込み・右ドラッグ=パン';}
+function updateZoomStatus(){const z=$('zoomStatus'); if(!z||!masterImg)return; const pct=Math.round(totalScale(mc,masterImg)*100); z.textContent='倍率: '+pct+'%　PC: Ctrl+ホイール=拡大縮小 / 右ドラッグ=パン　モバイル: 2本指で拡大縮小・平行移動';}
 function drawImageFit(canvas,img,drawFn){const ctx=canvas.getContext('2d');ctx.clearRect(0,0,canvas.width,canvas.height);ctx.fillStyle='#111';ctx.fillRect(0,0,canvas.width,canvas.height);if(!img)return;const f=baseFit(canvas,img);ctx.drawImage(img,f.ox+view.panX,f.oy+view.panY,f.w*view.zoom,f.h*view.zoom);if(drawFn)drawFn(ctx,canvas,img);updateZoomStatus();}
 function fitParams(canvas,img){const f=baseFit(canvas,img);return{r:f.r*view.zoom,ox:f.ox+view.panX,oy:f.oy+view.panY,w:f.w*view.zoom,h:f.h*view.zoom}}
 function eventToImg(canvas,e,img){const rect=canvas.getBoundingClientRect();const x=(e.clientX-rect.left)*canvas.width/rect.width,y=(e.clientY-rect.top)*canvas.height/rect.height;const f=fitParams(canvas,img);return{x:(x-f.ox)/f.r,y:(y-f.oy)/f.r}}
@@ -562,9 +562,16 @@ mc.addEventListener('touchmove',e=>{
       redrawMaster();
       return;
     }
-    if(pinchGesture.lastDistance>0 && dist>0){
+    if(pinchGesture.lastDistance>0 && dist>0 && pinchGesture.lastMid){
+      // 前フレームの中心を基準に縮放し、その後に二本指中心の移動量をパンへ加える。
+      // これで「拡大しながら平行移動」も、二本指を同じ方向へ動かすだけのパンも自然に追従する。
       const factor=Math.max(0.65,Math.min(1.55,dist/pinchGesture.lastDistance));
-      zoomAt(mc,masterImg,mid.clientX,mid.clientY,factor);
+      const prevMid=pinchGesture.lastMid;
+      zoomAt(mc,masterImg,prevMid.clientX,prevMid.clientY,factor);
+      const rect=mc.getBoundingClientRect();
+      view.panX += (mid.clientX-prevMid.clientX)*mc.width/rect.width;
+      view.panY += (mid.clientY-prevMid.clientY)*mc.height/rect.height;
+      redrawMaster();
     }
     pinchGesture.lastDistance=dist;
     pinchGesture.lastMid=mid;
