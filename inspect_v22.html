@@ -253,7 +253,8 @@ function startOpenCV(){
     if(cvLoaded)return;
     cvLoaded=true;
     cvStarting=false;
-    log('OpenCV.js 読込OK '+INSPECT_VERSION+'通常は「読取」でバーコード/QRを読んでください。');
+    log('OpenCV.js 読込OK '+INSPECT_VERSION+'
+通常は「読取」でバーコード/QRを読んでください。');
     updateActionState();
     if(!parts.length) loadParts();
   };
@@ -271,7 +272,8 @@ async function waitForOpenCV(timeoutMs=20000){
   startOpenCV();
   const start=Date.now();
   while(!cvLoaded && Date.now()-start<timeoutMs){
-    log('OpenCV.js準備中...解析開始まで待機しています。');
+    log('OpenCV.js準備中...
+解析開始まで待機しています。');
     await wait(150);
   }
   updateActionState();
@@ -328,7 +330,9 @@ async function loadParts(){
     updateActionState();
   }
 }
-async function loadSelectedPart(){ const partNo=$('partSelect').value; if(!partNo)return; try{ hideResultAction(); setLoading(true); log('マスター読込中...'); setBanner('WAIT'); const res=await fetch(GAS_URL+'?action=get&partNo='+encodeURIComponent(partNo)); const js=await res.json(); if(!js.ok) throw new Error(js.error||'get失敗'); currentPart=js.part; if(!currentBarcodeRaw){ currentBarcodeRaw=String(currentPart.partNo||partNo); currentBarcodeInfo=parseQRCode(currentBarcodeRaw); } masterImg=await loadImageFromDataUrl(currentPart.topData); points=normalizePointsToImage(currentPart.points||[], masterImg); drawMasterPreview(); $('empty').style.display='none'; setStat('alignStat','--'); setStat('outerStat','--'); setStat('pointStat',points.length?('0/'+points.length):'外形のみ'); log('マスター読込OK: '+partNo+'\n検査ポイント: '+points.length+'件\n撮影準備OK。右上ボタンが「撮影」に切り替わりました。'); updateActionState(); }catch(e){ console.error(e); log('マスター読込エラー: '+e.message); updateActionState(); }finally{ setLoading(false); } }
+async function loadSelectedPart(){ const partNo=$('partSelect').value; if(!partNo)return; try{ hideResultAction(); setLoading(true); log('マスター読込中...'); setBanner('WAIT'); const res=await fetch(GAS_URL+'?action=get&partNo='+encodeURIComponent(partNo)); const js=await res.json(); if(!js.ok) throw new Error(js.error||'get失敗'); currentPart=js.part; if(!currentBarcodeRaw){ currentBarcodeRaw=String(currentPart.partNo||partNo); currentBarcodeInfo=parseQRCode(currentBarcodeRaw); } masterImg=await loadImageFromDataUrl(currentPart.topData); points=normalizePointsToImage(currentPart.points||[], masterImg); drawMasterPreview(); $('empty').style.display='none'; setStat('alignStat','--'); setStat('outerStat','--'); setStat('pointStat',points.length?('0/'+points.length):'外形のみ'); log('マスター読込OK: '+partNo+'\n検査ポイント: '+points.length+'件\n撮影準備OK。右上ボタンが「撮影」に切り替わりました。');
+    updateActionState();
+    requestAnimationFrame(()=>updateActionState()); }catch(e){ console.error(e); log('マスター読込エラー: '+e.message); updateActionState(); }finally{ setLoading(false); } }
 
 function normalizeBarcodeText(raw){ return String(raw||'').replace(/[\r\n]+$/g,'').trim(); }
 
@@ -579,7 +583,26 @@ async function stopBarcodeScan(close=true){
 
 function escapeHtml(s){ return String(s??'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m])); }
 $('reloadBtn').onclick=loadParts;
-$('partSelect').onchange=async()=>{ if($('partSelect').value){ currentBarcodeRaw=$('partSelect').value; lastInspectionRecord=null; ngLoggedForCurrent=false; okLoggedForCurrent=false; logSending=false; await loadSelectedPart(); } else resetMasterState(); };
+async function selectMasterManually(){
+  const partNo=($('partSelect')?.value||'').trim();
+  if(!partNo){ resetMasterState(); return; }
+
+  // 手動選択はバーコードを読んでいないテスト用の経路。
+  // QR由来の前回値を残さず、選択品番を明示してから読込む。
+  currentBarcodeRaw='';
+  currentBarcodeInfo={raw:'', normalized:partNo, partNo, format:'manual'};
+  lastInspectionRecord=null;
+  ngLoggedForCurrent=false;
+  okLoggedForCurrent=false;
+  logSending=false;
+
+  await loadSelectedPart();
+
+  // iPhone Safariで画像onload直後の状態反映が1フレーム遅れることがあるため、
+  // 1フレーム待ってから必ず撮影/読取ボタンの状態を再評価する。
+  requestAnimationFrame(()=>updateActionState());
+}
+$('partSelect').onchange=selectMasterManually;
 $('actionBtn').onclick=async()=>{ if(currentPart&&masterImg){ $('inspectFile').click(); } else { await startBarcodeScan(); } };
 $('scanCloseBtn').onclick=()=>stopBarcodeScan(true);
 $('barcodeInput').addEventListener('keydown',async e=>{ if(e.key==='Enter'){ e.preventDefault(); await selectMasterByBarcode(e.target.value); }});
@@ -732,7 +755,9 @@ async function runInspect(){
     const ready=await waitForOpenCV(20000);
     if(!ready){
       setLoading(false);
-      log('OpenCV.js準備タイムアウト。ページを再読み込みしてください。※ /js/opencv.js がGitHub Pagesで読めるか確認。');
+      log('OpenCV.js準備タイムアウト。
+ページを再読み込みしてください。
+※ ./js/opencv.js がGitHub Pagesで読めるか確認。');
       return;
     }
   }
