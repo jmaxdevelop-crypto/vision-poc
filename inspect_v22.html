@@ -15,6 +15,7 @@
 #barcodeInput{grid-column:1/-1;width:100%;max-width:none}
 #partSelect{min-width:0}
 #actionBtn{min-width:92px;font-size:15px}
+#actionBtn:disabled{opacity:.55;filter:grayscale(.45);cursor:not-allowed}
 #reloadBtn{min-width:68px;background:#26395f;color:#eef6ff}
 .masterReady #actionBtn{background:linear-gradient(90deg,#20d56f,#35f078);color:#00180a}
 .masterNotReady #actionBtn{background:linear-gradient(90deg,#2aa7ff,#39e0ff);color:#001225}
@@ -102,7 +103,7 @@
 // 例: const GAS_URL = 'https://script.google.com/macros/s/xxxxxxx/exec';
 // =====================================================
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbzhTwzLskVh0lRNegdW0FnmL-dedZ6LIps2NP9mRrXsPp0aC93ziLRAMUTEmzFiiU_3/exec'; // ←ここを今井さんのGAS URLに置き換え
-const INSPECT_VERSION = 'v22-partno-qr-log';
+const INSPECT_VERSION = 'v22-partno-qr-log-local-lib-readyfix';
 
 // 固定設定：現場用なので画面には出さない
 const CONFIG = {
@@ -224,7 +225,11 @@ function updateActionState(){
   document.body.classList.toggle('masterReady',ready);
   document.body.classList.toggle('masterNotReady',!ready);
   const btn=$('actionBtn');
-  if(btn){ btn.textContent=ready?'撮影':'読取'; btn.title=ready?'部品を撮影します':'バーコード/QRを読み取ります'; }
+  if(btn){
+    btn.disabled = ready && !cvLoaded;
+    btn.textContent = ready ? (cvLoaded ? '撮影' : '準備中') : '読取';
+    btn.title = ready ? (cvLoaded ? '部品を撮影します' : 'OpenCV.js準備中です') : 'バーコード/QRを読み取ります';
+  }
 }
 function resetMasterState(){
   hideResultAction();
@@ -236,11 +241,14 @@ function resetMasterState(){
 function dbg(msg,obj){ const line=new Date().toLocaleTimeString('ja-JP')+'  '+msg+(obj?'\n'+safeJson(obj):''); DEBUG.logs.push(line); if(DEBUG.logs.length>40) DEBUG.logs.shift(); renderDebug(); }
 function safeJson(obj){ try{return JSON.stringify(obj,(k,v)=>typeof v==='number'?Math.round(v*1000)/1000:v,2)}catch(e){return String(obj)} }
 function renderDebug(){ $('debugState').textContent=($('banner').textContent||'WAIT'); $('debugImage').textContent=safeJson(DEBUG.image||{}); $('debugAlign').textContent=safeJson(DEBUG.align||{}); $('debugPoints').textContent=safeJson(DEBUG.points||[]); $('debugLog').textContent=(DEBUG.logs||[]).join('\n\n')||'待機中'; }
+let appInitStarted=false;
 function cvReady(){
   const boot = () => {
+    if(cvLoaded) return;
     cvLoaded = true;
     log('OpenCV.js 読込OK '+INSPECT_VERSION);
-    init();
+    updateActionState();
+    if(!appInitStarted){ appInitStarted=true; init(); }
   };
 
   if (window.cv && cv.Mat) {
@@ -248,9 +256,26 @@ function cvReady(){
   } else if (window.cv) {
     cv['onRuntimeInitialized'] = boot;
   } else {
-    log('OpenCV.js読込失敗');
+    log('OpenCV.js読込失敗。js/opencv.js の配置を確認してください。');
+    updateActionState();
   }
 }
+function waitForOpenCV(timeoutMs=20000){
+  if(cvLoaded) return Promise.resolve(true);
+  return new Promise(resolve=>{
+    const start=Date.now();
+    const timer=setInterval(()=>{
+      if(cvLoaded){ clearInterval(timer); resolve(true); return; }
+      if(Date.now()-start>timeoutMs){ clearInterval(timer); resolve(false); }
+    },100);
+  });
+}
+window.addEventListener('load',()=>{
+  if(!appInitStarted && !(window.cv)){
+    updateActionState();
+    log('OpenCV.js読込待ち... js/opencv.js を確認してください。');
+  }
+});
 function loadImageFromDataUrl(dataUrl){ return new Promise((res,rej)=>{ const img=new Image(); img.onload=()=>res(img); img.onerror=rej; img.src=dataUrl; }); }
 function loadImageFromFile(file){ return new Promise((res,rej)=>{ const img=new Image(); img.onload=()=>res(img); img.onerror=rej; img.src=URL.createObjectURL(file); }); }
 function drawImageFit(canvas,img){ const ctx=canvas.getContext('2d'); ctx.clearRect(0,0,canvas.width,canvas.height); ctx.fillStyle='#05070b'; ctx.fillRect(0,0,canvas.width,canvas.height); if(!img)return; const r=Math.min(canvas.width/img.width,canvas.height/img.height); const w=img.width*r,h=img.height*r,ox=(canvas.width-w)/2,oy=(canvas.height-h)/2; ctx.drawImage(img,ox,oy,w,h); }
@@ -554,7 +579,7 @@ async function stopBarcodeScan(close=true){
 function escapeHtml(s){ return String(s??'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m])); }
 $('reloadBtn').onclick=loadParts;
 $('partSelect').onchange=async()=>{ if($('partSelect').value){ currentBarcodeRaw=$('partSelect').value; lastInspectionRecord=null; ngLoggedForCurrent=false; okLoggedForCurrent=false; logSending=false; await loadSelectedPart(); } else resetMasterState(); };
-$('actionBtn').onclick=async()=>{ if(currentPart&&masterImg){ $('inspectFile').click(); } else { await startBarcodeScan(); } };
+$('actionBtn').onclick=async()=>{ if(currentPart&&masterImg){ if(!cvLoaded){ log('OpenCV.js準備中です。しばらく待ってください。'); updateActionState(); return; } $('inspectFile').click(); } else { await startBarcodeScan(); } };
 $('scanCloseBtn').onclick=()=>stopBarcodeScan(true);
 $('barcodeInput').addEventListener('keydown',async e=>{ if(e.key==='Enter'){ e.preventDefault(); await selectMasterByBarcode(e.target.value); }});
 $('actionRegisterBtn').onclick=async()=>{
@@ -697,12 +722,17 @@ function compareAll(m,warped,points){
 }
 
 async function runInspect(){
-  if(!cvLoaded){alert('OpenCV.js読み込み中');return}
   if(!masterImg||!inspectImg){alert('品番と写真を確認してください');return}
+  hideResultAction();
+  okLoggedForCurrent=false; logSending=false;
+  setLoading(true); setBanner('WAIT');
+  if(!cvLoaded){
+    log('OpenCV.js準備中... 最大20秒待機します');
+    const okCv=await waitForOpenCV(20000);
+    if(!okCv){ setLoading(false); log('OpenCV.js読込タイムアウト。js/opencv.js の配置/キャッシュを確認してください。'); updateActionState(); return; }
+  }
   try{
-    hideResultAction();
-    okLoggedForCurrent=false; logSending=false;
-    setLoading(true); setBanner('WAIT'); log('解析中...');
+    log('解析中...');
     const pointNormalizeInfo=DEBUG.image?.pointNormalize;
     DEBUG={image:{pointNormalize:pointNormalizeInfo},align:{},points:DEBUG.points||[],logs:DEBUG.logs||[]};
     dbg('解析開始');
