@@ -96,14 +96,14 @@
 </section>
 <script src="./js/zxing-browser.min.js"></script>
 <script src="./js/jsQR.min.js"></script>
-<script src="./js/opencv.js" onload="cvReady()"></script>
+<script src="./js/opencv.js"></script>
 <script>
 // =====================================================
 // ★ここにGASの /exec URLを貼ってください
 // 例: const GAS_URL = 'https://script.google.com/macros/s/xxxxxxx/exec';
 // =====================================================
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbzhTwzLskVh0lRNegdW0FnmL-dedZ6LIps2NP9mRrXsPp0aC93ziLRAMUTEmzFiiU_3/exec'; // ←ここを今井さんのGAS URLに置き換え
-const INSPECT_VERSION = 'v22-partno-qr-log-local-lib-readyfix';
+const INSPECT_VERSION = 'v22-partno-qr-log-local-lib-best-fix2';
 
 // 固定設定：現場用なので画面には出さない
 const CONFIG = {
@@ -260,6 +260,11 @@ function cvReady(){
     updateActionState();
   }
 }
+
+// OpenCV本体の<script>読込完了後、関数定義済みのここで初期化を開始する。
+// onload属性はローカル読込が速いとcvReady未定義で発火するため使わない。
+cvReady();
+
 function waitForOpenCV(timeoutMs=20000){
   if(cvLoaded) return Promise.resolve(true);
   return new Promise(resolve=>{
