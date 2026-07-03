@@ -10,7 +10,32 @@
 }.scanGuide{position:absolute;left:12%;right:12%;top:32%;height:36%;border:3px solid rgba(255,216,77,.9);border-radius:14px;box-shadow:0 0 0 9999px rgba(0,0,0,.18);pointer-events:none}.scanMsg{font-size:12px;color:#c6d8ff;line-height:1.55;margin-top:8px;white-space:pre-line}.scanHidden{display:none}.barcodeScanBtn{background:linear-gradient(90deg,#ffd84d,#ffef9e)!important;color:#111!important}.modeBtn{font-size:15px;padding:13px 10px}.modeBtn.active{outline:2px solid var(--yellow);background:linear-gradient(90deg,#ffd84d,#ffef9e)!important;color:#111!important}.modeArea{display:none}.modeArea.on{display:block}.workArea{display:none}.workArea.on{display:block}.modePlaceholder{border:1px dashed #31517e;border-radius:12px;padding:12px;color:#9fb4d9;font-size:12px;line-height:1.5;background:rgba(2,7,17,.42)}.mobileCanvasSlot{display:none}.canvasCard{min-height:200px}.canvasCard.mobileMoved{display:none}.canvasHint{font-size:11px;color:#9fb4d9;margin-top:6px;line-height:1.45}
 /* v26: モバイルでは写真の直前に検査ポイント操作を置く */
 .mobilePointToolbar{display:none}.mobilePointToolbar .toolbarTitle{font-size:12px;font-weight:900;color:#dff8ff;margin-bottom:8px;letter-spacing:.04em}.mobilePointToolbar .toolbarRow{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:8px}.mobilePointToolbar .toolbarRow.one{grid-template-columns:1fr}.mobilePointToolbar .typeBtn{margin:0;padding:10px 7px;background:#26395f;color:#eef6ff;font-size:13px}.mobilePointToolbar .typeBtn.active{background:linear-gradient(90deg,#ffd84d,#ffef9e)!important;color:#111!important;outline:2px solid var(--yellow)}.mobilePointToolbar .toolbarAdd{margin:0;padding:13px 10px;font-size:15px}.mobilePointToolbar .toolbarHelp{font-size:11px;color:#9fb4d9;line-height:1.45;margin-top:8px}.mobilePointToolbar .toolbarThr{display:grid;grid-template-columns:1fr auto;align-items:center;gap:8px;margin-top:8px}.mobilePointToolbar .toolbarThr input{margin:0;padding:0}.mobilePointToolbar .toolbarThr b{min-width:46px;text-align:right;color:#ffd84d;font-size:13px}
-@media(max-width:900px){main{grid-template-columns:1fr}.grid{grid-template-columns:1fr}.metrics{grid-template-columns:1fr 1fr}.decision{font-size:52px}.mobileImageEditing #pointSettingsBlock{display:none}.mobileImageEditing .mobilePointToolbar{display:block;margin-bottom:10px;padding:11px;border:1px solid #31517e;border-radius:12px;background:rgba(7,18,38,.92);box-shadow:0 10px 26px #0005;position:sticky;top:58px;z-index:4}.mobileImageEditing .canvasHint{margin-top:8px}/* v25 fix: canvasCard自体をmobileCanvasSlotへ移動するため、中のdesktopCanvasSlotは隠さない */.desktopCanvasSlot{display:block}.mobileCanvasSlot{display:block;margin:0 0 12px}.mobileCanvasSlot .card{padding:0;border:0;background:transparent;box-shadow:none}.mobileCanvasSlot .box{border-color:#31517e}.box canvas{touch-action:none}.flowBlock{margin-bottom:10px}}
+
+/* v27: モバイルの検査ポイント設定は画像の上にフローティング表示 */
+.imageBox{position:relative}
+.mobilePointOverlay{display:none}
+@media(max-width:900px){
+  .mobileImageEditing #pointSettingsBlock{display:none}
+  .mobilePointOverlay{display:block;position:absolute;z-index:20;left:10px;right:10px;bottom:10px;padding:10px;border:1px solid rgba(53,220,255,.78);border-radius:14px;background:rgba(4,14,30,.91);backdrop-filter:blur(10px);box-shadow:0 12px 32px rgba(0,0,0,.52)}
+  .mobilePointOverlay.collapsed{left:auto;right:10px;bottom:10px;padding:0;border:0;background:transparent;box-shadow:none;backdrop-filter:none}
+  .mobilePointOverlay .overlayHead{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+  .mobilePointOverlay .overlayTitle{font-size:12px;font-weight:900;letter-spacing:.05em;color:#dff8ff}
+  .mobilePointOverlay .overlayMin{width:auto;margin:0;padding:6px 9px;border-radius:9px;background:#26395f;color:#eef6ff;font-size:12px}
+  .mobilePointOverlay .toolbarRow{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:7px}
+  .mobilePointOverlay .toolbarRow.one{grid-template-columns:1fr}
+  .mobilePointOverlay .typeBtn{margin:0;padding:10px 7px;background:#26395f;color:#eef6ff;font-size:13px}
+  .mobilePointOverlay .typeBtn.active{background:linear-gradient(90deg,#ffd84d,#ffef9e)!important;color:#111!important;outline:2px solid var(--yellow)}
+  .mobilePointOverlay .toolbarAdd{margin:0;padding:12px 10px;font-size:15px}
+  .mobilePointOverlay .toolbarHelp{font-size:11px;color:#9fb4d9;line-height:1.35;margin-top:7px}
+  .mobilePointOverlay .toolbarThr{display:grid;grid-template-columns:1fr auto;align-items:center;gap:8px;margin-top:7px}
+  .mobilePointOverlay .toolbarThr input{margin:0;padding:0}
+  .mobilePointOverlay .toolbarThr b{min-width:46px;text-align:right;color:#ffd84d;font-size:13px}
+  .mobilePointOverlay.collapsed .overlayBody{display:none}
+  .mobilePointOverlay.collapsed .overlayHead{margin:0}
+  .mobilePointOverlay.collapsed .overlayTitle{display:none}
+  .mobilePointOverlay.collapsed .overlayMin{background:linear-gradient(90deg,#2aa7ff,#39e0ff);color:#001225;font-weight:900;padding:10px 13px}
+}
+@media(max-width:900px){main{grid-template-columns:1fr}.grid{grid-template-columns:1fr}.metrics{grid-template-columns:1fr 1fr}.decision{font-size:52px}.mobileImageEditing #pointSettingsBlock{display:none}.mobileImageEditing .canvasHint{margin-top:8px}/* v25 fix: canvasCard自体をmobileCanvasSlotへ移動するため、中のdesktopCanvasSlotは隠さない */.desktopCanvasSlot{display:block}.mobileCanvasSlot{display:block;margin:0 0 12px}.mobileCanvasSlot .card{padding:0;border:0;background:transparent;box-shadow:none}.mobileCanvasSlot .box{border-color:#31517e}.box canvas{touch-action:none}.flowBlock{margin-bottom:10px}}
 </style></head>
 <body>
 <header><h1>ぴろえんす Master v25 / モード選択UI・モバイル対応</h1><div class="sub">最初に「新規登録」または「登録済み修正」を選択。必要な入力だけ表示します。画像は圧縮してGoogle Driveへ保存。</div></header>
@@ -84,7 +109,7 @@
   <div id="desktopCanvasSlot" class="desktopCanvasSlot">
     <div id="canvasContent">
       <div class="grid">
-        <div class="box big"><h3>マスター画像（ドラッグで検査ポイント登録）</h3><canvas id="masterCanvas" width="1000" height="650"></canvas><div class="canvasHint">PC: ドラッグで検査ポイント登録 / 右ドラッグでパン。モバイル: 検査ポイント登録ON後、画像上を指でドラッグ。</div></div>
+        <div id="imageBox" class="box big imageBox"><h3>マスター画像（ドラッグで検査ポイント登録）</h3><canvas id="masterCanvas" width="1000" height="650"></canvas><div class="canvasHint">PC: ドラッグで検査ポイント登録 / 右ドラッグでパン。モバイル: 検査ポイント登録ON後、画像上を指でドラッグ。</div></div>
       </div>
     </div>
   </div>
@@ -110,7 +135,7 @@
 
 const $=id=>document.getElementById(id);
 const DEFAULT_GAS_URL='https://script.google.com/macros/s/AKfycbzhTwzLskVh0lRNegdW0FnmL-dedZ6LIps2NP9mRrXsPp0aC93ziLRAMUTEmzFiiU_3/exec';
-const MASTER_VERSION='v26-mobile-image-editbar-20260703';
+const MASTER_VERSION='v27-mobile-point-overlay-20260703';
 let loadedTopFileId='';
 function log(s){$('status').textContent=s}
 function getGasUrl(){return ($('gasUrl')?.value || localStorage.getItem('PIROENS_GAS_URL') || DEFAULT_GAS_URL).trim()}
@@ -135,22 +160,27 @@ function updateCanvasPlacement(){
 }
 
 function ensureMobilePointToolbar(){
-  const slot=$('mobileCanvasSlot');
-  if(!slot || $('mobilePointToolbar')) return;
+  const host=$('imageBox');
+  if(!host || $('mobilePointToolbar')) return;
   const bar=document.createElement('div');
   bar.id='mobilePointToolbar';
-  bar.className='mobilePointToolbar';
+  bar.className='mobilePointOverlay';
   bar.innerHTML=`
-    <div class="toolbarTitle">検査ポイントを設定</div>
-    <input id="mPointName" type="text" placeholder="ポイント名（例：穴A / 刻印）">
-    <div class="toolbarRow">
-      <button id="mTypePresent" class="typeBtn" type="button">あること確認</button>
-      <button id="mTypeAbsent" class="typeBtn" type="button">ないこと確認</button>
+    <div class="overlayHead">
+      <div class="overlayTitle">検査ポイント設定</div>
+      <button id="mOverlayMin" class="overlayMin" type="button">閉じる</button>
     </div>
-    <div class="toolbarThr"><input id="mPointThr" type="range" min="1" max="100" value="50"><b id="mPointThrVal">50%</b></div>
-    <div class="toolbarRow one"><button id="mPointToggle" class="toolbarAdd secondary" type="button">＋ この条件で範囲をドラッグ</button></div>
-    <div class="toolbarHelp">条件を選択 → ボタンをON → すぐ下の写真を指でドラッグ。追加後もONのまま続けて登録できます。</div>`;
-  slot.insertBefore(bar,slot.firstChild);
+    <div class="overlayBody">
+      <input id="mPointName" type="text" placeholder="ポイント名（例：穴A / 刻印）">
+      <div class="toolbarRow">
+        <button id="mTypePresent" class="typeBtn" type="button">あること確認</button>
+        <button id="mTypeAbsent" class="typeBtn" type="button">ないこと確認</button>
+      </div>
+      <div class="toolbarThr"><input id="mPointThr" type="range" min="1" max="100" value="50"><b id="mPointThrVal">50%</b></div>
+      <div class="toolbarRow one"><button id="mPointToggle" class="toolbarAdd secondary" type="button">＋ この条件で範囲をドラッグ</button></div>
+      <div class="toolbarHelp">条件を選択 → ON → 写真を指でドラッグ。範囲を作った後も続けて追加できます。</div>
+    </div>`;
+  host.appendChild(bar);
 
   const syncToMain=()=>{
     const n=$('mPointName'), t=$('mPointThr');
@@ -163,7 +193,11 @@ function ensureMobilePointToolbar(){
   $('mPointThr').addEventListener('input',syncToMain);
   $('mTypePresent').onclick=()=>{ $('pointType').value='present'; updatePointThrUI(); refreshMobileImageEditor(); };
   $('mTypeAbsent').onclick=()=>{ $('pointType').value='absent'; updatePointThrUI(); refreshMobileImageEditor(); };
-  $('mPointToggle').onclick=()=>setPointMode(!pointMode);
+  $('mPointToggle').onclick=()=>{ bar.classList.remove('collapsed'); setPointMode(!pointMode); };
+  $('mOverlayMin').onclick=()=>{
+    const collapsed=bar.classList.toggle('collapsed');
+    $('mOverlayMin').textContent=collapsed?'検査ポイント':'閉じる';
+  };
 }
 
 function refreshMobileImageEditor(){
@@ -173,6 +207,8 @@ function refreshMobileImageEditor(){
   document.body.classList.toggle('mobileImageEditing',active);
   const bar=$('mobilePointToolbar');
   if(!bar)return;
+  bar.style.display=active?'block':'none';
+  if(pointMode){ bar.classList.remove('collapsed'); const min=$('mOverlayMin'); if(min) min.textContent='閉じる'; }
   const n=$('mPointName'), t=$('mPointThr'), tv=$('mPointThrVal');
   if(n && document.activeElement!==n) n.value=$('pointName').value||'';
   if(t) t.value=$('pointThr').value;
@@ -463,7 +499,7 @@ $('masterFile').onchange=async e=>{
   updateCanvasPlacement();
   fitView();
   log('マスター画像読込OK\nモバイルでは画像上を指でドラッグして検査ポイント登録できます。');
-  setTimeout(()=>{ if(window.matchMedia('(max-width:900px)').matches){ refreshMobileImageEditor(); const target=$('mobilePointToolbar')||$('mobileCanvasSlot'); if(target) target.scrollIntoView({behavior:'smooth',block:'start'}); } },80);
+  setTimeout(()=>{ if(window.matchMedia('(max-width:900px)').matches){ refreshMobileImageEditor(); const target=$('imageBox')||$('mobileCanvasSlot'); if(target) target.scrollIntoView({behavior:'smooth',block:'start'}); } },80);
 };
 async function loadRegisteredParts(){
   const gas=getGasUrl();
