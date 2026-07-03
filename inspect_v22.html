@@ -15,7 +15,6 @@
 #barcodeInput{grid-column:1/-1;width:100%;max-width:none}
 #partSelect{min-width:0}
 #actionBtn{min-width:92px;font-size:15px}
-#actionBtn:disabled{opacity:.55;filter:grayscale(.45);cursor:not-allowed}
 #reloadBtn{min-width:68px;background:#26395f;color:#eef6ff}
 .masterReady #actionBtn{background:linear-gradient(90deg,#20d56f,#35f078);color:#00180a}
 .masterNotReady #actionBtn{background:linear-gradient(90deg,#2aa7ff,#39e0ff);color:#001225}
@@ -96,14 +95,14 @@
 </section>
 <script src="./js/zxing-browser.min.js"></script>
 <script src="./js/jsQR.min.js"></script>
-<script src="./js/opencv.js" onload="cvReady()"></script>
+<script src="./js/opencv.js"></script>
 <script>
 // =====================================================
 // ★ここにGASの /exec URLを貼ってください
 // 例: const GAS_URL = 'https://script.google.com/macros/s/xxxxxxx/exec';
 // =====================================================
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbzhTwzLskVh0lRNegdW0FnmL-dedZ6LIps2NP9mRrXsPp0aC93ziLRAMUTEmzFiiU_3/exec'; // ←ここを今井さんのGAS URLに置き換え
-const INSPECT_VERSION = 'v22-partno-qr-log-local-lib-readyfix';
+const INSPECT_VERSION = 'v22-partno-qr-log';
 
 // 固定設定：現場用なので画面には出さない
 const CONFIG = {
@@ -123,7 +122,7 @@ const CONFIG = {
 };
 
 const $=id=>document.getElementById(id);
-let cvLoaded=false, parts=[], currentPart=null, masterImg=null, inspectImg=null, points=[];
+let cvLoaded=false, cvStarting=false, parts=[], currentPart=null, masterImg=null, inspectImg=null, points=[];
 let currentBarcodeInfo=null;
 let currentBarcodeRaw='', lastInspectionRecord=null, ngLoggedForCurrent=false, okLoggedForCurrent=false, logSending=false;
 let DEBUG={image:{},align:{},points:[],logs:[]};
@@ -222,13 +221,18 @@ function endInspectionToScanMode(){
 }
 function updateActionState(){
   const ready=!!(currentPart&&masterImg);
-  document.body.classList.toggle('masterReady',ready);
-  document.body.classList.toggle('masterNotReady',!ready);
+  document.body.classList.toggle('masterReady',ready && cvLoaded);
+  document.body.classList.toggle('masterNotReady',!(ready && cvLoaded));
   const btn=$('actionBtn');
-  if(btn){
-    btn.disabled = ready && !cvLoaded;
-    btn.textContent = ready ? (cvLoaded ? '撮影' : '準備中') : '読取';
-    btn.title = ready ? (cvLoaded ? '部品を撮影します' : 'OpenCV.js準備中です') : 'バーコード/QRを読み取ります';
+  if(!btn)return;
+  if(ready && !cvLoaded){
+    btn.disabled=true;
+    btn.textContent='準備中';
+    btn.title='OpenCV.js準備中です。完了すると撮影できます。';
+  }else{
+    btn.disabled=false;
+    btn.textContent=ready?'撮影':'読取';
+    btn.title=ready?'部品を撮影します':'バーコード/QRを読み取ります';
   }
 }
 function resetMasterState(){
@@ -241,41 +245,40 @@ function resetMasterState(){
 function dbg(msg,obj){ const line=new Date().toLocaleTimeString('ja-JP')+'  '+msg+(obj?'\n'+safeJson(obj):''); DEBUG.logs.push(line); if(DEBUG.logs.length>40) DEBUG.logs.shift(); renderDebug(); }
 function safeJson(obj){ try{return JSON.stringify(obj,(k,v)=>typeof v==='number'?Math.round(v*1000)/1000:v,2)}catch(e){return String(obj)} }
 function renderDebug(){ $('debugState').textContent=($('banner').textContent||'WAIT'); $('debugImage').textContent=safeJson(DEBUG.image||{}); $('debugAlign').textContent=safeJson(DEBUG.align||{}); $('debugPoints').textContent=safeJson(DEBUG.points||[]); $('debugLog').textContent=(DEBUG.logs||[]).join('\n\n')||'待機中'; }
-let appInitStarted=false;
-function cvReady(){
-  const boot = () => {
-    if(cvLoaded) return;
-    cvLoaded = true;
-    log('OpenCV.js 読込OK '+INSPECT_VERSION);
+function wait(ms){ return new Promise(r=>setTimeout(r,ms)); }
+function startOpenCV(){
+  if(cvLoaded || cvStarting)return;
+  cvStarting=true;
+  const boot=()=>{
+    if(cvLoaded)return;
+    cvLoaded=true;
+    cvStarting=false;
+    log('OpenCV.js 読込OK '+INSPECT_VERSION+'
+通常は「読取」でバーコード/QRを読んでください。');
     updateActionState();
-    if(!appInitStarted){ appInitStarted=true; init(); }
+    if(!parts.length) loadParts();
   };
-
-  if (window.cv && cv.Mat) {
+  if(window.cv && typeof cv.Mat==='function' && typeof cv.getBuildInformation==='function'){
     boot();
-  } else if (window.cv) {
-    cv['onRuntimeInitialized'] = boot;
-  } else {
-    log('OpenCV.js読込失敗。js/opencv.js の配置を確認してください。');
-    updateActionState();
+  }else if(window.cv){
+    cv.onRuntimeInitialized=boot;
+  }else{
+    cvStarting=false;
+    setTimeout(startOpenCV,120);
   }
 }
-function waitForOpenCV(timeoutMs=20000){
-  if(cvLoaded) return Promise.resolve(true);
-  return new Promise(resolve=>{
-    const start=Date.now();
-    const timer=setInterval(()=>{
-      if(cvLoaded){ clearInterval(timer); resolve(true); return; }
-      if(Date.now()-start>timeoutMs){ clearInterval(timer); resolve(false); }
-    },100);
-  });
-}
-window.addEventListener('load',()=>{
-  if(!appInitStarted && !(window.cv)){
-    updateActionState();
-    log('OpenCV.js読込待ち... js/opencv.js を確認してください。');
+function cvReady(){ startOpenCV(); }
+async function waitForOpenCV(timeoutMs=20000){
+  startOpenCV();
+  const start=Date.now();
+  while(!cvLoaded && Date.now()-start<timeoutMs){
+    log('OpenCV.js準備中...
+解析開始まで待機しています。');
+    await wait(150);
   }
-});
+  updateActionState();
+  return cvLoaded;
+}
 function loadImageFromDataUrl(dataUrl){ return new Promise((res,rej)=>{ const img=new Image(); img.onload=()=>res(img); img.onerror=rej; img.src=dataUrl; }); }
 function loadImageFromFile(file){ return new Promise((res,rej)=>{ const img=new Image(); img.onload=()=>res(img); img.onerror=rej; img.src=URL.createObjectURL(file); }); }
 function drawImageFit(canvas,img){ const ctx=canvas.getContext('2d'); ctx.clearRect(0,0,canvas.width,canvas.height); ctx.fillStyle='#05070b'; ctx.fillRect(0,0,canvas.width,canvas.height); if(!img)return; const r=Math.min(canvas.width/img.width,canvas.height/img.height); const w=img.width*r,h=img.height*r,ox=(canvas.width-w)/2,oy=(canvas.height-h)/2; ctx.drawImage(img,ox,oy,w,h); }
@@ -579,7 +582,7 @@ async function stopBarcodeScan(close=true){
 function escapeHtml(s){ return String(s??'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m])); }
 $('reloadBtn').onclick=loadParts;
 $('partSelect').onchange=async()=>{ if($('partSelect').value){ currentBarcodeRaw=$('partSelect').value; lastInspectionRecord=null; ngLoggedForCurrent=false; okLoggedForCurrent=false; logSending=false; await loadSelectedPart(); } else resetMasterState(); };
-$('actionBtn').onclick=async()=>{ if(currentPart&&masterImg){ if(!cvLoaded){ log('OpenCV.js準備中です。しばらく待ってください。'); updateActionState(); return; } $('inspectFile').click(); } else { await startBarcodeScan(); } };
+$('actionBtn').onclick=async()=>{ if(currentPart&&masterImg){ $('inspectFile').click(); } else { await startBarcodeScan(); } };
 $('scanCloseBtn').onclick=()=>stopBarcodeScan(true);
 $('barcodeInput').addEventListener('keydown',async e=>{ if(e.key==='Enter'){ e.preventDefault(); await selectMasterByBarcode(e.target.value); }});
 $('actionRegisterBtn').onclick=async()=>{
@@ -722,17 +725,23 @@ function compareAll(m,warped,points){
 }
 
 async function runInspect(){
-  if(!masterImg||!inspectImg){alert('品番と写真を確認してください');return}
+  if(!masterImg||!inspectImg){log('品番と写真を確認してください');return}
   hideResultAction();
   okLoggedForCurrent=false; logSending=false;
-  setLoading(true); setBanner('WAIT');
+  setLoading(true);
   if(!cvLoaded){
-    log('OpenCV.js準備中... 最大20秒待機します');
-    const okCv=await waitForOpenCV(20000);
-    if(!okCv){ setLoading(false); log('OpenCV.js読込タイムアウト。js/opencv.js の配置/キャッシュを確認してください。'); updateActionState(); return; }
+    setBanner('WAIT');
+    const ready=await waitForOpenCV(20000);
+    if(!ready){
+      setLoading(false);
+      log('OpenCV.js準備タイムアウト。
+ページを再読み込みしてください。
+※ ./js/opencv.js がGitHub Pagesで読めるか確認。');
+      return;
+    }
   }
   try{
-    log('解析中...');
+    setBanner('WAIT'); log('解析中...');
     const pointNormalizeInfo=DEBUG.image?.pointNormalize;
     DEBUG={image:{pointNormalize:pointNormalizeInfo},align:{},points:DEBUG.points||[],logs:DEBUG.logs||[]};
     dbg('解析開始');
@@ -811,6 +820,12 @@ async function runInspect(){
     console.error(e); setBanner('NG'); setStat('alignStat','NG','ngText'); log('解析エラー: '+e.message); dbg('解析エラー',{message:e.message,stack:e.stack});
   }finally{ setLoading(false); }
 }
+// 起動処理：ライブラリをローカル化するとOpenCVの読込が速すぎて onload が関数定義より先に走ることがある。
+// そのため onload 属性は使わず、全関数定義後にここから初期化する。
+updateActionState();
+loadParts();
+startOpenCV();
+window.addEventListener('load', startOpenCV);
 </script>
 </body>
 </html>
