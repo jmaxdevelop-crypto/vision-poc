@@ -108,6 +108,9 @@
     </div>
     <canvas id="scanCanvas" class="scanHidden"></canvas>
     <div id="scanMsg" class="scanMsg">カメラ準備中...</div>
+    <input id="qrPhotoInput" class="scanHidden" type="file" accept="image/*" capture="environment">
+    <button id="qrPhotoBtn" class="secondary" type="button">小さいQRは写真で読む</button>
+    <div class="scanMsg">動画で読めない小さいQRは、写真モードで高解像度撮影して読取できます。</div>
   </div>
 </div>
 <script src="https://unpkg.com/@zxing/browser@latest/umd/index.min.js"></script>
@@ -390,6 +393,63 @@ async function decodeQrAssistFromVideo(video, canvas, ctx, frame){
   ctx.filter='none';
   return '';
 }
+
+function loadQrPhotoImage(file){
+  return new Promise((res,rej)=>{
+    const img=new Image();
+    img.onload=()=>res(img);
+    img.onerror=rej;
+    img.src=URL.createObjectURL(file);
+  });
+}
+async function decodeQrFromStillImage(img){
+  const canvas=$('scanCanvas') || document.createElement('canvas');
+  const ctx=canvas.getContext('2d',{willReadFrequently:true});
+  const maxSides=[2600,2000,1500,1100];
+  const filters=['none','contrast(150%) brightness(112%)','contrast(185%) brightness(105%) grayscale(100%)'];
+  for(const maxSide of maxSides){
+    const s=Math.min(1,maxSide/Math.max(img.width,img.height));
+    canvas.width=Math.max(1,Math.round(img.width*s));
+    canvas.height=Math.max(1,Math.round(img.height*s));
+    for(const filter of filters){
+      ctx.imageSmoothingEnabled=false;
+      ctx.filter=filter;
+      ctx.drawImage(img,0,0,canvas.width,canvas.height);
+      ctx.filter='none';
+      if(window.BarcodeDetector){
+        try{
+          const detector=new BarcodeDetector({formats:['qr_code']});
+          const codes=await detector.detect(canvas);
+          if(codes&&codes.length&&codes[0].rawValue) return codes[0].rawValue;
+        }catch(_){/* unsupported */}
+      }
+      if(window.jsQR){
+        const data=ctx.getImageData(0,0,canvas.width,canvas.height);
+        const code=jsQR(data.data,data.width,data.height,{inversionAttempts:'attemptBoth'});
+        if(code&&code.data) return code.data;
+      }
+    }
+  }
+  return '';
+}
+async function readQrFromPhotoFile(file){
+  const msg=$('scanMsg');
+  try{
+    if(!file)return;
+    if(msg) msg.textContent='高解像度写真からQR読取中...';
+    const img=await loadQrPhotoImage(file);
+    const text=await decodeQrFromStillImage(img);
+    if(text && setBarcodeValue(text,'写真QR')){
+      await stopCameraBarcodeScan(true);
+      return;
+    }
+    if(msg) msg.textContent='写真からQRを読めませんでした。QRが入るように少し離して再撮影してください。';
+  }catch(e){
+    console.error(e);
+    if(msg) msg.textContent='写真QR読取エラー: '+e.message;
+  }
+}
+
 async function stopCameraBarcodeScan(close=true){
   if(scanTimer){cancelAnimationFrame(scanTimer);scanTimer=null;}
   if(scanControls){try{scanControls.stop();}catch(_){ } scanControls=null;}
@@ -508,6 +568,8 @@ $('barcodeInput').addEventListener('keydown',e=>{
 $('barcodeInput').addEventListener('paste',()=>setTimeout(()=>acceptBarcodeValue($('barcodeInput').value),30));
 $('barcodeInput').addEventListener('blur',()=>{ if(!$('barcodeInput').value) $('barcodeInput').classList.remove('barcodeReady'); });
 $('cameraBarcodeBtn').onclick=startCameraBarcodeScan;
+$('qrPhotoBtn').onclick=()=>{$('qrPhotoInput').click();};
+$('qrPhotoInput').onchange=async e=>{const f=e.target.files&&e.target.files[0]; await readQrFromPhotoFile(f); e.target.value='';};
 $('manualBarcodeBtn').onclick=()=>acceptBarcodeValue($('barcodeInput').value);
 $('scanCloseBtn').onclick=()=>stopCameraBarcodeScan(true);
 $('scanOverlay').addEventListener('click',e=>{if(e.target.id==='scanOverlay')stopCameraBarcodeScan(true);});
