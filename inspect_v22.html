@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>ぴろえんす Inspect v22 partNo QR log</title>
+<title>ぴろえんす Inspect v23 scan stable QR guide</title>
 <style>
 :root{--bg:#06101f;--panel:rgba(5,12,26,.88);--txt:#eef6ff;--muted:#9fb4d9;--green:#35f078;--red:#ff4b5f;--yellow:#ffd84d;--cyan:#35dcff;--line:#29436d}
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;width:100%;min-height:100%;background:#000;color:var(--txt);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;overflow-x:hidden;overflow-y:auto}.app{position:relative;width:100%;height:100dvh;min-height:100vh;background:#000;overflow:hidden}.topbar{position:absolute;z-index:10;left:0;right:0;top:0;padding:10px max(10px,env(safe-area-inset-left)) 10px max(10px,env(safe-area-inset-right));background:linear-gradient(180deg,rgba(0,0,0,.88),rgba(0,0,0,.30),transparent);display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}.brand{font-weight:900;letter-spacing:.06em;font-size:14px;color:#dff8ff}.selectRow{display:flex;gap:8px;align-items:center}.selectRow select{flex:1;min-width:0;padding:11px 12px;border-radius:12px;border:1px solid #31517e;background:#071226;color:var(--txt);font-size:15px}.selectRow button,.cameraBtn{border:0;border-radius:12px;padding:11px 14px;background:linear-gradient(90deg,#2aa7ff,#39e0ff);font-weight:900;color:#001225;font-size:14px}.cameraBtn{white-space:nowrap}.photoInput{display:none}.canvasWrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#020711}canvas{width:100%;height:100%;object-fit:contain;display:block}.empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;color:#aabde0;padding:24px;font-size:15px;line-height:1.7}.resultBanner{position:absolute;z-index:12;left:12px;right:12px;top:88px;border-radius:18px;padding:18px 14px;text-align:center;font-size:72px;font-weight:1000;letter-spacing:.14em;line-height:1;box-shadow:0 18px 40px rgba(0,0,0,.45);display:none}.resultBanner::before{content:'総合判定';display:block;font-size:13px;letter-spacing:.16em;margin-bottom:8px;color:#d9e9ff}.resultBanner.ok{display:block;background:rgba(9,65,37,.92);border:3px solid var(--green);color:var(--green)}.resultBanner.ng{display:block;background:rgba(73,18,31,.94);border:3px solid var(--red);color:var(--red)}.bottom{position:absolute;z-index:10;left:0;right:0;bottom:0;padding:10px max(10px,env(safe-area-inset-left)) max(12px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-right));background:linear-gradient(0deg,rgba(0,0,0,.92),rgba(0,0,0,.46),transparent)}.status{background:rgba(7,18,38,.86);border:1px solid var(--line);border-radius:14px;padding:10px 12px;color:#c6d8ff;font-size:12px;line-height:1.45;white-space:pre-line;max-height:160px;overflow:auto}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:7px}.stat{background:rgba(7,18,38,.82);border:1px solid var(--line);border-radius:12px;padding:8px;text-align:center}.stat small{display:block;color:#aabde0;font-size:10px}.stat b{display:block;font-size:18px;margin-top:2px}.okText{color:var(--green)}.ngText{color:var(--red)}.waitText{color:var(--yellow)}.loading{position:absolute;z-index:15;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:#dff8ff}.loading.on{display:flex}.debugPanel{min-height:100dvh;background:#050b16;padding:18px max(14px,env(safe-area-inset-left)) max(28px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-right));border-top:1px solid #20385f}.debugHead{display:flex;align-items:end;justify-content:space-between;gap:10px;margin-bottom:12px}.debugHead h2{margin:0;font-size:20px;letter-spacing:.08em}.debugHint{color:#9fb4d9;font-size:12px}.debugGrid{display:grid;grid-template-columns:1fr;gap:10px}.debugCard{background:rgba(7,18,38,.88);border:1px solid var(--line);border-radius:14px;padding:12px}.debugCard h3{margin:0 0 8px;font-size:14px;color:#dff8ff}.debugPre{margin:0;white-space:pre-wrap;word-break:break-word;color:#c6d8ff;font-size:12px;line-height:1.5}.debugCanvasWrap{background:#020711;border:1px solid #20385f;border-radius:12px;overflow:hidden}.debugCanvasWrap canvas{width:100%;height:auto;display:block}.debugBadge{display:inline-block;padding:3px 8px;border-radius:999px;border:1px solid #31517e;color:#9fb4d9;font-size:11px;margin-left:6px}.barcodeInput{min-width:180px;max-width:260px;padding:11px 12px;border-radius:12px;border:1px solid #31517e;background:#071226;color:var(--txt);font-size:15px}.scanOverlay{position:fixed;z-index:30;inset:0;background:#020711;display:none;align-items:center;justify-content:center;flex-direction:column;padding:max(18px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) max(18px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left));gap:12px}.scanOverlay.on{display:flex}.scanBox{position:relative;width:min(92vw,720px);aspect-ratio:4/3;border:2px solid #31517e;border-radius:18px;overflow:hidden;background:#000;box-shadow:0 20px 60px #000a}.scanBox video,.scanBox canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.scanGuide{position:absolute;left:50%;top:50%;width:58%;height:36%;transform:translate(-50%,-50%);border:4px solid var(--cyan);border-radius:16px;box-shadow:0 0 0 999px rgba(0,0,0,.28);pointer-events:none}.scanTitle{font-size:20px;font-weight:900;color:#dff8ff}.scanStatus{color:#c6d8ff;font-size:14px;text-align:center;min-height:1.6em;white-space:pre-line}.scanClose{width:min(92vw,360px);border:0;border-radius:14px;padding:13px 18px;background:#26395f;color:#eef6ff;font-weight:900;font-size:16px}@media(max-width:480px){.topbar{grid-template-columns:1fr}.resultBanner{font-size:58px;top:118px}.brand{display:none}.selectRow select{font-size:14px}.barcodeInput{min-width:0;max-width:none;width:100%;font-size:14px}.stats{grid-template-columns:repeat(3,1fr)}.stat b{font-size:16px}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;width:100%;min-height:100%;background:#000;color:var(--txt);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;overflow-x:hidden;overflow-y:auto}.app{position:relative;width:100%;height:100dvh;min-height:100vh;background:#000;overflow:hidden}.topbar{position:absolute;z-index:10;left:0;right:0;top:0;padding:10px max(10px,env(safe-area-inset-left)) 10px max(10px,env(safe-area-inset-right));background:linear-gradient(180deg,rgba(0,0,0,.88),rgba(0,0,0,.30),transparent);display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}.brand{font-weight:900;letter-spacing:.06em;font-size:14px;color:#dff8ff}.selectRow{display:flex;gap:8px;align-items:center}.selectRow select{flex:1;min-width:0;padding:11px 12px;border-radius:12px;border:1px solid #31517e;background:#071226;color:var(--txt);font-size:15px}.selectRow button,.cameraBtn{border:0;border-radius:12px;padding:11px 14px;background:linear-gradient(90deg,#2aa7ff,#39e0ff);font-weight:900;color:#001225;font-size:14px}.cameraBtn{white-space:nowrap}.photoInput{display:none}.canvasWrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#020711}canvas{width:100%;height:100%;object-fit:contain;display:block}.empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;color:#aabde0;padding:24px;font-size:15px;line-height:1.7}.resultBanner{position:absolute;z-index:12;left:12px;right:12px;top:88px;border-radius:18px;padding:18px 14px;text-align:center;font-size:72px;font-weight:1000;letter-spacing:.14em;line-height:1;box-shadow:0 18px 40px rgba(0,0,0,.45);display:none}.resultBanner::before{content:'総合判定';display:block;font-size:13px;letter-spacing:.16em;margin-bottom:8px;color:#d9e9ff}.resultBanner.ok{display:block;background:rgba(9,65,37,.92);border:3px solid var(--green);color:var(--green)}.resultBanner.ng{display:block;background:rgba(73,18,31,.94);border:3px solid var(--red);color:var(--red)}.bottom{position:absolute;z-index:10;left:0;right:0;bottom:0;padding:10px max(10px,env(safe-area-inset-left)) max(12px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-right));background:linear-gradient(0deg,rgba(0,0,0,.92),rgba(0,0,0,.46),transparent)}.status{background:rgba(7,18,38,.86);border:1px solid var(--line);border-radius:14px;padding:10px 12px;color:#c6d8ff;font-size:12px;line-height:1.45;white-space:pre-line;max-height:160px;overflow:auto}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:7px}.stat{background:rgba(7,18,38,.82);border:1px solid var(--line);border-radius:12px;padding:8px;text-align:center}.stat small{display:block;color:#aabde0;font-size:10px}.stat b{display:block;font-size:18px;margin-top:2px}.okText{color:var(--green)}.ngText{color:var(--red)}.waitText{color:var(--yellow)}.loading{position:absolute;z-index:15;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:#dff8ff}.loading.on{display:flex}.debugPanel{min-height:100dvh;background:#050b16;padding:18px max(14px,env(safe-area-inset-left)) max(28px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-right));border-top:1px solid #20385f}.debugHead{display:flex;align-items:end;justify-content:space-between;gap:10px;margin-bottom:12px}.debugHead h2{margin:0;font-size:20px;letter-spacing:.08em}.debugHint{color:#9fb4d9;font-size:12px}.debugGrid{display:grid;grid-template-columns:1fr;gap:10px}.debugCard{background:rgba(7,18,38,.88);border:1px solid var(--line);border-radius:14px;padding:12px}.debugCard h3{margin:0 0 8px;font-size:14px;color:#dff8ff}.debugPre{margin:0;white-space:pre-wrap;word-break:break-word;color:#c6d8ff;font-size:12px;line-height:1.5}.debugCanvasWrap{background:#020711;border:1px solid #20385f;border-radius:12px;overflow:hidden}.debugCanvasWrap canvas{width:100%;height:auto;display:block}.debugBadge{display:inline-block;padding:3px 8px;border-radius:999px;border:1px solid #31517e;color:#9fb4d9;font-size:11px;margin-left:6px}.barcodeInput{min-width:180px;max-width:260px;padding:11px 12px;border-radius:12px;border:1px solid #31517e;background:#071226;color:var(--txt);font-size:15px}.scanOverlay{position:fixed;z-index:30;inset:0;background:#020711;display:none;align-items:center;justify-content:center;flex-direction:column;padding:max(18px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) max(18px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left));gap:12px}.scanOverlay.on{display:flex}.scanBox{position:relative;width:min(92vw,720px);aspect-ratio:4/3;border:2px solid #31517e;border-radius:18px;overflow:hidden;background:#000;box-shadow:0 20px 60px #000a}.scanBox video,.scanBox canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.scanGuide{position:absolute;left:50%;top:50%;width:min(64%,360px);aspect-ratio:1/1;height:auto;transform:translate(-50%,-50%);border:4px solid var(--cyan);border-radius:16px;box-shadow:0 0 0 999px rgba(0,0,0,.28);pointer-events:none}.scanTitle{font-size:20px;font-weight:900;color:#dff8ff}.scanStatus{color:#c6d8ff;font-size:14px;text-align:center;min-height:1.6em;white-space:pre-line}.scanClose{width:min(92vw,360px);border:0;border-radius:14px;padding:13px 18px;background:#26395f;color:#eef6ff;font-weight:900;font-size:16px}@media(max-width:480px){.topbar{grid-template-columns:1fr}.resultBanner{font-size:58px;top:118px}.brand{display:none}.selectRow select{font-size:14px}.barcodeInput{min-width:0;max-width:none;width:100%;font-size:14px}.stats{grid-template-columns:repeat(3,1fr)}.stat b{font-size:16px}}
 
 /* v18: iPhone向けに操作を1ボタン化 */
 .topbar{grid-template-columns:1fr}
@@ -41,7 +41,7 @@
   <div class="topbar">
     <div class="brand">ぴろえんす Inspect v20</div>
     <div class="selectRow">
-      <input id="barcodeInput" class="barcodeInput" type="text" autocomplete="off" inputmode="none" placeholder="バーコード/QR読取（USBリーダーはここへ）">
+      <input id="barcodeInput" class="barcodeInput" type="text" autocomplete="off" inputmode="none" placeholder="QR読取（手入力も可）">
       <select id="partSelect"><option>マスター読込中...</option></select>
       <button id="reloadBtn" type="button">更新</button>
       <button id="actionBtn" type="button">読取</button>
@@ -49,7 +49,7 @@
     </div>
   </div>
   <div class="canvasWrap"><canvas id="viewCanvas" width="1100" height="760"></canvas></div>
-  <div id="empty" class="empty">バーコード/QRを読み取ってください。<br>対応するマスターを自動で呼び出します。<br><small>テスト時はマスターを手動選択してもOK</small></div>
+  <div id="empty" class="empty">QRを読み取ってください。<br>対応するマスターを自動で呼び出します。<br><small>テスト時はマスターを手動選択してもOK</small></div>
   <div id="banner" class="resultBanner">WAIT</div>
   <div id="loading" class="loading">解析中...</div>
   <div class="bottom">
@@ -70,7 +70,7 @@
   </div>
 </div>
 <div id="scanOverlay" class="scanOverlay">
-  <div class="scanTitle">バーコード / QR 読取</div>
+  <div class="scanTitle">QR 読取</div>
   <div class="scanBox">
     <video id="scanVideo" playsinline muted></video>
     <canvas id="scanCanvas" width="640" height="480" style="display:none"></canvas>
@@ -103,7 +103,7 @@
 // 例: const GAS_URL = 'https://script.google.com/macros/s/xxxxxxx/exec';
 // =====================================================
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbzhTwzLskVh0lRNegdW0FnmL-dedZ6LIps2NP9mRrXsPp0aC93ziLRAMUTEmzFiiU_3/exec'; // ←ここを今井さんのGAS URLに置き換え
-const INSPECT_VERSION = 'v23-multi-qr-parser';
+const INSPECT_VERSION = 'v23-scan-stable-qr-guide';
 
 // 固定設定：現場用なので画面には出さない
 const CONFIG = {
@@ -218,7 +218,7 @@ function endInspectionToScanMode(){
   resetMasterState();
   const ps=$('partSelect'); if(ps) ps.value='';
   const bi=$('barcodeInput'); if(bi){ bi.value=''; setTimeout(()=>bi.focus(),80); }
-  log('次のバーコード/QRを読み取ってください。');
+  log('次のQRを読み取ってください。');
 }
 function updateActionState(){
   const ready=!!(currentPart&&masterImg);
@@ -554,7 +554,8 @@ async function startBarcodeScan(){
   overlay.classList.add('on');
   setScanStatus('カメラ起動中...');
   try{
-    // まずZXing。GitHub PagesならCDN読み込みで動く。ローカルに zxing-browser.min.js を置いた場合もグローバルがあればそのまま使う。
+    // 安定優先：ZXing BrowserMultiFormatReaderを主役にする。
+    // jsQR/BarcodeDetectorのQR専用補助は並走させるが、検査処理には触らない。
     if(window.ZXingBrowser && ZXingBrowser.BrowserMultiFormatReader){
       const reader=new ZXingBrowser.BrowserMultiFormatReader();
       scanControls=await reader.decodeFromVideoDevice(null, video, async (result, err, controls)=>{
@@ -566,14 +567,16 @@ async function startBarcodeScan(){
           await selectMasterByBarcode(raw);
         }
       });
-      setScanStatus('QR/バーコードを枠内に入れてください');
+      scanLoopOn=true;
+      setScanStatus('QRを正方形ガイド付近に入れてください。画面全体から補助読取もします。');
+      scanLoop();
       return;
     }
   }catch(e){
     console.warn('ZXing起動失敗。jsQR/BarcodeDetectorへフォールバック',e);
   }
   try{
-    scanStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:1280},height:{ideal:720}},audio:false});
+    scanStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:1920},height:{ideal:1080}},audio:false});
     video.srcObject=scanStream;
     await video.play();
     scanLoopOn=true;
@@ -584,29 +587,72 @@ async function startBarcodeScan(){
     setScanStatus('カメラ起動エラー: '+e.message+'\nUSBリーダーの場合は入力欄にフォーカスして読んでください。');
   }
 }
+let qrAssistFrame=0;
 async function scanLoop(){
   if(!scanLoopOn)return;
   const video=$('scanVideo'), canvas=$('scanCanvas');
   const ctx=canvas.getContext('2d',{willReadFrequently:true});
   try{
-    if(video.readyState>=2){
-      canvas.width=video.videoWidth||640; canvas.height=video.videoHeight||480;
-      ctx.drawImage(video,0,0,canvas.width,canvas.height);
-      if(window.BarcodeDetector){
-        try{
-          const detector=new BarcodeDetector({formats:['qr_code','code_128','code_39','ean_13','ean_8','data_matrix','itf','codabar','upc_a','upc_e']});
-          const codes=await detector.detect(canvas);
-          if(codes&&codes.length){ await stopBarcodeScan(false); await selectMasterByBarcode(codes[0].rawValue); return; }
-        }catch(_){/* BarcodeDetector formats unsupported */}
-      }
-      if(window.jsQR){
-        const img=ctx.getImageData(0,0,canvas.width,canvas.height);
-        const code=jsQR(img.data,canvas.width,canvas.height,{inversionAttempts:'attemptBoth'});
-        if(code&&code.data){ await stopBarcodeScan(false); await selectMasterByBarcode(code.data); return; }
-      }
+    if(video.readyState>=2 && video.videoWidth && video.videoHeight){
+      qrAssistFrame++;
+      const found=await decodeQrAssistFromVideo(video, canvas, ctx, qrAssistFrame);
+      if(found){ await stopBarcodeScan(false); await selectMasterByBarcode(found); return; }
     }
-  }catch(e){ console.warn(e); }
+  }catch(e){ console.warn('QR補助読取エラー',e); }
   requestAnimationFrame(scanLoop);
+}
+async function decodeQrAssistFromVideo(video, canvas, ctx, frame){
+  const vw=video.videoWidth||640, vh=video.videoHeight||480;
+  const maxSide=1280;
+  const baseScale=Math.min(1, maxSide/Math.max(vw,vh));
+  canvas.width=Math.max(1,Math.round(vw*baseScale));
+  canvas.height=Math.max(1,Math.round(vh*baseScale));
+  ctx.filter='none';
+  ctx.drawImage(video,0,0,canvas.width,canvas.height);
+
+  // 1) BarcodeDetectorはQR専用。対応端末だけ低頻度で使う。
+  if(window.BarcodeDetector && frame%6===0){
+    try{
+      const detector=new BarcodeDetector({formats:['qr_code']});
+      const codes=await detector.detect(canvas);
+      if(codes&&codes.length&&codes[0].rawValue) return codes[0].rawValue;
+    }catch(_){/* unsupported */}
+  }
+
+  if(!window.jsQR) return '';
+  const tryCanvas=()=>{
+    const img=ctx.getImageData(0,0,canvas.width,canvas.height);
+    const code=jsQR(img.data,img.width,img.height,{inversionAttempts:'attemptBoth'});
+    return code&&code.data ? code.data : '';
+  };
+
+  // 2) 原画像を毎回。ここは軽い。
+  let hit=tryCanvas();
+  if(hit) return hit;
+
+  // 3) 明るさ/コントラスト補正。3フレームに1回。
+  if(frame%3===0){
+    ctx.filter='contrast(150%) brightness(112%)';
+    ctx.drawImage(video,0,0,canvas.width,canvas.height);
+    hit=tryCanvas();
+    if(hit) return hit;
+  }
+
+  // 4) 軽いシャープ風。少し拡大＋補正を5フレームに1回だけ。
+  if(frame%5===0){
+    const scale=Math.min(1.45, 1600/Math.max(vw,vh));
+    if(scale>1.02){
+      canvas.width=Math.round(vw*scale); canvas.height=Math.round(vh*scale);
+      ctx.imageSmoothingEnabled=false;
+      ctx.filter='contrast(165%) brightness(108%)';
+      ctx.drawImage(video,0,0,canvas.width,canvas.height);
+      ctx.imageSmoothingEnabled=true;
+      hit=tryCanvas();
+      if(hit) return hit;
+    }
+  }
+  ctx.filter='none';
+  return '';
 }
 async function stopBarcodeScan(close=true){
   scanLoopOn=false;
