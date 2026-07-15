@@ -99,7 +99,7 @@
 <div id="scanOverlay" class="scanOverlay">
   <div class="scanBox">
     <div class="scanHead">
-      <div class="scanTitle">QR専用カメラ読取</div>
+      <div class="scanTitle">バーコード / QR カメラ読取</div>
       <button id="scanCloseBtn" class="scanClose" type="button">閉じる</button>
     </div>
     <div class="scanStage">
@@ -110,13 +110,13 @@
     <div id="scanMsg" class="scanMsg">カメラ準備中...</div>
   </div>
 </div>
-<script src="./js/zxing-browser.min.js"></script>
-<script src="./js/jsQR.min.js"></script>
+<script src="https://unpkg.com/@zxing/browser@latest/umd/index.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
 <script>
 
 const $=id=>document.getElementById(id);
 const DEFAULT_GAS_URL='https://script.google.com/macros/s/AKfycbzhTwzLskVh0lRNegdW0FnmL-dedZ6LIps2NP9mRrXsPp0aC93ziLRAMUTEmzFiiU_3/exec';
-const MASTER_VERSION='v33-qr-only-stable-ha';
+const MASTER_VERSION='v31-mobile-parser-pinch-pan';
 let loadedTopFileId='';
 function log(s){$('status').textContent=s}
 function getGasUrl(){return ($('gasUrl')?.value || localStorage.getItem('PIROENS_GAS_URL') || DEFAULT_GAS_URL).trim()}
@@ -279,130 +279,69 @@ function setBarcodeValue(raw, source='camera'){
   return true;
 }
 
-
 async function startCameraBarcodeScan(){
   if(scanBusy)return;
   scanBusy=true;
-  const ov=$('scanOverlay'), video=$('scanVideo'), canvas=$('scanCanvas'), msg=$('scanMsg');
+  const ov=$('scanOverlay'), video=$('scanVideo'), msg=$('scanMsg');
   ov.classList.add('on');
-  msg.textContent='QR専用カメラ起動中...\n黄色枠いっぱいにQRを入れてください。';
+  msg.textContent='カメラ起動中...';
   try{
     await stopCameraBarcodeScan(false);
-    scanBusy=false;
-
-    // ZXingを復活。ただしQRCodeReaderがあればQR専用Readerを優先。
-    if(window.ZXingBrowser && (ZXingBrowser.BrowserQRCodeReader || ZXingBrowser.BrowserMultiFormatReader)){
+    // ZXingが使える環境では1Dバーコードも読む。失敗してもjsQRへフォールバック。
+    if(window.ZXingBrowser && ZXingBrowser.BrowserMultiFormatReader){
       try{
-        const Reader=ZXingBrowser.BrowserQRCodeReader || ZXingBrowser.BrowserMultiFormatReader;
-        const reader=new Reader();
-        const constraints={video:{facingMode:{ideal:'environment'},width:{ideal:1920},height:{ideal:1080}},audio:false};
-        const cb=(result,err,controls)=>{
+        const reader=new ZXingBrowser.BrowserMultiFormatReader();
+        scanControls=await reader.decodeFromVideoDevice(undefined, video, (result, err, controls)=>{
           if(result){
-            let isQr=true;
-            try{ if(typeof result.getBarcodeFormat==='function') isQr=/QR/i.test(String(result.getBarcodeFormat())); }catch(_){ }
-            if(!isQr) return;
             const text=(typeof result.getText==='function')?result.getText():String(result.text||result);
-            if(setBarcodeValue(text,'QR camera')) stopCameraBarcodeScan(true);
+            if(setBarcodeValue(text,'camera')) stopCameraBarcodeScan(true);
           }
-        };
-        if(typeof reader.decodeFromConstraints==='function') scanControls=await reader.decodeFromConstraints(constraints,video,cb);
-        else scanControls=await reader.decodeFromVideoDevice(undefined,video,cb);
-        msg.textContent='QR読取中...\n黄色枠いっぱいにQRを入れてください。\nQR専用モードです。';
-        scanLoopJsQR(); // ZXingと並行して小型QR向けjsQRも回す
+        });
+        msg.textContent='読取中...\n黄色枠内にQR/バーコードを入れてください。';
         return;
       }catch(zerr){
-        console.warn('ZXing QR start failed, fallback jsQR', zerr);
+        console.warn('ZXing camera start failed, fallback jsQR', zerr);
       }
     }
-
-    scanStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:1920},height:{ideal:1080}},audio:false});
+    scanStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:1280},height:{ideal:720}},audio:false});
     video.srcObject=scanStream;
     await video.play();
-    msg.textContent='QR読取中...\n黄色枠いっぱいにQRを入れてください。\n普通のバーコードは読みません。';
+    msg.textContent='読取中...\nQRコードを黄色枠内に入れてください。';
     scanLoopJsQR();
   }catch(e){
     console.error(e);
+    msg.textContent='カメラ起動/読取エラー: '+e.message+'\nhttps(GitHub Pages)で開いているか、カメラ許可を確認してください。';
+  }finally{
     scanBusy=false;
-    msg.textContent='QRカメラ起動/読取エラー: '+e.message+'\nhttps(GitHub Pages)で開いているか、カメラ許可を確認してください。';
   }
-}
-const qrWorkCanvas=document.createElement('canvas');
-const qrWorkCtx=qrWorkCanvas.getContext('2d',{willReadFrequently:true});
-let qrLoopBusy=false, qrFrameNo=0, qrDetector=null;
-function getQRDetector(){
-  if(!('BarcodeDetector' in window))return null;
-  if(!qrDetector){try{qrDetector=new BarcodeDetector({formats:['qr_code']});}catch(_){qrDetector=null;}}
-  return qrDetector;
-}
-function getQRRects(w,h){
-  return [
-    {x:0,y:0,w:w,h:h},
-    {x:0.12*w,y:0.16*h,w:0.76*w,h:0.68*h},
-    {x:0.24*w,y:0.24*h,w:0.52*w,h:0.52*h},
-    {x:0.04*w,y:0.06*h,w:0.92*w,h:0.88*h}
-  ].map(r=>({x:Math.max(0,Math.round(r.x)),y:Math.max(0,Math.round(r.y)),w:Math.max(32,Math.min(w-Math.max(0,Math.round(r.x)),Math.round(r.w))),h:Math.max(32,Math.min(h-Math.max(0,Math.round(r.y)),Math.round(r.h)))}));
-}
-function drawQRWork(srcCanvas,r,scale=1){
-  const maxSide=2200, realScale=Math.min(scale,maxSide/Math.max(1,r.w),maxSide/Math.max(1,r.h));
-  qrWorkCanvas.width=Math.max(64,Math.round(r.w*realScale));
-  qrWorkCanvas.height=Math.max(64,Math.round(r.h*realScale));
-  qrWorkCtx.imageSmoothingEnabled=false;
-  qrWorkCtx.clearRect(0,0,qrWorkCanvas.width,qrWorkCanvas.height);
-  qrWorkCtx.drawImage(srcCanvas,r.x,r.y,r.w,r.h,0,0,qrWorkCanvas.width,qrWorkCanvas.height);
-}
-function contrastImageData(img,mode){
-  if(!img)return null; const d=img.data; let sum=0;
-  for(let i=0;i<d.length;i+=4)sum+=d[i]*0.299+d[i+1]*0.587+d[i+2]*0.114;
-  const mean=sum/Math.max(1,d.length/4);
-  for(let i=0;i<d.length;i+=4){const g=d[i]*0.299+d[i+1]*0.587+d[i+2]*0.114;let v=(g-mean)*(mode==='strong'?1.9:1.35)+128;v=Math.max(0,Math.min(255,v));if(mode==='strong')v=v<105?0:(v>155?255:v);d[i]=d[i+1]=d[i+2]=v;d[i+3]=255;} return img;
-}
-function tryJsQRCurrent(mode='raw'){
-  if(!window.jsQR)return '';
-  let img; try{img=qrWorkCtx.getImageData(0,0,qrWorkCanvas.width,qrWorkCanvas.height);}catch(_){return '';}
-  if(mode!=='raw')img=contrastImageData(img,mode);
-  try{const code=jsQR(img.data,qrWorkCanvas.width,qrWorkCanvas.height,{inversionAttempts:'attemptBoth'});return code&&code.data?code.data:'';}catch(_){return '';}
-}
-async function scanQRFromVideoFrame(video,canvas){
-  if(!video||video.readyState<2||!video.videoWidth||!video.videoHeight)return '';
-  canvas.width=video.videoWidth; canvas.height=video.videoHeight;
-  const ctx=canvas.getContext('2d',{willReadFrequently:true});
-  ctx.drawImage(video,0,0,canvas.width,canvas.height);
-  const rects=getQRRects(canvas.width,canvas.height), scales=[1,1.5,2.25,3.2,4.0];
-  qrFrameNo++;
-  const detector=getQRDetector();
-  if(detector&&qrFrameNo%4===0){
-    try{for(const r of rects.slice(0,3)){drawQRWork(canvas,r,1.2);const codes=await detector.detect(qrWorkCanvas);if(codes&&codes.length&&codes[0].rawValue)return codes[0].rawValue;}}catch(_){ }
-  }
-  for(const r of rects){for(const s of scales){drawQRWork(canvas,r,s);const found=tryJsQRCurrent('raw')||tryJsQRCurrent('soft')||tryJsQRCurrent('strong');if(found)return found;}}
-  return '';
 }
 function scanLoopJsQR(){
   const video=$('scanVideo'), canvas=$('scanCanvas'), msg=$('scanMsg');
-  const loop=async()=>{
+  const ctx=canvas.getContext('2d',{willReadFrequently:true});
+  const loop=()=>{
     if(!$('scanOverlay').classList.contains('on'))return;
-    if(qrLoopBusy){scanTimer=requestAnimationFrame(loop);return;}
-    qrLoopBusy=true;
-    try{
-      const text=await scanQRFromVideoFrame(video,canvas);
-      if(text){
-        msg.textContent='QR読取OK\n'+text;
-        if(setBarcodeValue(text,'QR camera')){ stopCameraBarcodeScan(true); return; }
+    if(video.readyState>=2 && video.videoWidth && video.videoHeight){
+      canvas.width=video.videoWidth;
+      canvas.height=video.videoHeight;
+      ctx.drawImage(video,0,0,canvas.width,canvas.height);
+      const img=ctx.getImageData(0,0,canvas.width,canvas.height);
+      let code=null;
+      if(window.jsQR) code=jsQR(img.data,img.width,img.height,{inversionAttempts:'attemptBoth'});
+      if(code && code.data){
+        if(setBarcodeValue(code.data,'camera')){ stopCameraBarcodeScan(true); return; }
       }
-    }catch(e){console.warn(e);}
-    qrLoopBusy=false;
+    }
     scanTimer=requestAnimationFrame(loop);
   };
   scanTimer=requestAnimationFrame(loop);
 }
 async function stopCameraBarcodeScan(close=true){
   if(scanTimer){cancelAnimationFrame(scanTimer);scanTimer=null;}
-  qrLoopBusy=false;
   if(scanControls){try{scanControls.stop();}catch(_){ } scanControls=null;}
   if(scanStream){scanStream.getTracks().forEach(t=>t.stop());scanStream=null;}
-  const video=$('scanVideo'); if(video){try{video.pause();video.srcObject=null;}catch(_){}}
+  const video=$('scanVideo'); if(video){video.pause();video.srcObject=null;}
   if(close)$('scanOverlay').classList.remove('on');
 }
-
 function loadImage(file){return new Promise((res,rej)=>{const img=new Image(); img.onload=()=>res(img); img.onerror=rej; img.src=URL.createObjectURL(file);})}
 function dataUrlToImage(dataUrl){return new Promise((res,rej)=>{const img=new Image(); img.onload=()=>res(img); img.onerror=rej; img.src=dataUrl;})}
 function compressImage(img,maxW=700,quality=0.55){const scale=Math.min(1,maxW/img.width);const c=document.createElement('canvas');c.width=Math.round(img.width*scale);c.height=Math.round(img.height*scale);const x=c.getContext('2d');x.drawImage(img,0,0,c.width,c.height);return c.toDataURL('image/jpeg',quality)}
