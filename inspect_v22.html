@@ -41,7 +41,7 @@
   <div class="topbar">
     <div class="brand">ぴろえんす Inspect v20</div>
     <div class="selectRow">
-      <input id="barcodeInput" class="barcodeInput" type="text" autocomplete="off" inputmode="none" placeholder="QR読取（USBリーダーはここへ）">
+      <input id="barcodeInput" class="barcodeInput" type="text" autocomplete="off" inputmode="none" placeholder="バーコード/QR読取（USBリーダーはここへ）">
       <select id="partSelect"><option>マスター読込中...</option></select>
       <button id="reloadBtn" type="button">更新</button>
       <button id="actionBtn" type="button">読取</button>
@@ -49,7 +49,7 @@
     </div>
   </div>
   <div class="canvasWrap"><canvas id="viewCanvas" width="1100" height="760"></canvas></div>
-  <div id="empty" class="empty">QRを読み取ってください。<br>対応するマスターを自動で呼び出します。<br><small>テスト時はマスターを手動選択してもOK</small></div>
+  <div id="empty" class="empty">バーコード/QRを読み取ってください。<br>対応するマスターを自動で呼び出します。<br><small>テスト時はマスターを手動選択してもOK</small></div>
   <div id="banner" class="resultBanner">WAIT</div>
   <div id="loading" class="loading">解析中...</div>
   <div class="bottom">
@@ -70,7 +70,7 @@
   </div>
 </div>
 <div id="scanOverlay" class="scanOverlay">
-  <div class="scanTitle">QR専用読取</div>
+  <div class="scanTitle">バーコード / QR 読取</div>
   <div class="scanBox">
     <video id="scanVideo" playsinline muted></video>
     <canvas id="scanCanvas" width="640" height="480" style="display:none"></canvas>
@@ -94,6 +94,7 @@
     <div class="debugCard"><h3>デバッグ重ね画像</h3><div class="debugCanvasWrap"><canvas id="debugCanvas" width="1100" height="760"></canvas></div></div>
   </div>
 </section>
+<script src="./js/zxing-browser.min.js"></script>
 <script src="./js/jsQR.min.js"></script>
 <script src="./js/opencv.js"></script>
 <script>
@@ -102,7 +103,7 @@
 // 例: const GAS_URL = 'https://script.google.com/macros/s/xxxxxxx/exec';
 // =====================================================
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbzhTwzLskVh0lRNegdW0FnmL-dedZ6LIps2NP9mRrXsPp0aC93ziLRAMUTEmzFiiU_3/exec'; // ←ここを今井さんのGAS URLに置き換え
-const INSPECT_VERSION = 'v23-multi-qr-parser';
+const INSPECT_VERSION = 'v25-qr-only-stable-ha';
 
 // 固定設定：現場用なので画面には出さない
 const CONFIG = {
@@ -217,7 +218,7 @@ function endInspectionToScanMode(){
   resetMasterState();
   const ps=$('partSelect'); if(ps) ps.value='';
   const bi=$('barcodeInput'); if(bi){ bi.value=''; setTimeout(()=>bi.focus(),80); }
-  log('次のQRを読み取ってください。');
+  log('次のバーコード/QRを読み取ってください。');
 }
 function updateActionState(){
   const ready=!!(currentPart&&masterImg);
@@ -227,7 +228,7 @@ function updateActionState(){
   if(btn){
     btn.disabled = ready && !cvLoaded;
     btn.textContent = ready ? (cvLoaded ? '撮影' : '準備中') : '読取';
-    btn.title = ready ? (cvLoaded ? '部品を撮影します' : 'OpenCV.js準備中です') : 'QRを読み取ります';
+    btn.title = ready ? (cvLoaded ? '部品を撮影します' : 'OpenCV.js準備中です') : 'バーコード/QRを読み取ります';
   }
 }
 function resetMasterState(){
@@ -323,7 +324,7 @@ async function loadParts(){
     parts=js.parts||[];
     $('partSelect').innerHTML='<option value="">テスト用：マスター手動選択</option>'+(parts.map(p=>`<option value="${escapeHtml(p.partNo)}">${escapeHtml(p.partNo)}${p.memo?' - '+escapeHtml(p.memo):''}</option>`).join('') || '');
     if(!parts.length) $('partSelect').innerHTML='<option value="">登録なし</option>';
-    log('マスター一覧OK: '+parts.length+'件\n通常は「読取」でQRを読んでください。\nテスト時だけマスターを手動選択できます。');
+    log('マスター一覧OK: '+parts.length+'件\n通常は「読取」でバーコード/QRを読んでください。\nテスト時だけマスターを手動選択できます。');
     updateActionState();
   }catch(e){
     console.error(e);
@@ -547,155 +548,166 @@ function normalizePointsToImage(rawPoints,img){
 
 
 // =====================================================
-// QR専用・小型QR優先スキャナ vQR-HA1
-// - 普通のバーコードは読まない
-// - 中央ガイド枠を優先
-// - 高解像度カメラ + 中央切り出し + 複数倍率 + コントラスト補正
+// QR専用・小型QR優先スキャナ vQR-HA2
+// 重要: v24ではjsQRだけに寄せすぎて読めない端末が出たため、
+// 安定していたZXingカメラ読取を復活しつつ、裏でQR専用jsQR高精度スキャンを同時実行する。
+// 普通の1DバーコードはUI上は対象外。ZXing結果もQR形式っぽいものだけ採用する。
 // =====================================================
-let qrDetector=null, qrFrameNo=0, qrDetecting=false;
+let scanControls=null, scanStream=null, scanLoopOn=false;
+let qrFrameNo=0, qrLoopBusy=false, qrDetector=null;
 const qrWorkCanvas=document.createElement('canvas');
 const qrWorkCtx=qrWorkCanvas.getContext('2d',{willReadFrequently:true});
-
+function setScanStatus(s){ const el=$('scanStatus'); if(el) el.textContent=s; }
+function qrCameraConstraints(){
+  return {video:{facingMode:{ideal:'environment'},width:{ideal:1920},height:{ideal:1080}},audio:false};
+}
+function isZXingQRResult(result){
+  try{
+    if(result && typeof result.getBarcodeFormat==='function'){
+      const fmt=String(result.getBarcodeFormat());
+      return /QR/i.test(fmt);
+    }
+  }catch(_){ }
+  // formatが取れない場合は、実用優先で採用。品番パーサで後段チェックする。
+  return true;
+}
 function getQRDetector(){
   if(!('BarcodeDetector' in window)) return null;
-  if(!qrDetector){
-    try{ qrDetector=new BarcodeDetector({formats:['qr_code']}); }catch(_){ qrDetector=null; }
-  }
+  if(!qrDetector){ try{ qrDetector=new BarcodeDetector({formats:['qr_code']}); }catch(_){ qrDetector=null; } }
   return qrDetector;
 }
-
 function getQRRects(w,h){
-  // 表示ガイドとだいたい一致。小さいQRはまず中央、その後少し広め、最後に全体。
+  // まず全体、次に中央枠。小さいQRで「少し外れた」時も拾うため中央広めも試す。
   return [
-    {name:'center-tight', x:0.24*w, y:0.24*h, w:0.52*w, h:0.52*h},
-    {name:'center-guide', x:0.14*w, y:0.18*h, w:0.72*w, h:0.64*h},
-    {name:'center-wide', x:0.05*w, y:0.08*h, w:0.90*w, h:0.84*h},
-    {name:'full', x:0, y:0, w:w, h:h}
-  ].map(r=>({...r,x:Math.max(0,Math.round(r.x)),y:Math.max(0,Math.round(r.y)),w:Math.min(w,Math.round(r.w)),h:Math.min(h,Math.round(r.h))}));
+    {name:'full',x:0,y:0,w:w,h:h},
+    {name:'center-guide',x:0.12*w,y:0.16*h,w:0.76*w,h:0.68*h},
+    {name:'center-tight',x:0.24*w,y:0.24*h,w:0.52*w,h:0.52*h},
+    {name:'center-wide',x:0.04*w,y:0.06*h,w:0.92*w,h:0.88*h}
+  ].map(r=>({name:r.name,x:Math.max(0,Math.round(r.x)),y:Math.max(0,Math.round(r.y)),w:Math.max(32,Math.min(w-Math.max(0,Math.round(r.x)),Math.round(r.w))),h:Math.max(32,Math.min(h-Math.max(0,Math.round(r.y)),Math.round(r.h)))}));
 }
-
-function drawQRWork(srcCanvas, r, scale=1){
-  const maxSide=1900;
-  const realScale=Math.min(scale, maxSide/Math.max(1,r.w), maxSide/Math.max(1,r.h));
-  qrWorkCanvas.width=Math.max(32,Math.round(r.w*realScale));
-  qrWorkCanvas.height=Math.max(32,Math.round(r.h*realScale));
+function drawQRWork(srcCanvas,r,scale=1,offsetX=0,offsetY=0){
+  const maxSide=2200;
+  const realScale=Math.min(scale,maxSide/Math.max(1,r.w),maxSide/Math.max(1,r.h));
+  qrWorkCanvas.width=Math.max(64,Math.round(r.w*realScale));
+  qrWorkCanvas.height=Math.max(64,Math.round(r.h*realScale));
   qrWorkCtx.imageSmoothingEnabled=false;
   qrWorkCtx.clearRect(0,0,qrWorkCanvas.width,qrWorkCanvas.height);
-  qrWorkCtx.drawImage(srcCanvas,r.x,r.y,r.w,r.h,0,0,qrWorkCanvas.width,qrWorkCanvas.height);
+  qrWorkCtx.drawImage(srcCanvas,r.x+offsetX,r.y+offsetY,r.w,r.h,0,0,qrWorkCanvas.width,qrWorkCanvas.height);
   return qrWorkCanvas;
 }
-
-function boostQRContrast(canvas){
-  const ctx=qrWorkCtx, w=canvas.width, h=canvas.height;
-  let img;
-  try{ img=ctx.getImageData(0,0,w,h); }catch(_){ return null; }
+function getImageDataSafe(canvas){
+  try{return qrWorkCtx.getImageData(0,0,canvas.width,canvas.height);}catch(_){return null;}
+}
+function contrastImageData(img,mode){
+  if(!img)return null;
   const d=img.data;
   let sum=0;
-  for(let i=0;i<d.length;i+=4){ sum += (d[i]*0.299 + d[i+1]*0.587 + d[i+2]*0.114); }
-  const mean=sum/(d.length/4);
-  // QRは白黒なので、やや強めに二値寄せ。ただし完全二値だけでなくRGBAとしてjsQRに渡す。
+  for(let i=0;i<d.length;i+=4) sum+=d[i]*0.299+d[i+1]*0.587+d[i+2]*0.114;
+  const mean=sum/Math.max(1,d.length/4);
   for(let i=0;i<d.length;i+=4){
-    const g=d[i]*0.299 + d[i+1]*0.587 + d[i+2]*0.114;
-    let v=(g-mean)*1.85 + 128;
-    v=v<112?0:(v>148?255:Math.max(0,Math.min(255,v)));
+    const g=d[i]*0.299+d[i+1]*0.587+d[i+2]*0.114;
+    let v;
+    if(mode==='strong') v=(g-mean)*1.9+128;
+    else v=(g-mean)*1.35+128;
+    v=Math.max(0,Math.min(255,v));
+    if(mode==='strong') v=v<105?0:(v>155?255:v);
     d[i]=d[i+1]=d[i+2]=v; d[i+3]=255;
   }
-  ctx.putImageData(img,0,0);
   return img;
 }
-
-function tryJsQR(canvas, contrast=false){
+function tryJsQRCurrentCanvas(mode='raw'){
   if(!window.jsQR) return '';
-  const ctx=qrWorkCtx, w=canvas.width, h=canvas.height;
-  let img;
+  let img=getImageDataSafe(qrWorkCanvas);
+  if(!img) return '';
+  if(mode!=='raw') img=contrastImageData(img,mode);
   try{
-    img=contrast ? boostQRContrast(canvas) : ctx.getImageData(0,0,w,h);
-    if(!img) return '';
-    const code=jsQR(img.data,w,h,{inversionAttempts:'attemptBoth'});
-    return code && code.data ? code.data : '';
-  }catch(_){ return ''; }
+    const code=jsQR(img.data,qrWorkCanvas.width,qrWorkCanvas.height,{inversionAttempts:'attemptBoth'});
+    return code&&code.data?code.data:'';
+  }catch(_){return '';}
 }
-
-async function scanQRFromVideoFrame(video, canvas){
-  if(!video || video.readyState<2) return '';
-  const vw=video.videoWidth||1280, vh=video.videoHeight||720;
-  if(!vw||!vh) return '';
-  canvas.width=vw; canvas.height=vh;
-  const ctx=canvas.getContext('2d',{willReadFrequently:true});
-  ctx.drawImage(video,0,0,vw,vh);
-
+async function scanQRFromVideoFrame(video,frameCanvas){
+  if(!video || video.readyState<2 || !video.videoWidth || !video.videoHeight) return '';
+  const vw=video.videoWidth, vh=video.videoHeight;
+  frameCanvas.width=vw; frameCanvas.height=vh;
+  const fctx=frameCanvas.getContext('2d',{willReadFrequently:true});
+  fctx.drawImage(video,0,0,vw,vh);
   const rects=getQRRects(vw,vh);
-  const scales=[1,1.6,2.3,3.1];
+  const scales=[1,1.5,2.25,3.2,4.0];
 
-  // BarcodeDetectorがある端末ではQRだけ検出。毎フレームではなく少し間引く。
-  const detector=getQRDetector();
+  // iPhone Safari以外などで使える場合だけQR形式限定のBarcodeDetectorも試す。
   qrFrameNo++;
-  if(detector && !qrDetecting && qrFrameNo%3===0){
-    qrDetecting=true;
+  const detector=getQRDetector();
+  if(detector && qrFrameNo%4===0){
     try{
       for(const r of rects.slice(0,3)){
-        const c=drawQRWork(canvas,r,1.4);
-        const codes=await detector.detect(c);
-        if(codes && codes.length){ qrDetecting=false; return codes[0].rawValue||''; }
+        drawQRWork(frameCanvas,r,1.2);
+        const codes=await detector.detect(qrWorkCanvas);
+        if(codes&&codes.length&&codes[0].rawValue) return codes[0].rawValue;
       }
-    }catch(_){/* detector失敗時はjsQR継続 */}
-    qrDetecting=false;
+    }catch(_){ }
   }
 
-  // jsQR: 中央から順に、複数倍率。raw → コントラスト補正の順。
   for(const r of rects){
     for(const s of scales){
-      const c=drawQRWork(canvas,r,s);
-      let found=tryJsQR(c,false);
-      if(found) return found;
-      found=tryJsQR(c,true);
+      drawQRWork(frameCanvas,r,s);
+      let found=tryJsQRCurrentCanvas('raw') || tryJsQRCurrentCanvas('soft') || tryJsQRCurrentCanvas('strong');
       if(found) return found;
     }
   }
   return '';
 }
-
-async function applyQRVideoTrackHints(stream){
-  try{
-    const track=stream.getVideoTracks && stream.getVideoTracks()[0];
-    if(!track || !track.applyConstraints) return;
-    await track.applyConstraints({advanced:[{focusMode:'continuous'},{exposureMode:'continuous'}]});
-  }catch(_){/* iPhone/Safari等は未対応でOK */}
-}
-
-let scanStream=null, scanLoopOn=false;
-function setScanStatus(s){ const el=$('scanStatus'); if(el) el.textContent=s; }
 async function startBarcodeScan(){
-  const overlay=$('scanOverlay'), video=$('scanVideo');
-  if(!overlay||!video){ return; }
+  const overlay=$('scanOverlay'), video=$('scanVideo'), canvas=$('scanCanvas');
+  if(!overlay||!video||!canvas){ return; }
+  await stopBarcodeScan(false);
   overlay.classList.add('on');
   setScanStatus('QR専用カメラ起動中...\n中央の枠いっぱいにQRを入れてください。');
+  scanLoopOn=true;
+
+  // まず安定していたZXingを復活。QRCodeReaderがあればそれを使い、なければMultiFormatを使う。
+  if(window.ZXingBrowser && (ZXingBrowser.BrowserQRCodeReader || ZXingBrowser.BrowserMultiFormatReader)){
+    try{
+      const Reader=ZXingBrowser.BrowserQRCodeReader || ZXingBrowser.BrowserMultiFormatReader;
+      const reader=new Reader();
+      const cb=async (result,err,controls)=>{
+        if(result && isZXingQRResult(result)){
+          const raw=(result.getText?result.getText():String(result.text||result));
+          setScanStatus('QR読取OK: '+raw+'\nマスター読込中...');
+          try{ if(controls)controls.stop(); }catch(_){ }
+          await stopBarcodeScan(false);
+          await selectMasterByBarcode(raw);
+        }
+      };
+      if(typeof reader.decodeFromConstraints==='function'){
+        scanControls=await reader.decodeFromConstraints(qrCameraConstraints(),video,cb);
+      }else{
+        scanControls=await reader.decodeFromVideoDevice(null,video,cb);
+      }
+      setScanStatus('QR読取中...\n小さいQRは中央枠いっぱいに近づけてください。\nQR専用モードです。');
+      scanLoop(); // ZXingと並行してjsQR高精度スキャンも回す
+      return;
+    }catch(e){
+      console.warn('ZXing QR起動失敗。jsQR専用へフォールバック',e);
+    }
+  }
+
   try{
-    await stopBarcodeScan(false);
-    scanStream=await navigator.mediaDevices.getUserMedia({
-      video:{
-        facingMode:{ideal:'environment'},
-        width:{ideal:1920,min:1280},
-        height:{ideal:1080,min:720}
-      },
-      audio:false
-    });
-    await applyQRVideoTrackHints(scanStream);
+    scanStream=await navigator.mediaDevices.getUserMedia(qrCameraConstraints());
     video.srcObject=scanStream;
     await video.play();
-    scanLoopOn=true;
     setScanStatus('QR読取中...\n小さいQRは中央枠いっぱいに近づけてください。\n普通のバーコードは読みません。');
     scanLoop();
   }catch(e){
     console.error(e);
+    scanLoopOn=false;
     setScanStatus('QRカメラ起動エラー: '+e.message+'\nカメラ許可とhttps(GitHub Pages)を確認してください。');
   }
 }
 async function scanLoop(){
   if(!scanLoopOn)return;
   const video=$('scanVideo'), canvas=$('scanCanvas');
-  if(scanLoop._busy){ requestAnimationFrame(scanLoop); return; }
-  scanLoop._busy=true;
+  if(qrLoopBusy){ requestAnimationFrame(scanLoop); return; }
+  qrLoopBusy=true;
   try{
     const raw=await scanQRFromVideoFrame(video,canvas);
     if(raw){
@@ -705,13 +717,13 @@ async function scanLoop(){
       return;
     }
   }catch(e){ console.warn(e); }
-  scanLoop._busy=false;
+  qrLoopBusy=false;
   requestAnimationFrame(scanLoop);
 }
 async function stopBarcodeScan(close=true){
-  scanLoopOn=false;
-  scanLoop._busy=false;
-  try{ if(scanStream){scanStream.getTracks().forEach(t=>t.stop());scanStream=null;} }catch(_){}
+  scanLoopOn=false; qrLoopBusy=false;
+  try{ if(scanControls){ scanControls.stop(); scanControls=null; } }catch(_){ }
+  try{ if(scanStream){ scanStream.getTracks().forEach(t=>t.stop()); scanStream=null; } }catch(_){ }
   const video=$('scanVideo'); if(video){ try{video.pause(); video.srcObject=null;}catch(_){} }
   if(close) $('scanOverlay')?.classList.remove('on'); else $('scanOverlay')?.classList.remove('on');
 }
