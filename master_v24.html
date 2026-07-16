@@ -1,16 +1,23 @@
 <!doctype html>
 <html lang="ja"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>ぴろえんす Master v24 Flow Mode UI</title><style>
+<title>ぴろえんす Master v31 Scan Stable QR Guide</title><style>
 :root{--bg:#071225;--card:#101c34;--line:#29436d;--txt:#eef6ff;--muted:#9fb4d9;--cyan:#35dcff;--green:#35f078;--red:#ff4b5f;--yellow:#ffd84d}
 *{box-sizing:border-box}body{margin:0;background:linear-gradient(135deg,#071225,#111b34);color:var(--txt);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}header{padding:12px 16px;border-bottom:1px solid #20375f;background:#081226cc;position:sticky;top:0;z-index:5}h1{font-size:19px;margin:0}.sub{font-size:12px;color:var(--muted);margin-top:4px}main{display:grid;grid-template-columns:330px 1fr;gap:12px;padding:12px;max-width:1500px;margin:auto}.card{background:rgba(16,28,52,.94);border:1px solid var(--line);border-radius:14px;padding:12px;box-shadow:0 12px 30px #0005}label{display:block;font-size:12px;color:#c8d8fa;margin:10px 0 5px}input,select{width:100%;padding:8px;border-radius:10px;border:1px solid #31517e;background:#071226;color:var(--txt)}button{width:100%;border:0;border-radius:11px;padding:11px 12px;margin-top:9px;background:linear-gradient(90deg,#2aa7ff,#39e0ff);font-weight:800;color:#001225;cursor:pointer}button.secondary{background:#26395f;color:#eef6ff}button.danger{background:#62283a;color:white}.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.box{background:#020711;border:1px solid #27436f;border-radius:12px;padding:9px}.box h3{font-size:13px;margin:0 0 6px}.box canvas{width:100%;height:auto;background:#111;border-radius:8px;display:block}.big{grid-column:1/-1}.status{font-size:12px;color:#c6d8ff;white-space:pre-line;line-height:1.45;margin-top:10px}.roiList{margin-top:10px;border-top:1px solid #2a416b;padding-top:8px;max-height:220px;overflow:auto}.roiItem{display:flex;justify-content:space-between;gap:8px;border-bottom:1px solid #20375f;padding:6px 0;font-size:12px}.decision{font-size:76px;font-weight:1000;text-align:center;border-radius:16px;padding:18px 12px;margin-bottom:10px;letter-spacing:.10em;line-height:1}.decision::before{content:"総合判定";display:block;font-size:14px;letter-spacing:.12em;margin-bottom:8px;color:#c8d8fa}.decision.wait{background:#26395f;color:#dce8ff;border:2px solid #405b8d}.decision.ok{background:#0f3d25;color:#35f078;border:3px solid #35f078}.decision.ng{background:#451520;color:#ff4b5f;border:3px solid #ff4b5f}.metrics{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:10px}.metric{background:#071226;border:1px solid #29436d;border-radius:10px;padding:9px;text-align:center}.metric b{display:block;font-size:22px}.metric small{color:#aabde0}.on{outline:2px solid var(--yellow);background:#ffd84d!important;color:#111!important}.flowBlock{border:1px solid #20375f;background:rgba(7,18,38,.58);border-radius:12px;padding:10px;margin:0 0 12px}.flowTitle{font-size:13px;font-weight:900;color:#dff8ff;margin:0 0 8px;letter-spacing:.04em}.flowNote{font-size:11px;color:#9fb4d9;line-height:1.45;margin:4px 0 0}.primarySave{font-size:15px;padding:13px 12px;margin-top:12px}.hiddenGas{display:none}.barcodeBox{margin-top:8px;padding:9px;border:1px dashed #31517e;border-radius:10px;background:rgba(2,7,17,.55)}.barcodeBox input{font-family:ui-monospace,Consolas,monospace;font-size:13px}.barcodeState{font-size:11px;color:#9fb4d9;margin-top:5px;white-space:pre-line}.barcodeReady{outline:2px solid var(--yellow)!important;box-shadow:0 0 0 3px rgba(255,216,77,.18)}.scanOverlay{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:99;display:none;align-items:center;justify-content:center;padding:14px}.scanOverlay.on{display:flex}.scanBox{width:min(760px,100%);background:#081226;border:1px solid #31517e;border-radius:16px;padding:12px;box-shadow:0 20px 60px #000a}.scanHead{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:8px}.scanTitle{font-weight:900;color:#dff8ff}.scanClose{width:auto;margin:0;padding:8px 12px;background:#62283a;color:white}.scanStage{position:relative;background:#000;border-radius:12px;overflow:hidden;border:1px solid #20375f}.scanStage video{
     width:100%;
     max-height:70vh;
     display:block;
     background:#000;
-}.scanGuide{position:absolute;left:12%;right:12%;top:32%;height:36%;border:3px solid rgba(255,216,77,.9);border-radius:14px;box-shadow:0 0 0 9999px rgba(0,0,0,.18);pointer-events:none}.scanMsg{font-size:12px;color:#c6d8ff;line-height:1.55;margin-top:8px;white-space:pre-line}.scanHidden{display:none}.barcodeScanBtn{background:linear-gradient(90deg,#ffd84d,#ffef9e)!important;color:#111!important}.modeBtn{font-size:15px;padding:13px 10px}.modeBtn.active{outline:2px solid var(--yellow);background:linear-gradient(90deg,#ffd84d,#ffef9e)!important;color:#111!important}.modeArea{display:none}.modeArea.on{display:block}.workArea{display:none}.workArea.on{display:block}.modePlaceholder{border:1px dashed #31517e;border-radius:12px;padding:12px;color:#9fb4d9;font-size:12px;line-height:1.5;background:rgba(2,7,17,.42)}@media(max-width:900px){main{grid-template-columns:1fr}.grid{grid-template-columns:1fr}.metrics{grid-template-columns:1fr 1fr}.decision{font-size:52px}}
+}.scanGuide{position:absolute;left:50%;top:50%;width:min(64%,360px);aspect-ratio:1/1;transform:translate(-50%,-50%);border:3px solid rgba(255,216,77,.95);border-radius:16px;box-shadow:0 0 0 9999px rgba(0,0,0,.18);pointer-events:none}.scanMsg{font-size:12px;color:#c6d8ff;line-height:1.55;margin-top:8px;white-space:pre-line}.scanHidden{display:none}.barcodeScanBtn{background:linear-gradient(90deg,#ffd84d,#ffef9e)!important;color:#111!important}.modeBtn{font-size:15px;padding:13px 10px}.modeBtn.active{outline:2px solid var(--yellow);background:linear-gradient(90deg,#ffd84d,#ffef9e)!important;color:#111!important}.modeArea{display:none}.modeArea.on{display:block}.workArea{display:none}.workArea.on{display:block}.modePlaceholder{border:1px dashed #31517e;border-radius:12px;padding:12px;color:#9fb4d9;font-size:12px;line-height:1.5;background:rgba(2,7,17,.42)}.mobileCanvasSlot{display:none}.canvasCard{min-height:200px}.canvasCard.mobileMoved{display:none}.canvasHint{font-size:11px;color:#9fb4d9;margin-top:6px;line-height:1.45}
+/* v29: モバイルは「検査ポイント設定 → 画像」の自然な操作順。画像上のオーバーレイは使わない。 */
+#undoBtn{margin-top:8px}
+@media(max-width:900px){
+  .mobilePointOverlay,.mobilePointToolbar{display:none!important}
+  .mobileImageEditing #pointSettingsBlock{display:block}
+}
+@media(max-width:900px){main{grid-template-columns:1fr}.grid{grid-template-columns:1fr}.metrics{grid-template-columns:1fr 1fr}.decision{font-size:52px}.mobileImageEditing #pointSettingsBlock{display:block}.mobileImageEditing .canvasHint{margin-top:8px}/* v25 fix: canvasCard自体をmobileCanvasSlotへ移動するため、中のdesktopCanvasSlotは隠さない */.desktopCanvasSlot{display:block}.mobileCanvasSlot{display:block;margin:0 0 12px}.mobileCanvasSlot .card{padding:0;border:0;background:transparent;box-shadow:none}.mobileCanvasSlot .box{border-color:#31517e}.box canvas{touch-action:none}.flowBlock{margin-bottom:10px}}
 </style></head>
 <body>
-<header><h1>ぴろえんす Master v24 / モード選択UI</h1><div class="sub">最初に「新規登録」または「登録済み修正」を選択。必要な入力だけ表示します。画像は圧縮してGoogle Driveへ保存。</div></header>
+<header><h1>ぴろえんす Master v31 / QR読取安定版</h1><div class="sub">最初に「新規登録」または「登録済み修正」を選択。必要な入力だけ表示します。画像は圧縮してGoogle Driveへ保存。</div></header>
 <main>
 <section class="card">
 <input id="gasUrl" class="hiddenGas" type="hidden" value="https://script.google.com/macros/s/AKfycbzhTwzLskVh0lRNegdW0FnmL-dedZ6LIps2NP9mRrXsPp0aC93ziLRAMUTEmzFiiU_3/exec">
@@ -28,11 +35,11 @@
 
 <div id="newArea" class="modeArea">
   <div class="flowBlock">
-    <div class="flowTitle">2. QR / バーコード読取</div>
+    <div class="flowTitle">2. QR読取</div>
     <div class="barcodeBox">
-      <label>バーコード読取</label>
-      <input id="barcodeInput" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="カメラ読取、または手入力">
-      <div class="row"><button id="cameraBarcodeBtn" class="barcodeScanBtn" type="button">カメラで読取</button><button id="manualBarcodeBtn" class="secondary" type="button">手入力確定</button></div>
+      <label>QR読取</label>
+      <input id="barcodeInput" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="QRカメラ読取、または手入力">
+      <div class="row"><button id="cameraBarcodeBtn" class="barcodeScanBtn" type="button">QRカメラで読取</button><button id="manualBarcodeBtn" class="secondary" type="button">手入力確定</button></div>
       <div id="barcodeState" class="barcodeState">新規登録モードを選択すると読取待ちになります。</div>
     </div>
     <div class="flowNote">QRから品番キーを抽出してMaster登録します。QR全文はInspectログ側で保存します。</div>
@@ -53,18 +60,22 @@
     <div class="flowTitle">3. マスター基本情報</div>
     <label>品番キー（QRから自動抽出 / 手入力可）</label><input id="partNo" placeholder="例：80239-7NA0A-RE">
     <label>メモ</label><input id="memo" placeholder="例：カッター刃先検査">
-    <label>マスター画像</label><input id="masterFile" type="file" accept="image/*">
+    <label>マスター画像</label><input id="masterFile" type="file" accept="image/*" capture="environment">
     <div class="row"><button id="fitBtn" class="secondary" type="button">全体表示</button><button id="actualBtn" class="secondary" type="button">100%</button></div>
     <div class="status" id="zoomStatus">倍率: --</div>
   </div>
 
-  <div class="flowBlock">
+  <div id="pointSettingsBlock" class="flowBlock">
     <div class="flowTitle">4. 検査ポイント設定</div>
     <label>検査ポイント名</label><input id="pointName" placeholder="例：刃先 / 刻印 / 穴A">
     <label>検査内容</label><select id="pointType"><option value="present">あることを確認</option><option value="absent">ないことを確認</option></select>
     <label id="pointThrLabel">相関OKしきい値%</label><input id="pointThr" type="range" min="1" max="100" value="50"><span id="pointThrVal">50</span>%
     <button id="pointBtn" class="secondary" type="button">検査ポイント登録</button>
+    <button id="undoBtn" class="secondary" type="button">↶ 直前の範囲を取り消す</button>
+    <div class="flowNote">モバイル：この条件を選んでから、下の画像を1本指でドラッグ。2本指で拡大縮小できます。</div>
   </div>
+
+  <div id="mobileCanvasSlot" class="mobileCanvasSlot"></div>
 
   <div class="flowBlock">
     <div class="flowTitle">5. 登録済み検査ポイント</div>
@@ -75,16 +86,20 @@
 </div>
 <div id="status" class="status">未読込</div>
 </section>
-<section class="card">
-<div class="grid">
-<div class="box big"><h3>マスター画像（ドラッグで検査ポイント登録）</h3><canvas id="masterCanvas" width="1000" height="650"></canvas></div>
-</div>
+<section id="canvasCard" class="card canvasCard">
+  <div id="desktopCanvasSlot" class="desktopCanvasSlot">
+    <div id="canvasContent">
+      <div class="grid">
+        <div id="imageBox" class="box big imageBox"><h3>マスター画像（ドラッグで検査ポイント登録）</h3><canvas id="masterCanvas" width="1000" height="650"></canvas><div class="canvasHint">PC: ドラッグで検査ポイント登録 / 右ドラッグでパン。モバイル: 上の検査ポイント設定後、1本指で範囲ドラッグ。2本指で拡大縮小・平行移動。誤った範囲は上の「直前を取り消す」。</div></div>
+      </div>
+    </div>
+  </div>
 </section>
 </main>
 <div id="scanOverlay" class="scanOverlay">
   <div class="scanBox">
     <div class="scanHead">
-      <div class="scanTitle">バーコード / QR カメラ読取</div>
+      <div class="scanTitle">QR カメラ読取</div>
       <button id="scanCloseBtn" class="scanClose" type="button">閉じる</button>
     </div>
     <div class="scanStage">
@@ -93,6 +108,9 @@
     </div>
     <canvas id="scanCanvas" class="scanHidden"></canvas>
     <div id="scanMsg" class="scanMsg">カメラ準備中...</div>
+    <input id="qrPhotoInput" class="scanHidden" type="file" accept="image/*" capture="environment">
+    <button id="qrPhotoBtn" class="secondary" type="button">小さいQRは写真で一発読取</button>
+    <div class="scanMsg">動画で読めない小さいQRは、写真モードで高解像度撮影して読取できます。</div>
   </div>
 </div>
 <script src="https://unpkg.com/@zxing/browser@latest/umd/index.min.js"></script>
@@ -101,11 +119,40 @@
 
 const $=id=>document.getElementById(id);
 const DEFAULT_GAS_URL='https://script.google.com/macros/s/AKfycbzhTwzLskVh0lRNegdW0FnmL-dedZ6LIps2NP9mRrXsPp0aC93ziLRAMUTEmzFiiU_3/exec';
-const MASTER_VERSION='v24-master-mode-switch-20260701';
+const MASTER_VERSION='v31-scan-stable-qr-guide';
 let loadedTopFileId='';
 function log(s){$('status').textContent=s}
 function getGasUrl(){return ($('gasUrl')?.value || localStorage.getItem('PIROENS_GAS_URL') || DEFAULT_GAS_URL).trim()}
 function saveGasUrl(){const u=getGasUrl(); if(u) localStorage.setItem('PIROENS_GAS_URL',u);}
+
+function updateCanvasPlacement(){
+  // カード自身を移動すると「親の中へ親を入れる」構造になり、iPhoneでCanvasが消える。
+  // 移動するのは中身(canvasContent)だけにする。
+  const card=$('canvasCard'), content=$('canvasContent'), mobile=$('mobileCanvasSlot'), desktop=$('desktopCanvasSlot');
+  if(!card||!content||!mobile||!desktop)return;
+  const isMobile=window.matchMedia('(max-width:900px)').matches;
+  if(isMobile){
+    if(content.parentElement!==mobile) mobile.appendChild(content);
+    card.classList.add('mobileMoved');
+  }else{
+    if(content.parentElement!==desktop) desktop.appendChild(content);
+    card.classList.remove('mobileMoved');
+  }
+  // 移動直後はSafariがCanvas幅を取り損ねることがあるため再描画。
+  setTimeout(()=>{ if(typeof redrawMaster==='function') redrawMaster(); }, 0);
+  if(typeof refreshMobileImageEditor==='function') refreshMobileImageEditor();
+}
+
+function refreshMobileImageEditor(){
+  // v29: 画像上のオーバーレイは廃止。通常の検査ポイント設定パネルを使う。
+  const undo=$('undoBtn');
+  if(undo){
+    undo.disabled=!points.length;
+    undo.textContent=points.length ? '↶ 直前の範囲を取り消す（'+points.length+'件）' : '↶ 直前の範囲を取り消す';
+  }
+}
+window.addEventListener('resize',updateCanvasPlacement);
+window.addEventListener('orientationchange',()=>setTimeout(updateCanvasPlacement,250));
 
 let scanStream=null, scanTimer=null, scanControls=null, scanBusy=false;
 
@@ -115,6 +162,18 @@ function formatDate8(s){
 }
 function normalizeCodeText(raw){
   return String(raw||'').replace(/[\r\n\t]+/g,' ').trim();
+}
+function formatCompactPartNo(code){
+  code=String(code||'').toUpperCase().replace(/[^0-9A-Z-]/g,'');
+  if(!code) return '';
+  if(code.includes('-')) return code;
+  if(/^\d{5}/.test(code)){
+    // 661003BWJ000AS → 66100-3BW-J000-AS / 802397NA0A → 80239-7NA0A
+    const rest=code.slice(5);
+    if(rest.length>=9) return code.slice(0,5)+'-'+rest.slice(0,3)+'-'+rest.slice(3,7)+(rest.slice(7)?'-'+rest.slice(7):'');
+    return code.slice(0,5)+'-'+rest;
+  }
+  return code;
 }
 function parseQRCode(raw){
   const rawText=String(raw||'').trim();
@@ -132,47 +191,70 @@ function parseQRCode(raw){
     planNo:'',
     process:'',
     traceNo:'',
+    extra:'',
     format:'unknown'
   };
 
-  // 右側の細かいQR想定：96375514 20260626 80239-7NA0A-RE  品名  数量  202607010000058B  H01  82991817XC222160
-  const pn=line.match(/([0-9]{5}-[A-Z0-9]{4,}(?:-[A-Z0-9]{1,4})?)/i);
+  // 共通：5桁から始まるハイフン付き品番。
+  // 例：80239-7NA0A-RE / 66100-3BW-J000-AS など、ブロック数違いを許容。
+  const PARTNO_RE=/\d{5}(?:-[A-Z0-9]{2,6}){1,5}(?![A-Z0-9-])/i;
+  const pn=line.match(PARTNO_RE) || compact.match(PARTNO_RE);
   if(pn){
-    data.format='topre-detail-qr';
-    data.partNo=pn[1].toUpperCase();
-    const head=line.slice(0,pn.index).replace(/\s+/g,'');
+    data.partNo=pn[0].toUpperCase();
+    const blocks=data.partNo.split('-').length;
+    data.format=blocks>=4 ? 'topre-detail-hyphen-multi' : 'topre-detail-hyphen';
+
+    const src = line.match(PARTNO_RE) ? line : compact;
+    const idx = src.search(PARTNO_RE);
+    const head=src.slice(0,idx).replace(/\s+/g,'');
     const hm=head.match(/^(\d{8})(\d{8})/);
     if(hm){ data.orderNo=hm[1]; data.issueDate=formatDate8(hm[2]); }
-    const tail=line.slice(pn.index+pn[1].length).trim();
+
+    const tail=src.slice(idx+data.partNo.length).trim();
     const fields=tail.split(/\s{2,}/).map(v=>v.trim()).filter(Boolean);
     data.partName=fields[0]||'';
-    data.qty=(fields[1]||'').match(/\d+/)?.[0]||'';
-    const dp=fields[2]||'';
-    const dm=dp.match(/^(\d{8})(.*)$/);
-    if(dm){ data.shipDate=formatDate8(dm[1]); data.planNo=(dm[2]||'').trim(); }
-    data.process=fields[3]||'';
-    const last=fields[4]||'';
-    const lm=last.match(/^(\d{8})(.*)$/);
-    if(lm){ data.traceNo=lm[1]; data.extra=(lm[2]||'').trim(); }
+
+    const qtyIdx=fields.findIndex((v,i)=>i>0 && /^\d+$/.test(v));
+    if(qtyIdx>=0){ data.qty=fields[qtyIdx].match(/\d+/)[0]; }
+
+    const afterQty = qtyIdx>=0 ? fields.slice(qtyIdx+1) : fields.slice(1);
+    let shipField='';
+    for(const f of afterQty){ if(/^\d{8}/.test(f)){ shipField=f; break; } }
+    if(shipField){
+      const dm=shipField.match(/^(\d{8})(.*)$/);
+      if(dm){ data.shipDate=formatDate8(dm[1]); data.planNo=(dm[2]||'').trim(); }
+    }
+
+    for(const f of afterQty){
+      if(f===shipField) continue;
+      if(!data.process && /^[A-Z]\d{1,3}$/i.test(f)){ data.process=f.toUpperCase(); continue; }
+      if(!data.traceNo){
+        const lm=f.match(/^(\d{8})(.*)$/);
+        if(lm){ data.traceNo=lm[1]; data.extra=(lm[2]||'').trim(); continue; }
+      }
+    }
     return data;
   }
 
-  // 左側の雑なQR想定：TS00000000802397NA0A 130/130 1/1
-  const simple=compact.match(/TS\d{8}([0-9A-Z]{9,14})/i);
+  // TS系の簡易QR：TS + 数字群 + ハイフンなし品番 + 数量表記
+  const simple=compact.match(/TS\d{8}([0-9A-Z]{9,20})/i);
   if(simple){
     data.format='topre-simple-qr';
-    const code=simple[1].toUpperCase();
-    if(/^\d{5}/.test(code)) data.partNo=code.slice(0,5)+'-'+code.slice(5);
-    else data.partNo=code;
+    data.partNo=formatCompactPartNo(simple[1]);
     const q=compact.match(/(\d+)\s*\/\s*(\d+)/);
     if(q) data.qty=q[1];
     return data;
   }
 
   // 既に品番だけの場合
-  const direct=compact.match(/^([0-9]{5}-[A-Z0-9]{4,}(?:-[A-Z0-9]{1,4})?)$/i);
-  if(direct){ data.format='partNo'; data.partNo=direct[1].toUpperCase(); return data; }
+  const direct=compact.match(/^(\d{5}(?:-[A-Z0-9]{2,6}){1,5})$/i);
+  if(direct){
+    data.format='partNo';
+    data.partNo=direct[1].toUpperCase();
+    return data;
+  }
 
+  // 最終フォールバック：読めた文字列をそのままキー候補にする
   data.partNo=compact;
   return data;
 }
@@ -208,23 +290,25 @@ async function startCameraBarcodeScan(){
   msg.textContent='カメラ起動中...';
   try{
     await stopCameraBarcodeScan(false);
-    // ZXingが使える環境では1Dバーコードも読む。失敗してもjsQRへフォールバック。
+    // 安定優先：元のZXing BrowserMultiFormatReaderを主役に戻す。
+    // 補助としてjsQR/BarcodeDetectorのQR専用・全画面読みを低頻度で並走させる。
     if(window.ZXingBrowser && ZXingBrowser.BrowserMultiFormatReader){
       try{
         const reader=new ZXingBrowser.BrowserMultiFormatReader();
         scanControls=await reader.decodeFromVideoDevice(undefined, video, (result, err, controls)=>{
           if(result){
             const text=(typeof result.getText==='function')?result.getText():String(result.text||result);
-            if(setBarcodeValue(text,'camera')) stopCameraBarcodeScan(true);
+            if(setBarcodeValue(text,'camera-ZXing')) stopCameraBarcodeScan(true);
           }
         });
-        msg.textContent='読取中...\n黄色枠内にQR/バーコードを入れてください。';
+        msg.textContent='読取中...\nQRを正方形ガイド付近に入れてください。画面全体から補助読取もします。';
+        scanLoopJsQR();
         return;
       }catch(zerr){
         console.warn('ZXing camera start failed, fallback jsQR', zerr);
       }
     }
-    scanStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:1280},height:{ideal:720}},audio:false});
+    scanStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:1920},height:{ideal:1080}},audio:false});
     video.srcObject=scanStream;
     await video.play();
     msg.textContent='読取中...\nQRコードを黄色枠内に入れてください。';
@@ -236,26 +320,142 @@ async function startCameraBarcodeScan(){
     scanBusy=false;
   }
 }
+let qrAssistFrame=0;
 function scanLoopJsQR(){
-  const video=$('scanVideo'), canvas=$('scanCanvas'), msg=$('scanMsg');
+  const video=$('scanVideo'), canvas=$('scanCanvas');
   const ctx=canvas.getContext('2d',{willReadFrequently:true});
-  const loop=()=>{
+  const loop=async()=>{
     if(!$('scanOverlay').classList.contains('on'))return;
-    if(video.readyState>=2 && video.videoWidth && video.videoHeight){
-      canvas.width=video.videoWidth;
-      canvas.height=video.videoHeight;
-      ctx.drawImage(video,0,0,canvas.width,canvas.height);
-      const img=ctx.getImageData(0,0,canvas.width,canvas.height);
-      let code=null;
-      if(window.jsQR) code=jsQR(img.data,img.width,img.height,{inversionAttempts:'attemptBoth'});
-      if(code && code.data){
-        if(setBarcodeValue(code.data,'camera')){ stopCameraBarcodeScan(true); return; }
+    try{
+      if(video.readyState>=2 && video.videoWidth && video.videoHeight){
+        qrAssistFrame++;
+        const found=await decodeQrAssistFromVideo(video, canvas, ctx, qrAssistFrame);
+        if(found){
+          if(setBarcodeValue(found,'camera補助')){ stopCameraBarcodeScan(true); return; }
+        }
       }
-    }
+    }catch(e){ console.warn('QR補助読取エラー',e); }
     scanTimer=requestAnimationFrame(loop);
   };
+  if(scanTimer){cancelAnimationFrame(scanTimer);scanTimer=null;}
   scanTimer=requestAnimationFrame(loop);
 }
+async function decodeQrAssistFromVideo(video, canvas, ctx, frame){
+  const vw=video.videoWidth||640, vh=video.videoHeight||480;
+  const maxSide=1280;
+  const baseScale=Math.min(1, maxSide/Math.max(vw,vh));
+  canvas.width=Math.max(1,Math.round(vw*baseScale));
+  canvas.height=Math.max(1,Math.round(vh*baseScale));
+  ctx.filter='none';
+  ctx.drawImage(video,0,0,canvas.width,canvas.height);
+
+  // 1) ブラウザ標準のQR専用検出。対応端末だけ低頻度で試す。
+  if(window.BarcodeDetector && frame%6===0){
+    try{
+      const detector=new BarcodeDetector({formats:['qr_code']});
+      const codes=await detector.detect(canvas);
+      if(codes&&codes.length&&codes[0].rawValue) return codes[0].rawValue;
+    }catch(_){/* unsupported */}
+  }
+
+  if(!window.jsQR) return '';
+  const tryCanvas=()=>{
+    const img=ctx.getImageData(0,0,canvas.width,canvas.height);
+    const code=jsQR(img.data,img.width,img.height,{inversionAttempts:'attemptBoth'});
+    return code&&code.data ? code.data : '';
+  };
+
+  // 2) 原画像。まず軽い処理を毎回。
+  let hit=tryCanvas();
+  if(hit) return hit;
+
+  // 3) 明るさ/コントラスト補正。3フレームに1回。
+  if(frame%3===0){
+    ctx.filter='contrast(150%) brightness(112%)';
+    ctx.drawImage(video,0,0,canvas.width,canvas.height);
+    hit=tryCanvas();
+    if(hit) return hit;
+  }
+
+  // 4) 軽いシャープ風：少し拡大してから補正。小さいQR向け、5フレームに1回だけ。
+  if(frame%5===0){
+    const scale=Math.min(1.45, 1600/Math.max(vw,vh));
+    if(scale>1.02){
+      canvas.width=Math.round(vw*scale); canvas.height=Math.round(vh*scale);
+      ctx.imageSmoothingEnabled=false;
+      ctx.filter='contrast(165%) brightness(108%)';
+      ctx.drawImage(video,0,0,canvas.width,canvas.height);
+      ctx.imageSmoothingEnabled=true;
+      hit=tryCanvas();
+      if(hit) return hit;
+    }
+  }
+  ctx.filter='none';
+  return '';
+}
+
+function loadQrPhotoImage(file){
+  return new Promise((res,rej)=>{
+    const img=new Image();
+    img.onload=()=>res(img);
+    img.onerror=rej;
+    img.src=URL.createObjectURL(file);
+  });
+}
+async function decodeQrFromStillImage(img){
+  const canvas=$('scanCanvas') || document.createElement('canvas');
+  const ctx=canvas.getContext('2d',{willReadFrequently:true});
+  const maxSides=[2600,2000,1500,1100];
+  const filters=['none','contrast(150%) brightness(112%)','contrast(185%) brightness(105%) grayscale(100%)'];
+  for(const maxSide of maxSides){
+    const s=Math.min(1,maxSide/Math.max(img.width,img.height));
+    canvas.width=Math.max(1,Math.round(img.width*s));
+    canvas.height=Math.max(1,Math.round(img.height*s));
+    for(const filter of filters){
+      ctx.imageSmoothingEnabled=false;
+      ctx.filter=filter;
+      ctx.drawImage(img,0,0,canvas.width,canvas.height);
+      ctx.filter='none';
+      if(window.BarcodeDetector){
+        try{
+          const detector=new BarcodeDetector({formats:['qr_code']});
+          const codes=await detector.detect(canvas);
+          if(codes&&codes.length&&codes[0].rawValue) return codes[0].rawValue;
+        }catch(_){/* unsupported */}
+      }
+      if(window.jsQR){
+        const data=ctx.getImageData(0,0,canvas.width,canvas.height);
+        const code=jsQR(data.data,data.width,data.height,{inversionAttempts:'attemptBoth'});
+        if(code&&code.data) return code.data;
+      }
+    }
+  }
+  return '';
+}
+async function readQrFromPhotoFile(file){
+  const msg=$('scanMsg');
+  try{
+    if(!file)return;
+    if(msg) msg.textContent='高解像度写真からQR読取中...';
+    const img=await loadQrPhotoImage(file);
+    const text=await decodeQrFromStillImage(img);
+    if(text && setBarcodeValue(text,'写真QR')){
+      if(msg) msg.textContent='写真QR読取OK。';
+      log('写真QR読取OK。品番キーを設定しました。');
+      await stopCameraBarcodeScan(true);
+      return;
+    }
+    if(msg) msg.textContent='写真QR読取NG。QRが写真内に大きく入るように再撮影してください。';
+    $('barcodeState').textContent='写真QR読取NG。QRが写真内に大きく入るように再撮影してください。';
+    log('写真QR読取NG。QRが写真内に大きく入るように再撮影してください。');
+  }catch(e){
+    console.error(e);
+    if(msg) msg.textContent='写真QR読取エラー: '+e.message;
+    $('barcodeState').textContent='写真QR読取エラー: '+e.message;
+    log('写真QR読取エラー: '+e.message);
+  }
+}
+
 async function stopCameraBarcodeScan(close=true){
   if(scanTimer){cancelAnimationFrame(scanTimer);scanTimer=null;}
   if(scanControls){try{scanControls.stop();}catch(_){ } scanControls=null;}
@@ -299,7 +499,7 @@ async function fetchJsonText(url,options={},timeoutMs=30000){
 function baseFit(canvas,img){const r=Math.min(canvas.width/img.width,canvas.height/img.height),w=img.width*r,h=img.height*r,ox=(canvas.width-w)/2,oy=(canvas.height-h)/2;return{r,w,h,ox,oy}}
 let view={zoom:1,panX:0,panY:0};
 function totalScale(canvas,img){const f=baseFit(canvas,img);return f.r*view.zoom}
-function updateZoomStatus(){const z=$('zoomStatus'); if(!z||!masterImg)return; const pct=Math.round(totalScale(mc,masterImg)*100); z.textContent='倍率: '+pct+'%　Ctrl+ホイール=拡大縮小 / ホイール押し込み・右ドラッグ=パン';}
+function updateZoomStatus(){const z=$('zoomStatus'); if(!z||!masterImg)return; const pct=Math.round(totalScale(mc,masterImg)*100); z.textContent='倍率: '+pct+'%　PC: Ctrl+ホイール=拡大縮小 / 右ドラッグ=パン　モバイル: 2本指で拡大縮小・平行移動';}
 function drawImageFit(canvas,img,drawFn){const ctx=canvas.getContext('2d');ctx.clearRect(0,0,canvas.width,canvas.height);ctx.fillStyle='#111';ctx.fillRect(0,0,canvas.width,canvas.height);if(!img)return;const f=baseFit(canvas,img);ctx.drawImage(img,f.ox+view.panX,f.oy+view.panY,f.w*view.zoom,f.h*view.zoom);if(drawFn)drawFn(ctx,canvas,img);updateZoomStatus();}
 function fitParams(canvas,img){const f=baseFit(canvas,img);return{r:f.r*view.zoom,ox:f.ox+view.panX,oy:f.oy+view.panY,w:f.w*view.zoom,h:f.h*view.zoom}}
 function eventToImg(canvas,e,img){const rect=canvas.getBoundingClientRect();const x=(e.clientX-rect.left)*canvas.width/rect.width,y=(e.clientY-rect.top)*canvas.height/rect.height;const f=fitParams(canvas,img);return{x:(x-f.ox)/f.r,y:(y-f.oy)/f.r}}
@@ -309,7 +509,7 @@ function actualView(){if(!masterImg)return;const f=baseFit(mc,masterImg);view.zo
 function setDecision(t,cls){const d=$('decision');if(!d)return;d.className='decision '+cls;d.textContent=t}
 function pointTypeLabel(t){return t==='absent'?'ないこと確認':'あること確認'}
 function pointThrLabel(t,th){return t==='absent'?('差異OK '+(th??12)+'%'):('相関OK '+(th??50)+'%')}
-function renderPointList(points, listId='pointList'){const el=$(listId); if(!el)return; el.innerHTML='<b>検査ポイント: '+points.length+'件</b>'+points.map((r,i)=>`<div class="roiItem"><span>${i+1}. ${r.name}<br><small>${pointTypeLabel(r.type)} / ${pointThrLabel(r.type,r.threshold)}</small></span><button class="danger" data-del="${i}">削除</button></div>`).join(''); el.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{points.splice(+b.dataset.del,1); if(selectedIndex===+b.dataset.del)selectedIndex=-1; renderPointList(points); if(typeof redrawMaster==='function')redrawMaster();});}
+function renderPointList(points, listId='pointList'){const el=$(listId); if(!el)return; el.innerHTML='<b>検査ポイント: '+points.length+'件</b>'+points.map((r,i)=>`<div class="roiItem"><span>${i+1}. ${r.name}<br><small>${pointTypeLabel(r.type)} / ${pointThrLabel(r.type,r.threshold)}</small></span><button class="danger" data-del="${i}">削除</button></div>`).join(''); el.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{points.splice(+b.dataset.del,1); if(selectedIndex===+b.dataset.del)selectedIndex=-1; renderPointList(points); if(typeof redrawMaster==='function')redrawMaster();}); if(typeof refreshMobileImageEditor==='function')refreshMobileImageEditor();}
 let masterImg=null, points=[], pointMode=false, dragStart=null, dragCurrent=null;
 let selectedIndex=-1, panning=false, panStart=null;
 $('gasUrl').value=DEFAULT_GAS_URL;
@@ -337,7 +537,7 @@ function selectEditMode(){
   log('修正モード\n登録済みマスターを選択して「選択マスターを読込」を押してください。');
 }
 
-function updatePointThrUI(){const type=$('pointType').value; if(type==='absent'){ $('pointThrLabel').textContent='差異OKしきい値%'; if(+$('pointThr').value>60)$('pointThr').value=12; }else{ $('pointThrLabel').textContent='相関OKしきい値%'; if(+$('pointThr').value<30)$('pointThr').value=50; } $('pointThrVal').textContent=$('pointThr').value;}
+function updatePointThrUI(){const type=$('pointType').value; if(type==='absent'){ $('pointThrLabel').textContent='差異OKしきい値%'; if(+$('pointThr').value>60)$('pointThr').value=12; }else{ $('pointThrLabel').textContent='相関OKしきい値%'; if(+$('pointThr').value<30)$('pointThr').value=50; } $('pointThrVal').textContent=$('pointThr').value; if(typeof refreshMobileImageEditor==='function')refreshMobileImageEditor();}
 $('pointThr').oninput=updatePointThrUI;
 $('pointType').onchange=updatePointThrUI;
 updatePointThrUI();
@@ -350,7 +550,7 @@ function focusBarcodeReader(){
   if(!inp)return;
   inp.value='';
   inp.classList.add('barcodeReady');
-  $('barcodeState').textContent='バーコード読取待ち...\nリーダーでスキャンしてください。';
+  $('barcodeState').textContent='QR読取待ち...\nリーダーでスキャンしてください。';
   setTimeout(()=>{inp.focus(); inp.select();},60);
 }
 function acceptBarcodeValue(raw){
@@ -374,11 +574,31 @@ $('barcodeInput').addEventListener('keydown',e=>{
 $('barcodeInput').addEventListener('paste',()=>setTimeout(()=>acceptBarcodeValue($('barcodeInput').value),30));
 $('barcodeInput').addEventListener('blur',()=>{ if(!$('barcodeInput').value) $('barcodeInput').classList.remove('barcodeReady'); });
 $('cameraBarcodeBtn').onclick=startCameraBarcodeScan;
+function openQrPhotoCapture(){
+  const inp=$('qrPhotoInput');
+  if(!inp)return;
+  $('barcodeState').textContent='写真QR読取を開始します。撮影後、自動で読取判定します。';
+  log('写真QR読取を開始します。撮影後、自動で読取判定します。');
+  inp.click();
+  // 動画スキャン中に写真カメラを開く端末で競合しないよう、クリック後に停止。
+  setTimeout(()=>{ try{ stopCameraBarcodeScan(false); }catch(_){} },150);
+}
+$('qrPhotoBtn').onclick=openQrPhotoCapture;
+$('qrPhotoMainBtn').onclick=openQrPhotoCapture;
+$('qrPhotoInput').onchange=async e=>{const f=e.target.files&&e.target.files[0]; await readQrFromPhotoFile(f); e.target.value='';};
 $('manualBarcodeBtn').onclick=()=>acceptBarcodeValue($('barcodeInput').value);
 $('scanCloseBtn').onclick=()=>stopCameraBarcodeScan(true);
 $('scanOverlay').addEventListener('click',e=>{if(e.target.id==='scanOverlay')stopCameraBarcodeScan(true);});
 
-$('masterFile').onchange=async e=>{masterImg=await loadImage(e.target.files[0]);fitView(); log('マスター画像読込OK');};
+$('masterFile').onchange=async e=>{
+  const f=e.target.files && e.target.files[0];
+  if(!f)return;
+  masterImg=await loadImage(f);
+  updateCanvasPlacement();
+  fitView();
+  log('マスター画像読込OK\nモバイルでは画像上を指でドラッグして検査ポイント登録できます。');
+  setTimeout(()=>{ if(window.matchMedia('(max-width:900px)').matches){ refreshMobileImageEditor(); const target=$('imageBox')||$('mobileCanvasSlot'); if(target) target.scrollIntoView({behavior:'smooth',block:'start'}); } },80);
+};
 async function loadRegisteredParts(){
   const gas=getGasUrl();
   const sel=$('registeredSelect');
@@ -422,15 +642,17 @@ async function loadRegisteredMaster(){
       w:+p.w||0,
       h:+p.h||0
     }));
-    selectedIndex=-1; pointMode=false; $('pointBtn').classList.remove('on'); $('pointBtn').textContent='検査ポイント登録';
+    selectedIndex=-1; setPointMode(false);
     renderPointList(points); fitView();
     $('workArea').classList.add('on');
+    updateCanvasPlacement();
+    refreshMobileImageEditor();
     $('saveBtn').textContent='上書き保存';
     log('修正モードで読込OK: '+(part.partNo||partNo)+'\n検査ポイント: '+points.length+'件\n編集後「スプレッドシートへ保存」で上書き保存');
   }catch(e){console.error(e);log('登録済みマスター読込エラー: '+e.message);}
 }
 function newMaster(){
-  $('partNo').value=''; $('memo').value=''; $('masterFile').value=''; loadedTopFileId=''; masterImg=null; points=[]; selectedIndex=-1; dragStart=null; dragCurrent=null; view={zoom:1,panX:0,panY:0}; renderPointList(points); redrawMaster(); log('新規登録モード\nバーコードを読み取ってください。'); focusBarcodeReader();
+  $('partNo').value=''; $('memo').value=''; $('masterFile').value=''; loadedTopFileId=''; masterImg=null; points=[]; selectedIndex=-1; dragStart=null; dragCurrent=null; view={zoom:1,panX:0,panY:0}; setPointMode(false); renderPointList(points); redrawMaster(); refreshMobileImageEditor(); log('新規登録モード\nバーコードを読み取ってください。'); focusBarcodeReader();
 }
 function escapeHtml(s){return String(s??'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));}
 $('loadRegisteredBtn').onclick=loadRegisteredMaster;
@@ -439,7 +661,14 @@ $('editModeBtn').onclick=selectEditMode;
 
 $('fitBtn').onclick=fitView;
 $('actualBtn').onclick=actualView;
-$('pointBtn').onclick=()=>{pointMode=!pointMode;$('pointBtn').classList.toggle('on',pointMode);$('pointBtn').textContent=pointMode?'登録中（ドラッグ）':'検査ポイント登録';};
+function setPointMode(on){
+  pointMode=!!on;
+  $('pointBtn').classList.toggle('on',pointMode);
+  $('pointBtn').textContent=pointMode?'登録中（ドラッグ）':'検査ポイント登録';
+  if(typeof refreshMobileImageEditor==='function')refreshMobileImageEditor();
+}
+$('pointBtn').onclick=()=>setPointMode(!pointMode);
+$('undoBtn').onclick=()=>undoLastPoint();
 const mc=$('masterCanvas');
 function redrawMaster(){drawImageFit(mc,masterImg,drawPoints)}
 function drawPoints(ctx,canvas,img){if(!img)return;const f=fitParams(canvas,img);ctx.save();ctx.translate(f.ox,f.oy);ctx.scale(f.r,f.r);ctx.font=`${16/f.r}px sans-serif`;points.forEach((p,i)=>{const sel=i===selectedIndex;ctx.strokeStyle=sel?'#35dcff':'#ffd84d';ctx.lineWidth=(sel?6:4)/f.r;if(sel){ctx.setLineDash([12/f.r,8/f.r]);ctx.lineDashOffset=-(Date.now()/60)%(20/f.r);}else{ctx.setLineDash([]);}ctx.strokeRect(p.x,p.y,p.w,p.h);ctx.setLineDash([]);ctx.fillStyle=sel?'#35dcff':'#ffd84d';ctx.fillText(p.name,p.x,p.y-6)});if(dragStart&&dragCurrent){const x=Math.min(dragStart.x,dragCurrent.x),y=Math.min(dragStart.y,dragCurrent.y),w=Math.abs(dragCurrent.x-dragStart.x),h=Math.abs(dragCurrent.y-dragStart.y);ctx.setLineDash([10/f.r,6/f.r]);ctx.lineDashOffset=-(Date.now()/45)%(16/f.r);ctx.strokeStyle='#35dcff';ctx.fillStyle='rgba(53,220,255,.16)';ctx.lineWidth=5/f.r;ctx.fillRect(x,y,w,h);ctx.strokeRect(x,y,w,h);ctx.setLineDash([]);ctx.fillStyle='#35dcff';ctx.fillText('選択中',x,y-8);requestAnimationFrame(()=>{if(dragStart)redrawMaster();});}ctx.restore();}
@@ -449,7 +678,102 @@ mc.addEventListener('wheel',e=>{if(!masterImg)return;if(e.ctrlKey){e.preventDefa
 mc.addEventListener('mousedown',e=>{if(!masterImg)return;if(e.button===1||e.button===2){panning=true;panStart={x:e.clientX,y:e.clientY,px:view.panX,py:view.panY};e.preventDefault();return;}if(e.button!==0)return;const p=eventToImg(mc,e,masterImg);if(pointMode){dragStart=p;dragCurrent=p;redrawMaster();}else{selectedIndex=hitPoint(p);redrawMaster();}});
 window.addEventListener('mousemove',e=>{if(!masterImg)return;if(panning&&panStart){view.panX=panStart.px+(e.clientX-panStart.x)*mc.width/mc.getBoundingClientRect().width;view.panY=panStart.py+(e.clientY-panStart.y)*mc.height/mc.getBoundingClientRect().height;redrawMaster();return;}if(pointMode&&dragStart){dragCurrent=eventToImg(mc,e,masterImg);redrawMaster();}});
 window.addEventListener('mouseup',e=>{if(panning){panning=false;panStart=null;return;}if(!pointMode||!masterImg||!dragStart)return;const p=eventToImg(mc,e,masterImg);const x=Math.min(dragStart.x,p.x),y=Math.min(dragStart.y,p.y),w=Math.abs(p.x-dragStart.x),h=Math.abs(p.y-dragStart.y);dragStart=null;dragCurrent=null;if(w<8||h<8){redrawMaster();return}points.push({name:$('pointName').value.trim()||'検査ポイント'+(points.length+1),type:$('pointType').value,threshold:+$('pointThr').value,x,y,w,h});selectedIndex=points.length-1;renderPointList(points);redrawMaster();});
-window.addEventListener('keydown',e=>{const tag=(document.activeElement&&document.activeElement.tagName)||'';if(tag==='INPUT'||tag==='TEXTAREA')return;if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'){e.preventDefault();points.pop();selectedIndex=-1;renderPointList(points);redrawMaster();log('直前の検査ポイントを取り消しました');}if(e.key==='Delete'||e.key==='Backspace'){if(selectedIndex>=0){e.preventDefault();points.splice(selectedIndex,1);selectedIndex=-1;renderPointList(points);redrawMaster();log('選択中の検査ポイントを削除しました');}}if(e.key==='Home'){e.preventDefault();fitView();}});
+
+function touchToClient(t){return {clientX:t.clientX,clientY:t.clientY};}
+function touchMid(a,b){return {clientX:(a.clientX+b.clientX)/2,clientY:(a.clientY+b.clientY)/2};}
+function touchDistance(a,b){return Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY);}
+let pinchGesture={active:false,lastDistance:0,lastMid:null};
+function cancelRoiDrag(){dragStart=null;dragCurrent=null;}
+function finishTouchRoi(t){
+  if(!pointMode||!masterImg||!dragStart)return;
+  const p=eventToImg(mc,touchToClient(t),masterImg);
+  const x=Math.min(dragStart.x,p.x),y=Math.min(dragStart.y,p.y),w=Math.abs(p.x-dragStart.x),h=Math.abs(p.y-dragStart.y);
+  cancelRoiDrag();
+  if(w<8||h<8){redrawMaster();return;}
+  points.push({name:$('pointName').value.trim()||'検査ポイント'+(points.length+1),type:$('pointType').value,threshold:+$('pointThr').value,x,y,w,h});
+  selectedIndex=points.length-1;
+  renderPointList(points);
+  redrawMaster();
+  log('検査ポイントを追加しました。誤った場合は「直前の範囲を取り消す」で戻せます。');
+}
+mc.addEventListener('touchstart',e=>{
+  if(!masterImg || !e.touches.length)return;
+  if(e.touches.length>=2){
+    e.preventDefault();
+    cancelRoiDrag();
+    pinchGesture.active=true;
+    pinchGesture.lastDistance=touchDistance(e.touches[0],e.touches[1]);
+    pinchGesture.lastMid=touchMid(e.touches[0],e.touches[1]);
+    redrawMaster();
+    return;
+  }
+  if(pointMode){
+    e.preventDefault();
+    const p=eventToImg(mc,touchToClient(e.touches[0]),masterImg);
+    dragStart=p; dragCurrent=p; redrawMaster();
+  }else{
+    const p=eventToImg(mc,touchToClient(e.touches[0]),masterImg);
+    selectedIndex=hitPoint(p); redrawMaster();
+  }
+},{passive:false});
+mc.addEventListener('touchmove',e=>{
+  if(!masterImg || !e.touches.length)return;
+  if(e.touches.length>=2){
+    e.preventDefault();
+    const dist=touchDistance(e.touches[0],e.touches[1]);
+    const mid=touchMid(e.touches[0],e.touches[1]);
+    if(!pinchGesture.active){
+      cancelRoiDrag();
+      pinchGesture.active=true;
+      pinchGesture.lastDistance=dist;
+      pinchGesture.lastMid=mid;
+      redrawMaster();
+      return;
+    }
+    if(pinchGesture.lastDistance>0 && dist>0 && pinchGesture.lastMid){
+      // 前フレームの中心を基準に縮放し、その後に二本指中心の移動量をパンへ加える。
+      // これで「拡大しながら平行移動」も、二本指を同じ方向へ動かすだけのパンも自然に追従する。
+      const factor=Math.max(0.65,Math.min(1.55,dist/pinchGesture.lastDistance));
+      const prevMid=pinchGesture.lastMid;
+      zoomAt(mc,masterImg,prevMid.clientX,prevMid.clientY,factor);
+      const rect=mc.getBoundingClientRect();
+      view.panX += (mid.clientX-prevMid.clientX)*mc.width/rect.width;
+      view.panY += (mid.clientY-prevMid.clientY)*mc.height/rect.height;
+      redrawMaster();
+    }
+    pinchGesture.lastDistance=dist;
+    pinchGesture.lastMid=mid;
+    return;
+  }
+  if(pinchGesture.active){ e.preventDefault(); return; }
+  if(!pointMode || !dragStart)return;
+  e.preventDefault();
+  dragCurrent=eventToImg(mc,touchToClient(e.touches[0]),masterImg);
+  redrawMaster();
+},{passive:false});
+mc.addEventListener('touchend',e=>{
+  if(!masterImg)return;
+  if(pinchGesture.active){
+    e.preventDefault();
+    if(e.touches.length<2){ pinchGesture.active=false; pinchGesture.lastDistance=0; pinchGesture.lastMid=null; cancelRoiDrag(); redrawMaster(); }
+    return;
+  }
+  if(!pointMode || !dragStart)return;
+  e.preventDefault();
+  const t=(e.changedTouches&&e.changedTouches[0]);
+  if(t)finishTouchRoi(t);
+},{passive:false});
+mc.addEventListener('touchcancel',e=>{pinchGesture.active=false;pinchGesture.lastDistance=0;pinchGesture.lastMid=null;cancelRoiDrag();redrawMaster();},{passive:false});
+function undoLastPoint(){
+  if(!points.length){ log('取り消せる検査ポイントはありません。'); return; }
+  const removed=points.pop();
+  selectedIndex=-1;
+  renderPointList(points);
+  redrawMaster();
+  log('直前の検査ポイントを取り消しました: '+(removed.name||'検査ポイント'));
+}
+
+window.addEventListener('keydown',e=>{const tag=(document.activeElement&&document.activeElement.tagName)||'';if(tag==='INPUT'||tag==='TEXTAREA')return;if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'){e.preventDefault();undoLastPoint();}if(e.key==='Delete'||e.key==='Backspace'){if(selectedIndex>=0){e.preventDefault();points.splice(selectedIndex,1);selectedIndex=-1;renderPointList(points);redrawMaster();log('選択中の検査ポイントを削除しました');}}if(e.key==='Home'){e.preventDefault();fitView();}});
 mc.addEventListener('dblclick',e=>{if(!masterImg)return;const p=eventToImg(mc,e,masterImg);const idx=hitPoint(p);if(idx<0)return;selectedIndex=idx;const r=points[idx];const name=prompt('検査ポイント名',r.name);if(name!==null)r.name=name.trim()||r.name;const type=prompt('検査内容: present / absent',r.type||'present');if(type!==null&&['present','absent'].includes(type.trim()))r.type=type.trim();const th=prompt((r.type==='absent'?'差異OKしきい値%':'相関OKしきい値%'),String(r.threshold??(r.type==='absent'?12:50)));if(th!==null&&!isNaN(+th))r.threshold=+th;renderPointList(points);redrawMaster();});
 $('saveBtn').onclick=async()=>{
   const gas=getGasUrl(); if(!gas){alert('GAS URLを入れて');return}
@@ -516,7 +840,9 @@ $('saveBtn').onclick=async()=>{
     log('保存エラー: '+e.message+'\n\n確認ポイント:\n1) GitHub Pages / http://localhost から開いているか\n2) GASが「全員」実行可でデプロイされているか\n3) POSTサイズが大きすぎないか（Drive保存でも送信時は圧縮画像を送ります）\n4) GAS側が v5 Drive保存版に差し替わっているか');
   }
 };
+updateCanvasPlacement();
 renderPointList(points);
+refreshMobileImageEditor();
 loadRegisteredParts();
-log('起動OK '+MASTER_VERSION+'\nまず作業モードを選択してください。');
+log('起動OK '+MASTER_VERSION+'\nまず作業モードを選択してください。モバイルは検査ポイント登録ON後、画像上を指でドラッグできます。');
 </script></body></html>

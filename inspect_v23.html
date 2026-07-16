@@ -1,0 +1,982 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>ぴろえんす Inspect v23 scan stable QR guide</title>
+<style>
+:root{--bg:#06101f;--panel:rgba(5,12,26,.88);--txt:#eef6ff;--muted:#9fb4d9;--green:#35f078;--red:#ff4b5f;--yellow:#ffd84d;--cyan:#35dcff;--line:#29436d}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;width:100%;min-height:100%;background:#000;color:var(--txt);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;overflow-x:hidden;overflow-y:auto}.app{position:relative;width:100%;height:100dvh;min-height:100vh;background:#000;overflow:hidden}.topbar{position:absolute;z-index:10;left:0;right:0;top:0;padding:10px max(10px,env(safe-area-inset-left)) 10px max(10px,env(safe-area-inset-right));background:linear-gradient(180deg,rgba(0,0,0,.88),rgba(0,0,0,.30),transparent);display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}.brand{font-weight:900;letter-spacing:.06em;font-size:14px;color:#dff8ff}.selectRow{display:flex;gap:8px;align-items:center}.selectRow select{flex:1;min-width:0;padding:11px 12px;border-radius:12px;border:1px solid #31517e;background:#071226;color:var(--txt);font-size:15px}.selectRow button,.cameraBtn{border:0;border-radius:12px;padding:11px 14px;background:linear-gradient(90deg,#2aa7ff,#39e0ff);font-weight:900;color:#001225;font-size:14px}.cameraBtn{white-space:nowrap}.photoInput{display:none}.canvasWrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#020711}canvas{width:100%;height:100%;object-fit:contain;display:block}.empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;color:#aabde0;padding:24px;font-size:15px;line-height:1.7}.resultBanner{position:absolute;z-index:12;left:12px;right:12px;top:88px;border-radius:18px;padding:18px 14px;text-align:center;font-size:72px;font-weight:1000;letter-spacing:.14em;line-height:1;box-shadow:0 18px 40px rgba(0,0,0,.45);display:none}.resultBanner::before{content:'総合判定';display:block;font-size:13px;letter-spacing:.16em;margin-bottom:8px;color:#d9e9ff}.resultBanner.ok{display:block;background:rgba(9,65,37,.92);border:3px solid var(--green);color:var(--green)}.resultBanner.ng{display:block;background:rgba(73,18,31,.94);border:3px solid var(--red);color:var(--red)}.bottom{position:absolute;z-index:10;left:0;right:0;bottom:0;padding:10px max(10px,env(safe-area-inset-left)) max(12px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-right));background:linear-gradient(0deg,rgba(0,0,0,.92),rgba(0,0,0,.46),transparent)}.status{background:rgba(7,18,38,.86);border:1px solid var(--line);border-radius:14px;padding:10px 12px;color:#c6d8ff;font-size:12px;line-height:1.45;white-space:pre-line;max-height:160px;overflow:auto}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:7px}.stat{background:rgba(7,18,38,.82);border:1px solid var(--line);border-radius:12px;padding:8px;text-align:center}.stat small{display:block;color:#aabde0;font-size:10px}.stat b{display:block;font-size:18px;margin-top:2px}.okText{color:var(--green)}.ngText{color:var(--red)}.waitText{color:var(--yellow)}.loading{position:absolute;z-index:15;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:#dff8ff}.loading.on{display:flex}.debugPanel{min-height:100dvh;background:#050b16;padding:18px max(14px,env(safe-area-inset-left)) max(28px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-right));border-top:1px solid #20385f}.debugHead{display:flex;align-items:end;justify-content:space-between;gap:10px;margin-bottom:12px}.debugHead h2{margin:0;font-size:20px;letter-spacing:.08em}.debugHint{color:#9fb4d9;font-size:12px}.debugGrid{display:grid;grid-template-columns:1fr;gap:10px}.debugCard{background:rgba(7,18,38,.88);border:1px solid var(--line);border-radius:14px;padding:12px}.debugCard h3{margin:0 0 8px;font-size:14px;color:#dff8ff}.debugPre{margin:0;white-space:pre-wrap;word-break:break-word;color:#c6d8ff;font-size:12px;line-height:1.5}.debugCanvasWrap{background:#020711;border:1px solid #20385f;border-radius:12px;overflow:hidden}.debugCanvasWrap canvas{width:100%;height:auto;display:block}.debugBadge{display:inline-block;padding:3px 8px;border-radius:999px;border:1px solid #31517e;color:#9fb4d9;font-size:11px;margin-left:6px}.barcodeInput{min-width:180px;max-width:260px;padding:11px 12px;border-radius:12px;border:1px solid #31517e;background:#071226;color:var(--txt);font-size:15px}.scanOverlay{position:fixed;z-index:30;inset:0;background:#020711;display:none;align-items:center;justify-content:center;flex-direction:column;padding:max(18px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) max(18px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left));gap:12px}.scanOverlay.on{display:flex}.scanBox{position:relative;width:min(92vw,720px);aspect-ratio:4/3;border:2px solid #31517e;border-radius:18px;overflow:hidden;background:#000;box-shadow:0 20px 60px #000a}.scanBox video,.scanBox canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.scanGuide{position:absolute;left:50%;top:50%;width:min(64%,360px);aspect-ratio:1/1;height:auto;transform:translate(-50%,-50%);border:4px solid var(--cyan);border-radius:16px;box-shadow:0 0 0 999px rgba(0,0,0,.28);pointer-events:none}.scanTitle{font-size:20px;font-weight:900;color:#dff8ff}.scanStatus{color:#c6d8ff;font-size:14px;text-align:center;min-height:1.6em;white-space:pre-line}.scanClose{width:min(92vw,360px);border:0;border-radius:14px;padding:13px 18px;background:#26395f;color:#eef6ff;font-weight:900;font-size:16px}@media(max-width:480px){.topbar{grid-template-columns:1fr}.resultBanner{font-size:58px;top:118px}.brand{display:none}.selectRow select{font-size:14px}.barcodeInput{min-width:0;max-width:none;width:100%;font-size:14px}.stats{grid-template-columns:repeat(3,1fr)}.stat b{font-size:16px}}
+
+/* v18: iPhone向けに操作を1ボタン化 */
+.topbar{grid-template-columns:1fr}
+.brand{font-size:13px;opacity:.92}
+.selectRow{display:grid;grid-template-columns:1fr auto auto auto;gap:8px;width:100%}
+#barcodeInput{grid-column:1/-1;width:100%;max-width:none}
+#partSelect{min-width:0}
+#actionBtn{min-width:92px;font-size:15px}#qrPhotoMainBtn{min-width:76px;font-size:14px;background:#26395f;color:#eef6ff}
+#actionBtn:disabled{opacity:.55;filter:grayscale(.45);cursor:not-allowed}
+#reloadBtn{min-width:68px;background:#26395f;color:#eef6ff}
+.masterReady #actionBtn{background:linear-gradient(90deg,#20d56f,#35f078);color:#00180a}
+.masterNotReady #actionBtn{background:linear-gradient(90deg,#2aa7ff,#39e0ff);color:#001225}
+@media(min-width:760px){.topbar{grid-template-columns:auto 1fr}.selectRow{grid-template-columns:minmax(180px,320px) minmax(180px,360px) auto auto auto}.brand{display:block}#barcodeInput{grid-column:auto}}
+
+/* v20: 結果操作はモーダルではなく下部パネルに出す */
+.actionPanel{display:none;margin-top:8px;background:rgba(7,18,38,.94);border:1px solid var(--line);border-radius:16px;padding:12px;box-shadow:0 10px 28px rgba(0,0,0,.35)}
+.actionPanel.on{display:block}
+.actionPanel.ok{border-color:var(--green);background:rgba(8,50,30,.95)}
+.actionPanel.ng{border-color:var(--red);background:rgba(58,17,28,.95)}
+.actionMsg{font-weight:900;font-size:15px;line-height:1.45;text-align:center;color:#eef6ff;margin-bottom:10px;white-space:pre-line}
+.actionButtons{display:grid;grid-template-columns:1fr;gap:8px}
+.actionButtons.two{grid-template-columns:1fr 1fr}
+.actionButtons button{border:0;border-radius:14px;padding:13px 10px;font-weight:1000;font-size:15px}
+#actionRegisterBtn{background:linear-gradient(90deg,#20d56f,#35f078);color:#00180a}
+#actionRetryBtn{background:linear-gradient(90deg,#2aa7ff,#39e0ff);color:#001225}
+#actionEndBtn{background:#26395f;color:#eef6ff}
+@media(max-width:480px){.actionMsg{font-size:14px}.actionButtons button{font-size:14px;padding:12px 8px}}
+</style>
+</head>
+<body class="masterNotReady">
+<div class="app">
+  <div class="topbar">
+    <div class="brand">ぴろえんす Inspect v20</div>
+    <div class="selectRow">
+      <input id="barcodeInput" class="barcodeInput" type="text" autocomplete="off" inputmode="none" placeholder="QR読取（手入力も可）">
+      <select id="partSelect"><option>マスター読込中...</option></select>
+      <button id="reloadBtn" type="button">更新</button>
+      <button id="actionBtn" type="button">読取</button>
+      <button id="qrPhotoMainBtn" type="button">QR写真</button>
+      <input id="inspectFile" class="photoInput" type="file" accept="image/*" capture="environment">
+    </div>
+  </div>
+  <div class="canvasWrap"><canvas id="viewCanvas" width="1100" height="760"></canvas></div>
+  <div id="empty" class="empty">QRを読み取ってください。<br>対応するマスターを自動で呼び出します。<br><small>テスト時はマスターを手動選択してもOK</small></div>
+  <div id="banner" class="resultBanner">WAIT</div>
+  <div id="loading" class="loading">解析中...</div>
+  <div class="bottom">
+    <div class="stats">
+      <div class="stat"><small>位置合わせ</small><b id="alignStat">--</b></div>
+      <div class="stat"><small>外形一致</small><b id="outerStat">--</b></div>
+      <div class="stat"><small>検査点</small><b id="pointStat">--</b></div>
+    </div>
+    <div id="status" class="status">OpenCV.js読み込み待ち...</div>
+    <div id="actionPanel" class="actionPanel">
+      <div id="actionMsg" class="actionMsg"></div>
+      <div id="actionButtons" class="actionButtons">
+        <button id="actionRegisterBtn" type="button">登録</button>
+        <button id="actionRetryBtn" type="button">再撮影</button>
+        <button id="actionEndBtn" type="button">撮影終了</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="scanOverlay" class="scanOverlay">
+  <div class="scanTitle">QR 読取</div>
+  <div class="scanBox">
+    <video id="scanVideo" playsinline muted></video>
+    <canvas id="scanCanvas" width="640" height="480" style="display:none"></canvas>
+    <div class="scanGuide"></div>
+  </div>
+  <div id="scanStatus" class="scanStatus">カメラ起動中...</div>
+  <input id="qrPhotoInput" class="photoInput" type="file" accept="image/*" capture="environment">
+  <button id="qrPhotoBtn" class="scanClose" type="button">小さいQRは写真で一発読取</button>
+  <button id="scanCloseBtn" class="scanClose" type="button">閉じる</button>
+</div>
+<section id="debugPanel" class="debugPanel">
+  <div class="debugHead">
+    <div>
+      <h2>DEBUG PANEL <span id="debugState" class="debugBadge">WAIT</span></h2>
+      <div class="debugHint">通常画面はそのまま。ここは下へスクロールした時だけ見る開発用。</div>
+    </div>
+  </div>
+  <div class="debugGrid">
+    <div class="debugCard"><h3>画像・Canvas座標</h3><pre id="debugImage" class="debugPre">未解析</pre></div>
+    <div class="debugCard"><h3>位置合わせ / Homography</h3><pre id="debugAlign" class="debugPre">未解析</pre></div>
+    <div class="debugCard"><h3>検査ポイント変換</h3><pre id="debugPoints" class="debugPre">未解析</pre></div>
+    <div class="debugCard"><h3>プロセスログ</h3><pre id="debugLog" class="debugPre">待機中</pre></div>
+    <div class="debugCard"><h3>デバッグ重ね画像</h3><div class="debugCanvasWrap"><canvas id="debugCanvas" width="1100" height="760"></canvas></div></div>
+  </div>
+</section>
+<script src="./js/zxing-browser.min.js"></script>
+<script src="./js/jsQR.min.js"></script>
+<script src="./js/opencv.js"></script>
+<script>
+// =====================================================
+// ★ここにGASの /exec URLを貼ってください
+// 例: const GAS_URL = 'https://script.google.com/macros/s/xxxxxxx/exec';
+// =====================================================
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbzhTwzLskVh0lRNegdW0FnmL-dedZ6LIps2NP9mRrXsPp0aC93ziLRAMUTEmzFiiU_3/exec'; // ←ここを今井さんのGAS URLに置き換え
+const INSPECT_VERSION = 'v23-scan-stable-qr-guide';
+
+// 固定設定：現場用なので画面には出さない
+const CONFIG = {
+  edgeThr: 100,
+  tol: 6,
+  maxW: 700,
+  features: 1500,      // 1500→2000
+  minInliers: 30,      // 30→15
+  minInlierRatio: 0.60,// 0.60→0.30
+  scaleMin: 0.80,      // 0.80→0.50
+  scaleMax: 1.25,      // 1.25→2.00
+  outerThr: 0.60,      // 6%→60%
+  defaultPointThr: 0.50,
+  holeMatchThr: 0.45,
+  pointCanvasW: 1100,
+  pointCanvasH: 760
+};
+
+const $=id=>document.getElementById(id);
+let cvLoaded=false, parts=[], currentPart=null, masterImg=null, inspectImg=null, points=[];
+let currentBarcodeInfo=null;
+let currentBarcodeRaw='', lastInspectionRecord=null, ngLoggedForCurrent=false, okLoggedForCurrent=false, logSending=false;
+let DEBUG={image:{},align:{},points:[],logs:[]};
+
+function log(s){ $('status').textContent=s; }
+function setLoading(on){ $('loading').classList.toggle('on',!!on); }
+function setBanner(state){ const b=$('banner'); b.className='resultBanner '+(state==='OK'?'ok':state==='NG'?'ng':''); b.textContent=state; }
+function setStat(id,text,cls=''){ const el=$(id); el.textContent=text; el.className=cls; }
+function getDeviceId(){
+  let id=localStorage.getItem('PIROENS_INSPECT_DEVICE_ID');
+  if(!id){
+    id='Inspect-'+Math.random().toString(36).slice(2,8).toUpperCase();
+    localStorage.setItem('PIROENS_INSPECT_DEVICE_ID',id);
+  }
+  return id;
+}
+async function sendInspectionLog(record){
+  if(!record)return false;
+  const payload=encodeURIComponent(JSON.stringify(record));
+  const url=GAS_URL+'?action=logInspection&payload='+payload+'&v='+Date.now();
+  const res=await fetch(url,{cache:'no-store'});
+  const js=await res.json();
+  if(!js.ok) throw new Error(js.error||'ログ保存失敗');
+  return true;
+}
+async function recordInspection(action){
+  if(!lastInspectionRecord)return false;
+
+  // v21 fix1: 同じ検査結果の二重送信防止
+  // OK登録ボタン連打で同じログが複数行入るのを防ぐ。
+  if(action==='OK_REGISTER' && okLoggedForCurrent){
+    dbg('検査ログ保存スキップ',{reason:'OK already logged'});
+    return true;
+  }
+  if(logSending){
+    dbg('検査ログ保存スキップ',{reason:'log sending'});
+    return false;
+  }
+
+  const rec={...lastInspectionRecord, action:action||''};
+  logSending=true;
+  const reg=$('actionRegisterBtn');
+  const oldText=reg?reg.textContent:'';
+  if(action==='OK_REGISTER' && reg){
+    reg.disabled=true;
+    reg.textContent='登録中...';
+  }
+  try{
+    await sendInspectionLog(rec);
+    if(action==='OK_REGISTER') okLoggedForCurrent=true;
+    dbg('検査ログ保存OK',rec);
+    return true;
+  }catch(e){
+    console.error(e);
+    dbg('検査ログ保存エラー',{message:e.message});
+    log(($('status').textContent||'')+'\n\n検査ログ保存エラー: '+e.message);
+    return false;
+  }finally{
+    logSending=false;
+    if(action==='OK_REGISTER' && reg && !okLoggedForCurrent){
+      reg.disabled=false;
+      reg.textContent=oldText||'登録';
+    }
+  }
+}
+function hideResultAction(){
+  const p=$('actionPanel');
+  if(p){ p.className='actionPanel'; }
+}
+function showResultAction(ok){
+  const p=$('actionPanel'), msg=$('actionMsg'), buttons=$('actionButtons');
+  const reg=$('actionRegisterBtn'), retry=$('actionRetryBtn'), end=$('actionEndBtn');
+  if(!p||!msg||!buttons)return;
+  p.className='actionPanel on '+(ok?'ok':'ng');
+  if(ok){
+    msg.textContent='バーコードと製品が一致しました。\nOKで登録します。よろしいですか？';
+    buttons.className='actionButtons';
+    if(reg){ reg.style.display='block'; reg.disabled=!!okLoggedForCurrent; reg.textContent=okLoggedForCurrent?'登録済み':'登録'; }
+    if(retry) retry.style.display='none';
+    if(end) end.style.display='none';
+  }else{
+    msg.textContent='バーコードと製品が違います。\n再撮影しますか？';
+    buttons.className='actionButtons two';
+    if(reg) reg.style.display='none';
+    if(retry) retry.style.display='block';
+    if(end) end.style.display='block';
+  }
+}
+function endInspectionToScanMode(){
+  hideResultAction();
+  lastInspectionRecord=null; ngLoggedForCurrent=false; okLoggedForCurrent=false; logSending=false; currentBarcodeRaw=''; currentBarcodeInfo=null; currentBarcodeInfo=null;
+  resetMasterState();
+  const ps=$('partSelect'); if(ps) ps.value='';
+  const bi=$('barcodeInput'); if(bi){ bi.value=''; setTimeout(()=>bi.focus(),80); }
+  log('次のQRを読み取ってください。');
+}
+function updateActionState(){
+  const ready=!!(currentPart&&masterImg);
+  document.body.classList.toggle('masterReady',ready);
+  document.body.classList.toggle('masterNotReady',!ready);
+  const btn=$('actionBtn');
+  if(btn){
+    btn.disabled = ready && !cvLoaded;
+    btn.textContent = ready ? (cvLoaded ? '撮影' : '準備中') : '読取';
+    btn.title = ready ? (cvLoaded ? '部品を撮影します' : 'OpenCV.js準備中です') : 'QRを動画で読み取ります';
+  }
+  const pbtn=$('qrPhotoMainBtn');
+  if(pbtn){
+    pbtn.style.display = ready ? 'none' : 'block';
+    pbtn.title='小さいQRを高解像度写真で一発読取します';
+  }
+}
+function resetMasterState(){
+  hideResultAction();
+  currentPart=null; masterImg=null; inspectImg=null; points=[];
+  setBanner('WAIT'); setStat('alignStat','--'); setStat('outerStat','--'); setStat('pointStat','--');
+  drawImageFit($('viewCanvas'),null); $('empty').style.display='flex'; updateActionState();
+}
+
+function dbg(msg,obj){ const line=new Date().toLocaleTimeString('ja-JP')+'  '+msg+(obj?'\n'+safeJson(obj):''); DEBUG.logs.push(line); if(DEBUG.logs.length>40) DEBUG.logs.shift(); renderDebug(); }
+function safeJson(obj){ try{return JSON.stringify(obj,(k,v)=>typeof v==='number'?Math.round(v*1000)/1000:v,2)}catch(e){return String(obj)} }
+function renderDebug(){ $('debugState').textContent=($('banner').textContent||'WAIT'); $('debugImage').textContent=safeJson(DEBUG.image||{}); $('debugAlign').textContent=safeJson(DEBUG.align||{}); $('debugPoints').textContent=safeJson(DEBUG.points||[]); $('debugLog').textContent=(DEBUG.logs||[]).join('\n\n')||'待機中'; }
+let appInitStarted=false;
+function cvReady(){
+  const boot = () => {
+    if(cvLoaded) return;
+    cvLoaded = true;
+    log('OpenCV.js 読込OK '+INSPECT_VERSION);
+    updateActionState();
+    if(!appInitStarted){ appInitStarted=true; init(); }
+  };
+
+  if (window.cv && cv.Mat) {
+    boot();
+  } else if (window.cv) {
+    cv['onRuntimeInitialized'] = boot;
+  } else {
+    log('OpenCV.js読込失敗。js/opencv.js の配置を確認してください。');
+    updateActionState();
+  }
+}
+
+// OpenCV本体の<script>読込完了後、関数定義済みのここで初期化を開始する。
+// onload属性はローカル読込が速いとcvReady未定義で発火するため使わない。
+cvReady();
+
+function waitForOpenCV(timeoutMs=20000){
+  if(cvLoaded) return Promise.resolve(true);
+  return new Promise(resolve=>{
+    const start=Date.now();
+    const timer=setInterval(()=>{
+      if(cvLoaded){ clearInterval(timer); resolve(true); return; }
+      if(Date.now()-start>timeoutMs){ clearInterval(timer); resolve(false); }
+    },100);
+  });
+}
+window.addEventListener('load',()=>{
+  if(!appInitStarted && !(window.cv)){
+    updateActionState();
+    log('OpenCV.js読込待ち... js/opencv.js を確認してください。');
+  }
+});
+function loadImageFromDataUrl(dataUrl){ return new Promise((res,rej)=>{ const img=new Image(); img.onload=()=>res(img); img.onerror=rej; img.src=dataUrl; }); }
+function loadImageFromFile(file){ return new Promise((res,rej)=>{ const img=new Image(); img.onload=()=>res(img); img.onerror=rej; img.src=URL.createObjectURL(file); }); }
+function drawImageFit(canvas,img){ const ctx=canvas.getContext('2d'); ctx.clearRect(0,0,canvas.width,canvas.height); ctx.fillStyle='#05070b'; ctx.fillRect(0,0,canvas.width,canvas.height); if(!img)return; const r=Math.min(canvas.width/img.width,canvas.height/img.height); const w=img.width*r,h=img.height*r,ox=(canvas.width-w)/2,oy=(canvas.height-h)/2; ctx.drawImage(img,ox,oy,w,h); }
+function drawMatFit(canvas,mat){ const tmp=document.createElement('canvas'); cv.imshow(tmp,mat); drawImageFit(canvas,tmp); }
+function drawMasterPreview(){
+  const canvas=$('viewCanvas');
+  drawImageFit(canvas,masterImg);
+  drawInspectionPoints(canvas,masterImg,points,{alpha:0.95,color:'#35dcff',dash:true});
+}
+function drawInspectionPoints(canvas,img,pts,opts={}){
+  if(!canvas||!img||!pts||!pts.length)return;
+  const ctx=canvas.getContext('2d');
+  const r=Math.min(canvas.width/img.width,canvas.height/img.height);
+  const w=img.width*r,h=img.height*r,ox=(canvas.width-w)/2,oy=(canvas.height-h)/2;
+  ctx.save();
+  ctx.translate(ox,oy);
+  ctx.scale(r,r);
+  ctx.globalAlpha=opts.alpha??1;
+  ctx.strokeStyle=opts.color||'#35dcff';
+  ctx.fillStyle=opts.color||'#35dcff';
+  ctx.lineWidth=4/r;
+  if(opts.dash)ctx.setLineDash([10/r,7/r]);
+  ctx.font=`${18/r}px sans-serif`;
+  for(const roi of pts){
+    const x=+roi.x||0,y=+roi.y||0,w=+roi.w||0,h=+roi.h||0;
+    ctx.strokeRect(x,y,w,h);
+    ctx.fillText(roi.name||'検査点',x,y-8);
+    ctx.beginPath();
+    ctx.arc(x+w/2,y+h/2,Math.max(3,5/r),0,Math.PI*2);
+    ctx.fill();
+  }
+  ctx.restore();
+}
+async function init(){ if(!GAS_URL){ log('GAS_URL未設定です。HTML内の const GAS_URL に /exec URLを貼ってください。'); return; } await loadParts(); }
+async function loadParts(){
+  try{
+    log('マスター一覧読込中...');
+    const res=await fetch(GAS_URL+'?action=list');
+    const js=await res.json();
+    if(!js.ok) throw new Error(js.error||'list失敗');
+    parts=js.parts||[];
+    $('partSelect').innerHTML='<option value="">テスト用：マスター手動選択</option>'+(parts.map(p=>`<option value="${escapeHtml(p.partNo)}">${escapeHtml(p.partNo)}${p.memo?' - '+escapeHtml(p.memo):''}</option>`).join('') || '');
+    if(!parts.length) $('partSelect').innerHTML='<option value="">登録なし</option>';
+    log('マスター一覧OK: '+parts.length+'件\n通常は「読取」でバーコード/QRを読んでください。\nテスト時だけマスターを手動選択できます。');
+    updateActionState();
+  }catch(e){
+    console.error(e);
+    log('マスター一覧エラー: '+e.message);
+    updateActionState();
+  }
+}
+async function loadSelectedPart(){ const partNo=$('partSelect').value; if(!partNo)return; try{ hideResultAction(); setLoading(true); log('マスター読込中...'); setBanner('WAIT'); const res=await fetch(GAS_URL+'?action=get&partNo='+encodeURIComponent(partNo)); const js=await res.json(); if(!js.ok) throw new Error(js.error||'get失敗'); currentPart=js.part; if(!currentBarcodeRaw){ currentBarcodeRaw=String(currentPart.partNo||partNo); currentBarcodeInfo=parseQRCode(currentBarcodeRaw); } masterImg=await loadImageFromDataUrl(currentPart.topData); points=normalizePointsToImage(currentPart.points||[], masterImg); drawMasterPreview(); $('empty').style.display='none'; setStat('alignStat','--'); setStat('outerStat','--'); setStat('pointStat',points.length?('0/'+points.length):'外形のみ'); log('マスター読込OK: '+partNo+'\n検査ポイント: '+points.length+'件\n撮影準備OK。右上ボタンが「撮影」に切り替わりました。'); updateActionState(); }catch(e){ console.error(e); log('マスター読込エラー: '+e.message); updateActionState(); }finally{ setLoading(false); } }
+
+function normalizeBarcodeText(raw){ return String(raw||'').replace(/[\r\n]+$/g,'').trim(); }
+
+function formatDate8(s){
+  s=String(s||'').replace(/\D/g,'');
+  return s.length===8 ? (s.slice(0,4)+'-'+s.slice(4,6)+'-'+s.slice(6,8)) : '';
+}
+function normalizeCodeText(raw){
+  return String(raw||'').replace(/[\r\n\t]+/g,' ').trim();
+}
+function formatCompactPartNo(code){
+  code=String(code||'').toUpperCase().replace(/[^0-9A-Z-]/g,'');
+  if(!code) return '';
+  if(code.includes('-')) return code;
+  if(/^\d{5}/.test(code)){
+    // 661003BWJ000AS → 66100-3BW-J000-AS / 802397NA0A → 80239-7NA0A
+    const rest=code.slice(5);
+    if(rest.length>=9) return code.slice(0,5)+'-'+rest.slice(0,3)+'-'+rest.slice(3,7)+(rest.slice(7)?'-'+rest.slice(7):'');
+    return code.slice(0,5)+'-'+rest;
+  }
+  return code;
+}
+function parseQRCode(raw){
+  const rawText=String(raw||'').trim();
+  const line=normalizeCodeText(rawText);
+  const compact=line.replace(/\s+/g,' ');
+  const data={
+    raw:rawText,
+    normalized:compact,
+    partNo:'',
+    partName:'',
+    qty:'',
+    shipDate:'',
+    issueDate:'',
+    orderNo:'',
+    planNo:'',
+    process:'',
+    traceNo:'',
+    extra:'',
+    format:'unknown'
+  };
+
+  // 共通：5桁から始まるハイフン付き品番。
+  // 例：80239-7NA0A-RE / 66100-3BW-J000-AS など、ブロック数違いを許容。
+  const PARTNO_RE=/\d{5}(?:-[A-Z0-9]{2,6}){1,5}(?![A-Z0-9-])/i;
+  const pn=line.match(PARTNO_RE) || compact.match(PARTNO_RE);
+  if(pn){
+    data.partNo=pn[0].toUpperCase();
+    const blocks=data.partNo.split('-').length;
+    data.format=blocks>=4 ? 'topre-detail-hyphen-multi' : 'topre-detail-hyphen';
+
+    const src = line.match(PARTNO_RE) ? line : compact;
+    const idx = src.search(PARTNO_RE);
+    const head=src.slice(0,idx).replace(/\s+/g,'');
+    const hm=head.match(/^(\d{8})(\d{8})/);
+    if(hm){ data.orderNo=hm[1]; data.issueDate=formatDate8(hm[2]); }
+
+    const tail=src.slice(idx+data.partNo.length).trim();
+    const fields=tail.split(/\s{2,}/).map(v=>v.trim()).filter(Boolean);
+    data.partName=fields[0]||'';
+
+    const qtyIdx=fields.findIndex((v,i)=>i>0 && /^\d+$/.test(v));
+    if(qtyIdx>=0){ data.qty=fields[qtyIdx].match(/\d+/)[0]; }
+
+    const afterQty = qtyIdx>=0 ? fields.slice(qtyIdx+1) : fields.slice(1);
+    let shipField='';
+    for(const f of afterQty){ if(/^\d{8}/.test(f)){ shipField=f; break; } }
+    if(shipField){
+      const dm=shipField.match(/^(\d{8})(.*)$/);
+      if(dm){ data.shipDate=formatDate8(dm[1]); data.planNo=(dm[2]||'').trim(); }
+    }
+
+    for(const f of afterQty){
+      if(f===shipField) continue;
+      if(!data.process && /^[A-Z]\d{1,3}$/i.test(f)){ data.process=f.toUpperCase(); continue; }
+      if(!data.traceNo){
+        const lm=f.match(/^(\d{8})(.*)$/);
+        if(lm){ data.traceNo=lm[1]; data.extra=(lm[2]||'').trim(); continue; }
+      }
+    }
+    return data;
+  }
+
+  // TS系の簡易QR：TS + 数字群 + ハイフンなし品番 + 数量表記
+  const simple=compact.match(/TS\d{8}([0-9A-Z]{9,20})/i);
+  if(simple){
+    data.format='topre-simple-qr';
+    data.partNo=formatCompactPartNo(simple[1]);
+    const q=compact.match(/(\d+)\s*\/\s*(\d+)/);
+    if(q) data.qty=q[1];
+    return data;
+  }
+
+  // 既に品番だけの場合
+  const direct=compact.match(/^(\d{5}(?:-[A-Z0-9]{2,6}){1,5})$/i);
+  if(direct){
+    data.format='partNo';
+    data.partNo=direct[1].toUpperCase();
+    return data;
+  }
+
+  // 最終フォールバック：読めた文字列をそのままキー候補にする
+  data.partNo=compact;
+  return data;
+}
+function barcodeInfoSummary(info){
+  if(!info)return '';
+  const lines=[];
+  if(info.partNo) lines.push('品番: '+info.partNo);
+  if(info.partName) lines.push('品名: '+info.partName);
+  if(info.qty) lines.push('数量: '+info.qty);
+  if(info.shipDate) lines.push('納入日: '+info.shipDate);
+  if(info.orderNo) lines.push('手配番号: '+info.orderNo);
+  return lines.join('\n');
+}
+
+function playScanBeep(){ try{ const ac=new (window.AudioContext||window.webkitAudioContext)(); const o=ac.createOscillator(); const g=ac.createGain(); o.type='sine'; o.frequency.value=880; g.gain.value=0.08; o.connect(g); g.connect(ac.destination); o.start(); setTimeout(()=>{o.stop(); ac.close();},90); }catch(_){} }
+async function selectMasterByBarcode(raw){
+  const rawText=normalizeBarcodeText(raw);
+  if(!rawText){ log('読取データが空です'); return false; }
+  const info=parseQRCode(rawText);
+  const key=normalizeBarcodeText(info.partNo || rawText);
+  if(!key){ log('品番を抽出できませんでした。\n読取: '+rawText); return false; }
+  const bi0=$('barcodeInput'); if(bi0) bi0.value=key;
+  currentBarcodeRaw=rawText;
+  currentBarcodeInfo=info;
+  lastInspectionRecord=null; ngLoggedForCurrent=false; okLoggedForCurrent=false; logSending=false;
+  let idx=parts.findIndex(p=>String(p.partNo)===key);
+  if(idx<0){
+    await loadParts();
+    idx=parts.findIndex(p=>String(p.partNo)===key);
+  }
+  if(idx<0){
+    hideResultAction();
+    currentPart=null; masterImg=null; inspectImg=null; points=[];
+    setBanner('WAIT');
+    setStat('alignStat','--'); setStat('outerStat','--'); setStat('pointStat','--');
+    const canvas=$('viewCanvas');
+    if(canvas) drawImageFit(canvas,null);
+    const emp=$('empty');
+    if(emp){
+      emp.style.display='flex';
+      emp.innerHTML='マスター登録がありません。<br><br><span style="color:#ffd84d">抽出品番</span><br>'+escapeHtml(key)+'<br><br><span style="color:#9fb4d9">QR全文はログ用に保持します</span>';
+    }
+    const ps=$('partSelect'); if(ps) ps.value='';
+    const bi=$('barcodeInput'); if(bi) bi.value=key;
+    log('マスター登録がありません。\n抽出品番: '+key+'\n'+barcodeInfoSummary(info)+'\n\nMaster側で品番を登録してください。');
+    updateActionState();
+    return false;
+  }
+  $('partSelect').value=parts[idx].partNo;
+  playScanBeep();
+  await loadSelectedPart();
+  log('バーコード読取OK\n'+barcodeInfoSummary(info)+'\n\n対応マスター読込完了\n撮影準備OK');
+  return true;
+}
+
+
+function normalizePointsToImage(rawPoints,img){
+  // v10-debug-fix3
+  // 方針：raw座標がmaster画像サイズ内なら絶対に変換しない。
+  // 今回の raw x=152,y=492 はすでに画像座標。canvas-fit補正すると ox=264 を引いて xが0へ潰れる。
+  const pts=(rawPoints||[]).map((p,idx)=>({
+    ...p,
+    _idx:idx,
+    _raw:{x:+p.x||0,y:+p.y||0,w:+p.w||0,h:+p.h||0}
+  }));
+  DEBUG.points=[];
+  if(!img || !pts.length){ renderDebug(); return pts; }
+
+  const maxX=Math.max(...pts.map(p=>p._raw.x+p._raw.w));
+  const maxY=Math.max(...pts.map(p=>p._raw.y+p._raw.h));
+  let mode='image-raw-forced';
+  let out;
+
+  if(maxX<=img.width*1.02 && maxY<=img.height*1.02){
+    // すでに画像座標。何もしない。
+    out=pts.map(p=>({...p,x:p._raw.x,y:p._raw.y,w:p._raw.w,h:p._raw.h}));
+  }else{
+    // 画像サイズを明らかに超える古い保存データだけ、全体比率で縮小。
+    // canvas-fitの余白引き算は誤判定リスクが高いので一旦禁止。
+    mode='simple-scale-to-image-only';
+    const s=Math.min(img.width/maxX, img.height/maxY);
+    out=pts.map(p=>({...p,x:p._raw.x*s,y:p._raw.y*s,w:p._raw.w*s,h:p._raw.h*s}));
+  }
+
+  out=out.map(p=>{
+    const x=Math.max(0,Math.min(img.width-1,+p.x||0));
+    const y=Math.max(0,Math.min(img.height-1,+p.y||0));
+    const w=Math.max(2,Math.min(img.width-x,+p.w||2));
+    const h=Math.max(2,Math.min(img.height-y,+p.h||2));
+    return {...p,x,y,w,h};
+  });
+
+  DEBUG.image.pointNormalize={
+    version:'v10-debug-fix3',
+    mode,
+    masterImage:{w:img.width,h:img.height},
+    rawMax:{x:maxX,y:maxY},
+    note:'rawがmaster画像サイズ内なら変換禁止。x=152が0になる旧canvas-fit補正を停止。'
+  };
+  DEBUG.points=out.map(p=>({
+    name:p.name||('検査点'+(p._idx+1)),
+    raw:p._raw,
+    normalized:{x:p.x,y:p.y,w:p.w,h:p.h},
+    mode,
+    version:'v10-debug-fix3'
+  }));
+  renderDebug();
+  return out;
+}
+
+
+let scanControls=null, scanStream=null, scanLoopOn=false;
+function setScanStatus(s){ const el=$('scanStatus'); if(el) el.textContent=s; }
+async function startBarcodeScan(){
+  const overlay=$('scanOverlay'), video=$('scanVideo');
+  if(!overlay||!video){ return; }
+  overlay.classList.add('on');
+  setScanStatus('カメラ起動中...');
+  try{
+    // 安定優先：ZXing BrowserMultiFormatReaderを主役にする。
+    // jsQR/BarcodeDetectorのQR専用補助は並走させるが、検査処理には触らない。
+    if(window.ZXingBrowser && ZXingBrowser.BrowserMultiFormatReader){
+      const reader=new ZXingBrowser.BrowserMultiFormatReader();
+      scanControls=await reader.decodeFromVideoDevice(null, video, async (result, err, controls)=>{
+        if(result){
+          const raw=(result.getText?result.getText():String(result.text||result));
+          setScanStatus('読取OK: '+raw+'\nマスター読込中...');
+          try{ if(controls)controls.stop(); }catch(_){}
+          await stopBarcodeScan(false);
+          await selectMasterByBarcode(raw);
+        }
+      });
+      scanLoopOn=true;
+      setScanStatus('QRを正方形ガイド付近に入れてください。画面全体から補助読取もします。');
+      scanLoop();
+      return;
+    }
+  }catch(e){
+    console.warn('ZXing起動失敗。jsQR/BarcodeDetectorへフォールバック',e);
+  }
+  try{
+    scanStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:1920},height:{ideal:1080}},audio:false});
+    video.srcObject=scanStream;
+    await video.play();
+    scanLoopOn=true;
+    setScanStatus('QRを枠内に入れてください');
+    scanLoop();
+  }catch(e){
+    console.error(e);
+    setScanStatus('カメラ起動エラー: '+e.message+'\nUSBリーダーの場合は入力欄にフォーカスして読んでください。');
+  }
+}
+let qrAssistFrame=0;
+async function scanLoop(){
+  if(!scanLoopOn)return;
+  const video=$('scanVideo'), canvas=$('scanCanvas');
+  const ctx=canvas.getContext('2d',{willReadFrequently:true});
+  try{
+    if(video.readyState>=2 && video.videoWidth && video.videoHeight){
+      qrAssistFrame++;
+      const found=await decodeQrAssistFromVideo(video, canvas, ctx, qrAssistFrame);
+      if(found){ await stopBarcodeScan(false); await selectMasterByBarcode(found); return; }
+    }
+  }catch(e){ console.warn('QR補助読取エラー',e); }
+  requestAnimationFrame(scanLoop);
+}
+async function decodeQrAssistFromVideo(video, canvas, ctx, frame){
+  const vw=video.videoWidth||640, vh=video.videoHeight||480;
+  const maxSide=1280;
+  const baseScale=Math.min(1, maxSide/Math.max(vw,vh));
+  canvas.width=Math.max(1,Math.round(vw*baseScale));
+  canvas.height=Math.max(1,Math.round(vh*baseScale));
+  ctx.filter='none';
+  ctx.drawImage(video,0,0,canvas.width,canvas.height);
+
+  // 1) BarcodeDetectorはQR専用。対応端末だけ低頻度で使う。
+  if(window.BarcodeDetector && frame%6===0){
+    try{
+      const detector=new BarcodeDetector({formats:['qr_code']});
+      const codes=await detector.detect(canvas);
+      if(codes&&codes.length&&codes[0].rawValue) return codes[0].rawValue;
+    }catch(_){/* unsupported */}
+  }
+
+  if(!window.jsQR) return '';
+  const tryCanvas=()=>{
+    const img=ctx.getImageData(0,0,canvas.width,canvas.height);
+    const code=jsQR(img.data,img.width,img.height,{inversionAttempts:'attemptBoth'});
+    return code&&code.data ? code.data : '';
+  };
+
+  // 2) 原画像を毎回。ここは軽い。
+  let hit=tryCanvas();
+  if(hit) return hit;
+
+  // 3) 明るさ/コントラスト補正。3フレームに1回。
+  if(frame%3===0){
+    ctx.filter='contrast(150%) brightness(112%)';
+    ctx.drawImage(video,0,0,canvas.width,canvas.height);
+    hit=tryCanvas();
+    if(hit) return hit;
+  }
+
+  // 4) 軽いシャープ風。少し拡大＋補正を5フレームに1回だけ。
+  if(frame%5===0){
+    const scale=Math.min(1.45, 1600/Math.max(vw,vh));
+    if(scale>1.02){
+      canvas.width=Math.round(vw*scale); canvas.height=Math.round(vh*scale);
+      ctx.imageSmoothingEnabled=false;
+      ctx.filter='contrast(165%) brightness(108%)';
+      ctx.drawImage(video,0,0,canvas.width,canvas.height);
+      ctx.imageSmoothingEnabled=true;
+      hit=tryCanvas();
+      if(hit) return hit;
+    }
+  }
+  ctx.filter='none';
+  return '';
+}
+
+function loadQrPhotoImage(file){
+  return new Promise((res,rej)=>{
+    const img=new Image();
+    img.onload=()=>res(img);
+    img.onerror=rej;
+    img.src=URL.createObjectURL(file);
+  });
+}
+async function decodeQrFromStillImage(img){
+  const canvas=$('scanCanvas') || document.createElement('canvas');
+  const ctx=canvas.getContext('2d',{willReadFrequently:true});
+  const maxSides=[2600,2000,1500,1100];
+  const filters=['none','contrast(150%) brightness(112%)','contrast(185%) brightness(105%) grayscale(100%)'];
+  for(const maxSide of maxSides){
+    const s=Math.min(1,maxSide/Math.max(img.width,img.height));
+    canvas.width=Math.max(1,Math.round(img.width*s));
+    canvas.height=Math.max(1,Math.round(img.height*s));
+    for(const filter of filters){
+      ctx.imageSmoothingEnabled=false;
+      ctx.filter=filter;
+      ctx.drawImage(img,0,0,canvas.width,canvas.height);
+      ctx.filter='none';
+      if(window.BarcodeDetector){
+        try{
+          const detector=new BarcodeDetector({formats:['qr_code']});
+          const codes=await detector.detect(canvas);
+          if(codes&&codes.length&&codes[0].rawValue) return codes[0].rawValue;
+        }catch(_){/* unsupported */}
+      }
+      if(window.jsQR){
+        const data=ctx.getImageData(0,0,canvas.width,canvas.height);
+        const code=jsQR(data.data,data.width,data.height,{inversionAttempts:'attemptBoth'});
+        if(code&&code.data) return code.data;
+      }
+    }
+  }
+  return '';
+}
+async function readQrFromPhotoFile(file){
+  try{
+    if(!file)return;
+    setScanStatus('高解像度写真からQR読取中...');
+    const img=await loadQrPhotoImage(file);
+    const text=await decodeQrFromStillImage(img);
+    if(text){
+      setScanStatus('写真QR読取OK。マスター読込中...');
+      log('写真QR読取OK。マスター読込中...');
+      await stopBarcodeScan(false);
+      await selectMasterByBarcode(text);
+      return;
+    }
+    setScanStatus('写真QR読取NG。QRが写真内に大きく入るように再撮影してください。');
+    log('写真QR読取NG。QRが写真内に大きく入るように再撮影してください。');
+  }catch(e){
+    console.error(e);
+    setScanStatus('写真QR読取エラー: '+e.message);
+    log('写真QR読取エラー: '+e.message);
+  }
+}
+
+async function stopBarcodeScan(close=true){
+  scanLoopOn=false;
+  try{ if(scanControls){ scanControls.stop(); scanControls=null; } }catch(_){}
+  try{ if(scanStream){ scanStream.getTracks().forEach(t=>t.stop()); scanStream=null; } }catch(_){}
+  const video=$('scanVideo'); if(video){ try{video.pause(); video.srcObject=null;}catch(_){} }
+  if(close) $('scanOverlay')?.classList.remove('on'); else $('scanOverlay')?.classList.remove('on');
+}
+
+function escapeHtml(s){ return String(s??'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m])); }
+function openQrPhotoCapture(){
+  const inp=$('qrPhotoInput');
+  if(!inp)return;
+  log('写真QR読取を開始します。撮影後、自動で読取判定します。');
+  inp.click();
+  // 動画スキャン中に写真カメラを開く端末で競合しないよう、クリック後に停止。
+  setTimeout(()=>{ try{ stopBarcodeScan(false); }catch(_){} },150);
+}
+$('reloadBtn').onclick=loadParts;
+$('partSelect').onchange=async()=>{ if($('partSelect').value){ currentBarcodeRaw=$('partSelect').value; lastInspectionRecord=null; ngLoggedForCurrent=false; okLoggedForCurrent=false; logSending=false; await loadSelectedPart(); } else resetMasterState(); };
+$('actionBtn').onclick=async()=>{ if(currentPart&&masterImg){ if(!cvLoaded){ log('OpenCV.js準備中です。しばらく待ってください。'); updateActionState(); return; } $('inspectFile').click(); } else { await startBarcodeScan(); } };
+$('scanCloseBtn').onclick=()=>stopBarcodeScan(true);
+$('qrPhotoBtn').onclick=openQrPhotoCapture;
+$('qrPhotoMainBtn').onclick=openQrPhotoCapture;
+$('qrPhotoInput').onchange=async e=>{const f=e.target.files&&e.target.files[0]; await readQrFromPhotoFile(f); e.target.value='';};
+$('barcodeInput').addEventListener('keydown',async e=>{ if(e.key==='Enter'){ e.preventDefault(); await selectMasterByBarcode(e.target.value); }});
+$('actionRegisterBtn').onclick=async()=>{
+  const btn=$('actionRegisterBtn');
+  if(logSending || okLoggedForCurrent){ return; }
+  if(btn) btn.disabled=true;
+  const ok=await recordInspection('OK_REGISTER');
+  if(ok){
+    endInspectionToScanMode();
+  }else{
+    if(btn) btn.disabled=false;
+    alert('検査ログを保存できませんでした。通信/GASを確認してください。');
+  }
+};
+$('actionRetryBtn').onclick=()=>{ hideResultAction(); if(currentPart&&masterImg){ $('inspectFile').click(); } };
+$('actionEndBtn').onclick=()=>{ endInspectionToScanMode(); };
+$('inspectFile').onchange=async e=>{ const f=e.target.files&&e.target.files[0]; if(!f)return; inspectImg=await loadImageFromFile(f); drawImageFit($('viewCanvas'),inspectImg); $('empty').style.display='none'; await runInspect(); e.target.value=''; };
+
+function matFromImage(img,maxW){ const scale=Math.min(1,maxW/img.width); const c=document.createElement('canvas'); c.width=Math.round(img.width*scale); c.height=Math.round(img.height*scale); const x=c.getContext('2d'); x.drawImage(img,0,0,c.width,c.height); let src=cv.imread(c); let gray=new cv.Mat(); cv.cvtColor(src,gray,cv.COLOR_RGBA2GRAY); return{src,gray,scale,w:c.width,h:c.height,canvas:c}; }
+function edgeMask(gray,edgeThr){ let blur=new cv.Mat(),edges=new cv.Mat(); cv.GaussianBlur(gray,blur,new cv.Size(3,3),0); cv.Canny(blur,edges,edgeThr,edgeThr*2); blur.delete(); return edges; }
+function hasNearbyEdge(edge,x,y,w,h,tol){ for(let dy=-tol;dy<=tol;dy++){ for(let dx=-tol;dx<=tol;dx++){ let nx=x+dx,ny=y+dy; if(nx>=0&&ny>=0&&nx<w&&ny<h&&edge.ucharPtr(ny,nx)[0]) return true; } } return false; }
+function detectAndMatch(m,i,features){ let orb=new cv.ORB(features); let kp1=new cv.KeyPointVector(),kp2=new cv.KeyPointVector(),des1=new cv.Mat(),des2=new cv.Mat(); orb.detectAndCompute(m.gray,new cv.Mat(),kp1,des1); orb.detectAndCompute(i.gray,new cv.Mat(),kp2,des2); if(des1.empty()||des2.empty()) throw new Error('特徴点が少なすぎます'); let matcher=new cv.BFMatcher(cv.NORM_HAMMING,true); let matches=new cv.DMatchVector(); matcher.match(des1,des2,matches); let arr=[]; for(let k=0;k<matches.size();k++)arr.push(matches.get(k)); arr.sort((a,b)=>a.distance-b.distance); arr=arr.slice(0,Math.min(120,arr.length)); let srcPts=[],dstPts=[]; for(const mt of arr){ let p1=kp1.get(mt.queryIdx).pt,p2=kp2.get(mt.trainIdx).pt; srcPts.push(p1.x,p1.y); dstPts.push(p2.x,p2.y); } let srcMat=cv.matFromArray(arr.length,1,cv.CV_32FC2,srcPts); let dstMat=cv.matFromArray(arr.length,1,cv.CV_32FC2,dstPts); let mask=new cv.Mat(); let H=cv.findHomography(dstMat,srcMat,cv.RANSAC,5,mask); let inliers=0; for(let k=0;k<mask.rows;k++) if(mask.data[k]) inliers++; orb.delete(); kp1.delete(); kp2.delete(); des1.delete(); des2.delete(); matcher.delete(); matches.delete(); srcMat.delete(); dstMat.delete(); mask.delete(); if(H.empty()) throw new Error('位置合わせ失敗'); return{H,inliers,total:arr.length}; }
+function homographyScale(H){ let d=H.data64F||H.data32F; let a=d[0],b=d[1],c=d[3],e=d[4]; return Math.sqrt(Math.abs(a*e-b*c)); }
+function clamp01(v){ return Math.max(0, Math.min(1, v)); }
+function percentile(sortedVals, q){
+  if(!sortedVals.length) return 0;
+  const i=Math.max(0, Math.min(sortedVals.length-1, Math.round((sortedVals.length-1)*q)));
+  return sortedVals[i];
+}
+
+function normalizePointType(t){ return String(t||'present').toLowerCase()==='absent'?'absent':'present'; }
+function darkBlob(gray,x,y,w,h){
+  x=Math.max(0,Math.round(x)); y=Math.max(0,Math.round(y));
+  w=Math.max(1,Math.min(gray.cols-x,Math.round(w))); h=Math.max(1,Math.min(gray.rows-y,Math.round(h)));
+  const vals=[];
+  for(let yy=y;yy<y+h;yy++) for(let xx=x;xx<x+w;xx++) vals.push(gray.ucharPtr(yy,xx)[0]);
+  vals.sort((a,b)=>a-b);
+  const p25=percentile(vals,0.25), p35=percentile(vals,0.35), p50=percentile(vals,0.50);
+  const mean=vals.reduce((a,b)=>a+b,0)/Math.max(1,vals.length);
+  // 穴は周囲より暗い。金属面の光沢で暴れにくいよう、低い側のパーセンタイルで自動しきい値化。
+  const thr=Math.min(p35, mean-8, p50-4);
+  let count=0,cx=0,cy=0,minX=999999,minY=999999,maxX=-1,maxY=-1;
+  for(let yy=y;yy<y+h;yy++){
+    for(let xx=x;xx<x+w;xx++){
+      if(gray.ucharPtr(yy,xx)[0] <= thr){
+        count++; cx+=xx; cy+=yy; minX=Math.min(minX,xx); minY=Math.min(minY,yy); maxX=Math.max(maxX,xx); maxY=Math.max(maxY,yy);
+      }
+    }
+  }
+  if(count){ cx/=count; cy/=count; }
+  return {count, area:count/Math.max(1,w*h), cx, cy, thr, p25, p35, mean, bbox:count?{x:minX,y:minY,w:maxX-minX+1,h:maxY-minY+1}:null};
+}
+function evalHolePoint(mGray,wGray,x,y,w,h,roi){
+  const mb=darkBlob(mGray,x,y,w,h);
+  const ib=darkBlob(wGray,x,y,w,h);
+  const minDark=Math.max(6, mb.count*0.25);
+  let areaScore=0, centerScore=0, sizeScore=0;
+  if(mb.count>0 && ib.count>=minDark){
+    areaScore=clamp01(ib.count/(mb.count*0.70));
+    const dist=Math.hypot(ib.cx-mb.cx, ib.cy-mb.cy);
+    centerScore=clamp01(1 - dist/(Math.max(w,h)*0.32));
+    const bboxM=mb.bbox||{w:1,h:1}, bboxI=ib.bbox||{w:0,h:0};
+    const bw=Math.min(bboxM.w,bboxI.w)/Math.max(1,Math.max(bboxM.w,bboxI.w));
+    const bh=Math.min(bboxM.h,bboxI.h)/Math.max(1,Math.max(bboxM.h,bboxI.h));
+    sizeScore=clamp01((bw+bh)/2);
+  }
+  const match=clamp01(areaScore*0.45 + centerScore*0.40 + sizeScore*0.15);
+  // Holeでは既存の「差異しきい値%」ではなく「最低マッチ率%」として扱う。低すぎる値は安全側に45%へ丸める。
+  const thr=Math.max(CONFIG.holeMatchThr, ((roi.threshold??50)/100));
+  return {diff:1-match, match, ok:match>=thr, threshold:thr, hole:{master:mb, inspect:ib, areaScore, centerScore, sizeScore}};
+}
+function compareAll(m,warped,points){
+  let wGray=new cv.Mat();
+  cv.cvtColor(warped,wGray,cv.COLOR_RGBA2GRAY);
+  let mEdge=edgeMask(m.gray,CONFIG.edgeThr), wEdge=edgeMask(wGray,CONFIG.edgeThr);
+  let result=$('viewCanvas'),ctx=result.getContext('2d');
+  ctx.clearRect(0,0,result.width,result.height);
+  ctx.fillStyle='#05070b'; ctx.fillRect(0,0,result.width,result.height);
+  const r=Math.min(result.width/m.w,result.height/m.h), ox=(result.width-m.w*r)/2, oy=(result.height-m.h*r)/2;
+  let tmp=document.createElement('canvas'); cv.imshow(tmp,warped); ctx.drawImage(tmp,ox,oy,m.w*r,m.h*r);
+  // v14: 撮影後もマスター画像を薄く重ねる。ズレ・回転・穴位置の目視確認用。
+  let outerMismatch=0,outerDenom=0;
+  ctx.save(); ctx.translate(ox,oy); ctx.scale(r,r);
+  for(let yy=0;yy<m.h;yy+=2){
+    for(let xx=0;xx<m.w;xx+=2){
+      if(mEdge.ucharPtr(yy,xx)[0]){
+        outerDenom++;
+        const found=hasNearbyEdge(wEdge,xx,yy,m.w,m.h,CONFIG.tol);
+        if(!found)outerMismatch++;
+        ctx.fillStyle=found?'rgba(53,240,120,.32)':'rgba(255,75,95,.85)';
+        ctx.fillRect(xx,yy,2,2);
+      }
+    }
+  }
+  let okCount=0,maxPointDiff=0,details=[];
+  for(const roi of points){
+    let x=Math.max(0,Math.round(roi.x*m.scale)), y=Math.max(0,Math.round(roi.y*m.scale));
+    let w=Math.max(1,Math.min(m.w-x,Math.round(roi.w*m.scale))), h=Math.max(1,Math.min(m.h-y,Math.round(roi.h*m.scale)));
+    let mode=normalizePointType(roi.type, roi.name);
+    const typeRaw=String(roi.type ?? '');
+    let mismatch=0,denom=0,diff=0,match=0,ok=false,thr=((roi.threshold??(CONFIG.defaultPointThr*100))/100), extra={};
+
+    if(mode==='hole'){
+      const hr=evalHolePoint(m.gray,wGray,x,y,w,h,roi);
+      diff=hr.diff; match=hr.match; ok=hr.ok; thr=hr.threshold; extra={hole:hr.hole};
+    }else if(mode==='present'){
+      for(let yy=y;yy<y+h;yy++) for(let xx=x;xx<x+w;xx++) if(mEdge.ucharPtr(yy,xx)[0]){ denom++; if(!hasNearbyEdge(wEdge,xx,yy,m.w,m.h,CONFIG.tol)) mismatch++; }
+      diff=denom?mismatch/denom:1; match=1-diff;
+      // v14: 「あることを確認」は差異率ではなく相関/マッチ率で判定。threshold=50ならマッチ50%以上でOK。
+      thr=((roi.threshold??50)/100);
+      ok=match>=thr;
+    }else{
+      for(let yy=y;yy<y+h;yy++) for(let xx=x;xx<x+w;xx++) if(wEdge.ucharPtr(yy,xx)[0]){ denom++; if(!hasNearbyEdge(mEdge,xx,yy,m.w,m.h,CONFIG.tol)) mismatch++; }
+      diff=denom?mismatch/denom:0; match=1-diff; ok=diff<=thr;
+    }
+
+    if(ok) okCount++;
+    maxPointDiff=Math.max(maxPointDiff,diff);
+    details.push({name:roi.name||('検査点'+(roi._idx+1)), typeRaw, type:mode, raw:roi._raw, normalized:{x:roi.x,y:roi.y,w:roi.w,h:roi.h}, process:{x,y,w,h}, diff, match, ok, threshold:thr, ...extra});
+    ctx.strokeStyle=ok?'#35f078':'#ff4b5f'; ctx.lineWidth=5/r; ctx.strokeRect(x,y,w,h);
+    // ROI中心のデバッグ点。枠位置ズレと穴検出ズレを切り分ける。
+    ctx.fillStyle='#ffd84d'; ctx.beginPath(); ctx.arc(x+w/2,y+h/2,Math.max(3,5/r),0,Math.PI*2); ctx.fill();
+    ctx.fillStyle=ctx.strokeStyle; ctx.font=`${18/r}px sans-serif`;
+    const labelMode=mode==='absent'?'なし':'あり';
+    ctx.fillText(`${roi.name||'検査点'} ${labelMode}マッチ${(match*100).toFixed(1)}%`,x,y-8);
+    if(mode==='hole' && extra.hole?.master?.count){
+      ctx.save(); ctx.strokeStyle='#35dcff'; ctx.beginPath(); ctx.arc(extra.hole.master.cx, extra.hole.master.cy, Math.max(3,Math.min(w,h)*0.08), 0, Math.PI*2); ctx.stroke(); ctx.restore();
+    }
+    if(mode==='hole' && extra.hole?.inspect?.count){
+      ctx.beginPath(); ctx.arc(extra.hole.inspect.cx, extra.hole.inspect.cy, Math.max(3,Math.min(w,h)*0.08), 0, Math.PI*2); ctx.stroke();
+    }
+  }
+  ctx.restore();
+  const dc=$('debugCanvas'); if(dc){ const dctx=dc.getContext('2d'); dctx.clearRect(0,0,dc.width,dc.height); dctx.drawImage(result,0,0,dc.width,dc.height); }
+  DEBUG.points=details;
+  const outerDiff=outerDenom?outerMismatch/outerDenom:1;
+  const outerMatch=1-outerDiff;
+  mEdge.delete(); wEdge.delete(); wGray.delete();
+  return{outerDiff, outerMatch, pointOk:okCount, pointAllOk:okCount===points.length, maxPointDiff, details};
+}
+
+async function runInspect(){
+  if(!masterImg||!inspectImg){alert('品番と写真を確認してください');return}
+  hideResultAction();
+  okLoggedForCurrent=false; logSending=false;
+  setLoading(true); setBanner('WAIT');
+  if(!cvLoaded){
+    log('OpenCV.js準備中... 最大20秒待機します');
+    const okCv=await waitForOpenCV(20000);
+    if(!okCv){ setLoading(false); log('OpenCV.js読込タイムアウト。js/opencv.js の配置/キャッシュを確認してください。'); updateActionState(); return; }
+  }
+  try{
+    log('解析中...');
+    const pointNormalizeInfo=DEBUG.image?.pointNormalize;
+    DEBUG={image:{pointNormalize:pointNormalizeInfo},align:{},points:DEBUG.points||[],logs:DEBUG.logs||[]};
+    dbg('解析開始');
+    const m=matFromImage(masterImg,CONFIG.maxW), i=matFromImage(inspectImg,CONFIG.maxW);
+    DEBUG.image={
+      version:'inspect_v12_hole_stable',
+      partNo:currentPart?.partNo||'',
+      masterOriginal:{w:masterImg.width,h:masterImg.height},
+      inspectOriginal:{w:inspectImg.width,h:inspectImg.height},
+      processMaster:{w:m.w,h:m.h,scale:m.scale},
+      processInspect:{w:i.w,h:i.h,scale:i.scale},
+      viewCanvas:{w:$('viewCanvas').width,h:$('viewCanvas').height},
+      pointCount:points.length,
+      pointNormalize:DEBUG.image.pointNormalize||undefined
+    };
+    const {H,inliers,total}=detectAndMatch(m,i,CONFIG.features);
+    let warped=new cv.Mat();
+    cv.warpPerspective(i.src,warped,H,new cv.Size(m.w,m.h));
+    const scale=homographyScale(H);
+    const d=H.data64F||H.data32F;
+    const scaleOk=scale>=CONFIG.scaleMin&&scale<=CONFIG.scaleMax;
+    const alignOk=inliers>=CONFIG.minInliers && (inliers/Math.max(1,total))>=CONFIG.minInlierRatio && scaleOk;
+    DEBUG.align={
+      inliers,total,ratio:inliers/Math.max(1,total),scale,scaleOk,alignOk,
+      H:[d[0],d[1],d[2],d[3],d[4],d[5],d[6],d[7],d[8]],
+      note:'Hはinspect画像→master画像へwarpする変換。検査点はmaster画像座標で評価。'
+    };
+    const res=compareAll(m,warped,points);
+    const outerOk=res.outerDiff<=CONFIG.outerThr;
+    const pointsOk=(points.length===0)||res.pointAllOk;
+    const ok= outerOk && pointsOk;
+    lastInspectionRecord={
+      barcodeRaw: currentBarcodeRaw || currentPart?.partNo || '',
+      masterKey: currentPart?.partNo || '',
+      partNo: currentBarcodeInfo?.partNo || currentPart?.partNo || '',
+      partName: currentBarcodeInfo?.partName || '',
+      qty: currentBarcodeInfo?.qty || '',
+      shipDate: currentBarcodeInfo?.shipDate || '',
+      issueDate: currentBarcodeInfo?.issueDate || '',
+      orderNo: currentBarcodeInfo?.orderNo || '',
+      planNo: currentBarcodeInfo?.planNo || '',
+      process: currentBarcodeInfo?.process || '',
+      traceNo: currentBarcodeInfo?.traceNo || '',
+      barcodeFormat: currentBarcodeInfo?.format || '',
+      result: ok ? 'OK' : 'NG',
+      outerMatch: Math.round((res.outerMatch||0)*1000)/10,
+      outerDiff: Math.round((res.outerDiff||0)*1000)/10,
+      pointOk: res.pointOk,
+      pointTotal: points.length,
+      inliers,
+      total,
+      inlierRatio: Math.round((inliers/Math.max(1,total))*1000)/1000,
+      scale: Math.round(scale*1000)/1000,
+      alignOk,
+      outerOk,
+      pointsOk,
+      deviceId: getDeviceId(),
+      inspectVersion: INSPECT_VERSION,
+      pointDetails: (res.details||[]).map(p=>({name:p.name,type:p.type,ok:p.ok,match:Math.round((p.match||0)*1000)/10,threshold:Math.round((p.threshold||0)*1000)/10}))
+    };
+    setBanner(ok?'OK':'NG');
+    setStat('alignStat',`${inliers}/${total}`,alignOk?'okText':'ngText');
+    setStat('outerStat',(res.outerMatch*100).toFixed(1)+'%',outerOk?'okText':'ngText');
+    setStat('pointStat',points.length?`${res.pointOk}/${points.length}`:'外形のみ',pointsOk?'okText':'ngText');
+    log(`品番: ${currentPart?.partNo||''}
+総合: ${ok?'OK':'NG'}
+位置合わせ: ${alignOk?'OK':'NG'} (${inliers}/${total}, 倍率${scale.toFixed(3)})
+外形マッチ率: ${(res.outerMatch*100).toFixed(1)}% ${outerOk?'OK':'NG'}
+検査ポイント: ${points.length?res.pointOk+'/'+points.length:'なし（外形のみ）'}`);
+    dbg('解析完了',{ok,outerMatch:res.outerMatch,outerDiff:res.outerDiff,pointOk:res.pointOk,points:res.details});
+    renderDebug();
+    showResultAction(ok);
+    if(!ok && !ngLoggedForCurrent){ ngLoggedForCurrent=true; recordInspection('NG_AUTO'); }
+    m.src.delete(); m.gray.delete(); i.src.delete(); i.gray.delete(); H.delete(); warped.delete();
+  }catch(e){
+    console.error(e); setBanner('NG'); setStat('alignStat','NG','ngText'); log('解析エラー: '+e.message); dbg('解析エラー',{message:e.message,stack:e.stack});
+  }finally{ setLoading(false); }
+}
+</script>
+</body>
+</html>
