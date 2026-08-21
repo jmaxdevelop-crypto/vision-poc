@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>ぴろえんす Inspect CameraBoost v2</title>
+<title>ぴろえんす Inspect v26 Align Gate Fix</title>
 <style>
 :root{--bg:#06101f;--panel:rgba(5,12,26,.88);--txt:#eef6ff;--muted:#9fb4d9;--green:#35f078;--red:#ff4b5f;--yellow:#ffd84d;--cyan:#35dcff;--line:#29436d}
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;width:100%;min-height:100%;background:#000;color:var(--txt);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;overflow-x:hidden;overflow-y:auto}.app{position:relative;width:100%;height:100dvh;min-height:100vh;background:#000;overflow:hidden}.topbar{position:absolute;z-index:10;left:0;right:0;top:0;padding:10px max(10px,env(safe-area-inset-left)) 10px max(10px,env(safe-area-inset-right));background:linear-gradient(180deg,rgba(0,0,0,.88),rgba(0,0,0,.30),transparent);display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}.brand{font-weight:900;letter-spacing:.06em;font-size:14px;color:#dff8ff}.selectRow{display:flex;gap:8px;align-items:center}.selectRow select{flex:1;min-width:0;padding:11px 12px;border-radius:12px;border:1px solid #31517e;background:#071226;color:var(--txt);font-size:15px}.selectRow button,.cameraBtn{border:0;border-radius:12px;padding:11px 14px;background:linear-gradient(90deg,#2aa7ff,#39e0ff);font-weight:900;color:#001225;font-size:14px}.cameraBtn{white-space:nowrap}.photoInput{display:none}.canvasWrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#020711}canvas{width:100%;height:100%;object-fit:contain;display:block}.empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;color:#aabde0;padding:24px;font-size:15px;line-height:1.7}.resultBanner{position:absolute;z-index:12;left:12px;right:12px;top:88px;border-radius:18px;padding:18px 14px;text-align:center;font-size:72px;font-weight:1000;letter-spacing:.14em;line-height:1;box-shadow:0 18px 40px rgba(0,0,0,.45);display:none}.resultBanner::before{content:'総合判定';display:block;font-size:13px;letter-spacing:.16em;margin-bottom:8px;color:#d9e9ff}.resultBanner.ok{display:block;background:rgba(9,65,37,.92);border:3px solid var(--green);color:var(--green)}.resultBanner.ng{display:block;background:rgba(73,18,31,.94);border:3px solid var(--red);color:var(--red)}.bottom{position:absolute;z-index:10;left:0;right:0;bottom:0;padding:10px max(10px,env(safe-area-inset-left)) max(12px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-right));background:linear-gradient(0deg,rgba(0,0,0,.92),rgba(0,0,0,.46),transparent)}.status{background:rgba(7,18,38,.86);border:1px solid var(--line);border-radius:14px;padding:10px 12px;color:#c6d8ff;font-size:12px;line-height:1.45;white-space:pre-line;max-height:160px;overflow:auto}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:7px}.stat{background:rgba(7,18,38,.82);border:1px solid var(--line);border-radius:12px;padding:8px;text-align:center}.stat small{display:block;color:#aabde0;font-size:10px}.stat b{display:block;font-size:18px;margin-top:2px}.okText{color:var(--green)}.ngText{color:var(--red)}.waitText{color:var(--yellow)}.loading{position:absolute;z-index:15;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:#dff8ff}.loading.on{display:flex}.debugPanel{min-height:100dvh;background:#050b16;padding:18px max(14px,env(safe-area-inset-left)) max(28px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-right));border-top:1px solid #20385f}.debugHead{display:flex;align-items:end;justify-content:space-between;gap:10px;margin-bottom:12px}.debugHead h2{margin:0;font-size:20px;letter-spacing:.08em}.debugHint{color:#9fb4d9;font-size:12px}.debugGrid{display:grid;grid-template-columns:1fr;gap:10px}.debugCard{background:rgba(7,18,38,.88);border:1px solid var(--line);border-radius:14px;padding:12px}.debugCard h3{margin:0 0 8px;font-size:14px;color:#dff8ff}.debugPre{margin:0;white-space:pre-wrap;word-break:break-word;color:#c6d8ff;font-size:12px;line-height:1.5}.debugCanvasWrap{background:#020711;border:1px solid #20385f;border-radius:12px;overflow:hidden}.debugCanvasWrap canvas{width:100%;height:auto;display:block}.debugBadge{display:inline-block;padding:3px 8px;border-radius:999px;border:1px solid #31517e;color:#9fb4d9;font-size:11px;margin-left:6px}.barcodeInput{min-width:180px;max-width:260px;padding:11px 12px;border-radius:12px;border:1px solid #31517e;background:#071226;color:var(--txt);font-size:15px}.scanOverlay{position:fixed;z-index:30;inset:0;background:#020711;display:none;align-items:center;justify-content:center;flex-direction:column;padding:max(18px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) max(18px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left));gap:12px}.scanOverlay.on{display:flex}.scanBox{position:relative;width:min(92vw,720px);aspect-ratio:4/3;border:2px solid #31517e;border-radius:18px;overflow:hidden;background:#000;box-shadow:0 20px 60px #000a}.scanBox video,.scanBox canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.scanGuide{position:absolute;left:50%;top:50%;width:58%;height:36%;transform:translate(-50%,-50%);border:4px solid var(--cyan);border-radius:16px;box-shadow:0 0 0 999px rgba(0,0,0,.28);pointer-events:none}.scanTitle{font-size:20px;font-weight:900;color:#dff8ff}.scanStatus{color:#c6d8ff;font-size:14px;text-align:center;min-height:1.6em;white-space:pre-line}.scanClose{width:min(92vw,360px);border:0;border-radius:14px;padding:13px 18px;background:#26395f;color:#eef6ff;font-weight:900;font-size:16px}.qrTorchBtn{width:min(92vw,360px);border:0;border-radius:14px;padding:13px 18px;background:#ffd84d;color:#111;font-weight:900;font-size:16px}.qrTorchBtn.off{background:#26395f;color:#eef6ff}.captureButtons{display:flex;gap:10px;width:min(92vw,520px)}.captureButtons button{flex:1;border:0;border-radius:14px;padding:14px 18px;font-weight:900;font-size:16px}.captureShutter{background:linear-gradient(90deg,#2aa7ff,#39e0ff);color:#001225}.captureClose{background:#26395f;color:#eef6ff}.focusHint{position:absolute;right:10px;bottom:10px;background:rgba(0,0,0,.6);color:#fff;border-radius:999px;padding:5px 9px;font-size:11px;pointer-events:none}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;width:100%;min-height:100%;background:#000;color:var(--txt);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;overflow-x:hidden;overflow-y:auto}.app{position:relative;width:100%;height:100dvh;min-height:100vh;background:#000;overflow:hidden}.topbar{position:absolute;z-index:10;left:0;right:0;top:0;padding:10px max(10px,env(safe-area-inset-left)) 10px max(10px,env(safe-area-inset-right));background:linear-gradient(180deg,rgba(0,0,0,.88),rgba(0,0,0,.30),transparent);display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}.brand{font-weight:900;letter-spacing:.06em;font-size:14px;color:#dff8ff}.selectRow{display:flex;gap:8px;align-items:center}.selectRow select{flex:1;min-width:0;padding:11px 12px;border-radius:12px;border:1px solid #31517e;background:#071226;color:var(--txt);font-size:15px}.selectRow button,.cameraBtn{border:0;border-radius:12px;padding:11px 14px;background:linear-gradient(90deg,#2aa7ff,#39e0ff);font-weight:900;color:#001225;font-size:14px}.cameraBtn{white-space:nowrap}.photoInput{display:none}.canvasWrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#020711}canvas{width:100%;height:100%;object-fit:contain;display:block}.empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;color:#aabde0;padding:24px;font-size:15px;line-height:1.7}.resultBanner{position:absolute;z-index:12;left:12px;right:12px;top:88px;border-radius:18px;padding:18px 14px;text-align:center;font-size:72px;font-weight:1000;letter-spacing:.14em;line-height:1;box-shadow:0 18px 40px rgba(0,0,0,.45);display:none}.resultBanner::before{content:'総合判定';display:block;font-size:13px;letter-spacing:.16em;margin-bottom:8px;color:#d9e9ff}.resultBanner.ok{display:block;background:rgba(9,65,37,.92);border:3px solid var(--green);color:var(--green)}.resultBanner.ng{display:block;background:rgba(73,18,31,.94);border:3px solid var(--red);color:var(--red)}.bottom{position:absolute;z-index:10;left:0;right:0;bottom:0;padding:10px max(10px,env(safe-area-inset-left)) max(12px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-right));background:linear-gradient(0deg,rgba(0,0,0,.92),rgba(0,0,0,.46),transparent)}.status{background:rgba(7,18,38,.86);border:1px solid var(--line);border-radius:14px;padding:10px 12px;color:#c6d8ff;font-size:12px;line-height:1.45;white-space:pre-line;max-height:160px;overflow:auto}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:7px}.stat{background:rgba(7,18,38,.82);border:1px solid var(--line);border-radius:12px;padding:8px;text-align:center}.stat small{display:block;color:#aabde0;font-size:10px}.stat b{display:block;font-size:18px;margin-top:2px}.okText{color:var(--green)}.ngText{color:var(--red)}.waitText{color:var(--yellow)}.loading{position:absolute;z-index:15;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:#dff8ff}.loading.on{display:flex}.debugPanel{min-height:100dvh;background:#050b16;padding:18px max(14px,env(safe-area-inset-left)) max(28px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-right));border-top:1px solid #20385f}.debugHead{display:flex;align-items:end;justify-content:space-between;gap:10px;margin-bottom:12px}.debugHead h2{margin:0;font-size:20px;letter-spacing:.08em}.debugHint{color:#9fb4d9;font-size:12px}.debugGrid{display:grid;grid-template-columns:1fr;gap:10px}.debugCard{background:rgba(7,18,38,.88);border:1px solid var(--line);border-radius:14px;padding:12px}.debugCard h3{margin:0 0 8px;font-size:14px;color:#dff8ff}.debugPre{margin:0;white-space:pre-wrap;word-break:break-word;color:#c6d8ff;font-size:12px;line-height:1.5}.debugCanvasWrap{background:#020711;border:1px solid #20385f;border-radius:12px;overflow:hidden}.debugCanvasWrap canvas{width:100%;height:auto;display:block}.debugBadge{display:inline-block;padding:3px 8px;border-radius:999px;border:1px solid #31517e;color:#9fb4d9;font-size:11px;margin-left:6px}.barcodeInput{min-width:180px;max-width:260px;padding:11px 12px;border-radius:12px;border:1px solid #31517e;background:#071226;color:var(--txt);font-size:15px}.scanOverlay{position:fixed;z-index:30;inset:0;background:#020711;display:none;align-items:center;justify-content:center;flex-direction:column;padding:max(18px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) max(18px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left));gap:12px}.scanOverlay.on{display:flex}.scanBox{position:relative;width:min(92vw,720px);aspect-ratio:4/3;border:2px solid #31517e;border-radius:18px;overflow:hidden;background:#000;box-shadow:0 20px 60px #000a}.scanBox video,.scanBox canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.scanGuide{position:absolute;left:50%;top:50%;width:58%;height:36%;transform:translate(-50%,-50%);border:4px solid var(--cyan);border-radius:16px;box-shadow:0 0 0 999px rgba(0,0,0,.28);pointer-events:none}.scanTitle{font-size:20px;font-weight:900;color:#dff8ff}.scanStatus{color:#c6d8ff;font-size:14px;text-align:center;min-height:1.6em;white-space:pre-line}.scanClose{width:min(92vw,360px);border:0;border-radius:14px;padding:13px 18px;background:#26395f;color:#eef6ff;font-weight:900;font-size:16px}.qrTorchBtn{width:min(92vw,360px);border:0;border-radius:14px;padding:13px 18px;background:#ffd84d;color:#111;font-weight:900;font-size:16px}.qrTorchBtn.off{background:#26395f;color:#eef6ff}.captureButtons{display:flex;gap:10px;width:min(92vw,520px)}.captureButtons button{flex:1;border:0;border-radius:14px;padding:14px 18px;font-weight:900;font-size:16px}.captureShutter{background:linear-gradient(90deg,#2aa7ff,#39e0ff);color:#001225}.captureClose{background:#26395f;color:#eef6ff}.containerRansacBtn{background:linear-gradient(90deg,#8f7cff,#39e0ff)!important;color:#06101f!important}.focusHint{position:absolute;right:10px;bottom:10px;background:rgba(0,0,0,.6);color:#fff;border-radius:999px;padding:5px 9px;font-size:11px;pointer-events:none}
 @media(max-width:480px){.topbar{grid-template-columns:1fr}.resultBanner{font-size:58px;top:118px}.brand{display:none}.selectRow select{font-size:14px}.barcodeInput{min-width:0;max-width:none;width:100%;font-size:14px}.stats{grid-template-columns:repeat(3,1fr)}.stat b{font-size:16px}}
 
 /* v18: iPhone向けに操作を1ボタン化 */
@@ -79,7 +79,8 @@
   </div>
   <div id="captureStatus" class="scanStatus">カメラ起動中...</div>
   <div class="captureButtons">
-    <button id="captureShutterBtn" class="captureShutter" type="button">撮影して判定</button>
+    <button id="captureShutterBtn" class="captureShutter" type="button">1個撮影して判定</button>
+    <button id="containerRansacBtn" class="containerRansacBtn" type="button">容器から1個探して判定 β</button>
     <button id="captureCloseBtn" class="captureClose" type="button">閉じる</button>
   </div>
 </div>
@@ -118,7 +119,7 @@
 // 例: const GAS_URL = 'https://script.google.com/macros/s/xxxxxxx/exec';
 // =====================================================
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbzhTwzLskVh0lRNegdW0FnmL-dedZ6LIps2NP9mRrXsPp0aC93ziLRAMUTEmzFiiU_3/exec'; // ←ここを今井さんのGAS URLに置き換え
-const INSPECT_VERSION = 'v23-multi-qr-parser-android-camboost3-qr-torch';
+const INSPECT_VERSION = 'v26-align-gate-fix';
 
 // 固定設定：現場用なので画面には出さない
 const CONFIG = {
@@ -657,7 +658,7 @@ async function startInspectCamera(){
     video.srcObject=inspectCameraStream; await video.play();
     const result=await applyCameraBoost(video,{torch:true});
     inspectCameraTrack=result.track;
-    setCaptureStatus(result.torch ? 'ライトON / 画面タップでピント合わせ → 撮影' : 'ライト制御非対応 / 画面タップでピント合わせ → 撮影');
+    setCaptureStatus(result.torch ? 'ライトON / タップAF → 1個撮影 または 容器から1個探索' : 'ライト制御非対応 / タップAF → 1個撮影 または 容器から1個探索');
   }catch(e){
     console.warn('inspect camera failed; file input fallback',e);
     setCaptureStatus('カメラ直接起動に失敗。標準カメラへ切替します。');
@@ -841,6 +842,7 @@ $('scanCloseBtn').onclick=()=>stopBarcodeScan(true);
 $('scanBox')?.addEventListener('click',e=>tapFocus($('scanVideo'),e,$('scanStatus')));
 $('captureBox')?.addEventListener('click',e=>tapFocus($('captureVideo'),e,$('captureStatus')));
 $('captureShutterBtn').onclick=()=>captureInspectPhoto();
+$('containerRansacBtn')?.addEventListener('click',captureContainerOne);
 $('captureCloseBtn').onclick=()=>stopInspectCamera(true);
 $('barcodeInput').addEventListener('keydown',async e=>{ if(e.key==='Enter'){ e.preventDefault(); await selectMasterByBarcode(e.target.value); }});
 $('actionRegisterBtn').onclick=async()=>{
@@ -862,7 +864,35 @@ $('inspectFile').onchange=async e=>{ const f=e.target.files&&e.target.files[0]; 
 function matFromImage(img,maxW){ const scale=Math.min(1,maxW/img.width); const c=document.createElement('canvas'); c.width=Math.round(img.width*scale); c.height=Math.round(img.height*scale); const x=c.getContext('2d'); x.drawImage(img,0,0,c.width,c.height); let src=cv.imread(c); let gray=new cv.Mat(); cv.cvtColor(src,gray,cv.COLOR_RGBA2GRAY); return{src,gray,scale,w:c.width,h:c.height,canvas:c}; }
 function edgeMask(gray,edgeThr){ let blur=new cv.Mat(),edges=new cv.Mat(); cv.GaussianBlur(gray,blur,new cv.Size(3,3),0); cv.Canny(blur,edges,edgeThr,edgeThr*2); blur.delete(); return edges; }
 function hasNearbyEdge(edge,x,y,w,h,tol){ for(let dy=-tol;dy<=tol;dy++){ for(let dx=-tol;dx<=tol;dx++){ let nx=x+dx,ny=y+dy; if(nx>=0&&ny>=0&&nx<w&&ny<h&&edge.ucharPtr(ny,nx)[0]) return true; } } return false; }
-function detectAndMatch(m,i,features){ let orb=new cv.ORB(features); let kp1=new cv.KeyPointVector(),kp2=new cv.KeyPointVector(),des1=new cv.Mat(),des2=new cv.Mat(); orb.detectAndCompute(m.gray,new cv.Mat(),kp1,des1); orb.detectAndCompute(i.gray,new cv.Mat(),kp2,des2); if(des1.empty()||des2.empty()) throw new Error('特徴点が少なすぎます'); let matcher=new cv.BFMatcher(cv.NORM_HAMMING,true); let matches=new cv.DMatchVector(); matcher.match(des1,des2,matches); let arr=[]; for(let k=0;k<matches.size();k++)arr.push(matches.get(k)); arr.sort((a,b)=>a.distance-b.distance); arr=arr.slice(0,Math.min(120,arr.length)); let srcPts=[],dstPts=[]; for(const mt of arr){ let p1=kp1.get(mt.queryIdx).pt,p2=kp2.get(mt.trainIdx).pt; srcPts.push(p1.x,p1.y); dstPts.push(p2.x,p2.y); } let srcMat=cv.matFromArray(arr.length,1,cv.CV_32FC2,srcPts); let dstMat=cv.matFromArray(arr.length,1,cv.CV_32FC2,dstPts); let mask=new cv.Mat(); let H=cv.findHomography(dstMat,srcMat,cv.RANSAC,5,mask); let inliers=0; for(let k=0;k<mask.rows;k++) if(mask.data[k]) inliers++; orb.delete(); kp1.delete(); kp2.delete(); des1.delete(); des2.delete(); matcher.delete(); matches.delete(); srcMat.delete(); dstMat.delete(); mask.delete(); if(H.empty()) throw new Error('位置合わせ失敗'); return{H,inliers,total:arr.length}; }
+function detectAndMatch(m,i,features,maxMatches=120,ransacThr=5){
+  let orb=new cv.ORB(features);
+  let kp1=new cv.KeyPointVector(),kp2=new cv.KeyPointVector(),des1=new cv.Mat(),des2=new cv.Mat();
+  let emptyMask1=new cv.Mat(),emptyMask2=new cv.Mat();
+  orb.detectAndCompute(m.gray,emptyMask1,kp1,des1);
+  orb.detectAndCompute(i.gray,emptyMask2,kp2,des2);
+  emptyMask1.delete(); emptyMask2.delete();
+  if(des1.empty()||des2.empty()) throw new Error('特徴点が少なすぎます');
+  let matcher=new cv.BFMatcher(cv.NORM_HAMMING,true);
+  let matches=new cv.DMatchVector(); matcher.match(des1,des2,matches);
+  let arr=[]; for(let k=0;k<matches.size();k++)arr.push(matches.get(k));
+  arr.sort((a,b)=>a.distance-b.distance);
+  arr=arr.slice(0,Math.min(maxMatches,arr.length));
+  if(arr.length<8) throw new Error('対応特徴点が不足しています');
+  let srcPts=[],dstPts=[];
+  for(const mt of arr){
+    let p1=kp1.get(mt.queryIdx).pt,p2=kp2.get(mt.trainIdx).pt;
+    srcPts.push(p1.x,p1.y); dstPts.push(p2.x,p2.y);
+  }
+  let srcMat=cv.matFromArray(arr.length,1,cv.CV_32FC2,srcPts);
+  let dstMat=cv.matFromArray(arr.length,1,cv.CV_32FC2,dstPts);
+  let mask=new cv.Mat();
+  let H=cv.findHomography(dstMat,srcMat,cv.RANSAC,ransacThr,mask);
+  let inliers=0; for(let k=0;k<mask.rows;k++) if(mask.data[k]) inliers++;
+  const bestDistance=arr.length?arr[0].distance:999, medianDistance=arr.length?arr[Math.floor(arr.length/2)].distance:999;
+  orb.delete(); kp1.delete(); kp2.delete(); des1.delete(); des2.delete(); matcher.delete(); matches.delete(); srcMat.delete(); dstMat.delete(); mask.delete();
+  if(H.empty()) throw new Error('位置合わせ失敗');
+  return{H,inliers,total:arr.length,bestDistance,medianDistance};
+}
 function homographyScale(H){ let d=H.data64F||H.data32F; let a=d[0],b=d[1],c=d[3],e=d[4]; return Math.sqrt(Math.abs(a*e-b*c)); }
 function clamp01(v){ return Math.max(0, Math.min(1, v)); }
 function percentile(sortedVals, q){
@@ -982,6 +1012,212 @@ function compareAll(m,warped,points){
   return{outerDiff, outerMatch, pointOk:okCount, pointAllOk:okCount===points.length, maxPointDiff, details};
 }
 
+
+// =====================================================
+// v26 Single-RANSAC Container β
+// 容器内を「分割」せず、Masterの特徴点から最も強い1個だけRANSACで探す。
+// 別部品混入検出ではなく、検査可能な1個を拾って既存判定へ渡す用途。
+// =====================================================
+const CONTAINER_RANSAC = {
+  masterMaxW: 900,
+  sceneMaxW: 1400,
+  features: 4000,
+  maxMatches: 260,
+  ransacThr: 5,
+  minInliers: 18,
+  minRatio: 0.065,
+  minAreaRatio: 0.008,
+  maxAreaRatio: 0.70
+};
+
+function polygonArea4(pts){
+  let a=0;
+  for(let i=0;i<4;i++){
+    const p=pts[i],q=pts[(i+1)%4];
+    a+=p.x*q.y-q.x*p.y;
+  }
+  return Math.abs(a)/2;
+}
+function transformMasterCornersToScene(HsceneToMaster,mw,mh){
+  let inv=new cv.Mat();
+  cv.invert(HsceneToMaster,inv,cv.DECOMP_SVD);
+  let src=cv.matFromArray(4,1,cv.CV_32FC2,[0,0,mw,0,mw,mh,0,mh]);
+  let dst=new cv.Mat();
+  cv.perspectiveTransform(src,dst,inv);
+  const d=dst.data32F;
+  const pts=[];
+  for(let i=0;i<4;i++)pts.push({x:d[i*2],y:d[i*2+1]});
+  inv.delete(); src.delete(); dst.delete();
+  return pts;
+}
+function validateContainerCandidate(H,m,i,match){
+  const corners=transformMasterCornersToScene(H,m.w,m.h);
+  const area=polygonArea4(corners);
+  const areaRatio=area/Math.max(1,i.w*i.h);
+  const margin=Math.max(i.w,i.h)*0.18;
+  const finite=corners.every(p=>Number.isFinite(p.x)&&Number.isFinite(p.y));
+  const inLooseFrame=finite && corners.every(p=>p.x>=-margin&&p.y>=-margin&&p.x<=i.w+margin&&p.y<=i.h+margin);
+  const ratio=match.inliers/Math.max(1,match.total);
+  const ok=match.inliers>=CONTAINER_RANSAC.minInliers &&
+           ratio>=CONTAINER_RANSAC.minRatio &&
+           areaRatio>=CONTAINER_RANSAC.minAreaRatio &&
+           areaRatio<=CONTAINER_RANSAC.maxAreaRatio &&
+           inLooseFrame;
+  return {ok,corners,areaRatio,ratio,inLooseFrame};
+}
+function drawContainerFoundDebug(img,corners){
+  try{
+    const c=$('debugCanvas'),ctx=c.getContext('2d');
+    c.width=img.width;c.height=img.height;
+    ctx.drawImage(img,0,0,c.width,c.height);
+    const sx=c.width/(img.width||1),sy=c.height/(img.height||1);
+    ctx.save();ctx.strokeStyle='#35dcff';ctx.lineWidth=Math.max(4,c.width/280);
+    ctx.beginPath();
+    corners.forEach((p,k)=>{const x=p.x/CONTAINER_RANSAC.sceneScaleToOriginalX,y=p.y/CONTAINER_RANSAC.sceneScaleToOriginalY;k?ctx.lineTo(x,y):ctx.moveTo(x,y)});
+    ctx.closePath();ctx.stroke();
+    ctx.fillStyle='rgba(53,220,255,.18)';ctx.fill();
+    ctx.restore();
+  }catch(_){}
+}
+async function captureContainerOne(){
+  const video=$('captureVideo'), canvas=$('captureCanvas');
+  if(!video || video.readyState<2){ setCaptureStatus('カメラ準備中です'); return; }
+  try{
+    setCaptureStatus('容器全体を撮影 → Masterと最も一致する1個を探索します...');
+    canvas.width=video.videoWidth||1920; canvas.height=video.videoHeight||1080;
+    canvas.getContext('2d').drawImage(video,0,0,canvas.width,canvas.height);
+    const dataUrl=canvas.toDataURL('image/jpeg',0.95);
+    inspectImg=await new Promise((res,rej)=>{ const im=new Image(); im.onload=()=>res(im); im.onerror=rej; im.src=dataUrl; });
+    await stopInspectCamera(true);
+    drawImageFit($('viewCanvas'),inspectImg); $('empty').style.display='none';
+    await runInspectContainerOne();
+  }catch(e){ console.error(e); setCaptureStatus('容器撮影エラー: '+e.message); }
+}
+async function runInspectContainerOne(){
+  if(!masterImg||!inspectImg){alert('品番と写真を確認してください');return}
+  hideResultAction();
+  okLoggedForCurrent=false; logSending=false;
+  setLoading(true); setBanner('WAIT');
+  if(!cvLoaded){
+    log('OpenCV.js準備中... 最大20秒待機します');
+    const okCv=await waitForOpenCV(20000);
+    if(!okCv){ setLoading(false); log('OpenCV.js読込タイムアウト。'); return; }
+  }
+  let m=null,i=null,H=null,warped=null;
+  try{
+    log('容器内からMasterと一致する1個を探索中...\n※ 全個体の分離はしません。最も強い1個だけを使います。');
+    const pointNormalizeInfo=DEBUG.image?.pointNormalize;
+    DEBUG={image:{pointNormalize:pointNormalizeInfo,mode:'container-single-ransac'},align:{},points:DEBUG.points||[],logs:DEBUG.logs||[]};
+
+    m=matFromImage(masterImg,CONTAINER_RANSAC.masterMaxW);
+    i=matFromImage(inspectImg,CONTAINER_RANSAC.sceneMaxW);
+    CONTAINER_RANSAC.sceneScaleToOriginalX=i.w/inspectImg.width;
+    CONTAINER_RANSAC.sceneScaleToOriginalY=i.h/inspectImg.height;
+
+    const mt=detectAndMatch(m,i,CONTAINER_RANSAC.features,CONTAINER_RANSAC.maxMatches,CONTAINER_RANSAC.ransacThr);
+    H=mt.H;
+    const valid=validateContainerCandidate(H,m,i,mt);
+
+    DEBUG.image={
+      mode:'container-single-ransac',
+      masterOriginal:{w:masterImg.width,h:masterImg.height},
+      inspectOriginal:{w:inspectImg.width,h:inspectImg.height},
+      processMaster:{w:m.w,h:m.h,scale:m.scale},
+      processScene:{w:i.w,h:i.h,scale:i.scale},
+      pointCount:points.length,
+      pointNormalize:pointNormalizeInfo||undefined
+    };
+    const d=H.data64F||H.data32F;
+    DEBUG.align={
+      mode:'single-best-instance',
+      inliers:mt.inliers,total:mt.total,ratio:valid.ratio,
+      projectedAreaRatio:valid.areaRatio,
+      inLooseFrame:valid.inLooseFrame,
+      bestDistance:mt.bestDistance,medianDistance:mt.medianDistance,
+      candidateOk:valid.ok,
+      corners:valid.corners,
+      H:[d[0],d[1],d[2],d[3],d[4],d[5],d[6],d[7],d[8]]
+    };
+    renderDebug();
+
+    if(!valid.ok){
+      setBanner('WAIT');
+      setStat('alignStat',`${mt.inliers}/${mt.total}`,'waitText');
+      setStat('outerStat','--','waitText');
+      setStat('pointStat','判定不能','waitText');
+      log(`容器内から検査可能な1個を確定できませんでした。
+位置合わせ候補: ${mt.inliers}/${mt.total}
+候補面積: ${(valid.areaRatio*100).toFixed(1)}%
+製品を少し見える状態にするか、端末を近づけて再撮影してください。`);
+      dbg('container candidate rejected',DEBUG.align);
+      return;
+    }
+
+    warped=new cv.Mat();
+    cv.warpPerspective(i.src,warped,H,new cv.Size(m.w,m.h));
+    const res=compareAll(m,warped,points);
+    const outerOk=res.outerDiff<=CONFIG.outerThr;
+    const pointsOk=(points.length===0)||res.pointAllOk;
+    const ok=outerOk&&pointsOk;
+
+    lastInspectionRecord={
+      barcodeRaw: currentBarcodeRaw || currentPart?.partNo || '',
+      masterKey: currentPart?.partNo || '',
+      partNo: currentBarcodeInfo?.partNo || currentPart?.partNo || '',
+      partName: currentBarcodeInfo?.partName || '',
+      qty: currentBarcodeInfo?.qty || '',
+      shipDate: currentBarcodeInfo?.shipDate || '',
+      issueDate: currentBarcodeInfo?.issueDate || '',
+      orderNo: currentBarcodeInfo?.orderNo || '',
+      planNo: currentBarcodeInfo?.planNo || '',
+      process: currentBarcodeInfo?.process || '',
+      traceNo: currentBarcodeInfo?.traceNo || '',
+      barcodeFormat: currentBarcodeInfo?.format || '',
+      result: ok ? 'OK' : 'NG',
+      mode:'CONTAINER_SINGLE_RANSAC',
+      outerMatch: Math.round((res.outerMatch||0)*1000)/10,
+      outerDiff: Math.round((res.outerDiff||0)*1000)/10,
+      pointOk: res.pointOk,
+      pointTotal: points.length,
+      inliers:mt.inliers,total:mt.total,
+      inlierRatio:Math.round(valid.ratio*1000)/1000,
+      projectedAreaRatio:Math.round(valid.areaRatio*10000)/10000,
+      alignOk:true,outerOk,pointsOk,
+      deviceId:getDeviceId(),
+      inspectVersion:INSPECT_VERSION,
+      pointDetails:(res.details||[]).map(p=>({name:p.name,type:p.type,ok:p.ok,match:Math.round((p.match||0)*1000)/10,threshold:Math.round((p.threshold||0)*1000)/10}))
+    };
+
+    setBanner(ok?'OK':'NG');
+    setStat('alignStat',`${mt.inliers}/${mt.total}`,'okText');
+    setStat('outerStat',(res.outerMatch*100).toFixed(1)+'%',outerOk?'okText':'ngText');
+    setStat('pointStat',points.length?`${res.pointOk}/${points.length}`:'外形のみ',pointsOk?'okText':'ngText');
+    log(`容器内から1個検出 → 判定完了
+品番: ${currentPart?.partNo||''}
+総合: ${ok?'OK':'NG'}
+位置合わせ: ${mt.inliers}/${mt.total}
+検出個体の画面占有率: ${(valid.areaRatio*100).toFixed(1)}%
+外形マッチ率: ${(res.outerMatch*100).toFixed(1)}%
+検査ポイント: ${points.length?res.pointOk+'/'+points.length:'なし（外形のみ）'}`);
+    dbg('container single-RANSAC 完了',{ok,align:DEBUG.align,outerMatch:res.outerMatch,points:res.details});
+    renderDebug();
+    showResultAction(ok);
+    if(!ok && !ngLoggedForCurrent){ ngLoggedForCurrent=true; recordInspection('NG_AUTO'); }
+  }catch(e){
+    console.error(e);
+    setBanner('WAIT'); setStat('alignStat','--','waitText'); setStat('outerStat','--','waitText'); setStat('pointStat','判定不能','waitText');
+    log('容器内1個探索エラー: '+e.message+'\n製品が小さすぎる・隠れすぎている場合は近づけて再撮影してください。');
+    dbg('container single-RANSAC error',{message:e.message,stack:e.stack});
+    renderDebug();
+  }finally{
+    try{if(m){m.src.delete();m.gray.delete();}}catch(_){}
+    try{if(i){i.src.delete();i.gray.delete();}}catch(_){}
+    try{if(H)H.delete();}catch(_){}
+    try{if(warped)warped.delete();}catch(_){}
+    setLoading(false);
+  }
+}
+
 async function runInspect(){
   if(!masterImg||!inspectImg){alert('品番と写真を確認してください');return}
   hideResultAction();
@@ -1024,7 +1260,7 @@ async function runInspect(){
     const res=compareAll(m,warped,points);
     const outerOk=res.outerDiff<=CONFIG.outerThr;
     const pointsOk=(points.length===0)||res.pointAllOk;
-    const ok= outerOk && pointsOk;
+    const ok= alignOk && outerOk && pointsOk;
     lastInspectionRecord={
       barcodeRaw: currentBarcodeRaw || currentPart?.partNo || '',
       masterKey: currentPart?.partNo || '',
@@ -1054,16 +1290,32 @@ async function runInspect(){
       inspectVersion: INSPECT_VERSION,
       pointDetails: (res.details||[]).map(p=>({name:p.name,type:p.type,ok:p.ok,match:Math.round((p.match||0)*1000)/10,threshold:Math.round((p.threshold||0)*1000)/10}))
     };
+    if(!alignOk){
+      setBanner('WAIT');
+      setStat('alignStat',`${inliers}/${total}`,'ngText');
+      setStat('outerStat','--','waitText');
+      setStat('pointStat','判定不能','waitText');
+      lastInspectionRecord=null;
+      hideResultAction();
+      log(`品番: ${currentPart?.partNo||''}
+総合: 判定不能（再撮影）
+位置合わせ: NG (${inliers}/${total}, 倍率${scale.toFixed(3)})
+※位置合わせが成立していないため、外形・検査ポイントが偶然一致してもOK判定しません。`);
+      dbg('解析終了: 位置合わせNGのため判定不能',{alignOk,inliers,total,scale,outerMatch:res.outerMatch,pointOk:res.pointOk});
+      renderDebug();
+      return;
+    }
+
     setBanner(ok?'OK':'NG');
-    setStat('alignStat',`${inliers}/${total}`,alignOk?'okText':'ngText');
+    setStat('alignStat',`${inliers}/${total}`,'okText');
     setStat('outerStat',(res.outerMatch*100).toFixed(1)+'%',outerOk?'okText':'ngText');
     setStat('pointStat',points.length?`${res.pointOk}/${points.length}`:'外形のみ',pointsOk?'okText':'ngText');
     log(`品番: ${currentPart?.partNo||''}
 総合: ${ok?'OK':'NG'}
-位置合わせ: ${alignOk?'OK':'NG'} (${inliers}/${total}, 倍率${scale.toFixed(3)})
+位置合わせ: OK (${inliers}/${total}, 倍率${scale.toFixed(3)})
 外形マッチ率: ${(res.outerMatch*100).toFixed(1)}% ${outerOk?'OK':'NG'}
 検査ポイント: ${points.length?res.pointOk+'/'+points.length:'なし（外形のみ）'}`);
-    dbg('解析完了',{ok,outerMatch:res.outerMatch,outerDiff:res.outerDiff,pointOk:res.pointOk,points:res.details});
+    dbg('解析完了',{ok,alignOk,outerMatch:res.outerMatch,outerDiff:res.outerDiff,pointOk:res.pointOk,points:res.details});
     renderDebug();
     showResultAction(ok);
     if(!ok && !ngLoggedForCurrent){ ngLoggedForCurrent=true; recordInspection('NG_AUTO'); }
