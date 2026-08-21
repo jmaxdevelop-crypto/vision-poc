@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>ぴろえんす Inspect v35 NoMask Strict Aperture Constellation β</title>
+<title>ぴろえんす Inspect v35 DarkArea Strong β</title>
 <style>
 :root{--bg:#06101f;--panel:rgba(5,12,26,.88);--txt:#eef6ff;--muted:#9fb4d9;--green:#35f078;--red:#ff4b5f;--yellow:#ffd84d;--cyan:#35dcff;--line:#29436d}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;width:100%;min-height:100%;background:#000;color:var(--txt);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;overflow-x:hidden;overflow-y:auto}.app{position:relative;width:100%;height:100dvh;min-height:100vh;background:#000;overflow:hidden}.topbar{position:absolute;z-index:10;left:0;right:0;top:0;padding:10px max(10px,env(safe-area-inset-left)) 10px max(10px,env(safe-area-inset-right));background:linear-gradient(180deg,rgba(0,0,0,.88),rgba(0,0,0,.30),transparent);display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}.brand{font-weight:900;letter-spacing:.06em;font-size:14px;color:#dff8ff}.selectRow{display:flex;gap:8px;align-items:center}.selectRow select{flex:1;min-width:0;padding:11px 12px;border-radius:12px;border:1px solid #31517e;background:#071226;color:var(--txt);font-size:15px}.selectRow button,.cameraBtn{border:0;border-radius:12px;padding:11px 14px;background:linear-gradient(90deg,#2aa7ff,#39e0ff);font-weight:900;color:#001225;font-size:14px}.cameraBtn{white-space:nowrap}.photoInput{display:none}.canvasWrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#020711}canvas{width:100%;height:100%;object-fit:contain;display:block}.empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;color:#aabde0;padding:24px;font-size:15px;line-height:1.7}.resultBanner{position:absolute;z-index:12;left:12px;right:12px;top:88px;border-radius:18px;padding:18px 14px;text-align:center;font-size:72px;font-weight:1000;letter-spacing:.14em;line-height:1;box-shadow:0 18px 40px rgba(0,0,0,.45);display:none}.resultBanner::before{content:'総合判定';display:block;font-size:13px;letter-spacing:.16em;margin-bottom:8px;color:#d9e9ff}.resultBanner.ok{display:block;background:rgba(9,65,37,.92);border:3px solid var(--green);color:var(--green)}.resultBanner.ng{display:block;background:rgba(73,18,31,.94);border:3px solid var(--red);color:var(--red)}.bottom{position:absolute;z-index:10;left:0;right:0;bottom:0;padding:10px max(10px,env(safe-area-inset-left)) max(12px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-right));background:linear-gradient(0deg,rgba(0,0,0,.92),rgba(0,0,0,.46),transparent)}.status{background:rgba(7,18,38,.86);border:1px solid var(--line);border-radius:14px;padding:10px 12px;color:#c6d8ff;font-size:12px;line-height:1.45;white-space:pre-line;max-height:160px;overflow:auto}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:7px}.stat{background:rgba(7,18,38,.82);border:1px solid var(--line);border-radius:12px;padding:8px;text-align:center}.stat small{display:block;color:#aabde0;font-size:10px}.stat b{display:block;font-size:18px;margin-top:2px}.okText{color:var(--green)}.ngText{color:var(--red)}.waitText{color:var(--yellow)}.loading{position:absolute;z-index:15;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:#dff8ff}.loading.on{display:flex}.debugPanel{min-height:100dvh;background:#050b16;padding:18px max(14px,env(safe-area-inset-left)) max(28px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-right));border-top:1px solid #20385f}.debugHead{display:flex;align-items:end;justify-content:space-between;gap:10px;margin-bottom:12px}.debugHead h2{margin:0;font-size:20px;letter-spacing:.08em}.debugHint{color:#9fb4d9;font-size:12px}.debugGrid{display:grid;grid-template-columns:1fr;gap:10px}.debugCard{background:rgba(7,18,38,.88);border:1px solid var(--line);border-radius:14px;padding:12px}.debugCard h3{margin:0 0 8px;font-size:14px;color:#dff8ff}.debugPre{margin:0;white-space:pre-wrap;word-break:break-word;color:#c6d8ff;font-size:12px;line-height:1.5}.debugCanvasWrap{background:#020711;border:1px solid #20385f;border-radius:12px;overflow:hidden}.debugCanvasWrap canvas{width:100%;height:auto;display:block}.debugBadge{display:inline-block;padding:3px 8px;border-radius:999px;border:1px solid #31517e;color:#9fb4d9;font-size:11px;margin-left:6px}.barcodeInput{min-width:180px;max-width:260px;padding:11px 12px;border-radius:12px;border:1px solid #31517e;background:#071226;color:var(--txt);font-size:15px}.scanOverlay{position:fixed;z-index:30;inset:0;background:#020711;display:none;align-items:center;justify-content:center;flex-direction:column;padding:max(18px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) max(18px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left));gap:12px}.scanOverlay.on{display:flex}.scanBox{position:relative;width:min(92vw,720px);aspect-ratio:4/3;border:2px solid #31517e;border-radius:18px;overflow:hidden;background:#000;box-shadow:0 20px 60px #000a}.scanBox video,.scanBox canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.scanGuide{position:absolute;left:50%;top:50%;width:58%;height:36%;transform:translate(-50%,-50%);border:4px solid var(--cyan);border-radius:16px;box-shadow:0 0 0 999px rgba(0,0,0,.28);pointer-events:none}.scanTitle{font-size:20px;font-weight:900;color:#dff8ff}.scanStatus{color:#c6d8ff;font-size:14px;text-align:center;min-height:1.6em;white-space:pre-line}.scanClose{width:min(92vw,360px);border:0;border-radius:14px;padding:13px 18px;background:#26395f;color:#eef6ff;font-weight:900;font-size:16px}.qrTorchBtn{width:min(92vw,360px);border:0;border-radius:14px;padding:13px 18px;background:#ffd84d;color:#111;font-weight:900;font-size:16px}.qrTorchBtn.off{background:#26395f;color:#eef6ff}.captureButtons{display:flex;gap:10px;width:min(92vw,520px)}.captureButtons button{flex:1;border:0;border-radius:14px;padding:14px 18px;font-weight:900;font-size:16px}.captureShutter{background:linear-gradient(90deg,#2aa7ff,#39e0ff);color:#001225}.captureClose{background:#26395f;color:#eef6ff}.containerRansacBtn{background:linear-gradient(90deg,#8f7cff,#39e0ff)!important;color:#06101f!important}.focusHint{position:absolute;right:10px;bottom:10px;background:rgba(0,0,0,.6);color:#fff;border-radius:999px;padding:5px 9px;font-size:11px;pointer-events:none}
@@ -40,7 +40,7 @@
 <body class="masterNotReady">
 <div class="app">
   <div class="topbar">
-    <div class="brand">ぴろえんす Inspect v35 / マスクなし厳格開口星座β</div>
+    <div class="brand">ぴろえんす Inspect v35 / 黒面積強化β</div>
     <div class="selectRow">
       <input id="barcodeInput" class="barcodeInput" type="text" autocomplete="off" inputmode="none" placeholder="バーコード/QR読取（USBリーダーはここへ）">
       <select id="partSelect"><option>マスター読込中...</option></select>
@@ -122,7 +122,7 @@
 // 例: const GAS_URL = 'https://script.google.com/macros/s/xxxxxxx/exec';
 // =====================================================
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbzhTwzLskVh0lRNegdW0FnmL-dedZ6LIps2NP9mRrXsPp0aC93ziLRAMUTEmzFiiU_3/exec'; // ←ここを今井さんのGAS URLに置き換え
-const INSPECT_VERSION = 'v35-nomask-strict-aperture-constellation';
+const INSPECT_VERSION = 'v35-darkarea-strong';
 
 // 固定設定：現場用なので画面には出さない
 const CONFIG = {
@@ -1085,13 +1085,18 @@ function compareAll(m,warped,points){
 const STRICT_V35 = {
   masterMaxW: 1100,
   sceneMaxW: 1500,
-  masterMinAreaRatio: 0.000018,
-  sceneMinAreaRatio: 0.000010,
+  // v35 DarkArea Strong:
+  // contour全体の面積だけでなく、「実際に黒い画素そのもの」の最低面積を要求する。
+  // 小さい影・ビス頭・模様などの誤検出を強く落とす。
+  masterMinAreaRatio: 0.000032,
+  sceneMinAreaRatio: 0.000018,
+  masterMinDarkPixels: 180,
+  sceneMinDarkPixels: 140,
   maxAreaRatio: 0.025,
-  masterDarkDelta: 28,
-  sceneDarkDelta: 24,
-  masterBlackRatio: 0.46,
-  sceneBlackRatio: 0.40,
+  masterDarkDelta: 30,
+  sceneDarkDelta: 27,
+  masterBlackRatio: 0.50,
+  sceneBlackRatio: 0.45,
   minBrightRingRatio: 0.22,
   minExtent: 0.16,
   maxAspect: 12.0,
@@ -1144,6 +1149,7 @@ function contourPixelStatsV35(gray,contour,r,outerScale=1.65){
   let black=0;
   for(const v of vals)if(v<=darkCut)black++;
   const blackRatio=black/vals.length;
+  const darkPixelCount=black;
 
   let bright=0,totalOuter=0;
   for(let y=0;y<outer.rows;y++){
@@ -1153,7 +1159,7 @@ function contourPixelStatsV35(gray,contour,r,outerScale=1.65){
   const brightRingRatio=bright/Math.max(1,totalOuter);
   outer.delete();
 
-  return {innerMean,outerMean,darkDelta:outerMean-innerMean,blackRatio,brightRingRatio,p35,darkCut};
+  return {innerMean,outerMean,darkDelta:outerMean-innerMean,blackRatio,darkPixelCount,brightRingRatio,p35,darkCut};
 }
 
 function classifyStrictHoleV35(v){
@@ -1199,19 +1205,21 @@ function extractStrictAperturesV35(gray,maxCount,isMaster=false){
     const st=contourPixelStatsV35(gray,c,r);
     if(!st)continue;
 
+    const minDarkPixels=isMaster?STRICT_V35.masterMinDarkPixels:STRICT_V35.sceneMinDarkPixels;
     let reason='';
-    if(st.darkDelta<minDelta)reason='contrast';
+    if(st.darkPixelCount<minDarkPixels)reason='darkArea';
+    else if(st.darkDelta<minDelta)reason='contrast';
     else if(st.blackRatio<minBlack)reason='blackRatio';
     else if(st.brightRingRatio<STRICT_V35.minBrightRingRatio)reason='brightRing';
 
     if(reason){
-      rejected.push({x,y,size:Math.sqrt(area),reason,blackRatio:st.blackRatio,darkDelta:st.darkDelta});
+      rejected.push({x,y,size:Math.sqrt(area),reason,blackRatio:st.blackRatio,darkPixelCount:st.darkPixelCount,darkDelta:st.darkDelta});
       continue;
     }
 
     const v={
       x,y,area,w:r.width,h:r.height,aspect,circularity,extent,size:Math.sqrt(area),
-      darkDelta:st.darkDelta,blackRatio:st.blackRatio,brightRingRatio:st.brightRingRatio,
+      darkDelta:st.darkDelta,blackRatio:st.blackRatio,darkPixelCount:st.darkPixelCount,brightRingRatio:st.brightRingRatio,
       innerMean:st.innerMean,outerMean:st.outerMean
     };
     v.kind=classifyStrictHoleV35(v);
@@ -1262,7 +1270,7 @@ function getMasterStrictModelV35(){
     masterStrictCacheV35={key,w:m.w,h:m.h,scale:m.scale,holes:ex.holes,rejected:ex.rejected,desc,proxyRect};
     dbg('v35 Master厳格穴抽出',{
       holes:ex.holes.length,rejected:ex.rejected.length,proxyRect,
-      sample:ex.holes.slice(0,12).map(v=>({kind:v.kind,blackRatio:v.blackRatio,darkDelta:v.darkDelta}))
+      sample:ex.holes.slice(0,12).map(v=>({kind:v.kind,darkPixelCount:v.darkPixelCount,blackRatio:v.blackRatio,darkDelta:v.darkDelta}))
     });
     return masterStrictCacheV35;
   }finally{m.gray.delete();}
@@ -1341,7 +1349,7 @@ function drawMasterStrictV35(){
       ctx.fillRect(x-2,y-2,4,4);
     }
     ctx.restore();
-    DEBUG.image={...(DEBUG.image||{}),masterStrictV35:{accepted:holes.length,rejected:model.rejected.length,proxyRect:model.proxyRect,note:'マスクなし。黒画素率＋内外輝度差＋明リング率で厳格採用'}};
+    DEBUG.image={...(DEBUG.image||{}),masterStrictV35:{accepted:holes.length,rejected:model.rejected.length,proxyRect:model.proxyRect,note:'マスクなし。黒画素の実面積＋黒画素率＋内外輝度差＋明リング率で厳格採用'}};
     renderDebug();
     return holes.length;
   }catch(e){dbg('v35 Master厳格穴可視化失敗',{message:e.message});return 0;}
