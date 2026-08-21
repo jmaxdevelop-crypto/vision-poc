@@ -1,0 +1,3350 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>ぴろえんす Inspect v35 NoMask Strict Aperture Constellation β</title>
+<style>
+:root{--bg:#06101f;--panel:rgba(5,12,26,.88);--txt:#eef6ff;--muted:#9fb4d9;--green:#35f078;--red:#ff4b5f;--yellow:#ffd84d;--cyan:#35dcff;--line:#29436d}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;width:100%;min-height:100%;background:#000;color:var(--txt);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;overflow-x:hidden;overflow-y:auto}.app{position:relative;width:100%;height:100dvh;min-height:100vh;background:#000;overflow:hidden}.topbar{position:absolute;z-index:10;left:0;right:0;top:0;padding:10px max(10px,env(safe-area-inset-left)) 10px max(10px,env(safe-area-inset-right));background:linear-gradient(180deg,rgba(0,0,0,.88),rgba(0,0,0,.30),transparent);display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}.brand{font-weight:900;letter-spacing:.06em;font-size:14px;color:#dff8ff}.selectRow{display:flex;gap:8px;align-items:center}.selectRow select{flex:1;min-width:0;padding:11px 12px;border-radius:12px;border:1px solid #31517e;background:#071226;color:var(--txt);font-size:15px}.selectRow button,.cameraBtn{border:0;border-radius:12px;padding:11px 14px;background:linear-gradient(90deg,#2aa7ff,#39e0ff);font-weight:900;color:#001225;font-size:14px}.cameraBtn{white-space:nowrap}.photoInput{display:none}.canvasWrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#020711}canvas{width:100%;height:100%;object-fit:contain;display:block}.empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;color:#aabde0;padding:24px;font-size:15px;line-height:1.7}.resultBanner{position:absolute;z-index:12;left:12px;right:12px;top:88px;border-radius:18px;padding:18px 14px;text-align:center;font-size:72px;font-weight:1000;letter-spacing:.14em;line-height:1;box-shadow:0 18px 40px rgba(0,0,0,.45);display:none}.resultBanner::before{content:'総合判定';display:block;font-size:13px;letter-spacing:.16em;margin-bottom:8px;color:#d9e9ff}.resultBanner.ok{display:block;background:rgba(9,65,37,.92);border:3px solid var(--green);color:var(--green)}.resultBanner.ng{display:block;background:rgba(73,18,31,.94);border:3px solid var(--red);color:var(--red)}.bottom{position:absolute;z-index:10;left:0;right:0;bottom:0;padding:10px max(10px,env(safe-area-inset-left)) max(12px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-right));background:linear-gradient(0deg,rgba(0,0,0,.92),rgba(0,0,0,.46),transparent)}.status{background:rgba(7,18,38,.86);border:1px solid var(--line);border-radius:14px;padding:10px 12px;color:#c6d8ff;font-size:12px;line-height:1.45;white-space:pre-line;max-height:160px;overflow:auto}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:7px}.stat{background:rgba(7,18,38,.82);border:1px solid var(--line);border-radius:12px;padding:8px;text-align:center}.stat small{display:block;color:#aabde0;font-size:10px}.stat b{display:block;font-size:18px;margin-top:2px}.okText{color:var(--green)}.ngText{color:var(--red)}.waitText{color:var(--yellow)}.loading{position:absolute;z-index:15;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:#dff8ff}.loading.on{display:flex}.debugPanel{min-height:100dvh;background:#050b16;padding:18px max(14px,env(safe-area-inset-left)) max(28px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-right));border-top:1px solid #20385f}.debugHead{display:flex;align-items:end;justify-content:space-between;gap:10px;margin-bottom:12px}.debugHead h2{margin:0;font-size:20px;letter-spacing:.08em}.debugHint{color:#9fb4d9;font-size:12px}.debugGrid{display:grid;grid-template-columns:1fr;gap:10px}.debugCard{background:rgba(7,18,38,.88);border:1px solid var(--line);border-radius:14px;padding:12px}.debugCard h3{margin:0 0 8px;font-size:14px;color:#dff8ff}.debugPre{margin:0;white-space:pre-wrap;word-break:break-word;color:#c6d8ff;font-size:12px;line-height:1.5}.debugCanvasWrap{background:#020711;border:1px solid #20385f;border-radius:12px;overflow:hidden}.debugCanvasWrap canvas{width:100%;height:auto;display:block}.debugBadge{display:inline-block;padding:3px 8px;border-radius:999px;border:1px solid #31517e;color:#9fb4d9;font-size:11px;margin-left:6px}.barcodeInput{min-width:180px;max-width:260px;padding:11px 12px;border-radius:12px;border:1px solid #31517e;background:#071226;color:var(--txt);font-size:15px}.scanOverlay{position:fixed;z-index:30;inset:0;background:#020711;display:none;align-items:center;justify-content:center;flex-direction:column;padding:max(18px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) max(18px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left));gap:12px}.scanOverlay.on{display:flex}.scanBox{position:relative;width:min(92vw,720px);aspect-ratio:4/3;border:2px solid #31517e;border-radius:18px;overflow:hidden;background:#000;box-shadow:0 20px 60px #000a}.scanBox video,.scanBox canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.scanGuide{position:absolute;left:50%;top:50%;width:58%;height:36%;transform:translate(-50%,-50%);border:4px solid var(--cyan);border-radius:16px;box-shadow:0 0 0 999px rgba(0,0,0,.28);pointer-events:none}.scanTitle{font-size:20px;font-weight:900;color:#dff8ff}.scanStatus{color:#c6d8ff;font-size:14px;text-align:center;min-height:1.6em;white-space:pre-line}.scanClose{width:min(92vw,360px);border:0;border-radius:14px;padding:13px 18px;background:#26395f;color:#eef6ff;font-weight:900;font-size:16px}.qrTorchBtn{width:min(92vw,360px);border:0;border-radius:14px;padding:13px 18px;background:#ffd84d;color:#111;font-weight:900;font-size:16px}.qrTorchBtn.off{background:#26395f;color:#eef6ff}.captureButtons{display:flex;gap:10px;width:min(92vw,520px)}.captureButtons button{flex:1;border:0;border-radius:14px;padding:14px 18px;font-weight:900;font-size:16px}.captureShutter{background:linear-gradient(90deg,#2aa7ff,#39e0ff);color:#001225}.captureClose{background:#26395f;color:#eef6ff}.containerRansacBtn{background:linear-gradient(90deg,#8f7cff,#39e0ff)!important;color:#06101f!important}.focusHint{position:absolute;right:10px;bottom:10px;background:rgba(0,0,0,.6);color:#fff;border-radius:999px;padding:5px 9px;font-size:11px;pointer-events:none}
+@media(max-width:480px){.topbar{grid-template-columns:1fr}.resultBanner{font-size:58px;top:118px}.brand{display:none}.selectRow select{font-size:14px}.barcodeInput{min-width:0;max-width:none;width:100%;font-size:14px}.stats{grid-template-columns:repeat(3,1fr)}.stat b{font-size:16px}}
+
+/* v18: iPhone向けに操作を1ボタン化 */
+.topbar{grid-template-columns:1fr}
+.brand{font-size:13px;opacity:.92}
+.selectRow{display:grid;grid-template-columns:1fr auto auto;gap:8px;width:100%}
+#barcodeInput{grid-column:1/-1;width:100%;max-width:none}
+#partSelect{min-width:0}
+#actionBtn{min-width:92px;font-size:15px}
+#actionBtn:disabled{opacity:.55;filter:grayscale(.45);cursor:not-allowed}
+#reloadBtn{min-width:68px;background:#26395f;color:#eef6ff}#pcFileBtn,#pcHoleBtn{min-width:78px}
+.masterReady #actionBtn{background:linear-gradient(90deg,#20d56f,#35f078);color:#00180a}
+.masterNotReady #actionBtn{background:linear-gradient(90deg,#2aa7ff,#39e0ff);color:#001225}
+@media(min-width:760px){.topbar{grid-template-columns:auto 1fr}.selectRow{grid-template-columns:minmax(180px,320px) minmax(180px,360px) auto auto auto}.brand{display:block}#barcodeInput{grid-column:auto}}
+
+/* v20: 結果操作はモーダルではなく下部パネルに出す */
+.actionPanel{display:none;margin-top:8px;background:rgba(7,18,38,.94);border:1px solid var(--line);border-radius:16px;padding:12px;box-shadow:0 10px 28px rgba(0,0,0,.35)}
+.actionPanel.on{display:block}
+.actionPanel.ok{border-color:var(--green);background:rgba(8,50,30,.95)}
+.actionPanel.ng{border-color:var(--red);background:rgba(58,17,28,.95)}
+.actionMsg{font-weight:900;font-size:15px;line-height:1.45;text-align:center;color:#eef6ff;margin-bottom:10px;white-space:pre-line}
+.actionButtons{display:grid;grid-template-columns:1fr;gap:8px}
+.actionButtons.two{grid-template-columns:1fr 1fr}
+.actionButtons button{border:0;border-radius:14px;padding:13px 10px;font-weight:1000;font-size:15px}
+#actionRegisterBtn{background:linear-gradient(90deg,#20d56f,#35f078);color:#00180a}
+#actionRetryBtn{background:linear-gradient(90deg,#2aa7ff,#39e0ff);color:#001225}
+#actionEndBtn{background:#26395f;color:#eef6ff}
+@media(max-width:480px){.actionMsg{font-size:14px}.actionButtons button{font-size:14px;padding:12px 8px}}
+</style>
+</head>
+<body class="masterNotReady">
+<div class="app">
+  <div class="topbar">
+    <div class="brand">ぴろえんす Inspect v35 / マスクなし厳格開口星座β</div>
+    <div class="selectRow">
+      <input id="barcodeInput" class="barcodeInput" type="text" autocomplete="off" inputmode="none" placeholder="バーコード/QR読取（USBリーダーはここへ）">
+      <select id="partSelect"><option>マスター読込中...</option></select>
+      <button id="reloadBtn" type="button">更新</button>
+      <button id="actionBtn" type="button">読取</button>
+      <button id="pcFileBtn" type="button" style="display:none;background:#26395f;color:#eef6ff">PC画像</button>
+      <button id="pcHoleBtn" type="button" style="display:none;background:#5942a8;color:#fff">PC厳格穴星座</button>
+      <input id="inspectFile" class="photoInput" type="file" accept="image/*" capture="environment">
+      <input id="holeInspectFile" class="photoInput" type="file" accept="image/*">
+    </div>
+  </div>
+  <div class="canvasWrap"><canvas id="viewCanvas" width="1100" height="760"></canvas></div>
+  <div id="empty" class="empty">バーコード/QRを読み取ってください。<br>対応するマスターを自動で呼び出します。<br><small>テスト時はマスターを手動選択してもOK</small></div>
+  <div id="banner" class="resultBanner">WAIT</div>
+  <div id="loading" class="loading">解析中...</div>
+  <div class="bottom">
+    <div class="stats">
+      <div class="stat"><small>位置合わせ</small><b id="alignStat">--</b></div>
+      <div class="stat"><small>外形一致</small><b id="outerStat">--</b></div>
+      <div class="stat"><small>検査点</small><b id="pointStat">--</b></div>
+    </div>
+    <div id="status" class="status">OpenCV.js読み込み待ち...</div>
+    <div id="actionPanel" class="actionPanel">
+      <div id="actionMsg" class="actionMsg"></div>
+      <div id="actionButtons" class="actionButtons">
+        <button id="actionRegisterBtn" type="button">登録</button>
+        <button id="actionRetryBtn" type="button">再撮影</button>
+        <button id="actionEndBtn" type="button">撮影終了</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="captureOverlay" class="scanOverlay">
+  <div class="scanTitle">現物撮影（対応端末はライト自動ON）</div>
+  <div id="captureBox" class="scanBox">
+    <video id="captureVideo" playsinline muted></video>
+    <canvas id="captureCanvas" width="1280" height="720" style="display:none"></canvas>
+    <div class="focusHint">画面タップ：ピント合わせ</div>
+  </div>
+  <div id="captureStatus" class="scanStatus">カメラ起動中...</div>
+  <div class="captureButtons">
+    <button id="captureShutterBtn" class="captureShutter" type="button">1個撮影して判定</button>
+    <button id="containerRansacBtn" class="containerRansacBtn" type="button">厳格穴星座で1個探して判定 β</button>
+    <button id="captureCloseBtn" class="captureClose" type="button">閉じる</button>
+  </div>
+</div>
+<div id="scanOverlay" class="scanOverlay">
+  <div class="scanTitle">バーコード / QR 読取</div>
+  <div id="scanBox" class="scanBox">
+    <video id="scanVideo" playsinline muted></video>
+    <canvas id="scanCanvas" width="640" height="480" style="display:none"></canvas>
+    <div class="scanGuide"></div>
+  </div>
+  <div id="scanStatus" class="scanStatus">カメラ起動中...</div>
+  <button id="qrTorchBtn" class="qrTorchBtn" type="button">ライトOFF</button>
+  <button id="scanCloseBtn" class="scanClose" type="button">閉じる</button>
+</div>
+<section id="debugPanel" class="debugPanel">
+  <div class="debugHead">
+    <div>
+      <h2>DEBUG PANEL <span id="debugState" class="debugBadge">WAIT</span></h2>
+      <div class="debugHint">通常画面はそのまま。ここは下へスクロールした時だけ見る開発用。</div>
+    </div>
+  </div>
+  <div class="debugGrid">
+    <div class="debugCard"><h3>画像・Canvas座標</h3><pre id="debugImage" class="debugPre">未解析</pre></div>
+    <div class="debugCard"><h3>位置合わせ / Homography</h3><pre id="debugAlign" class="debugPre">未解析</pre></div>
+    <div class="debugCard"><h3>検査ポイント変換</h3><pre id="debugPoints" class="debugPre">未解析</pre></div>
+    <div class="debugCard"><h3>プロセスログ</h3><pre id="debugLog" class="debugPre">待機中</pre></div>
+    <div class="debugCard"><h3>デバッグ重ね画像</h3><div class="debugCanvasWrap"><canvas id="debugCanvas" width="1100" height="760"></canvas></div></div>
+  </div>
+</section>
+<script src="./js/zxing-browser.min.js"></script>
+<script src="./js/jsQR.min.js"></script>
+<script src="./js/opencv.js"></script>
+<script>
+// =====================================================
+// ★ここにGASの /exec URLを貼ってください
+// 例: const GAS_URL = 'https://script.google.com/macros/s/xxxxxxx/exec';
+// =====================================================
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbzhTwzLskVh0lRNegdW0FnmL-dedZ6LIps2NP9mRrXsPp0aC93ziLRAMUTEmzFiiU_3/exec'; // ←ここを今井さんのGAS URLに置き換え
+const INSPECT_VERSION = 'v35-nomask-strict-aperture-constellation';
+
+// 固定設定：現場用なので画面には出さない
+const CONFIG = {
+  edgeThr: 100,
+  tol: 6,
+  maxW: 700,
+  features: 1500,      // 1500→2000
+  minInliers: 30,      // 30→15
+  minInlierRatio: 0.60,// 0.60→0.30
+  scaleMin: 0.80,      // 0.80→0.50
+  scaleMax: 1.25,      // 1.25→2.00
+  outerThr: 0.60,      // 6%→60%
+  defaultPointThr: 0.50,
+  holeMatchThr: 0.45,
+  pointCanvasW: 1100,
+  pointCanvasH: 760
+};
+
+const $=id=>document.getElementById(id);
+
+function isLikelyDesktop(){
+  const ua=navigator.userAgent||'';
+  const mobile=/Android|iPhone|iPad|iPod|Mobile/i.test(ua);
+  return !mobile && window.matchMedia('(pointer:fine)').matches;
+}
+function updatePcFileButton(){
+  const b=$('pcFileBtn');
+  if(!b)return;
+  b.style.display=isLikelyDesktop()?'inline-block':'none';
+  b.disabled=!(currentPart&&masterImg);
+  const h=$('pcHoleBtn'); if(h){h.style.display=isLikelyDesktop()?'inline-block':'none';h.disabled=!(currentPart&&masterImg);}
+}
+
+let cvLoaded=false, parts=[], currentPart=null, masterImg=null, inspectImg=null, points=[];
+let currentBarcodeInfo=null;
+let currentBarcodeRaw='', lastInspectionRecord=null, ngLoggedForCurrent=false, okLoggedForCurrent=false, logSending=false;
+let DEBUG={image:{},align:{},points:[],logs:[]};
+
+function log(s){ $('status').textContent=s; }
+function setLoading(on){ $('loading').classList.toggle('on',!!on); }
+function setBanner(state){ const b=$('banner'); b.className='resultBanner '+(state==='OK'?'ok':state==='NG'?'ng':''); b.textContent=state; }
+function setStat(id,text,cls=''){ const el=$(id); el.textContent=text; el.className=cls; }
+function getDeviceId(){
+  let id=localStorage.getItem('PIROENS_INSPECT_DEVICE_ID');
+  if(!id){
+    id='Inspect-'+Math.random().toString(36).slice(2,8).toUpperCase();
+    localStorage.setItem('PIROENS_INSPECT_DEVICE_ID',id);
+  }
+  return id;
+}
+async function sendInspectionLog(record){
+  if(!record)return false;
+  const payload=encodeURIComponent(JSON.stringify(record));
+  const url=GAS_URL+'?action=logInspection&payload='+payload+'&v='+Date.now();
+  const res=await fetch(url,{cache:'no-store'});
+  const js=await res.json();
+  if(!js.ok) throw new Error(js.error||'ログ保存失敗');
+  return true;
+}
+async function recordInspection(action){
+  if(!lastInspectionRecord)return false;
+
+  // v21 fix1: 同じ検査結果の二重送信防止
+  // OK登録ボタン連打で同じログが複数行入るのを防ぐ。
+  if(action==='OK_REGISTER' && okLoggedForCurrent){
+    dbg('検査ログ保存スキップ',{reason:'OK already logged'});
+    return true;
+  }
+  if(logSending){
+    dbg('検査ログ保存スキップ',{reason:'log sending'});
+    return false;
+  }
+
+  const rec={...lastInspectionRecord, action:action||''};
+  logSending=true;
+  const reg=$('actionRegisterBtn');
+  const oldText=reg?reg.textContent:'';
+  if(action==='OK_REGISTER' && reg){
+    reg.disabled=true;
+    reg.textContent='登録中...';
+  }
+  try{
+    await sendInspectionLog(rec);
+    if(action==='OK_REGISTER') okLoggedForCurrent=true;
+    dbg('検査ログ保存OK',rec);
+    return true;
+  }catch(e){
+    console.error(e);
+    dbg('検査ログ保存エラー',{message:e.message});
+    log(($('status').textContent||'')+'\n\n検査ログ保存エラー: '+e.message);
+    return false;
+  }finally{
+    logSending=false;
+    if(action==='OK_REGISTER' && reg && !okLoggedForCurrent){
+      reg.disabled=false;
+      reg.textContent=oldText||'登録';
+    }
+  }
+}
+function hideResultAction(){
+  const p=$('actionPanel');
+  if(p){ p.className='actionPanel'; }
+}
+function showResultAction(ok){
+  const p=$('actionPanel'), msg=$('actionMsg'), buttons=$('actionButtons');
+  const reg=$('actionRegisterBtn'), retry=$('actionRetryBtn'), end=$('actionEndBtn');
+  if(!p||!msg||!buttons)return;
+  p.className='actionPanel on '+(ok?'ok':'ng');
+  if(ok){
+    msg.textContent='バーコードと製品が一致しました。\nOKで登録します。よろしいですか？';
+    buttons.className='actionButtons';
+    if(reg){ reg.style.display='block'; reg.disabled=!!okLoggedForCurrent; reg.textContent=okLoggedForCurrent?'登録済み':'登録'; }
+    if(retry) retry.style.display='none';
+    if(end) end.style.display='none';
+  }else{
+    msg.textContent='バーコードと製品が違います。\n再撮影しますか？';
+    buttons.className='actionButtons two';
+    if(reg) reg.style.display='none';
+    if(retry) retry.style.display='block';
+    if(end) end.style.display='block';
+  }
+}
+function endInspectionToScanMode(){
+  hideResultAction();
+  lastInspectionRecord=null; ngLoggedForCurrent=false; okLoggedForCurrent=false; logSending=false; currentBarcodeRaw=''; currentBarcodeInfo=null; currentBarcodeInfo=null;
+  resetMasterState();
+  const ps=$('partSelect'); if(ps) ps.value='';
+  const bi=$('barcodeInput'); if(bi){ bi.value=''; setTimeout(()=>bi.focus(),80); }
+  log('次のバーコード/QRを読み取ってください。');
+}
+function updateActionState(){
+  const ready=!!(currentPart&&masterImg);
+  document.body.classList.toggle('masterReady',ready);
+  document.body.classList.toggle('masterNotReady',!ready);
+  const btn=$('actionBtn');
+  if(btn){
+    btn.disabled = ready && !cvLoaded;
+    btn.textContent = ready ? (cvLoaded ? '撮影' : '準備中') : '読取';
+    btn.title = ready ? (cvLoaded ? '部品を撮影します' : 'OpenCV.js準備中です') : 'バーコード/QRを読み取ります';
+  }
+  updatePcFileButton();
+}
+function resetMasterState(){ masterShapeCacheV29=null; masterHoleCacheV32=null; masterConstellationCacheV33=null; masterApertureCacheV34=null; masterProductMaskCacheV34=null; masterStrictCacheV35=null;
+  hideResultAction();
+  currentPart=null; masterImg=null; inspectImg=null; points=[];
+  setBanner('WAIT'); setStat('alignStat','--'); setStat('outerStat','--'); setStat('pointStat','--');
+  drawImageFit($('viewCanvas'),null); $('empty').style.display='flex'; updateActionState();
+}
+
+function dbg(msg,obj){ const line=new Date().toLocaleTimeString('ja-JP')+'  '+msg+(obj?'\n'+safeJson(obj):''); DEBUG.logs.push(line); if(DEBUG.logs.length>40) DEBUG.logs.shift(); renderDebug(); }
+function safeJson(obj){ try{return JSON.stringify(obj,(k,v)=>typeof v==='number'?Math.round(v*1000)/1000:v,2)}catch(e){return String(obj)} }
+function renderDebug(){ $('debugState').textContent=($('banner').textContent||'WAIT'); $('debugImage').textContent=safeJson(DEBUG.image||{}); $('debugAlign').textContent=safeJson(DEBUG.align||{}); $('debugPoints').textContent=safeJson(DEBUG.points||[]); $('debugLog').textContent=(DEBUG.logs||[]).join('\n\n')||'待機中'; }
+let appInitStarted=false;
+function cvReady(){
+  const boot = () => {
+    if(cvLoaded) return;
+    cvLoaded = true;
+    log('OpenCV.js 読込OK '+INSPECT_VERSION);
+    updateActionState();
+    if(!appInitStarted){ appInitStarted=true; init(); }
+  };
+
+  if (window.cv && cv.Mat) {
+    boot();
+  } else if (window.cv) {
+    cv['onRuntimeInitialized'] = boot;
+  } else {
+    log('OpenCV.js読込失敗。js/opencv.js の配置を確認してください。');
+    updateActionState();
+  }
+}
+
+// OpenCV本体の<script>読込完了後、関数定義済みのここで初期化を開始する。
+// onload属性はローカル読込が速いとcvReady未定義で発火するため使わない。
+cvReady();
+
+function waitForOpenCV(timeoutMs=20000){
+  if(cvLoaded) return Promise.resolve(true);
+  return new Promise(resolve=>{
+    const start=Date.now();
+    const timer=setInterval(()=>{
+      if(cvLoaded){ clearInterval(timer); resolve(true); return; }
+      if(Date.now()-start>timeoutMs){ clearInterval(timer); resolve(false); }
+    },100);
+  });
+}
+window.addEventListener('resize',updatePcFileButton);
+window.addEventListener('load',()=>{ updatePcFileButton();
+  if(!appInitStarted && !(window.cv)){
+    updateActionState();
+    log('OpenCV.js読込待ち... js/opencv.js を確認してください。');
+  }
+});
+function loadImageFromDataUrl(dataUrl){ return new Promise((res,rej)=>{ const img=new Image(); img.onload=()=>res(img); img.onerror=rej; img.src=dataUrl; }); }
+function loadImageFromFile(file){ return new Promise((res,rej)=>{ const img=new Image(); img.onload=()=>res(img); img.onerror=rej; img.src=URL.createObjectURL(file); }); }
+function drawImageFit(canvas,img){ const ctx=canvas.getContext('2d'); ctx.clearRect(0,0,canvas.width,canvas.height); ctx.fillStyle='#05070b'; ctx.fillRect(0,0,canvas.width,canvas.height); if(!img)return; const r=Math.min(canvas.width/img.width,canvas.height/img.height); const w=img.width*r,h=img.height*r,ox=(canvas.width-w)/2,oy=(canvas.height-h)/2; ctx.drawImage(img,ox,oy,w,h); }
+function drawMatFit(canvas,mat){ const tmp=document.createElement('canvas'); cv.imshow(tmp,mat); drawImageFit(canvas,tmp); }
+function drawMasterPreview(){
+  const canvas=$('viewCanvas');
+  drawImageFit(canvas,masterImg);
+  drawInspectionPoints(canvas,masterImg,points,{alpha:0.95,color:'#35dcff',dash:true});
+  if(cvLoaded && masterImg){
+    const n=drawMasterStrictV35();
+    if(n){
+      const old=$('status')?.textContent||'';
+      if(old && !old.includes('Master厳格穴')) log(old+'\nMaster厳格穴: '+n+'個（マスクなし・星座表示中）');
+    }
+  }
+}
+function drawInspectionPoints(canvas,img,pts,opts={}){
+  if(!canvas||!img||!pts||!pts.length)return;
+  const ctx=canvas.getContext('2d');
+  const r=Math.min(canvas.width/img.width,canvas.height/img.height);
+  const w=img.width*r,h=img.height*r,ox=(canvas.width-w)/2,oy=(canvas.height-h)/2;
+  ctx.save();
+  ctx.translate(ox,oy);
+  ctx.scale(r,r);
+  ctx.globalAlpha=opts.alpha??1;
+  ctx.strokeStyle=opts.color||'#35dcff';
+  ctx.fillStyle=opts.color||'#35dcff';
+  ctx.lineWidth=4/r;
+  if(opts.dash)ctx.setLineDash([10/r,7/r]);
+  ctx.font=`${18/r}px sans-serif`;
+  for(const roi of pts){
+    const x=+roi.x||0,y=+roi.y||0,w=+roi.w||0,h=+roi.h||0;
+    ctx.strokeRect(x,y,w,h);
+    ctx.fillText(roi.name||'検査点',x,y-8);
+    ctx.beginPath();
+    ctx.arc(x+w/2,y+h/2,Math.max(3,5/r),0,Math.PI*2);
+    ctx.fill();
+  }
+  ctx.restore();
+}
+async function init(){ if(!GAS_URL){ log('GAS_URL未設定です。HTML内の const GAS_URL に /exec URLを貼ってください。'); return; } await loadParts(); }
+async function loadParts(){
+  try{
+    log('マスター一覧読込中...');
+    const res=await fetch(GAS_URL+'?action=list');
+    const js=await res.json();
+    if(!js.ok) throw new Error(js.error||'list失敗');
+    parts=js.parts||[];
+    $('partSelect').innerHTML='<option value="">テスト用：マスター手動選択</option>'+(parts.map(p=>`<option value="${escapeHtml(p.partNo)}">${escapeHtml(p.partNo)}${p.memo?' - '+escapeHtml(p.memo):''}</option>`).join('') || '');
+    if(!parts.length) $('partSelect').innerHTML='<option value="">登録なし</option>';
+    log('マスター一覧OK: '+parts.length+'件\n通常は「読取」でバーコード/QRを読んでください。\nテスト時だけマスターを手動選択できます。');
+    updateActionState();
+  }catch(e){
+    console.error(e);
+    log('マスター一覧エラー: '+e.message);
+    updateActionState();
+  }
+}
+async function loadSelectedPart(){ masterShapeCacheV29=null; masterHoleCacheV32=null; masterConstellationCacheV33=null; masterApertureCacheV34=null; masterProductMaskCacheV34=null; masterStrictCacheV35=null; const partNo=$('partSelect').value; if(!partNo)return; try{ hideResultAction(); setLoading(true); log('マスター読込中...'); setBanner('WAIT'); const res=await fetch(GAS_URL+'?action=get&partNo='+encodeURIComponent(partNo)); const js=await res.json(); if(!js.ok) throw new Error(js.error||'get失敗'); currentPart=js.part; if(!currentBarcodeRaw){ currentBarcodeRaw=String(currentPart.partNo||partNo); currentBarcodeInfo=parseQRCode(currentBarcodeRaw); } masterImg=await loadImageFromDataUrl(currentPart.topData); points=normalizePointsToImage(currentPart.points||[], masterImg); drawMasterPreview(); $('empty').style.display='none'; setStat('alignStat','--'); setStat('outerStat','--'); setStat('pointStat',points.length?('0/'+points.length):'外形のみ'); log('マスター読込OK: '+partNo+'\n検査ポイント: '+points.length+'件\n撮影準備OK。右上ボタンが「撮影」に切り替わりました。'); updateActionState(); }catch(e){ console.error(e); log('マスター読込エラー: '+e.message); updateActionState(); }finally{ setLoading(false); } }
+
+function normalizeBarcodeText(raw){ return String(raw||'').replace(/[\r\n]+$/g,'').trim(); }
+
+function formatDate8(s){
+  s=String(s||'').replace(/\D/g,'');
+  return s.length===8 ? (s.slice(0,4)+'-'+s.slice(4,6)+'-'+s.slice(6,8)) : '';
+}
+function normalizeCodeText(raw){
+  return String(raw||'').replace(/[\r\n\t]+/g,' ').trim();
+}
+function formatCompactPartNo(code){
+  code=String(code||'').toUpperCase().replace(/[^0-9A-Z-]/g,'');
+  if(!code) return '';
+  if(code.includes('-')) return code;
+  if(/^\d{5}/.test(code)){
+    // 661003BWJ000AS → 66100-3BW-J000-AS / 802397NA0A → 80239-7NA0A
+    const rest=code.slice(5);
+    if(rest.length>=9) return code.slice(0,5)+'-'+rest.slice(0,3)+'-'+rest.slice(3,7)+(rest.slice(7)?'-'+rest.slice(7):'');
+    return code.slice(0,5)+'-'+rest;
+  }
+  return code;
+}
+function parseQRCode(raw){
+  const rawText=String(raw||'').trim();
+  const line=normalizeCodeText(rawText);
+  const compact=line.replace(/\s+/g,' ');
+  const data={
+    raw:rawText,
+    normalized:compact,
+    partNo:'',
+    partName:'',
+    qty:'',
+    shipDate:'',
+    issueDate:'',
+    orderNo:'',
+    planNo:'',
+    process:'',
+    traceNo:'',
+    extra:'',
+    format:'unknown'
+  };
+
+  // 共通：5桁から始まるハイフン付き品番。
+  // 例：80239-7NA0A-RE / 66100-3BW-J000-AS など、ブロック数違いを許容。
+  const PARTNO_RE=/\d{5}(?:-[A-Z0-9]{2,6}){1,5}(?![A-Z0-9-])/i;
+  const pn=line.match(PARTNO_RE) || compact.match(PARTNO_RE);
+  if(pn){
+    data.partNo=pn[0].toUpperCase();
+    const blocks=data.partNo.split('-').length;
+    data.format=blocks>=4 ? 'topre-detail-hyphen-multi' : 'topre-detail-hyphen';
+
+    const src = line.match(PARTNO_RE) ? line : compact;
+    const idx = src.search(PARTNO_RE);
+    const head=src.slice(0,idx).replace(/\s+/g,'');
+    const hm=head.match(/^(\d{8})(\d{8})/);
+    if(hm){ data.orderNo=hm[1]; data.issueDate=formatDate8(hm[2]); }
+
+    const tail=src.slice(idx+data.partNo.length).trim();
+    const fields=tail.split(/\s{2,}/).map(v=>v.trim()).filter(Boolean);
+    data.partName=fields[0]||'';
+
+    const qtyIdx=fields.findIndex((v,i)=>i>0 && /^\d+$/.test(v));
+    if(qtyIdx>=0){ data.qty=fields[qtyIdx].match(/\d+/)[0]; }
+
+    const afterQty = qtyIdx>=0 ? fields.slice(qtyIdx+1) : fields.slice(1);
+    let shipField='';
+    for(const f of afterQty){ if(/^\d{8}/.test(f)){ shipField=f; break; } }
+    if(shipField){
+      const dm=shipField.match(/^(\d{8})(.*)$/);
+      if(dm){ data.shipDate=formatDate8(dm[1]); data.planNo=(dm[2]||'').trim(); }
+    }
+
+    for(const f of afterQty){
+      if(f===shipField) continue;
+      if(!data.process && /^[A-Z]\d{1,3}$/i.test(f)){ data.process=f.toUpperCase(); continue; }
+      if(!data.traceNo){
+        const lm=f.match(/^(\d{8})(.*)$/);
+        if(lm){ data.traceNo=lm[1]; data.extra=(lm[2]||'').trim(); continue; }
+      }
+    }
+    return data;
+  }
+
+  // TS系の簡易QR：TS + 数字群 + ハイフンなし品番 + 数量表記
+  const simple=compact.match(/TS\d{8}([0-9A-Z]{9,20})/i);
+  if(simple){
+    data.format='topre-simple-qr';
+    data.partNo=formatCompactPartNo(simple[1]);
+    const q=compact.match(/(\d+)\s*\/\s*(\d+)/);
+    if(q) data.qty=q[1];
+    return data;
+  }
+
+  // 既に品番だけの場合
+  const direct=compact.match(/^(\d{5}(?:-[A-Z0-9]{2,6}){1,5})$/i);
+  if(direct){
+    data.format='partNo';
+    data.partNo=direct[1].toUpperCase();
+    return data;
+  }
+
+  // 最終フォールバック：読めた文字列をそのままキー候補にする
+  data.partNo=compact;
+  return data;
+}
+function barcodeInfoSummary(info){
+  if(!info)return '';
+  const lines=[];
+  if(info.partNo) lines.push('品番: '+info.partNo);
+  if(info.partName) lines.push('品名: '+info.partName);
+  if(info.qty) lines.push('数量: '+info.qty);
+  if(info.shipDate) lines.push('納入日: '+info.shipDate);
+  if(info.orderNo) lines.push('手配番号: '+info.orderNo);
+  return lines.join('\n');
+}
+
+function playScanBeep(){ try{ const ac=new (window.AudioContext||window.webkitAudioContext)(); const o=ac.createOscillator(); const g=ac.createGain(); o.type='sine'; o.frequency.value=880; g.gain.value=0.08; o.connect(g); g.connect(ac.destination); o.start(); setTimeout(()=>{o.stop(); ac.close();},90); }catch(_){} }
+async function selectMasterByBarcode(raw){
+  const rawText=normalizeBarcodeText(raw);
+  if(!rawText){ log('読取データが空です'); return false; }
+  const info=parseQRCode(rawText);
+  const key=normalizeBarcodeText(info.partNo || rawText);
+  if(!key){ log('品番を抽出できませんでした。\n読取: '+rawText); return false; }
+  const bi0=$('barcodeInput'); if(bi0) bi0.value=key;
+  currentBarcodeRaw=rawText;
+  currentBarcodeInfo=info;
+  lastInspectionRecord=null; ngLoggedForCurrent=false; okLoggedForCurrent=false; logSending=false;
+  let idx=parts.findIndex(p=>String(p.partNo)===key);
+  if(idx<0){
+    await loadParts();
+    idx=parts.findIndex(p=>String(p.partNo)===key);
+  }
+  if(idx<0){
+    hideResultAction();
+    currentPart=null; masterImg=null; inspectImg=null; points=[];
+    setBanner('WAIT');
+    setStat('alignStat','--'); setStat('outerStat','--'); setStat('pointStat','--');
+    const canvas=$('viewCanvas');
+    if(canvas) drawImageFit(canvas,null);
+    const emp=$('empty');
+    if(emp){
+      emp.style.display='flex';
+      emp.innerHTML='マスター登録がありません。<br><br><span style="color:#ffd84d">抽出品番</span><br>'+escapeHtml(key)+'<br><br><span style="color:#9fb4d9">QR全文はログ用に保持します</span>';
+    }
+    const ps=$('partSelect'); if(ps) ps.value='';
+    const bi=$('barcodeInput'); if(bi) bi.value=key;
+    log('マスター登録がありません。\n抽出品番: '+key+'\n'+barcodeInfoSummary(info)+'\n\nMaster側で品番を登録してください。');
+    updateActionState();
+    return false;
+  }
+  $('partSelect').value=parts[idx].partNo;
+  playScanBeep();
+  await loadSelectedPart();
+  log('バーコード読取OK\n'+barcodeInfoSummary(info)+'\n\n対応マスター読込完了\n撮影準備OK');
+  return true;
+}
+
+
+function normalizePointsToImage(rawPoints,img){
+  // v10-debug-fix3
+  // 方針：raw座標がmaster画像サイズ内なら絶対に変換しない。
+  // 今回の raw x=152,y=492 はすでに画像座標。canvas-fit補正すると ox=264 を引いて xが0へ潰れる。
+  const pts=(rawPoints||[]).map((p,idx)=>({
+    ...p,
+    _idx:idx,
+    _raw:{x:+p.x||0,y:+p.y||0,w:+p.w||0,h:+p.h||0}
+  }));
+  DEBUG.points=[];
+  if(!img || !pts.length){ renderDebug(); return pts; }
+
+  const maxX=Math.max(...pts.map(p=>p._raw.x+p._raw.w));
+  const maxY=Math.max(...pts.map(p=>p._raw.y+p._raw.h));
+  let mode='image-raw-forced';
+  let out;
+
+  if(maxX<=img.width*1.02 && maxY<=img.height*1.02){
+    // すでに画像座標。何もしない。
+    out=pts.map(p=>({...p,x:p._raw.x,y:p._raw.y,w:p._raw.w,h:p._raw.h}));
+  }else{
+    // 画像サイズを明らかに超える古い保存データだけ、全体比率で縮小。
+    // canvas-fitの余白引き算は誤判定リスクが高いので一旦禁止。
+    mode='simple-scale-to-image-only';
+    const s=Math.min(img.width/maxX, img.height/maxY);
+    out=pts.map(p=>({...p,x:p._raw.x*s,y:p._raw.y*s,w:p._raw.w*s,h:p._raw.h*s}));
+  }
+
+  out=out.map(p=>{
+    const x=Math.max(0,Math.min(img.width-1,+p.x||0));
+    const y=Math.max(0,Math.min(img.height-1,+p.y||0));
+    const w=Math.max(2,Math.min(img.width-x,+p.w||2));
+    const h=Math.max(2,Math.min(img.height-y,+p.h||2));
+    return {...p,x,y,w,h};
+  });
+
+  DEBUG.image.pointNormalize={
+    version:'v10-debug-fix3',
+    mode,
+    masterImage:{w:img.width,h:img.height},
+    rawMax:{x:maxX,y:maxY},
+    note:'rawがmaster画像サイズ内なら変換禁止。x=152が0になる旧canvas-fit補正を停止。'
+  };
+  DEBUG.points=out.map(p=>({
+    name:p.name||('検査点'+(p._idx+1)),
+    raw:p._raw,
+    normalized:{x:p.x,y:p.y,w:p.w,h:p.h},
+    mode,
+    version:'v10-debug-fix3'
+  }));
+  renderDebug();
+  return out;
+}
+
+
+
+// =====================================================
+// Android camera boost v2 / QR FAST RESCUE
+// - QR: rear camera + TORCH ON by default + OFF/ON button + up to 3x zoom + continuous AF + tap focus
+// - QR primary: ZXing continuous decode
+// - QR rescue: BarcodeDetector + jsQR at short intervals (full frame)
+// - QR glare rescue: request slight negative exposure compensation when supported
+// - Inspect photo: rear camera + torch ON when supported + tap focus
+// Unsupported constraints are ignored so PC/iPhone behavior is preserved.
+// =====================================================
+function sleepMs(ms){ return new Promise(r=>setTimeout(r,ms)); }
+async function getVideoTrackFromElement(video, tries=20){
+  for(let n=0;n<tries;n++){
+    const s=video && video.srcObject;
+    const t=s && s.getVideoTracks && s.getVideoTracks()[0];
+    if(t) return t;
+    await sleepMs(50);
+  }
+  return null;
+}
+function capHasMode(caps,key,mode){
+  const v=caps && caps[key];
+  return Array.isArray(v) ? v.includes(mode) : false;
+}
+function clampCapNumber(cap,target){
+  if(!cap || typeof cap!=='object') return null;
+  const min=Number.isFinite(Number(cap.min))?Number(cap.min):target;
+  const max=Number.isFinite(Number(cap.max))?Number(cap.max):target;
+  return Math.max(min,Math.min(max,target));
+}
+async function applyCameraBoost(video,opt={}){
+  const track=await getVideoTrackFromElement(video);
+  if(!track || !track.applyConstraints) return {track:null,caps:{},zoom:null,torch:false,exposure:null};
+  let caps={};
+  try{ caps=track.getCapabilities ? track.getCapabilities() : {}; }catch(_){ caps={}; }
+  const advanced=[];
+  if(capHasMode(caps,'focusMode','continuous')) advanced.push({focusMode:'continuous'});
+  let appliedZoom=null;
+  if(opt.zoom && caps.zoom){
+    appliedZoom=clampCapNumber(caps.zoom,Number(opt.zoom));
+    if(appliedZoom!=null) advanced.push({zoom:appliedZoom});
+  }
+  let exposure=null;
+  // Slight under-exposure helps specular white-out on labels/QR. Ignore if unsupported.
+  if(opt.qrExposure && caps.exposureCompensation){
+    exposure=clampCapNumber(caps.exposureCompensation,-0.7);
+    if(exposure!=null) advanced.push({exposureCompensation:exposure});
+  }
+  let torch=false;
+  if(opt.torch && caps.torch){ advanced.push({torch:true}); torch=true; }
+  if(advanced.length){
+    try{ await track.applyConstraints({advanced}); }
+    catch(e){ console.warn('camera boost applyConstraints failed',e); }
+  }
+  return {track,caps,zoom:appliedZoom,torch,exposure};
+}
+async function tapFocus(video,ev,statusEl){
+  try{
+    const track=await getVideoTrackFromElement(video,4); if(!track || !track.applyConstraints) return false;
+    const caps=track.getCapabilities ? track.getCapabilities() : {};
+    const rect=video.getBoundingClientRect();
+    const rx=Math.max(0,Math.min(1,(ev.clientX-rect.left)/Math.max(1,rect.width)));
+    const ry=Math.max(0,Math.min(1,(ev.clientY-rect.top)/Math.max(1,rect.height)));
+    const adv={};
+    if(caps.pointsOfInterest){
+      adv.pointsOfInterest=[{x:rx*(video.videoWidth||1000),y:ry*(video.videoHeight||1000)}];
+    }
+    if(capHasMode(caps,'focusMode','single-shot')) adv.focusMode='single-shot';
+    else if(capHasMode(caps,'focusMode','continuous')) adv.focusMode='continuous';
+    if(!Object.keys(adv).length){
+      if(statusEl) statusEl.textContent='この端末はタップAF制御非対応です（通常AFで継続）';
+      return false;
+    }
+    await track.applyConstraints({advanced:[adv]});
+    if(statusEl) statusEl.textContent='ピント合わせ中...';
+    if(capHasMode(caps,'focusMode','continuous')){
+      setTimeout(()=>track.applyConstraints({advanced:[{focusMode:'continuous'}]}).catch(()=>{}),550);
+    }
+    return true;
+  }catch(e){ console.warn('tap focus failed',e); return false; }
+}
+
+let inspectCameraStream=null, inspectCameraTrack=null;
+function setCaptureStatus(s){ const el=$('captureStatus'); if(el) el.textContent=s; }
+async function startInspectCamera(){
+  if(!currentPart||!masterImg) return;
+  const ov=$('captureOverlay'), video=$('captureVideo');
+  ov.classList.add('on'); setCaptureStatus('カメラ起動中...');
+  try{
+    await stopInspectCamera(false);
+    inspectCameraStream=await navigator.mediaDevices.getUserMedia({
+      video:{facingMode:{ideal:'environment'},width:{ideal:1920},height:{ideal:1080}},audio:false
+    });
+    video.srcObject=inspectCameraStream; await video.play();
+    const result=await applyCameraBoost(video,{torch:true});
+    inspectCameraTrack=result.track;
+    setCaptureStatus(result.torch ? 'ライトON / タップAF → 1個撮影 または 厳格穴星座探索' : 'ライト制御非対応 / タップAF → 1個撮影 または 厳格穴星座探索');
+  }catch(e){
+    console.warn('inspect camera failed; file input fallback',e);
+    setCaptureStatus('カメラ直接起動に失敗。標準カメラへ切替します。');
+    await stopInspectCamera(true);
+    $('inspectFile').click();
+  }
+}
+async function captureInspectPhoto(){
+  const video=$('captureVideo'), canvas=$('captureCanvas');
+  if(!video || video.readyState<2){ setCaptureStatus('カメラ準備中です'); return; }
+  try{
+    canvas.width=video.videoWidth||1920; canvas.height=video.videoHeight||1080;
+    canvas.getContext('2d').drawImage(video,0,0,canvas.width,canvas.height);
+    const dataUrl=canvas.toDataURL('image/jpeg',0.94);
+    inspectImg=await new Promise((res,rej)=>{ const im=new Image(); im.onload=()=>res(im); im.onerror=rej; im.src=dataUrl; });
+    await stopInspectCamera(true);
+    drawImageFit($('viewCanvas'),inspectImg); $('empty').style.display='none';
+    await runInspect();
+  }catch(e){ console.error(e); setCaptureStatus('撮影エラー: '+e.message); }
+}
+async function stopInspectCamera(close=true){
+  try{ if(inspectCameraTrack && inspectCameraTrack.applyConstraints){ await inspectCameraTrack.applyConstraints({advanced:[{torch:false}]}).catch(()=>{}); } }catch(_){}
+  try{ if(inspectCameraStream){ inspectCameraStream.getTracks().forEach(t=>t.stop()); } }catch(_){}
+  inspectCameraStream=null; inspectCameraTrack=null;
+  const video=$('captureVideo'); if(video){ try{video.pause();video.srcObject=null;}catch(_){} }
+  if(close) $('captureOverlay')?.classList.remove('on');
+}
+
+let scanControls=null, scanStream=null, scanLoopOn=false;
+let scanRescueTimer=null, scanRescueBusy=false, scanDetector=null, scanFound=false;
+const QR_RESCUE_INTERVAL_MS=70;
+const QR_JSQR_EVERY=2; // BarcodeDetector every pass; jsQR every 2nd pass to keep UI responsive.
+let qrRescuePass=0;
+function setScanStatus(s){ const el=$('scanStatus'); if(el) el.textContent=s; }
+let qrTorchOn=false;
+function updateQrTorchButton(){
+  const b=$('qrTorchBtn'); if(!b)return;
+  b.textContent=qrTorchOn?'ライトOFF':'ライトON';
+  b.classList.toggle('off',!qrTorchOn);
+}
+async function setQrTorch(on){
+  try{
+    const video=$('scanVideo'), track=await getVideoTrackFromElement(video,4);
+    if(!track||!track.applyConstraints){qrTorchOn=false;updateQrTorchButton();return false;}
+    const caps=track.getCapabilities?track.getCapabilities():{};
+    if(!caps.torch){qrTorchOn=false;updateQrTorchButton();return false;}
+    await track.applyConstraints({advanced:[{torch:!!on}]});
+    qrTorchOn=!!on;updateQrTorchButton();return true;
+  }catch(e){console.warn('QR torch control failed',e);qrTorchOn=false;updateQrTorchButton();return false;}
+}
+async function finishBarcodeScan(raw,source='QR'){
+  if(scanFound || !raw) return;
+  scanFound=true;
+  setScanStatus('読取OK ('+source+'): '+raw+'\nマスター読込中...');
+  await stopBarcodeScan(false);
+  await selectMasterByBarcode(raw);
+}
+function ensureQrDetector(){
+  if(scanDetector!==null) return scanDetector;
+  scanDetector=false;
+  if(!('BarcodeDetector' in window)) return scanDetector;
+  try{ scanDetector=new BarcodeDetector({formats:['qr_code']}); }catch(_){ scanDetector=false; }
+  return scanDetector;
+}
+function drawQrFrame(video,canvas,maxW=1280){
+  const vw=video.videoWidth||0,vh=video.videoHeight||0;
+  if(!vw||!vh)return null;
+  const scale=Math.min(1,maxW/vw);
+  canvas.width=Math.max(2,Math.round(vw*scale));
+  canvas.height=Math.max(2,Math.round(vh*scale));
+  const ctx=canvas.getContext('2d',{willReadFrequently:true});
+  ctx.drawImage(video,0,0,canvas.width,canvas.height);
+  return ctx;
+}
+function makeQrVariant(srcCanvas,mode){
+  const c=document.createElement('canvas'); c.width=srcCanvas.width; c.height=srcCanvas.height;
+  const x=c.getContext('2d',{willReadFrequently:true}); x.drawImage(srcCanvas,0,0);
+  const im=x.getImageData(0,0,c.width,c.height),d=im.data;
+  // Fast luminance transforms. These cannot reconstruct clipped pixels, but help near-white glare / low contrast.
+  for(let i=0;i<d.length;i+=4){
+    const y=(d[i]*77+d[i+1]*150+d[i+2]*29)>>8;
+    let v=y;
+    if(mode==='dark'){ v=Math.max(0,Math.min(255,(y-24)*1.18)); }
+    else if(mode==='contrast'){ v=Math.max(0,Math.min(255,(y-128)*1.55+128)); }
+    d[i]=d[i+1]=d[i+2]=v;
+  }
+  x.putImageData(im,0,0); return c;
+}
+async function qrRescueOnce(){
+  if(!scanLoopOn || scanFound || scanRescueBusy)return;
+  const video=$('scanVideo'),canvas=$('scanCanvas');
+  if(!video || video.readyState<2)return;
+  scanRescueBusy=true;
+  try{
+    const ctx=drawQrFrame(video,canvas,1280); if(!ctx)return;
+    const detector=ensureQrDetector();
+    if(detector){
+      try{
+        const codes=await detector.detect(canvas);
+        if(codes&&codes.length&&codes[0].rawValue){ await finishBarcodeScan(codes[0].rawValue,'BarcodeDetector'); return; }
+      }catch(_){ }
+    }
+    qrRescuePass++;
+    if(window.jsQR && qrRescuePass%QR_JSQR_EVERY===0){
+      const variants=[canvas,makeQrVariant(canvas,'contrast'),makeQrVariant(canvas,'dark')];
+      for(const c of variants){
+        const cx=c.getContext('2d',{willReadFrequently:true}); const img=cx.getImageData(0,0,c.width,c.height);
+        const code=jsQR(img.data,c.width,c.height,{inversionAttempts:'attemptBoth'});
+        if(code&&code.data){ await finishBarcodeScan(code.data,'jsQR'); return; }
+      }
+    }
+  }catch(e){ console.warn('QR rescue',e); }
+  finally{ scanRescueBusy=false; }
+}
+function startQrRescueLoop(){
+  scanLoopOn=true; qrRescuePass=0; scanFound=false;
+  if(scanRescueTimer)clearInterval(scanRescueTimer);
+  scanRescueTimer=setInterval(()=>{ qrRescueOnce(); },QR_RESCUE_INTERVAL_MS);
+  qrRescueOnce();
+}
+async function startBarcodeScan(){
+  const overlay=$('scanOverlay'), video=$('scanVideo');
+  if(!overlay||!video){ return; }
+  await stopBarcodeScan(false);
+  scanFound=false; overlay.classList.add('on'); setScanStatus('カメラ起動中...');
+  try{
+    // ZXing is the primary continuous decoder. Rescue loop races it using the same live video.
+    if(window.ZXingBrowser && ZXingBrowser.BrowserMultiFormatReader){
+      const reader=new ZXingBrowser.BrowserMultiFormatReader();
+      scanControls=await reader.decodeFromVideoDevice(null, video, async (result, err, controls)=>{
+        if(result && !scanFound){
+          const raw=(result.getText?result.getText():String(result.text||result));
+          try{ if(controls)controls.stop(); }catch(_){}
+          await finishBarcodeScan(raw,'ZXing');
+        }
+      });
+      const qrBoost=await applyCameraBoost(video,{zoom:3,qrExposure:true,torch:true});
+      startQrRescueLoop();
+      const extras=[];
+      if(qrBoost.zoom)extras.push('ズーム '+qrBoost.zoom.toFixed(1)+'x');
+      if(qrBoost.exposure!=null)extras.push('白飛び抑制');if(qrBoost.torch)extras.push('ライトON');
+      setScanStatus('最速QR読取中'+(extras.length?' / '+extras.join(' / '):'')+'\n画面タップでピント合わせ');
+      return;
+    }
+  }catch(e){
+    console.warn('ZXing起動失敗。高速救済スキャナへフォールバック',e);
+  }
+  try{
+    scanStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:1920},height:{ideal:1080}},audio:false});
+    video.srcObject=scanStream; await video.play();
+    const qrBoost=await applyCameraBoost(video,{zoom:3,qrExposure:true,torch:true});
+    startQrRescueLoop();
+    setScanStatus('高速QR読取中'+(qrBoost.zoom?' / ズーム '+qrBoost.zoom.toFixed(1)+'x':'')+(qrBoost.torch?' / ライトON':'')+'\n画面タップでピント合わせ');
+  }catch(e){
+    console.error(e);
+    setScanStatus('カメラ起動エラー: '+e.message+'\nUSBリーダーの場合は入力欄にフォーカスして読んでください。');
+  }
+}
+// Compatibility entry point: v2 uses the interval rescue loop instead of requestAnimationFrame.
+async function scanLoop(){ startQrRescueLoop(); }
+async function stopBarcodeScan(close=true){
+  try{await setQrTorch(false);}catch(_){}
+  scanLoopOn=false; scanRescueBusy=false;
+  if(scanRescueTimer){clearInterval(scanRescueTimer);scanRescueTimer=null;}
+  try{ if(scanControls){ scanControls.stop(); scanControls=null; } }catch(_){}
+  try{ if(scanStream){ scanStream.getTracks().forEach(t=>t.stop()); scanStream=null; } }catch(_){}
+  const video=$('scanVideo');
+  if(video){
+    try{ const s=video.srcObject; if(s&&s.getTracks) s.getTracks().forEach(t=>t.stop()); }catch(_){}
+    try{video.pause(); video.srcObject=null;}catch(_){}
+  }
+  $('scanOverlay')?.classList.remove('on');
+}
+
+function escapeHtml(s){ return String(s??'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m])); }
+$('reloadBtn').onclick=loadParts;
+$('partSelect').onchange=async()=>{ if($('partSelect').value){ currentBarcodeRaw=$('partSelect').value; lastInspectionRecord=null; ngLoggedForCurrent=false; okLoggedForCurrent=false; logSending=false; await loadSelectedPart(); } else resetMasterState(); };
+$('actionBtn').onclick=async()=>{ if(currentPart&&masterImg){ if(!cvLoaded){ log('OpenCV.js準備中です。しばらく待ってください。'); updateActionState(); return; } await startInspectCamera(); } else { await startBarcodeScan(); } };
+$('qrTorchBtn')?.addEventListener('click',async e=>{e.stopPropagation();await setQrTorch(!qrTorchOn);setScanStatus(qrTorchOn?'ライトON / 高速QR読取中\n画面タップでピント合わせ':'ライトOFF / 高速QR読取中\n画面タップでピント合わせ');});
+$('scanCloseBtn').onclick=()=>stopBarcodeScan(true);
+$('scanBox')?.addEventListener('click',e=>tapFocus($('scanVideo'),e,$('scanStatus')));
+$('captureBox')?.addEventListener('click',e=>tapFocus($('captureVideo'),e,$('captureStatus')));
+$('captureShutterBtn').onclick=()=>captureInspectPhoto();
+$('containerRansacBtn')?.addEventListener('click',captureStrictConstellationOneV35);
+$('captureCloseBtn').onclick=()=>stopInspectCamera(true);
+$('pcFileBtn')?.addEventListener('click',()=>{
+  if(!(currentPart&&masterImg)){ log('先にMasterを読み込んでください。'); return; }
+  if(!cvLoaded){ log('OpenCV.js準備中です。少し待ってから再度PC画像を押してください。'); return; }
+  $('inspectFile').click();
+});
+$('pcHoleBtn')?.addEventListener('click',()=>{
+  if(!(currentPart&&masterImg)){log('先にMasterを読み込んでください。');return;}
+  if(!cvLoaded){log('OpenCV.js準備中です。少し待ってください。');return;}
+  $('holeInspectFile').click();
+});
+$('barcodeInput').addEventListener('keydown',async e=>{ if(e.key==='Enter'){ e.preventDefault(); await selectMasterByBarcode(e.target.value); }});
+$('actionRegisterBtn').onclick=async()=>{
+  const btn=$('actionRegisterBtn');
+  if(logSending || okLoggedForCurrent){ return; }
+  if(btn) btn.disabled=true;
+  const ok=await recordInspection('OK_REGISTER');
+  if(ok){
+    endInspectionToScanMode();
+  }else{
+    if(btn) btn.disabled=false;
+    alert('検査ログを保存できませんでした。通信/GASを確認してください。');
+  }
+};
+$('actionRetryBtn').onclick=async()=>{ hideResultAction(); if(currentPart&&masterImg){ await startInspectCamera(); } };
+$('actionEndBtn').onclick=()=>{ endInspectionToScanMode(); };
+$('inspectFile').onchange=async e=>{
+  const f=e.target.files&&e.target.files[0]; if(!f)return;
+  inspectImg=await loadImageFromFile(f);
+  drawImageFit($('viewCanvas'),inspectImg); $('empty').style.display='none';
+  log((isLikelyDesktop()?'PC検証画像':'画像ファイル')+'を読込: '+f.name+'\n判定を開始します。');
+  await runInspect();
+  e.target.value='';
+};
+$('holeInspectFile').onchange=async e=>{
+  const f=e.target.files&&e.target.files[0];if(!f)return;
+  try{
+    setLoading(true);
+    const img=await loadImageFromFile(f);
+    log('PC厳格穴星座検証画像を読込: '+f.name+'\n製品マスク由来の開口星座探索を開始します。');
+    await runStrictConstellationFromImageV35(img);
+  }catch(err){
+    console.error(err);
+    setBanner('WAIT');setStat('alignStat','--','waitText');setStat('outerStat','--','waitText');setStat('pointStat','判定不能','waitText');
+    log('PC厳格穴星座探索エラー: '+err.message);
+  }finally{
+    setLoading(false);e.target.value='';
+  }
+};
+
+function matFromImage(img,maxW){ const scale=Math.min(1,maxW/img.width); const c=document.createElement('canvas'); c.width=Math.round(img.width*scale); c.height=Math.round(img.height*scale); const x=c.getContext('2d'); x.drawImage(img,0,0,c.width,c.height); let src=cv.imread(c); let gray=new cv.Mat(); cv.cvtColor(src,gray,cv.COLOR_RGBA2GRAY); return{src,gray,scale,w:c.width,h:c.height,canvas:c}; }
+function edgeMask(gray,edgeThr){ let blur=new cv.Mat(),edges=new cv.Mat(); cv.GaussianBlur(gray,blur,new cv.Size(3,3),0); cv.Canny(blur,edges,edgeThr,edgeThr*2); blur.delete(); return edges; }
+function hasNearbyEdge(edge,x,y,w,h,tol){ for(let dy=-tol;dy<=tol;dy++){ for(let dx=-tol;dx<=tol;dx++){ let nx=x+dx,ny=y+dy; if(nx>=0&&ny>=0&&nx<w&&ny<h&&edge.ucharPtr(ny,nx)[0]) return true; } } return false; }
+function detectAndMatch(m,i,features,maxMatches=120,ransacThr=5){
+  let orb=new cv.ORB(features);
+  let kp1=new cv.KeyPointVector(),kp2=new cv.KeyPointVector(),des1=new cv.Mat(),des2=new cv.Mat();
+  let emptyMask1=new cv.Mat(),emptyMask2=new cv.Mat();
+  orb.detectAndCompute(m.gray,emptyMask1,kp1,des1);
+  orb.detectAndCompute(i.gray,emptyMask2,kp2,des2);
+  emptyMask1.delete(); emptyMask2.delete();
+  if(des1.empty()||des2.empty()) throw new Error('特徴点が少なすぎます');
+  let matcher=new cv.BFMatcher(cv.NORM_HAMMING,true);
+  let matches=new cv.DMatchVector(); matcher.match(des1,des2,matches);
+  let arr=[]; for(let k=0;k<matches.size();k++)arr.push(matches.get(k));
+  arr.sort((a,b)=>a.distance-b.distance);
+  arr=arr.slice(0,Math.min(maxMatches,arr.length));
+  if(arr.length<8) throw new Error('対応特徴点が不足しています');
+  let srcPts=[],dstPts=[];
+  for(const mt of arr){
+    let p1=kp1.get(mt.queryIdx).pt,p2=kp2.get(mt.trainIdx).pt;
+    srcPts.push(p1.x,p1.y); dstPts.push(p2.x,p2.y);
+  }
+  let srcMat=cv.matFromArray(arr.length,1,cv.CV_32FC2,srcPts);
+  let dstMat=cv.matFromArray(arr.length,1,cv.CV_32FC2,dstPts);
+  let mask=new cv.Mat();
+  let H=cv.findHomography(dstMat,srcMat,cv.RANSAC,ransacThr,mask);
+  let inliers=0; for(let k=0;k<mask.rows;k++) if(mask.data[k]) inliers++;
+  const bestDistance=arr.length?arr[0].distance:999, medianDistance=arr.length?arr[Math.floor(arr.length/2)].distance:999;
+  orb.delete(); kp1.delete(); kp2.delete(); des1.delete(); des2.delete(); matcher.delete(); matches.delete(); srcMat.delete(); dstMat.delete(); mask.delete();
+  if(H.empty()) throw new Error('位置合わせ失敗');
+  return{H,inliers,total:arr.length,bestDistance,medianDistance};
+}
+function homographyScale(H){ let d=H.data64F||H.data32F; let a=d[0],b=d[1],c=d[3],e=d[4]; return Math.sqrt(Math.abs(a*e-b*c)); }
+function clamp01(v){ return Math.max(0, Math.min(1, v)); }
+function percentile(sortedVals, q){
+  if(!sortedVals.length) return 0;
+  const i=Math.max(0, Math.min(sortedVals.length-1, Math.round((sortedVals.length-1)*q)));
+  return sortedVals[i];
+}
+
+function normalizePointType(t){ return String(t||'present').toLowerCase()==='absent'?'absent':'present'; }
+function darkBlob(gray,x,y,w,h){
+  x=Math.max(0,Math.round(x)); y=Math.max(0,Math.round(y));
+  w=Math.max(1,Math.min(gray.cols-x,Math.round(w))); h=Math.max(1,Math.min(gray.rows-y,Math.round(h)));
+  const vals=[];
+  for(let yy=y;yy<y+h;yy++) for(let xx=x;xx<x+w;xx++) vals.push(gray.ucharPtr(yy,xx)[0]);
+  vals.sort((a,b)=>a-b);
+  const p25=percentile(vals,0.25), p35=percentile(vals,0.35), p50=percentile(vals,0.50);
+  const mean=vals.reduce((a,b)=>a+b,0)/Math.max(1,vals.length);
+  // 穴は周囲より暗い。金属面の光沢で暴れにくいよう、低い側のパーセンタイルで自動しきい値化。
+  const thr=Math.min(p35, mean-8, p50-4);
+  let count=0,cx=0,cy=0,minX=999999,minY=999999,maxX=-1,maxY=-1;
+  for(let yy=y;yy<y+h;yy++){
+    for(let xx=x;xx<x+w;xx++){
+      if(gray.ucharPtr(yy,xx)[0] <= thr){
+        count++; cx+=xx; cy+=yy; minX=Math.min(minX,xx); minY=Math.min(minY,yy); maxX=Math.max(maxX,xx); maxY=Math.max(maxY,yy);
+      }
+    }
+  }
+  if(count){ cx/=count; cy/=count; }
+  return {count, area:count/Math.max(1,w*h), cx, cy, thr, p25, p35, mean, bbox:count?{x:minX,y:minY,w:maxX-minX+1,h:maxY-minY+1}:null};
+}
+function evalHolePoint(mGray,wGray,x,y,w,h,roi){
+  const mb=darkBlob(mGray,x,y,w,h);
+  const ib=darkBlob(wGray,x,y,w,h);
+  const minDark=Math.max(6, mb.count*0.25);
+  let areaScore=0, centerScore=0, sizeScore=0;
+  if(mb.count>0 && ib.count>=minDark){
+    areaScore=clamp01(ib.count/(mb.count*0.70));
+    const dist=Math.hypot(ib.cx-mb.cx, ib.cy-mb.cy);
+    centerScore=clamp01(1 - dist/(Math.max(w,h)*0.32));
+    const bboxM=mb.bbox||{w:1,h:1}, bboxI=ib.bbox||{w:0,h:0};
+    const bw=Math.min(bboxM.w,bboxI.w)/Math.max(1,Math.max(bboxM.w,bboxI.w));
+    const bh=Math.min(bboxM.h,bboxI.h)/Math.max(1,Math.max(bboxM.h,bboxI.h));
+    sizeScore=clamp01((bw+bh)/2);
+  }
+  const match=clamp01(areaScore*0.45 + centerScore*0.40 + sizeScore*0.15);
+  // Holeでは既存の「差異しきい値%」ではなく「最低マッチ率%」として扱う。低すぎる値は安全側に45%へ丸める。
+  const thr=Math.max(CONFIG.holeMatchThr, ((roi.threshold??50)/100));
+  return {diff:1-match, match, ok:match>=thr, threshold:thr, hole:{master:mb, inspect:ib, areaScore, centerScore, sizeScore}};
+}
+function compareAll(m,warped,points){
+  let wGray=new cv.Mat();
+  cv.cvtColor(warped,wGray,cv.COLOR_RGBA2GRAY);
+  let mEdge=edgeMask(m.gray,CONFIG.edgeThr), wEdge=edgeMask(wGray,CONFIG.edgeThr);
+  let result=$('viewCanvas'),ctx=result.getContext('2d');
+  ctx.clearRect(0,0,result.width,result.height);
+  ctx.fillStyle='#05070b'; ctx.fillRect(0,0,result.width,result.height);
+  const r=Math.min(result.width/m.w,result.height/m.h), ox=(result.width-m.w*r)/2, oy=(result.height-m.h*r)/2;
+  let tmp=document.createElement('canvas'); cv.imshow(tmp,warped); ctx.drawImage(tmp,ox,oy,m.w*r,m.h*r);
+  // v14: 撮影後もマスター画像を薄く重ねる。ズレ・回転・穴位置の目視確認用。
+  let outerMismatch=0,outerDenom=0;
+  ctx.save(); ctx.translate(ox,oy); ctx.scale(r,r);
+  for(let yy=0;yy<m.h;yy+=2){
+    for(let xx=0;xx<m.w;xx+=2){
+      if(mEdge.ucharPtr(yy,xx)[0]){
+        outerDenom++;
+        const found=hasNearbyEdge(wEdge,xx,yy,m.w,m.h,CONFIG.tol);
+        if(!found)outerMismatch++;
+        ctx.fillStyle=found?'rgba(53,240,120,.32)':'rgba(255,75,95,.85)';
+        ctx.fillRect(xx,yy,2,2);
+      }
+    }
+  }
+  let okCount=0,maxPointDiff=0,details=[];
+  for(const roi of points){
+    let x=Math.max(0,Math.round(roi.x*m.scale)), y=Math.max(0,Math.round(roi.y*m.scale));
+    let w=Math.max(1,Math.min(m.w-x,Math.round(roi.w*m.scale))), h=Math.max(1,Math.min(m.h-y,Math.round(roi.h*m.scale)));
+    let mode=normalizePointType(roi.type, roi.name);
+    const typeRaw=String(roi.type ?? '');
+    let mismatch=0,denom=0,diff=0,match=0,ok=false,thr=((roi.threshold??(CONFIG.defaultPointThr*100))/100), extra={};
+
+    if(mode==='hole'){
+      const hr=evalHolePoint(m.gray,wGray,x,y,w,h,roi);
+      diff=hr.diff; match=hr.match; ok=hr.ok; thr=hr.threshold; extra={hole:hr.hole};
+    }else if(mode==='present'){
+      for(let yy=y;yy<y+h;yy++) for(let xx=x;xx<x+w;xx++) if(mEdge.ucharPtr(yy,xx)[0]){ denom++; if(!hasNearbyEdge(wEdge,xx,yy,m.w,m.h,CONFIG.tol)) mismatch++; }
+      diff=denom?mismatch/denom:1; match=1-diff;
+      // v14: 「あることを確認」は差異率ではなく相関/マッチ率で判定。threshold=50ならマッチ50%以上でOK。
+      thr=((roi.threshold??50)/100);
+      ok=match>=thr;
+    }else{
+      for(let yy=y;yy<y+h;yy++) for(let xx=x;xx<x+w;xx++) if(wEdge.ucharPtr(yy,xx)[0]){ denom++; if(!hasNearbyEdge(mEdge,xx,yy,m.w,m.h,CONFIG.tol)) mismatch++; }
+      diff=denom?mismatch/denom:0; match=1-diff; ok=diff<=thr;
+    }
+
+    if(ok) okCount++;
+    maxPointDiff=Math.max(maxPointDiff,diff);
+    details.push({name:roi.name||('検査点'+(roi._idx+1)), typeRaw, type:mode, raw:roi._raw, normalized:{x:roi.x,y:roi.y,w:roi.w,h:roi.h}, process:{x,y,w,h}, diff, match, ok, threshold:thr, ...extra});
+    ctx.strokeStyle=ok?'#35f078':'#ff4b5f'; ctx.lineWidth=5/r; ctx.strokeRect(x,y,w,h);
+    // ROI中心のデバッグ点。枠位置ズレと穴検出ズレを切り分ける。
+    ctx.fillStyle='#ffd84d'; ctx.beginPath(); ctx.arc(x+w/2,y+h/2,Math.max(3,5/r),0,Math.PI*2); ctx.fill();
+    ctx.fillStyle=ctx.strokeStyle; ctx.font=`${18/r}px sans-serif`;
+    const labelMode=mode==='absent'?'なし':'あり';
+    ctx.fillText(`${roi.name||'検査点'} ${labelMode}マッチ${(match*100).toFixed(1)}%`,x,y-8);
+    if(mode==='hole' && extra.hole?.master?.count){
+      ctx.save(); ctx.strokeStyle='#35dcff'; ctx.beginPath(); ctx.arc(extra.hole.master.cx, extra.hole.master.cy, Math.max(3,Math.min(w,h)*0.08), 0, Math.PI*2); ctx.stroke(); ctx.restore();
+    }
+    if(mode==='hole' && extra.hole?.inspect?.count){
+      ctx.beginPath(); ctx.arc(extra.hole.inspect.cx, extra.hole.inspect.cy, Math.max(3,Math.min(w,h)*0.08), 0, Math.PI*2); ctx.stroke();
+    }
+  }
+  ctx.restore();
+  const dc=$('debugCanvas'); if(dc){ const dctx=dc.getContext('2d'); dctx.clearRect(0,0,dc.width,dc.height); dctx.drawImage(result,0,0,dc.width,dc.height); }
+  DEBUG.points=details;
+  const outerDiff=outerDenom?outerMismatch/outerDenom:1;
+  const outerMatch=1-outerDiff;
+  mEdge.delete(); wEdge.delete(); wGray.delete();
+  return{outerDiff, outerMatch, pointOk:okCount, pointAllOk:okCount===points.length, maxPointDiff, details};
+}
+
+
+
+
+
+
+
+// =====================================================
+// v35 NoMask Strict Aperture Constellation β
+// 製品マスクは主判定に使わない。
+// 画像全体から「中が十分黒い」「周囲より明確に暗い」「閉じた面積がある」開口だけを厳格抽出。
+// 丸穴だけでなく長穴・角穴・変則開口も許容し、採用穴の全配置を星座として照合する。
+// =====================================================
+const STRICT_V35 = {
+  masterMaxW: 1100,
+  sceneMaxW: 1500,
+  masterMinAreaRatio: 0.000018,
+  sceneMinAreaRatio: 0.000010,
+  maxAreaRatio: 0.025,
+  masterDarkDelta: 28,
+  sceneDarkDelta: 24,
+  masterBlackRatio: 0.46,
+  sceneBlackRatio: 0.40,
+  minBrightRingRatio: 0.22,
+  minExtent: 0.16,
+  maxAspect: 12.0,
+  maxMaster: 60,
+  maxScene: 220,
+  // 星座
+  minSupport: 6,
+  minSupportRatio: 0.22,
+  maxMeanErrorRatio: 0.72,
+  ransacThr: 7.0,
+  minProjectedAreaRatio: 0.004,
+  maxProjectedAreaRatio: 0.62,
+  drawLinks: 3
+};
+let masterStrictCacheV35=null;
+
+function contourPixelStatsV35(gray,contour,r,outerScale=1.65){
+  const localMask=cv.Mat.zeros(r.height,r.width,cv.CV_8UC1);
+  const shifted=new cv.Mat();
+  const pts=contour.data32S;
+  const arr=[];
+  for(let i=0;i<pts.length;i+=2)arr.push(pts[i]-r.x,pts[i+1]-r.y);
+  const cc=cv.matFromArray(arr.length/2,1,cv.CV_32SC2,arr);
+  const mv=new cv.MatVector();mv.push_back(cc);
+  cv.drawContours(localMask,mv,0,new cv.Scalar(255),-1);
+  mv.delete();cc.delete();shifted.delete();
+
+  const roi=gray.roi(new cv.Rect(r.x,r.y,r.width,r.height));
+  const vals=[];
+  for(let y=0;y<roi.rows;y++){
+    const rp=roi.ucharPtr(y),mp=localMask.ucharPtr(y);
+    for(let x=0;x<roi.cols;x++)if(mp[x])vals.push(rp[x]);
+  }
+  roi.delete();localMask.delete();
+  if(!vals.length)return null;
+  vals.sort((a,b)=>a-b);
+  const innerMean=vals.reduce((s,v)=>s+v,0)/vals.length;
+  const p35=vals[Math.floor((vals.length-1)*0.35)];
+
+  const cx=Math.round(r.x+r.width/2),cy=Math.round(r.y+r.height/2);
+  const rr=Math.max(5,Math.round(Math.max(r.width,r.height)*outerScale));
+  const x0=Math.max(0,cx-rr),y0=Math.max(0,cy-rr);
+  const x1=Math.min(gray.cols,cx+rr+1),y1=Math.min(gray.rows,cy+rr+1);
+  const outer=gray.roi(new cv.Rect(x0,y0,x1-x0,y1-y0));
+  const outerMean=cv.mean(outer)[0];
+
+  // 「穴内部の代表値より35以上暗い」画素率。
+  // absolute blackだけでは照明差に弱いので、local outer基準も併用。
+  const darkCut=Math.max(18,Math.min(115,outerMean-32));
+  let black=0;
+  for(const v of vals)if(v<=darkCut)black++;
+  const blackRatio=black/vals.length;
+
+  let bright=0,totalOuter=0;
+  for(let y=0;y<outer.rows;y++){
+    const p=outer.ucharPtr(y);
+    for(let x=0;x<outer.cols;x++){totalOuter++;if(p[x]>=innerMean+28)bright++;}
+  }
+  const brightRingRatio=bright/Math.max(1,totalOuter);
+  outer.delete();
+
+  return {innerMean,outerMean,darkDelta:outerMean-innerMean,blackRatio,brightRingRatio,p35,darkCut};
+}
+
+function classifyStrictHoleV35(v){
+  if(v.circularity>=0.62&&v.aspect>=0.62&&v.aspect<=1.62)return 'round';
+  if(v.aspect>=2.0||v.aspect<=0.50)return 'slot';
+  if(v.extent>=0.48&&v.circularity<0.60)return 'angular';
+  return 'irregular';
+}
+
+function extractStrictAperturesV35(gray,maxCount,isMaster=false){
+  const eq=new cv.Mat(),bin=new cv.Mat(),morph=new cv.Mat();
+  const clahe=new cv.CLAHE(2.0,new cv.Size(8,8));clahe.apply(gray,eq);
+  // 暗い閉領域候補。adaptive thresholdは候補生成のみ、最終採否は黒率/内外輝度差で決める。
+  cv.adaptiveThreshold(eq,bin,255,cv.ADAPTIVE_THRESH_GAUSSIAN_C,cv.THRESH_BINARY_INV,35,7);
+  const k=cv.getStructuringElement(cv.MORPH_ELLIPSE,new cv.Size(3,3));
+  cv.morphologyEx(bin,morph,cv.MORPH_OPEN,k);k.delete();
+
+  const contours=new cv.MatVector(),hierarchy=new cv.Mat();
+  cv.findContours(morph,contours,hierarchy,cv.RETR_LIST,cv.CHAIN_APPROX_SIMPLE);
+
+  const imgArea=gray.cols*gray.rows;
+  const minA=Math.max(12,imgArea*(isMaster?STRICT_V35.masterMinAreaRatio:STRICT_V35.sceneMinAreaRatio));
+  const maxA=imgArea*STRICT_V35.maxAreaRatio;
+  const minDelta=isMaster?STRICT_V35.masterDarkDelta:STRICT_V35.sceneDarkDelta;
+  const minBlack=isMaster?STRICT_V35.masterBlackRatio:STRICT_V35.sceneBlackRatio;
+  const accepted=[],rejected=[];
+
+  for(let i=0;i<contours.size();i++){
+    const c=contours.get(i),area=cv.contourArea(c);
+    if(area<minA){continue;}
+    if(area>maxA){continue;}
+    const r=cv.boundingRect(c);
+    if(r.width<4||r.height<4)continue;
+    const aspect=r.width/Math.max(1,r.height);
+    if(aspect<1/STRICT_V35.maxAspect||aspect>STRICT_V35.maxAspect)continue;
+    const per=cv.arcLength(c,true);if(per<=0)continue;
+    const circularity=Math.max(0,Math.min(1,4*Math.PI*area/(per*per)));
+    const extent=area/Math.max(1,r.width*r.height);
+    if(extent<STRICT_V35.minExtent){continue;}
+
+    const M=cv.moments(c,false);if(Math.abs(M.m00)<1e-6)continue;
+    const x=M.m10/M.m00,y=M.m01/M.m00;
+    const st=contourPixelStatsV35(gray,c,r);
+    if(!st)continue;
+
+    let reason='';
+    if(st.darkDelta<minDelta)reason='contrast';
+    else if(st.blackRatio<minBlack)reason='blackRatio';
+    else if(st.brightRingRatio<STRICT_V35.minBrightRingRatio)reason='brightRing';
+
+    if(reason){
+      rejected.push({x,y,size:Math.sqrt(area),reason,blackRatio:st.blackRatio,darkDelta:st.darkDelta});
+      continue;
+    }
+
+    const v={
+      x,y,area,w:r.width,h:r.height,aspect,circularity,extent,size:Math.sqrt(area),
+      darkDelta:st.darkDelta,blackRatio:st.blackRatio,brightRingRatio:st.brightRingRatio,
+      innerMean:st.innerMean,outerMean:st.outerMean
+    };
+    v.kind=classifyStrictHoleV35(v);
+    // 「黒さ」を最重視。丸さはほぼ加点しない。
+    v.quality=
+      Math.min(1,st.blackRatio/0.72)*0.40+
+      Math.min(1,st.darkDelta/65)*0.34+
+      Math.min(1,st.brightRingRatio/0.55)*0.14+
+      Math.min(1,v.size/35)*0.12;
+    accepted.push(v);
+  }
+
+  contours.delete();hierarchy.delete();morph.delete();clahe.delete();eq.delete();bin.delete();
+
+  accepted.sort((a,b)=>b.quality-a.quality);
+  const kept=[];
+  for(const v of accepted){
+    const dup=kept.some(q=>Math.hypot(q.x-v.x,q.y-v.y)<Math.max(3,Math.min(q.size,v.size)*0.42));
+    if(!dup)kept.push(v);
+    if(kept.length>=maxCount)break;
+  }
+  return {holes:kept,rejected};
+}
+
+function masterProxyRectV35(holes,w,h){
+  if(!holes.length)return {x:0,y:0,w,h};
+  let minX=Math.min(...holes.map(v=>v.x-v.w/2)),maxX=Math.max(...holes.map(v=>v.x+v.w/2));
+  let minY=Math.min(...holes.map(v=>v.y-v.h/2)),maxY=Math.max(...holes.map(v=>v.y+v.h/2));
+  const bw=maxX-minX,bh=maxY-minY;
+  // マスクは使わないが、面積暴走チェック用に穴群の外包を少し拡張。
+  const px=Math.max(18,bw*0.18),py=Math.max(18,bh*0.40);
+  minX=Math.max(0,minX-px);maxX=Math.min(w,maxX+px);
+  minY=Math.max(0,minY-py);maxY=Math.min(h,maxY+py);
+  return {x:minX,y:minY,w:maxX-minX,h:maxY-minY};
+}
+
+function getMasterStrictModelV35(){
+  if(!masterImg)throw new Error('Master画像がありません');
+  const key=(currentPart?.partNo||'')+'|'+masterImg.width+'x'+masterImg.height+'|strict35';
+  if(masterStrictCacheV35?.key===key)return masterStrictCacheV35;
+  const m=grayMatFromImageV32(masterImg,STRICT_V35.masterMaxW);
+  try{
+    const ex=extractStrictAperturesV35(m.gray,STRICT_V35.maxMaster,true);
+    if(ex.holes.length<4)throw new Error(`Master厳格穴候補不足 ${ex.holes.length}/4`);
+    const desc=buildConstellationDescriptorsV33(ex.holes);
+    if(desc.length<4)throw new Error('Master穴星座を構成できません');
+    const proxyRect=masterProxyRectV35(ex.holes,m.w,m.h);
+    masterStrictCacheV35={key,w:m.w,h:m.h,scale:m.scale,holes:ex.holes,rejected:ex.rejected,desc,proxyRect};
+    dbg('v35 Master厳格穴抽出',{
+      holes:ex.holes.length,rejected:ex.rejected.length,proxyRect,
+      sample:ex.holes.slice(0,12).map(v=>({kind:v.kind,blackRatio:v.blackRatio,darkDelta:v.darkDelta}))
+    });
+    return masterStrictCacheV35;
+  }finally{m.gray.delete();}
+}
+
+function proxyCornersToSceneV35(HsceneToMaster,r){
+  const inv=new cv.Mat();cv.invert(HsceneToMaster,inv,cv.DECOMP_SVD);
+  const src=cv.matFromArray(4,1,cv.CV_32FC2,[r.x,r.y,r.x+r.w,r.y,r.x+r.w,r.y+r.h,r.x,r.y+r.h]);
+  const dst=new cv.Mat();cv.perspectiveTransform(src,dst,inv);
+  const d=dst.data32F,pts=[];
+  for(let i=0;i<4;i++)pts.push({x:d[i*2],y:d[i*2+1]});
+  inv.delete();src.delete();dst.delete();return pts;
+}
+
+function refineStrictHomographyV35(master,sceneHoles,best,sceneW,sceneH){
+  if(best.pairs.length<4)throw new Error(`支持穴不足 ${best.pairs.length}/4`);
+  const srcPts=[],dstPts=[];
+  for(const p of best.pairs){
+    const s=sceneHoles[p.sj],m=master.holes[p.mi];
+    srcPts.push(s.x,s.y);dstPts.push(m.x,m.y);
+  }
+  const src=cv.matFromArray(best.pairs.length,1,cv.CV_32FC2,srcPts);
+  const dst=cv.matFromArray(best.pairs.length,1,cv.CV_32FC2,dstPts);
+  const mask=new cv.Mat();
+  const H=cv.findHomography(src,dst,cv.RANSAC,STRICT_V35.ransacThr,mask);
+  let inliers=0;for(let i=0;i<mask.rows;i++)if(mask.data[i])inliers++;
+  const inlierRatio=inliers/Math.max(1,best.pairs.length);
+  src.delete();dst.delete();mask.delete();
+  if(H.empty())throw new Error('厳格穴星座Homography失敗');
+
+  const corners=proxyCornersToSceneV35(H,master.proxyRect);
+  const areaRatio=polygonAreaV32(corners)/Math.max(1,sceneW*sceneH);
+  const margin=Math.max(sceneW,sceneH)*0.18;
+  const inside=corners.every(p=>Number.isFinite(p.x)&&Number.isFinite(p.y)&&p.x>=-margin&&p.y>=-margin&&p.x<=sceneW+margin&&p.y<=sceneH+margin);
+
+  const constellationOk=best.support>=STRICT_V35.minSupport&&best.ratio>=STRICT_V35.minSupportRatio&&best.meanErrRatio<=STRICT_V35.maxMeanErrorRatio;
+  const homographyOk=inliers>=Math.max(4,Math.min(STRICT_V35.minSupport,best.support))&&inlierRatio>=0.58&&
+    areaRatio>=STRICT_V35.minProjectedAreaRatio&&areaRatio<=STRICT_V35.maxProjectedAreaRatio&&inside;
+  return {H,corners,areaRatio,inside,inliers,total:best.pairs.length,inlierRatio,constellationOk,homographyOk,ok:constellationOk&&homographyOk};
+}
+
+function drawMasterStrictV35(){
+  if(!cvLoaded||!masterImg)return 0;
+  try{
+    const model=getMasterStrictModelV35(),holes=model.holes;
+    const canvas=$('viewCanvas'),ctx=canvas.getContext('2d');
+    const fit=Math.min(canvas.width/masterImg.width,canvas.height/masterImg.height);
+    const ox=(canvas.width-masterImg.width*fit)/2,oy=(canvas.height-masterImg.height*fit)/2;
+    const inv=1/Math.max(1e-9,model.scale);
+
+    ctx.save();
+    const done=new Set();
+    ctx.strokeStyle='rgba(255,216,77,.30)';ctx.lineWidth=1.2;
+    for(let i=0;i<holes.length;i++){
+      const p=holes[i];
+      const ns=holes.map((q,j)=>j===i?null:{j,d:Math.hypot(q.x-p.x,q.y-p.y)}).filter(Boolean).sort((a,b)=>a.d-b.d).slice(0,STRICT_V35.drawLinks);
+      for(const n of ns){
+        const key=i<n.j?`${i}-${n.j}`:`${n.j}-${i}`;if(done.has(key))continue;done.add(key);
+        const q=holes[n.j];
+        ctx.beginPath();ctx.moveTo(ox+p.x*inv*fit,oy+p.y*inv*fit);ctx.lineTo(ox+q.x*inv*fit,oy+q.y*inv*fit);ctx.stroke();
+      }
+    }
+    ctx.font='bold 11px system-ui';
+    for(let i=0;i<holes.length;i++){
+      const h=holes[i],x=ox+h.x*inv*fit,y=oy+h.y*inv*fit;
+      const rr=Math.max(4,Math.min(17,h.size*inv*fit*.55));
+      const color=h.kind==='round'?'#ffd84d':h.kind==='slot'?'#35dcff':h.kind==='angular'?'#ff9f43':'#ff63c3';
+      ctx.strokeStyle=color;ctx.lineWidth=2;ctx.beginPath();ctx.arc(x,y,rr,0,Math.PI*2);ctx.stroke();
+      ctx.fillStyle='rgba(0,0,0,.76)';ctx.fillRect(x+5,y-16,34,15);
+      ctx.fillStyle='#fff';ctx.fillText('H'+(i+1),x+7,y-5);
+    }
+    // rejectedは赤点だけ。何を落としているか確認可能。
+    ctx.fillStyle='rgba(255,75,95,.65)';
+    for(const r of model.rejected.slice(0,40)){
+      const x=ox+r.x*inv*fit,y=oy+r.y*inv*fit;
+      ctx.fillRect(x-2,y-2,4,4);
+    }
+    ctx.restore();
+    DEBUG.image={...(DEBUG.image||{}),masterStrictV35:{accepted:holes.length,rejected:model.rejected.length,proxyRect:model.proxyRect,note:'マスクなし。黒画素率＋内外輝度差＋明リング率で厳格採用'}};
+    renderDebug();
+    return holes.length;
+  }catch(e){dbg('v35 Master厳格穴可視化失敗',{message:e.message});return 0;}
+}
+
+function drawStrictSceneV35(fullImg,sceneScale,sceneHoles,found,best){
+  const c=$('viewCanvas'),ctx=c.getContext('2d');drawImageFit(c,fullImg);
+  const fit=Math.min(c.width/fullImg.width,c.height/fullImg.height),ox=(c.width-fullImg.width*fit)/2,oy=(c.height-fullImg.height*fit)/2,inv=1/Math.max(1e-9,sceneScale);
+  ctx.save();
+  ctx.strokeStyle='rgba(255,216,77,.68)';ctx.lineWidth=1.4;
+  for(const h of sceneHoles.slice(0,180)){ctx.beginPath();ctx.arc(ox+h.x*inv*fit,oy+h.y*inv*fit,Math.max(2.5,h.size*inv*fit*.48),0,Math.PI*2);ctx.stroke();}
+  if(best?.pairs){ctx.strokeStyle='#35f078';ctx.lineWidth=2.5;for(const p of best.pairs){const h=sceneHoles[p.sj],x=ox+h.x*inv*fit,y=oy+h.y*inv*fit;ctx.beginPath();ctx.arc(x,y,5,0,Math.PI*2);ctx.stroke();}}
+  if(found?.corners){ctx.strokeStyle='#35dcff';ctx.lineWidth=5;ctx.beginPath();found.corners.forEach((p,i)=>{const x=ox+p.x*inv*fit,y=oy+p.y*inv*fit;i?ctx.lineTo(x,y):ctx.moveTo(x,y)});ctx.closePath();ctx.stroke();}
+  ctx.restore();
+}
+
+async function captureStrictConstellationOneV35(){
+  const video=$('captureVideo'),canvas=$('captureCanvas');
+  if(!video||video.readyState<2){setCaptureStatus('カメラ準備中です');return;}
+  if(!cvLoaded){setCaptureStatus('OpenCV.js準備中です');return;}
+  try{
+    setLoading(true);setCaptureStatus('容器全体を撮影 → 厳格穴星座探索中...');
+    canvas.width=video.videoWidth||1920;canvas.height=video.videoHeight||1080;
+    canvas.getContext('2d').drawImage(video,0,0,canvas.width,canvas.height);
+    const fullImg=await imageFromCanvasV29(canvas);
+    await stopInspectCamera(true);
+    await runStrictConstellationFromImageV35(fullImg);
+  }catch(e){
+    console.error(e);setBanner('WAIT');setStat('alignStat','--','waitText');setStat('outerStat','--','waitText');setStat('pointStat','判定不能','waitText');
+    lastInspectionRecord=null;hideResultAction();log('v35 厳格穴星座探索エラー: '+e.message);dbg('v35 strict error',{message:e.message,stack:e.stack});
+  }finally{setLoading(false);}
+}
+
+async function runStrictConstellationFromImageV35(fullImg){
+  drawImageFit($('viewCanvas'),fullImg);$('empty').style.display='none';
+  const master=getMasterStrictModelV35();
+  const scene=grayMatFromImageV32(fullImg,STRICT_V35.sceneMaxW);
+  let found=null,warped=null,best=null;
+  try{
+    const ex=extractStrictAperturesV35(scene.gray,STRICT_V35.maxScene,false),sceneHoles=ex.holes;
+    const sceneDesc=buildConstellationDescriptorsV33(sceneHoles);
+    if(sceneDesc.length<4)throw new Error(`Scene厳格穴候補不足 ${sceneHoles.length}`);
+    best=searchBestConstellationV33(master.holes,master.desc,sceneHoles,sceneDesc);
+    found=refineStrictHomographyV35(master,sceneHoles,best,scene.w,scene.h);
+    drawStrictSceneV35(fullImg,scene.scale,sceneHoles,found,best);
+
+    const hd=found.H.data64F||found.H.data32F;
+    DEBUG.image={...(DEBUG.image||{}),mode:'v35-nomask-strict-aperture-constellation',masterHoles:master.holes.length,sceneHoles:sceneHoles.length,sceneRejected:ex.rejected.length,support:best.support,supportRatio:best.ratio,meanError:best.meanErr,proxyRect:master.proxyRect};
+    DEBUG.align={mode:'v35-strict-homography',support:best.support,supportRatio:best.ratio,meanError:best.meanErr,meanErrorRatio:best.meanErrRatio,inliers:found.inliers,total:found.total,inlierRatio:found.inlierRatio,projectedProxyAreaRatio:found.areaRatio,inside:found.inside,constellationOk:found.constellationOk,homographyOk:found.homographyOk,candidateOk:found.ok,H:[hd[0],hd[1],hd[2],hd[3],hd[4],hd[5],hd[6],hd[7],hd[8]]};renderDebug();
+
+    if(!found.ok){
+      setBanner('WAIT');setStat('alignStat',`${found.inliers}/${found.total}`,'ngText');setStat('outerStat','--','waitText');setStat('pointStat','判定不能','waitText');lastInspectionRecord=null;hideResultAction();
+      log(`v35 厳格穴星座：位置合わせ未確定
+Master採用穴: ${master.holes.length}
+Scene採用穴: ${sceneHoles.length}
+星座支持穴: ${best.support}/${master.holes.length} (${(best.ratio*100).toFixed(1)}%)
+支持穴平均誤差: ${best.meanErr.toFixed(1)} px
+Homography: ${found.inliers}/${found.total} (${(found.inlierRatio*100).toFixed(1)}%)
+投影面積: ${(found.areaRatio*100).toFixed(1)}%
+※マスクは使用していません。
+※位置合わせ未確定なのでOK/NG判定しません。`);
+      return;
+    }
+
+    const sc=document.createElement('canvas');sc.width=scene.w;sc.height=scene.h;sc.getContext('2d').drawImage(fullImg,0,0,scene.w,scene.h);
+    const ss=cv.imread(sc);warped=new cv.Mat();cv.warpPerspective(ss,warped,found.H,new cv.Size(master.w,master.h));ss.delete();
+    const wc=document.createElement('canvas');cv.imshow(wc,warped);inspectImg=await imageFromCanvasV29(wc);
+    const m=matFromImage(masterImg,CONFIG.maxW),wi=matFromImage(inspectImg,CONFIG.maxW);
+    try{
+      const res=compareAll(m,wi.src,points),outerOk=res.outerDiff<=CONFIG.outerThr,pointsOk=(points.length===0)||res.pointAllOk,alignOk=found.ok,ok=alignOk&&outerOk&&pointsOk;
+      lastInspectionRecord={
+        barcodeRaw:currentBarcodeRaw||currentPart?.partNo||'',masterKey:currentPart?.partNo||'',partNo:currentBarcodeInfo?.partNo||currentPart?.partNo||'',
+        partName:currentBarcodeInfo?.partName||'',qty:currentBarcodeInfo?.qty||'',shipDate:currentBarcodeInfo?.shipDate||'',issueDate:currentBarcodeInfo?.issueDate||'',
+        orderNo:currentBarcodeInfo?.orderNo||'',planNo:currentBarcodeInfo?.planNo||'',process:currentBarcodeInfo?.process||'',traceNo:currentBarcodeInfo?.traceNo||'',
+        barcodeFormat:currentBarcodeInfo?.format||'',result:ok?'OK':'NG',mode:'NOMASK_STRICT_APERTURE_CONSTELLATION_V35',
+        outerMatch:Math.round((res.outerMatch||0)*1000)/10,outerDiff:Math.round((res.outerDiff||0)*1000)/10,pointOk:res.pointOk,pointTotal:points.length,
+        constellationSupport:best.support,constellationSupportRatio:Math.round(best.ratio*1000)/1000,constellationMeanError:Math.round(best.meanErr*100)/100,
+        inliers:found.inliers,total:found.total,inlierRatio:Math.round(found.inlierRatio*1000)/1000,projectedProxyAreaRatio:Math.round(found.areaRatio*10000)/10000,
+        alignOk,outerOk,pointsOk,deviceId:getDeviceId(),inspectVersion:INSPECT_VERSION,
+        pointDetails:(res.details||[]).map(p=>({name:p.name,type:p.type,ok:p.ok,match:Math.round((p.match||0)*1000)/10,threshold:Math.round((p.threshold||0)*1000)/10}))
+      };
+      setBanner(ok?'OK':'NG');setStat('alignStat',`${found.inliers}/${found.total}`,'okText');setStat('outerStat',(res.outerMatch*100).toFixed(1)+'%',outerOk?'okText':'ngText');setStat('pointStat',points.length?`${res.pointOk}/${points.length}`:'外形のみ',pointsOk?'okText':'ngText');
+      log(`v35 マスクなし厳格穴星座判定
+品番: ${currentPart?.partNo||''}
+総合: ${ok?'OK':'NG'}
+Master厳格穴: ${master.holes.length}
+Scene厳格穴: ${sceneHoles.length}
+星座支持穴: ${best.support}/${master.holes.length} (${(best.ratio*100).toFixed(1)}%)
+Homography: ${found.inliers}/${found.total}
+外形マッチ率: ${(res.outerMatch*100).toFixed(1)}%
+検査ポイント: ${points.length?res.pointOk+'/'+points.length:'なし（外形のみ）'}`);
+      dbg('v35 strict complete',{ok,support:best.support,supportRatio:best.ratio,homographyInliers:found.inliers,outerMatch:res.outerMatch,pointOk:res.pointOk});
+      renderDebug();showResultAction(ok);if(!ok&&!ngLoggedForCurrent){ngLoggedForCurrent=true;recordInspection('NG_AUTO');}
+    }finally{try{m.src.delete();m.gray.delete();wi.src.delete();wi.gray.delete();}catch(_){}}
+  }finally{try{scene.gray.delete();}catch(_){}try{found?.H?.delete();}catch(_){}try{warped?.delete();}catch(_){}}
+}
+
+// =====================================================
+// v34 Product Mask + Aperture Constellation β
+// Masterの「製品領域」を先に自動抽出し、その内側だけから開口を採用する。
+// 円穴だけでなく、長穴・角穴・大きな変則開口も「開口」として扱う。
+// 背景上の暗部はMaster星座へ入れない。
+// Scene側は製品が複数重なるため全体マスクを強制せず、開口候補＋金属周囲コントラストで抽出。
+// =====================================================
+const APERTURE_V34 = {
+  masterMaxW: 1100,
+  sceneMaxW: 1500,
+  // Master製品マスク
+  maskClose: 17,
+  maskOpen: 3,
+  maskErode: 4,
+  minProductAreaRatio: 0.035,
+  // 開口候補（丸に限定しない）
+  masterMinAreaRatio: 0.000012,
+  masterMaxAreaOfProduct: 0.16,
+  sceneMinAreaRatio: 0.000010,
+  sceneMaxAreaRatio: 0.030,
+  minDarkDeltaMaster: 10,
+  minDarkDeltaScene: 14,
+  maxMasterApertures: 90,
+  maxSceneApertures: 300,
+  // 外周から少し内側だけMaster開口として採用。大開口は許容。
+  supportInsideRatio: 0.70,
+  // 描画
+  drawRejectedMaster: true,
+  rejectedDrawMax: 28
+};
+let masterApertureCacheV34=null;
+let masterProductMaskCacheV34=null;
+
+function makeGrayAndColorV34(img,maxW){
+  const s=Math.min(1,maxW/Math.max(1,img.width));
+  const c=document.createElement('canvas');
+  c.width=Math.max(2,Math.round(img.width*s));
+  c.height=Math.max(2,Math.round(img.height*s));
+  c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+  const src=cv.imread(c),gray=new cv.Mat();
+  cv.cvtColor(src,gray,cv.COLOR_RGBA2GRAY);
+  return {src,gray,scale:s,w:c.width,h:c.height,canvas:c};
+}
+function percentileGrayV34(gray,p){
+  // 256-bin histogramで簡易パーセンタイル
+  const hist=new Array(256).fill(0),data=gray.data,total=gray.rows*gray.cols;
+  for(let i=0;i<data.length;i++)hist[data[i]]++;
+  const target=total*p;let acc=0;
+  for(let v=0;v<256;v++){acc+=hist[v];if(acc>=target)return v;}
+  return 128;
+}
+function buildProductMaskV34(img){
+  if(!img)throw new Error('Master画像がありません');
+  const key=(currentPart?.partNo||'')+'|'+img.width+'x'+img.height+'|pm34';
+  if(masterProductMaskCacheV34?.key===key)return masterProductMaskCacheV34;
+
+  const m=makeGrayAndColorV34(img,APERTURE_V34.masterMaxW);
+  const blur=new cv.Mat(),bin=new cv.Mat(),morph=new cv.Mat();
+  let kernelClose=null,kernelOpen=null;
+  const contours=new cv.MatVector(),hierarchy=new cv.Mat();
+  try{
+    cv.GaussianBlur(m.gray,blur,new cv.Size(5,5),0);
+    // Otsuに加えて、画像の中間より明るい領域を金属候補にする。
+    cv.threshold(blur,bin,0,255,cv.THRESH_BINARY+cv.THRESH_OTSU);
+    kernelClose=cv.getStructuringElement(cv.MORPH_ELLIPSE,new cv.Size(APERTURE_V34.maskClose,APERTURE_V34.maskClose));
+    kernelOpen=cv.getStructuringElement(cv.MORPH_ELLIPSE,new cv.Size(APERTURE_V34.maskOpen,APERTURE_V34.maskOpen));
+    cv.morphologyEx(bin,morph,cv.MORPH_CLOSE,kernelClose);
+    cv.morphologyEx(morph,morph,cv.MORPH_OPEN,kernelOpen);
+
+    cv.findContours(morph,contours,hierarchy,cv.RETR_EXTERNAL,cv.CHAIN_APPROX_SIMPLE);
+    const imgArea=m.w*m.h;
+    let best=-1,bestScore=-1,bestRect=null,bestArea=0;
+    for(let i=0;i<contours.size();i++){
+      const c=contours.get(i),area=cv.contourArea(c);
+      if(area<imgArea*APERTURE_V34.minProductAreaRatio)continue;
+      const r=cv.boundingRect(c);
+      const cx=(r.x+r.width/2)/m.w,cy=(r.y+r.height/2)/m.h;
+      const centerBonus=1-Math.min(0.85,Math.hypot(cx-.5,cy-.5));
+      const borderTouch=(r.x<=2||r.y<=2||r.x+r.width>=m.w-2||r.y+r.height>=m.h-2);
+      const aspect=Math.max(r.width,r.height)/Math.max(1,Math.min(r.width,r.height));
+      // 面積を主とし、中央・非境界・ある程度まとまった形を優先。横長専用にはしない。
+      const score=area*(0.72+0.28*centerBonus)*(borderTouch?0.42:1.0)*(0.88+0.12*Math.min(4,aspect)/4);
+      if(score>bestScore){best=i;bestScore=score;bestRect=r;bestArea=area;}
+    }
+    if(best<0)throw new Error('Master製品領域を自動抽出できません');
+
+    // 選んだ明部コンポーネントの凸包を製品の「外包絡」とする。
+    // 穴は暗く抜けていても、この包絡の内側として残る。
+    const chosen=contours.get(best);
+    const hull=new cv.Mat();
+    cv.convexHull(chosen,hull,false,true);
+    const hullVec=new cv.MatVector();hullVec.push_back(hull);
+    const mask=cv.Mat.zeros(m.h,m.w,cv.CV_8UC1);
+    cv.drawContours(mask,hullVec,0,new cv.Scalar(255),-1);
+
+    // 元の明部を少し膨張させたものともAND/OR調整し、凸包の過剰な張り出しを少し抑える。
+    const brightGrow=new cv.Mat();
+    const kg=cv.getStructuringElement(cv.MORPH_ELLIPSE,new cv.Size(25,25));
+    cv.dilate(morph,brightGrow,kg);
+    kg.delete();
+    const refined=new cv.Mat();
+    cv.bitwise_and(mask,brightGrow,refined);
+    brightGrow.delete();mask.delete();hullVec.delete();hull.delete();
+
+    // 穴探索用は境界誤検出を避けるため少し収縮。
+    const inner=new cv.Mat();
+    const ke=cv.getStructuringElement(cv.MORPH_ELLIPSE,new cv.Size(APERTURE_V34.maskErode*2+1,APERTURE_V34.maskErode*2+1));
+    cv.erode(refined,inner,ke);ke.delete();
+
+    const rr=cv.boundingRect(refined);
+    const result={
+      key,w:m.w,h:m.h,scale:m.scale,
+      maskCanvas:matToCanvasV29(refined),
+      innerMaskCanvas:matToCanvasV29(inner),
+      rect:{x:rr.x,y:rr.y,w:rr.width,h:rr.height},
+      area:cv.countNonZero(refined),
+      thresholdHint:percentileGrayV34(m.gray,.58)
+    };
+    refined.delete();inner.delete();
+    masterProductMaskCacheV34=result;
+    dbg('v34 Master製品マスク生成',{rect:result.rect,area:result.area,process:{w:m.w,h:m.h,scale:m.scale}});
+    return result;
+  }finally{
+    try{m.src.delete();m.gray.delete();blur.delete();bin.delete();morph.delete();}catch(_){ }
+    try{kernelClose?.delete();kernelOpen?.delete();contours.delete();hierarchy.delete();}catch(_){ }
+  }
+}
+function rectSupportRatioV34(mask,r){
+  const x=Math.max(0,r.x),y=Math.max(0,r.y),w=Math.min(mask.cols-x,r.width),h=Math.min(mask.rows-y,r.height);
+  if(w<=0||h<=0)return 0;
+  const roi=mask.roi(new cv.Rect(x,y,w,h));
+  const ratio=cv.countNonZero(roi)/Math.max(1,w*h);roi.delete();return ratio;
+}
+function classifyApertureV34(v){
+  if(v.circularity>=0.62&&v.aspect>=0.65&&v.aspect<=1.55)return 'round';
+  if(v.aspect>=2.0||v.aspect<=0.50)return 'slot';
+  if(v.extent>=0.52&&v.circularity<0.58)return 'angular';
+  return 'irregular';
+}
+function extractAperturesV34(gray,maxCount,opt={}){
+  const supportMask=opt.supportMask||null;
+  const isMaster=!!supportMask;
+  const eq=new cv.Mat(),bin=new cv.Mat(),morph=new cv.Mat();
+  const clahe=new cv.CLAHE(2.2,new cv.Size(8,8));
+  clahe.apply(gray,eq);
+  cv.adaptiveThreshold(eq,bin,255,cv.ADAPTIVE_THRESH_GAUSSIAN_C,cv.THRESH_BINARY_INV,35,6);
+  const k=cv.getStructuringElement(cv.MORPH_ELLIPSE,new cv.Size(3,3));
+  cv.morphologyEx(bin,morph,cv.MORPH_OPEN,k);k.delete();
+  if(supportMask)cv.bitwise_and(morph,supportMask,morph);
+
+  const contours=new cv.MatVector(),hierarchy=new cv.Mat();
+  cv.findContours(morph,contours,hierarchy,cv.RETR_LIST,cv.CHAIN_APPROX_SIMPLE);
+  const imgArea=gray.cols*gray.rows;
+  const supportArea=supportMask?cv.countNonZero(supportMask):imgArea;
+  const minA=Math.max(7,imgArea*(isMaster?APERTURE_V34.masterMinAreaRatio:APERTURE_V34.sceneMinAreaRatio));
+  const maxA=isMaster?supportArea*APERTURE_V34.masterMaxAreaOfProduct:imgArea*APERTURE_V34.sceneMaxAreaRatio;
+  const minDark=isMaster?APERTURE_V34.minDarkDeltaMaster:APERTURE_V34.minDarkDeltaScene;
+  const vals=[],rejected=[];
+
+  for(let i=0;i<contours.size();i++){
+    const c=contours.get(i),area=cv.contourArea(c);
+    if(area<minA||area>maxA)continue;
+    const r=cv.boundingRect(c);
+    if(r.width<3||r.height<3)continue;
+    const aspect=r.width/Math.max(1,r.height);
+    if(aspect<0.07||aspect>14)continue; // 変則/長穴をかなり広く許容
+    const per=cv.arcLength(c,true);if(per<=0)continue;
+    const circ=Math.max(0,Math.min(1,4*Math.PI*area/(per*per)));
+    const extent=area/Math.max(1,r.width*r.height);
+    const M=cv.moments(c,false);if(Math.abs(M.m00)<1e-6)continue;
+    const x=M.m10/M.m00,y=M.m01/M.m00;
+
+    if(supportMask){
+      const cx=Math.max(0,Math.min(supportMask.cols-1,Math.round(x)));
+      const cy=Math.max(0,Math.min(supportMask.rows-1,Math.round(y)));
+      if(!supportMask.ucharPtr(cy,cx)[0]){rejected.push({x,y,size:Math.sqrt(area),reason:'outside'});continue;}
+      const supportRatio=rectSupportRatioV34(supportMask,r);
+      if(supportRatio<APERTURE_V34.supportInsideRatio){rejected.push({x,y,size:Math.sqrt(area),reason:'edge'});continue;}
+    }
+
+    // 穴内部 vs ひと回り大きい周辺の明るさ差。形状は問わない。
+    const cx=Math.round(x),cy=Math.round(y);
+    const rr=Math.max(5,Math.round(Math.max(r.width,r.height)*1.55));
+    const x0=Math.max(0,cx-rr),y0=Math.max(0,cy-rr),x1=Math.min(gray.cols,cx+rr+1),y1=Math.min(gray.rows,cy+rr+1);
+    const inner=gray.roi(new cv.Rect(r.x,r.y,r.width,r.height));
+    const outer=gray.roi(new cv.Rect(x0,y0,x1-x0,y1-y0));
+    const innerMean=cv.mean(inner)[0],outerMean=cv.mean(outer)[0];inner.delete();outer.delete();
+    const darkDelta=outerMean-innerMean;
+    if(darkDelta<minDark){rejected.push({x,y,size:Math.sqrt(area),reason:'contrast'});continue;}
+
+    const v={x,y,area,w:r.width,h:r.height,aspect,circularity:circ,extent,darkDelta,size:Math.sqrt(area)};
+    v.kind=classifyApertureV34(v);
+    // 円形度を主役にしない。暗さ・サイズ・形の詰まり具合で評価。
+    v.quality=(Math.min(90,darkDelta)/90)*0.48 + Math.min(1,v.size/34)*0.22 + Math.min(1,extent)*0.16 + (v.kind==='irregular'?0.10:0.14);
+    vals.push(v);
+  }
+  contours.delete();hierarchy.delete();morph.delete();clahe.delete();eq.delete();bin.delete();
+
+  // 近接した重複輪郭を抑制
+  vals.sort((a,b)=>b.quality-a.quality);
+  const kept=[];
+  for(const v of vals){
+    const dup=kept.some(q=>Math.hypot(q.x-v.x,q.y-v.y)<Math.max(3,Math.min(q.size,v.size)*0.38));
+    if(!dup)kept.push(v);
+    if(kept.length>=maxCount)break;
+  }
+  return {holes:kept,rejected};
+}
+function getMasterApertureModelV34(){
+  if(!masterImg)throw new Error('Master画像がありません');
+  const key=(currentPart?.partNo||'')+'|'+masterImg.width+'x'+masterImg.height+'|ap34';
+  if(masterApertureCacheV34?.key===key)return masterApertureCacheV34;
+  const pm=buildProductMaskV34(masterImg);
+  const m=grayMatFromImageV32(masterImg,APERTURE_V34.masterMaxW);
+  const supportRGBA=cv.imread(pm.innerMaskCanvas),support=new cv.Mat();
+  cv.cvtColor(supportRGBA,support,cv.COLOR_RGBA2GRAY);supportRGBA.delete();
+  try{
+    const ex=extractAperturesV34(m.gray,APERTURE_V34.maxMasterApertures,{supportMask:support});
+    if(ex.holes.length<4)throw new Error('製品マスク内から有効な開口を4点以上抽出できません');
+    const desc=buildConstellationDescriptorsV33(ex.holes);
+    masterApertureCacheV34={
+      key,w:m.w,h:m.h,scale:m.scale,
+      holes:ex.holes,desc,rejected:ex.rejected,
+      productMask:pm,productRect:pm.rect
+    };
+    dbg('v34 Master開口星座生成',{
+      apertures:ex.holes.length,rejected:ex.rejected.length,
+      kinds:ex.holes.reduce((o,h)=>(o[h.kind]=(o[h.kind]||0)+1,o),{}),
+      productRect:pm.rect
+    });
+    return masterApertureCacheV34;
+  }finally{m.gray.delete();support.delete();}
+}
+function homographyRectToSceneCornersV34(HsceneToMaster,rect){
+  const inv=new cv.Mat();cv.invert(HsceneToMaster,inv,cv.DECOMP_SVD);
+  const x=rect.x,y=rect.y,w=rect.w,h=rect.h;
+  const src=cv.matFromArray(4,1,cv.CV_32FC2,[x,y,x+w,y,x+w,y+h,x,y+h]);
+  const dst=new cv.Mat();cv.perspectiveTransform(src,dst,inv);
+  const d=dst.data32F,pts=[];for(let i=0;i<4;i++)pts.push({x:d[i*2],y:d[i*2+1]});
+  inv.delete();src.delete();dst.delete();return pts;
+}
+function refineApertureHomographyV34(masterModel,sceneHoles,best,sceneW,sceneH){
+  if(best.pairs.length<4)throw new Error(`開口星座支持点不足 ${best.pairs.length}/4`);
+  const srcPts=[],dstPts=[];
+  for(const p of best.pairs){
+    const s=sceneHoles[p.sj],m=masterModel.holes[p.mi];
+    srcPts.push(s.x,s.y);dstPts.push(m.x,m.y);
+  }
+  const src=cv.matFromArray(best.pairs.length,1,cv.CV_32FC2,srcPts),dst=cv.matFromArray(best.pairs.length,1,cv.CV_32FC2,dstPts),mask=new cv.Mat();
+  const H=cv.findHomography(src,dst,cv.RANSAC,CONSTELLATION_V33.homographyRansacThr,mask);
+  let inliers=0;for(let i=0;i<mask.rows;i++)if(mask.data[i])inliers++;
+  const inlierRatio=inliers/Math.max(1,best.pairs.length);src.delete();dst.delete();mask.delete();
+  if(H.empty())throw new Error('開口星座Homography再推定失敗');
+  // v33の「Master画像全体」ではなく、製品マスクのbboxだけを投影面積検証に使う。
+  const corners=homographyRectToSceneCornersV34(H,masterModel.productRect);
+  const areaRatio=polygonAreaV32(corners)/Math.max(1,sceneW*sceneH);
+  const margin=Math.max(sceneW,sceneH)*0.16;
+  const inside=corners.every(p=>Number.isFinite(p.x)&&Number.isFinite(p.y)&&p.x>=-margin&&p.y>=-margin&&p.x<=sceneW+margin&&p.y<=sceneH+margin);
+  const constellationOk=best.support>=CONSTELLATION_V33.minSupport && best.ratio>=CONSTELLATION_V33.minSupportRatio && best.meanErrRatio<=CONSTELLATION_V33.maxMeanErrorRatio;
+  const homographyOk=inliers>=Math.max(4,Math.min(CONSTELLATION_V33.minSupport,best.support)) && inlierRatio>=0.55 && areaRatio>=0.004 && areaRatio<=0.62 && inside;
+  return {H,corners,areaRatio,inside,inliers,total:best.pairs.length,inlierRatio,constellationOk,homographyOk,ok:constellationOk&&homographyOk};
+}
+function drawProductMaskBoundaryV34(canvas,pm){
+  const rgba=cv.imread(pm.maskCanvas),gray=new cv.Mat();cv.cvtColor(rgba,gray,cv.COLOR_RGBA2GRAY);rgba.delete();
+  const contours=new cv.MatVector(),hier=new cv.Mat();cv.findContours(gray,contours,hier,cv.RETR_EXTERNAL,cv.CHAIN_APPROX_SIMPLE);gray.delete();
+  const ctx=canvas.getContext('2d');
+  const fit=Math.min(canvas.width/masterImg.width,canvas.height/masterImg.height),ox=(canvas.width-masterImg.width*fit)/2,oy=(canvas.height-masterImg.height*fit)/2,inv=1/Math.max(1e-9,pm.scale);
+  ctx.save();ctx.strokeStyle='#35f078';ctx.lineWidth=3;
+  for(let ci=0;ci<contours.size();ci++){
+    const c=contours.get(ci),data=c.data32S;if(!data||data.length<4)continue;
+    ctx.beginPath();
+    for(let j=0;j<data.length;j+=2){const x=ox+data[j]*inv*fit,y=oy+data[j+1]*inv*fit;j?ctx.lineTo(x,y):ctx.moveTo(x,y);}ctx.closePath();ctx.stroke();
+  }
+  ctx.restore();contours.delete();hier.delete();
+}
+function drawMasterApertureConstellationV34(){
+  if(!cvLoaded||!masterImg)return 0;
+  try{
+    const model=getMasterApertureModelV34(),holes=model.holes,canvas=$('viewCanvas'),ctx=canvas.getContext('2d');
+    drawProductMaskBoundaryV34(canvas,model.productMask);
+    const fit=Math.min(canvas.width/masterImg.width,canvas.height/masterImg.height),ox=(canvas.width-masterImg.width*fit)/2,oy=(canvas.height-masterImg.height*fit)/2,inv=1/Math.max(1e-9,model.scale);
+    const done=new Set();ctx.save();ctx.strokeStyle='rgba(255,216,77,.32)';ctx.lineWidth=1.3;
+    for(let i=0;i<holes.length;i++){
+      const p=holes[i],ns=holes.map((q,j)=>j===i?null:{j,d:Math.hypot(q.x-p.x,q.y-p.y)}).filter(Boolean).sort((a,b)=>a.d-b.d).slice(0,CONSTELLATION_V33.masterDrawLinks);
+      for(const n of ns){const key=i<n.j?`${i}-${n.j}`:`${n.j}-${i}`;if(done.has(key))continue;done.add(key);const q=holes[n.j];ctx.beginPath();ctx.moveTo(ox+p.x*inv*fit,oy+p.y*inv*fit);ctx.lineTo(ox+q.x*inv*fit,oy+q.y*inv*fit);ctx.stroke();}
+    }
+    ctx.font='bold 11px system-ui';
+    const colorFor=h=>h.kind==='round'?'#ffd84d':h.kind==='slot'?'#35dcff':h.kind==='angular'?'#ff9f43':'#ff72d0';
+    for(let i=0;i<holes.length;i++){
+      const h=holes[i],x=ox+h.x*inv*fit,y=oy+h.y*inv*fit,rr=Math.max(4,Math.min(18,h.size*inv*fit*.52));
+      ctx.strokeStyle=colorFor(h);ctx.lineWidth=2.2;ctx.beginPath();ctx.arc(x,y,rr,0,Math.PI*2);ctx.stroke();
+      ctx.fillStyle='rgba(0,0,0,.70)';ctx.fillRect(x+4,y-15,31,14);ctx.fillStyle='#fff';ctx.fillText('A'+(i+1),x+6,y-5);
+    }
+    if(APERTURE_V34.drawRejectedMaster){
+      ctx.strokeStyle='rgba(255,75,95,.72)';ctx.lineWidth=1.5;
+      for(const r of model.rejected.slice(0,APERTURE_V34.rejectedDrawMax)){
+        const x=ox+r.x*inv*fit,y=oy+r.y*inv*fit,s=4;ctx.beginPath();ctx.moveTo(x-s,y-s);ctx.lineTo(x+s,y+s);ctx.moveTo(x+s,y-s);ctx.lineTo(x-s,y+s);ctx.stroke();
+      }
+    }
+    ctx.restore();
+    DEBUG.image={...(DEBUG.image||{}),masterApertureV34:{productRect:model.productRect,accepted:holes.length,rejected:model.rejected.length,kinds:holes.reduce((o,h)=>(o[h.kind]=(o[h.kind]||0)+1,o),{}),legend:'緑=製品マスク / 黄=丸 / 水色=長穴 / 橙=角 / 桃=不定形 / 赤×=除外'}};
+    renderDebug();return holes.length;
+  }catch(e){dbg('v34 Master製品マスク/開口可視化失敗',{message:e.message});return 0;}
+}
+async function captureApertureConstellationOneV34(){
+  const video=$('captureVideo'),canvas=$('captureCanvas');
+  if(!video||video.readyState<2){setCaptureStatus('カメラ準備中です');return;}
+  if(!cvLoaded){setCaptureStatus('OpenCV.js準備中です');return;}
+  try{
+    setLoading(true);setCaptureStatus('容器全体を撮影 → 製品内開口星座探索中...');
+    canvas.width=video.videoWidth||1920;canvas.height=video.videoHeight||1080;canvas.getContext('2d').drawImage(video,0,0,canvas.width,canvas.height);
+    const fullImg=await imageFromCanvasV29(canvas);await stopInspectCamera(true);await runApertureConstellationFromImageV34(fullImg);
+  }catch(e){console.error(e);setBanner('WAIT');setStat('alignStat','--','waitText');setStat('outerStat','--','waitText');setStat('pointStat','判定不能','waitText');lastInspectionRecord=null;hideResultAction();log('v34 開口星座探索エラー: '+e.message);dbg('v34 aperture constellation error',{message:e.message,stack:e.stack});}finally{setLoading(false);}
+}
+async function runApertureConstellationFromImageV34(fullImg){
+  drawImageFit($('viewCanvas'),fullImg);$('empty').style.display='none';
+  const master=getMasterApertureModelV34();
+  const scene=grayMatFromImageV32(fullImg,APERTURE_V34.sceneMaxW);
+  let found=null,warped=null,best=null;
+  try{
+    const ex=extractAperturesV34(scene.gray,APERTURE_V34.maxSceneApertures,{}),sceneHoles=ex.holes;
+    const sceneDesc=buildConstellationDescriptorsV33(sceneHoles);
+    if(sceneDesc.length<4)throw new Error('容器画像から開口星座を構成できません');
+    best=searchBestConstellationV33(master.holes,master.desc,sceneHoles,sceneDesc);
+    found=refineApertureHomographyV34(master,sceneHoles,best,scene.w,scene.h);
+    drawConstellationSceneV33(fullImg,scene.scale,sceneHoles,found,best);
+
+    const hd=found.H.data64F||found.H.data32F;
+    DEBUG.image={...(DEBUG.image||{}),mode:'v34-productmask-aperture-constellation',masterApertures:master.holes.length,sceneApertures:sceneHoles.length,support:best.support,supportRatio:best.ratio,meanError:best.meanErr,productRect:master.productRect,sceneProcess:{w:scene.w,h:scene.h,scale:scene.scale}};
+    DEBUG.align={mode:'v34-aperture-constellation-homography',support:best.support,supportRatio:best.ratio,meanError:best.meanErr,meanErrorRatio:best.meanErrRatio,inliers:found.inliers,total:found.total,inlierRatio:found.inlierRatio,projectedProductAreaRatio:found.areaRatio,inside:found.inside,constellationOk:found.constellationOk,homographyOk:found.homographyOk,candidateOk:found.ok,H:[hd[0],hd[1],hd[2],hd[3],hd[4],hd[5],hd[6],hd[7],hd[8]]};renderDebug();
+
+    if(!found.ok){
+      setBanner('WAIT');setStat('alignStat',`${found.inliers}/${found.total}`,'ngText');setStat('outerStat','--','waitText');setStat('pointStat','判定不能','waitText');lastInspectionRecord=null;hideResultAction();
+      log(`開口星座は候補を作りましたが位置合わせ未確定です。\n星座支持開口: ${best.support}/${master.holes.length} (${(best.ratio*100).toFixed(1)}%)\n支持開口平均誤差: ${best.meanErr.toFixed(1)} px\nHomography: ${found.inliers}/${found.total} (${(found.inlierRatio*100).toFixed(1)}%)\n製品投影面積: ${(found.areaRatio*100).toFixed(1)}%\n※Master画像全体ではなく製品マスク領域で面積検証しています。\n※位置合わせ未確定なのでOK/NG判定しません。`);return;
+    }
+
+    const sceneColorCanvas=document.createElement('canvas');sceneColorCanvas.width=scene.w;sceneColorCanvas.height=scene.h;sceneColorCanvas.getContext('2d').drawImage(fullImg,0,0,scene.w,scene.h);
+    const sceneSrc=cv.imread(sceneColorCanvas);warped=new cv.Mat();cv.warpPerspective(sceneSrc,warped,found.H,new cv.Size(master.w,master.h));sceneSrc.delete();
+    const wc=document.createElement('canvas');cv.imshow(wc,warped);inspectImg=await imageFromCanvasV29(wc);
+    const m=matFromImage(masterImg,CONFIG.maxW),wi=matFromImage(inspectImg,CONFIG.maxW);
+    try{
+      const res=compareAll(m,wi.src,points),outerOk=res.outerDiff<=CONFIG.outerThr,pointsOk=(points.length===0)||res.pointAllOk,alignOk=found.ok,ok=alignOk&&outerOk&&pointsOk;
+      lastInspectionRecord={barcodeRaw:currentBarcodeRaw||currentPart?.partNo||'',masterKey:currentPart?.partNo||'',partNo:currentBarcodeInfo?.partNo||currentPart?.partNo||'',partName:currentBarcodeInfo?.partName||'',qty:currentBarcodeInfo?.qty||'',shipDate:currentBarcodeInfo?.shipDate||'',issueDate:currentBarcodeInfo?.issueDate||'',orderNo:currentBarcodeInfo?.orderNo||'',planNo:currentBarcodeInfo?.planNo||'',process:currentBarcodeInfo?.process||'',traceNo:currentBarcodeInfo?.traceNo||'',barcodeFormat:currentBarcodeInfo?.format||'',result:ok?'OK':'NG',mode:'PRODUCTMASK_APERTURE_CONSTELLATION_V34',outerMatch:Math.round((res.outerMatch||0)*1000)/10,outerDiff:Math.round((res.outerDiff||0)*1000)/10,pointOk:res.pointOk,pointTotal:points.length,constellationSupport:best.support,constellationSupportRatio:Math.round(best.ratio*1000)/1000,constellationMeanError:Math.round(best.meanErr*100)/100,inliers:found.inliers,total:found.total,inlierRatio:Math.round(found.inlierRatio*1000)/1000,projectedProductAreaRatio:Math.round(found.areaRatio*10000)/10000,alignOk,outerOk,pointsOk,deviceId:getDeviceId(),inspectVersion:INSPECT_VERSION,pointDetails:(res.details||[]).map(p=>({name:p.name,type:p.type,ok:p.ok,match:Math.round((p.match||0)*1000)/10,threshold:Math.round((p.threshold||0)*1000)/10}))};
+      setBanner(ok?'OK':'NG');setStat('alignStat',`${found.inliers}/${found.total}`,'okText');setStat('outerStat',(res.outerMatch*100).toFixed(1)+'%',outerOk?'okText':'ngText');setStat('pointStat',points.length?`${res.pointOk}/${points.length}`:'外形のみ',pointsOk?'okText':'ngText');
+      log(`v34 製品内開口星座判定\n品番: ${currentPart?.partNo||''}\n総合: ${ok?'OK':'NG'}\nMaster開口: ${master.holes.length}\n星座支持開口: ${best.support}/${master.holes.length} (${(best.ratio*100).toFixed(1)}%)\nHomography: ${found.inliers}/${found.total}\n外形マッチ率: ${(res.outerMatch*100).toFixed(1)}%\n検査ポイント: ${points.length?res.pointOk+'/'+points.length:'なし（外形のみ）'}`);
+      dbg('v34 aperture constellation complete',{ok,support:best.support,supportRatio:best.ratio,homographyInliers:found.inliers,outerMatch:res.outerMatch,pointOk:res.pointOk});renderDebug();showResultAction(ok);if(!ok&&!ngLoggedForCurrent){ngLoggedForCurrent=true;recordInspection('NG_AUTO');}
+    }finally{try{m.src.delete();m.gray.delete();wi.src.delete();wi.gray.delete();}catch(_){}}
+  }finally{try{scene.gray.delete();}catch(_){ }try{found?.H?.delete();}catch(_){ }try{warped?.delete();}catch(_){ }}
+}
+
+// =====================================================
+// v33 Hole Constellation Search β
+// 「穴1個の対応」ではなく、Masterで検出した穴群全体を星座として扱う。
+// 部品固有の穴座標はハードコードしない。
+// 1) Master/Sceneからv32と同じ汎用穴候補を抽出
+// 2) 各穴の近傍星座記述子を作成
+// 3) 星座アンカー2組から回転・倍率・平行移動を仮定
+// 4) Master全穴をSceneへ投影し、何個の穴が一貫して合うかを採点
+// 5) ベスト仮説の支持穴だけでHomographyを再推定
+// 6) 位置合わせ成立後のみ既存外形/検査ポイント判定へ進む
+// =====================================================
+const CONSTELLATION_V33 = {
+  neighbors: 5,
+  maxMasterHoles: 70,
+  maxSceneHoles: 260,
+  descriptorMax: 0.46,
+  anchorCandidates: 44,
+  minPairMasterDistance: 24,
+  scaleMin: 0.18,
+  scaleMax: 3.8,
+  basePairTolerancePx: 22,
+  minSupport: 6,
+  minSupportRatio: 0.20,
+  maxMeanErrorRatio: 0.80,
+  homographyRansacThr: 7.0,
+  minProjectedAreaRatio: 0.006,
+  maxProjectedAreaRatio: 0.78,
+  masterDrawLinks: 3
+};
+let masterConstellationCacheV33=null;
+
+function angleWrapV33(a){
+  while(a>Math.PI)a-=Math.PI*2;
+  while(a<-Math.PI)a+=Math.PI*2;
+  return a;
+}
+function holeShapeDistanceV33(a,b){
+  const aspect=Math.abs(Math.log(Math.max(.08,a.aspect)/Math.max(.08,b.aspect)));
+  const circ=Math.abs((a.circularity||0)-(b.circularity||0));
+  const ext=Math.abs((a.extent||0)-(b.extent||0));
+  return aspect*0.50+circ*0.28+ext*0.22;
+}
+function buildConstellationDescriptorsV33(holes){
+  if(!holes||holes.length<4)return [];
+  return holes.map((p,idx)=>{
+    const near=[];
+    for(let j=0;j<holes.length;j++){
+      if(j===idx)continue;
+      const q=holes[j],dx=q.x-p.x,dy=q.y-p.y;
+      near.push({j,d:Math.hypot(dx,dy),a:Math.atan2(dy,dx)});
+    }
+    near.sort((a,b)=>a.d-b.d);
+    const take=near.slice(0,CONSTELLATION_V33.neighbors);
+    if(take.length<3)return null;
+    const base=Math.max(2,take[0].d);
+    const ratios=take.map(n=>n.d/base);
+
+    // 回転不変の「角度間隔」
+    const aa=take.map(n=>n.a).sort((a,b)=>a-b);
+    const gaps=[];
+    for(let k=0;k<aa.length;k++){
+      let g=(k===aa.length-1?aa[0]+Math.PI*2:aa[k+1])-aa[k];
+      gaps.push(g/(Math.PI*2));
+    }
+    gaps.sort((a,b)=>a-b);
+
+    return {
+      idx,x:p.x,y:p.y,
+      ratios,gaps,
+      aspect:p.aspect,
+      circularity:p.circularity,
+      extent:p.extent,
+      quality:p.quality||0,
+      nearest:take
+    };
+  }).filter(Boolean);
+}
+function constellationDescriptorDistanceV33(a,b){
+  if(!a||!b)return 999;
+  const n=Math.min(a.ratios.length,b.ratios.length);
+  if(n<3)return 999;
+  let dr=0;
+  for(let i=0;i<n;i++)dr+=Math.abs(a.ratios[i]-b.ratios[i]);
+  dr/=n;
+
+  const g=Math.min(a.gaps.length,b.gaps.length);
+  let dg=0;
+  for(let i=0;i<g;i++)dg+=Math.abs(a.gaps[i]-b.gaps[i]);
+  dg/=Math.max(1,g);
+
+  const shape=holeShapeDistanceV33(a,b);
+  return dr*0.56+dg*0.25+shape*0.19;
+}
+function buildAnchorCandidatesV33(masterDesc,sceneDesc){
+  // 各Scene穴について「Master上位3候補」まで残す。
+  // v32の1対1 best-onlyより、同一部品が複数あるSceneで候補を失いにくい。
+  const all=[];
+  for(const s of sceneDesc){
+    const local=[];
+    for(const m of masterDesc){
+      const d=constellationDescriptorDistanceV33(m,s);
+      if(d<=CONSTELLATION_V33.descriptorMax)local.push({m,s,d});
+    }
+    local.sort((a,b)=>a.d-b.d);
+    for(const x of local.slice(0,3))all.push(x);
+  }
+  all.sort((a,b)=>a.d-b.d);
+  return all.slice(0,CONSTELLATION_V33.anchorCandidates);
+}
+function makeSimilarityTransformV33(m1,m2,s1,s2){
+  const mdx=m2.x-m1.x,mdy=m2.y-m1.y;
+  const sdx=s2.x-s1.x,sdy=s2.y-s1.y;
+  const md=Math.hypot(mdx,mdy),sd=Math.hypot(sdx,sdy);
+  if(md<CONSTELLATION_V33.minPairMasterDistance||sd<5)return null;
+  const scale=sd/md;
+  if(scale<CONSTELLATION_V33.scaleMin||scale>CONSTELLATION_V33.scaleMax)return null;
+  const rot=Math.atan2(sdy,sdx)-Math.atan2(mdy,mdx);
+  const c=Math.cos(rot),si=Math.sin(rot);
+  const tx=s1.x-scale*(m1.x*c-m1.y*si);
+  const ty=s1.y-scale*(m1.x*si+m1.y*c);
+  return {
+    scale,rot,tx,ty,
+    map(p){return {x:scale*(p.x*c-p.y*si)+tx,y:scale*(p.x*si+p.y*c)+ty};}
+  };
+}
+function nearestSceneHoleV33(p,sceneHoles,tol,used){
+  let best=-1,bestD=tol;
+  for(let j=0;j<sceneHoles.length;j++){
+    if(used&&used.has(j))continue;
+    const q=sceneHoles[j];
+    const d=Math.hypot(q.x-p.x,q.y-p.y);
+    if(d<bestD){bestD=d;best=j;}
+  }
+  return best>=0?{idx:best,d:bestD}:null;
+}
+function scoreConstellationTransformV33(masterHoles,sceneHoles,tf){
+  const tol=Math.max(9,Math.min(42,CONSTELLATION_V33.basePairTolerancePx*Math.sqrt(tf.scale)));
+  const candidates=[];
+  for(let mi=0;mi<masterHoles.length;mi++){
+    const mp=masterHoles[mi],pred=tf.map(mp);
+    // 最初は幾何距離で候補を拾い、形状差を加点
+    let best=null;
+    for(let sj=0;sj<sceneHoles.length;sj++){
+      const sp=sceneHoles[sj];
+      const d=Math.hypot(sp.x-pred.x,sp.y-pred.y);
+      if(d>tol)continue;
+      const sd=holeShapeDistanceV33(mp,sp);
+      const cost=d/tol+sd*0.55;
+      if(!best||cost<best.cost)best={mi,sj,d,cost,pred};
+    }
+    if(best)candidates.push(best);
+  }
+
+  // 同じScene穴の二重使用を禁止
+  candidates.sort((a,b)=>a.cost-b.cost);
+  const usedM=new Set(),usedS=new Set(),pairs=[];
+  for(const c of candidates){
+    if(usedM.has(c.mi)||usedS.has(c.sj))continue;
+    usedM.add(c.mi);usedS.add(c.sj);pairs.push(c);
+  }
+  const support=pairs.length;
+  const ratio=support/Math.max(1,masterHoles.length);
+  const meanErr=support?pairs.reduce((s,p)=>s+p.d,0)/support:999;
+  const meanErrRatio=meanErr/Math.max(1,tol);
+  const score=ratio*2.4 + Math.min(1,support/12)*1.0 - meanErrRatio*0.45;
+  return {support,ratio,meanErr,meanErrRatio,tol,score,pairs};
+}
+function searchBestConstellationV33(masterHoles,masterDesc,sceneHoles,sceneDesc){
+  const anchors=buildAnchorCandidatesV33(masterDesc,sceneDesc);
+  if(anchors.length<2)throw new Error('星座アンカー候補不足');
+
+  let best=null, tested=0;
+  // 上位アンカー同士から仮変換を作る。
+  for(let a=0;a<anchors.length;a++){
+    const A=anchors[a];
+    for(let b=a+1;b<anchors.length;b++){
+      const B=anchors[b];
+      if(A.m.idx===B.m.idx||A.s.idx===B.s.idx)continue;
+
+      const m1=masterHoles[A.m.idx],m2=masterHoles[B.m.idx];
+      const s1=sceneHoles[A.s.idx],s2=sceneHoles[B.s.idx];
+
+      // 2穴の形状対応が極端に違う仮説は捨てる
+      if(holeShapeDistanceV33(m1,s1)>0.9||holeShapeDistanceV33(m2,s2)>0.9)continue;
+
+      const tf=makeSimilarityTransformV33(m1,m2,s1,s2);
+      if(!tf)continue;
+      tested++;
+      const sc=scoreConstellationTransformV33(masterHoles,sceneHoles,tf);
+      if(!best||sc.score>best.score){
+        best={...sc,tf,anchorA:A,anchorB:B};
+      }
+    }
+  }
+  if(!best)throw new Error('星座の一貫した配置を作れません');
+  best.testedHypotheses=tested;
+  return best;
+}
+function refineConstellationHomographyV33(masterModel,sceneHoles,best,sceneW,sceneH){
+  if(best.pairs.length<4)throw new Error(`星座支持点不足 ${best.pairs.length}/4`);
+
+  // 仮Similarityで得た「全穴の整合ペア」をHomographyの入力にする。
+  const srcPts=[],dstPts=[];
+  for(const p of best.pairs){
+    const s=sceneHoles[p.sj],m=masterModel.holes[p.mi];
+    srcPts.push(s.x,s.y); // scene
+    dstPts.push(m.x,m.y); // master
+  }
+  const src=cv.matFromArray(best.pairs.length,1,cv.CV_32FC2,srcPts);
+  const dst=cv.matFromArray(best.pairs.length,1,cv.CV_32FC2,dstPts);
+  const mask=new cv.Mat();
+  const H=cv.findHomography(src,dst,cv.RANSAC,CONSTELLATION_V33.homographyRansacThr,mask);
+  let inliers=0;
+  for(let i=0;i<mask.rows;i++)if(mask.data[i])inliers++;
+  const inlierRatio=inliers/Math.max(1,best.pairs.length);
+  src.delete();dst.delete();mask.delete();
+  if(H.empty())throw new Error('星座Homography再推定失敗');
+
+  const corners=homographyMasterToSceneCornersV32(H,masterModel.w,masterModel.h);
+  const areaRatio=polygonAreaV32(corners)/Math.max(1,sceneW*sceneH);
+  const margin=Math.max(sceneW,sceneH)*0.20;
+  const inside=corners.every(p=>Number.isFinite(p.x)&&Number.isFinite(p.y)&&
+    p.x>=-margin&&p.y>=-margin&&p.x<=sceneW+margin&&p.y<=sceneH+margin);
+
+  const constellationOk=
+    best.support>=CONSTELLATION_V33.minSupport &&
+    best.ratio>=CONSTELLATION_V33.minSupportRatio &&
+    best.meanErrRatio<=CONSTELLATION_V33.maxMeanErrorRatio;
+
+  const homographyOk=
+    inliers>=Math.max(4,Math.min(CONSTELLATION_V33.minSupport,best.support)) &&
+    inlierRatio>=0.55 &&
+    areaRatio>=CONSTELLATION_V33.minProjectedAreaRatio &&
+    areaRatio<=CONSTELLATION_V33.maxProjectedAreaRatio &&
+    inside;
+
+  return {
+    H,corners,areaRatio,inside,
+    inliers,total:best.pairs.length,inlierRatio,
+    constellationOk,homographyOk,
+    ok:constellationOk&&homographyOk
+  };
+}
+function getMasterConstellationV33(){
+  const model=getMasterHoleModelV32();
+  const key=model.key+'|v33';
+  if(masterConstellationCacheV33?.key===key)return masterConstellationCacheV33;
+  const holes=model.holes.slice(0,CONSTELLATION_V33.maxMasterHoles);
+  const desc=buildConstellationDescriptorsV33(holes);
+  if(desc.length<4)throw new Error('Master穴星座を構成できません');
+  masterConstellationCacheV33={key,model,holes,desc};
+  return masterConstellationCacheV33;
+}
+function drawMasterConstellationV33(){
+  if(!cvLoaded||!masterImg)return;
+  try{
+    const constellation=getMasterConstellationV33();
+    const holes=constellation.holes;
+    const canvas=$('viewCanvas'),ctx=canvas.getContext('2d');
+    // drawMasterPreview直後のcanvasに重ねる
+    const fit=Math.min(canvas.width/masterImg.width,canvas.height/masterImg.height);
+    const ox=(canvas.width-masterImg.width*fit)/2;
+    const oy=(canvas.height-masterImg.height*fit)/2;
+    const inv=1/Math.max(1e-9,constellation.model.scale);
+
+    // 近傍リンク（重複線は避ける）
+    const done=new Set();
+    ctx.save();
+    ctx.strokeStyle='rgba(255,216,77,.40)';
+    ctx.lineWidth=1.5;
+    for(let i=0;i<holes.length;i++){
+      const p=holes[i];
+      const ns=holes.map((q,j)=>j===i?null:{j,d:Math.hypot(q.x-p.x,q.y-p.y)})
+                    .filter(Boolean).sort((a,b)=>a.d-b.d)
+                    .slice(0,CONSTELLATION_V33.masterDrawLinks);
+      for(const n of ns){
+        const key=i<n.j?`${i}-${n.j}`:`${n.j}-${i}`;
+        if(done.has(key))continue;done.add(key);
+        const q=holes[n.j];
+        ctx.beginPath();
+        ctx.moveTo(ox+p.x*inv*fit,oy+p.y*inv*fit);
+        ctx.lineTo(ox+q.x*inv*fit,oy+q.y*inv*fit);
+        ctx.stroke();
+      }
+    }
+
+    // 穴とID
+    ctx.font='bold 12px system-ui';
+    for(let i=0;i<holes.length;i++){
+      const h=holes[i],x=ox+h.x*inv*fit,y=oy+h.y*inv*fit;
+      const rr=Math.max(4,Math.min(15,h.size*inv*fit*0.55));
+      ctx.strokeStyle=h.circularity>=0.55?'#ffd84d':'#35dcff';
+      ctx.lineWidth=2;
+      ctx.beginPath();ctx.arc(x,y,rr,0,Math.PI*2);ctx.stroke();
+      ctx.fillStyle='rgba(0,0,0,.72)';ctx.fillRect(x+5,y-16,32,15);
+      ctx.fillStyle='#fff';ctx.fillText('H'+(i+1),x+7,y-5);
+    }
+    ctx.restore();
+
+    DEBUG.image={
+      ...(DEBUG.image||{}),
+      masterConstellation:{
+        detectedHoles:holes.length,
+        descriptors:constellation.desc.length,
+        note:'黄/水色=Master自動穴候補、線=近傍星座リンク'
+      }
+    };
+    renderDebug();
+    return holes.length;
+  }catch(e){
+    dbg('v33 Master穴星座可視化失敗',{message:e.message});
+    return 0;
+  }
+}
+function drawConstellationSceneV33(fullImg,sceneScale,sceneHoles,found,best){
+  const c=$('viewCanvas'),ctx=c.getContext('2d');
+  drawImageFit(c,fullImg);
+  const fit=Math.min(c.width/fullImg.width,c.height/fullImg.height);
+  const ox=(c.width-fullImg.width*fit)/2,oy=(c.height-fullImg.height*fit)/2;
+  const inv=1/Math.max(1e-9,sceneScale);
+  ctx.save();
+
+  // Scene穴候補
+  ctx.strokeStyle='rgba(255,216,77,.68)';
+  ctx.lineWidth=1.5;
+  for(const h of sceneHoles.slice(0,180)){
+    ctx.beginPath();
+    ctx.arc(ox+h.x*inv*fit,oy+h.y*inv*fit,Math.max(2.5,h.size*inv*fit*.5),0,Math.PI*2);
+    ctx.stroke();
+  }
+
+  // 採用された支持穴だけ緑で結ぶ
+  if(best?.pairs?.length){
+    ctx.strokeStyle='rgba(53,240,120,.72)';
+    ctx.fillStyle='#35f078';
+    ctx.lineWidth=2.5;
+    for(const p of best.pairs){
+      const s=sceneHoles[p.sj];
+      const x=ox+s.x*inv*fit,y=oy+s.y*inv*fit;
+      ctx.beginPath();ctx.arc(x,y,5,0,Math.PI*2);ctx.stroke();
+    }
+  }
+
+  if(found?.corners){
+    ctx.strokeStyle='#35dcff';ctx.lineWidth=5;
+    ctx.beginPath();
+    found.corners.forEach((p,i)=>{
+      const x=ox+p.x*inv*fit,y=oy+p.y*inv*fit;
+      i?ctx.lineTo(x,y):ctx.moveTo(x,y);
+    });
+    ctx.closePath();ctx.stroke();
+  }
+  ctx.restore();
+}
+async function captureHoleConstellationOneV33(){
+  const video=$('captureVideo'),canvas=$('captureCanvas');
+  if(!video||video.readyState<2){setCaptureStatus('カメラ準備中です');return;}
+  if(!cvLoaded){setCaptureStatus('OpenCV.js準備中です');return;}
+  try{
+    setLoading(true);
+    setCaptureStatus('容器全体を撮影 → 穴星座探索中...');
+    canvas.width=video.videoWidth||1920;canvas.height=video.videoHeight||1080;
+    canvas.getContext('2d').drawImage(video,0,0,canvas.width,canvas.height);
+    const fullImg=await imageFromCanvasV29(canvas);
+    await stopInspectCamera(true);
+    await runHoleConstellationFromImageV33(fullImg);
+  }catch(e){
+    console.error(e);
+    setBanner('WAIT');setStat('alignStat','--','waitText');setStat('outerStat','--','waitText');setStat('pointStat','判定不能','waitText');
+    lastInspectionRecord=null;hideResultAction();
+    log('v33 穴星座探索エラー: '+e.message);
+    dbg('v33 constellation error',{message:e.message,stack:e.stack});
+  }finally{setLoading(false);}
+}
+async function runHoleConstellationFromImageV33(fullImg){
+  drawImageFit($('viewCanvas'),fullImg);$('empty').style.display='none';
+  const master=getMasterConstellationV33();
+  const scene=grayMatFromImageV32(fullImg,HOLE_V32.sceneMaxW);
+  let found=null,warped=null,best=null;
+  try{
+    const sceneHoles=extractHoleCandidatesV32(scene.gray,CONSTELLATION_V33.maxSceneHoles);
+    const sceneDesc=buildConstellationDescriptorsV33(sceneHoles);
+    if(sceneDesc.length<4)throw new Error('容器画像から星座を構成できる穴候補が不足しています');
+
+    best=searchBestConstellationV33(master.holes,master.desc,sceneHoles,sceneDesc);
+    found=refineConstellationHomographyV33(master.model,sceneHoles,best,scene.w,scene.h);
+    drawConstellationSceneV33(fullImg,scene.scale,sceneHoles,found,best);
+
+    const hd=found.H.data64F||found.H.data32F;
+    DEBUG.image={
+      ...(DEBUG.image||{}),
+      mode:'v33-hole-constellation',
+      masterHoleCount:master.holes.length,
+      sceneHoleCount:sceneHoles.length,
+      testedHypotheses:best.testedHypotheses,
+      support:best.support,
+      supportRatio:best.ratio,
+      meanError:best.meanErr,
+      masterProcess:{w:master.model.w,h:master.model.h,scale:master.model.scale},
+      sceneProcess:{w:scene.w,h:scene.h,scale:scene.scale}
+    };
+    DEBUG.align={
+      mode:'v33-hole-constellation-homography',
+      support:best.support,
+      supportRatio:best.ratio,
+      meanError:best.meanErr,
+      meanErrorRatio:best.meanErrRatio,
+      inliers:found.inliers,total:found.total,inlierRatio:found.inlierRatio,
+      projectedAreaRatio:found.areaRatio,
+      inside:found.inside,
+      constellationOk:found.constellationOk,
+      homographyOk:found.homographyOk,
+      candidateOk:found.ok,
+      H:[hd[0],hd[1],hd[2],hd[3],hd[4],hd[5],hd[6],hd[7],hd[8]]
+    };
+    renderDebug();
+
+    if(!found.ok){
+      setBanner('WAIT');
+      setStat('alignStat',`${found.inliers}/${found.total}`,'ngText');
+      setStat('outerStat','--','waitText');
+      setStat('pointStat','判定不能','waitText');
+      lastInspectionRecord=null;hideResultAction();
+      log(`穴星座は候補を作りましたが位置合わせ未確定です。
+星座支持穴: ${best.support}/${master.holes.length} (${(best.ratio*100).toFixed(1)}%)
+支持穴平均誤差: ${best.meanErr.toFixed(1)} px
+Homography: ${found.inliers}/${found.total} (${(found.inlierRatio*100).toFixed(1)}%)
+投影面積: ${(found.areaRatio*100).toFixed(1)}%
+※位置合わせ未確定なのでOK/NG判定しません。`);
+      return;
+    }
+
+    // SceneをMaster座標へwarp
+    const sceneColorCanvas=document.createElement('canvas');
+    sceneColorCanvas.width=scene.w;sceneColorCanvas.height=scene.h;
+    sceneColorCanvas.getContext('2d').drawImage(fullImg,0,0,scene.w,scene.h);
+    const sceneSrc=cv.imread(sceneColorCanvas);
+    warped=new cv.Mat();
+    cv.warpPerspective(sceneSrc,warped,found.H,new cv.Size(master.model.w,master.model.h));
+    sceneSrc.delete();
+
+    const wc=document.createElement('canvas');cv.imshow(wc,warped);
+    inspectImg=await imageFromCanvasV29(wc);
+
+    // 既存の外形 / 検査ポイント判定へ
+    const m=matFromImage(masterImg,CONFIG.maxW);
+    const wi=matFromImage(inspectImg,CONFIG.maxW);
+    try{
+      const res=compareAll(m,wi.src,points);
+      const outerOk=res.outerDiff<=CONFIG.outerThr;
+      const pointsOk=(points.length===0)||res.pointAllOk;
+      const alignOk=found.ok;
+      const ok=alignOk&&outerOk&&pointsOk;
+
+      lastInspectionRecord={
+        barcodeRaw:currentBarcodeRaw||currentPart?.partNo||'',
+        masterKey:currentPart?.partNo||'',
+        partNo:currentBarcodeInfo?.partNo||currentPart?.partNo||'',
+        partName:currentBarcodeInfo?.partName||'',
+        qty:currentBarcodeInfo?.qty||'',
+        shipDate:currentBarcodeInfo?.shipDate||'',
+        issueDate:currentBarcodeInfo?.issueDate||'',
+        orderNo:currentBarcodeInfo?.orderNo||'',
+        planNo:currentBarcodeInfo?.planNo||'',
+        process:currentBarcodeInfo?.process||'',
+        traceNo:currentBarcodeInfo?.traceNo||'',
+        barcodeFormat:currentBarcodeInfo?.format||'',
+        result:ok?'OK':'NG',
+        mode:'HOLE_CONSTELLATION_V33',
+        outerMatch:Math.round((res.outerMatch||0)*1000)/10,
+        outerDiff:Math.round((res.outerDiff||0)*1000)/10,
+        pointOk:res.pointOk,pointTotal:points.length,
+        constellationSupport:best.support,
+        constellationSupportRatio:Math.round(best.ratio*1000)/1000,
+        constellationMeanError:Math.round(best.meanErr*100)/100,
+        inliers:found.inliers,total:found.total,
+        inlierRatio:Math.round(found.inlierRatio*1000)/1000,
+        projectedAreaRatio:Math.round(found.areaRatio*10000)/10000,
+        alignOk,outerOk,pointsOk,
+        deviceId:getDeviceId(),inspectVersion:INSPECT_VERSION,
+        pointDetails:(res.details||[]).map(p=>({
+          name:p.name,type:p.type,ok:p.ok,
+          match:Math.round((p.match||0)*1000)/10,
+          threshold:Math.round((p.threshold||0)*1000)/10
+        }))
+      };
+
+      setBanner(ok?'OK':'NG');
+      setStat('alignStat',`${found.inliers}/${found.total}`,'okText');
+      setStat('outerStat',(res.outerMatch*100).toFixed(1)+'%',outerOk?'okText':'ngText');
+      setStat('pointStat',points.length?`${res.pointOk}/${points.length}`:'外形のみ',pointsOk?'okText':'ngText');
+      log(`v33 穴星座判定
+品番: ${currentPart?.partNo||''}
+総合: ${ok?'OK':'NG'}
+星座支持穴: ${best.support}/${master.holes.length} (${(best.ratio*100).toFixed(1)}%)
+Homography: ${found.inliers}/${found.total}
+外形マッチ率: ${(res.outerMatch*100).toFixed(1)}%
+検査ポイント: ${points.length?res.pointOk+'/'+points.length:'なし（外形のみ）'}`);
+      dbg('v33 constellation complete',{
+        ok,support:best.support,supportRatio:best.ratio,
+        homographyInliers:found.inliers,outerMatch:res.outerMatch,pointOk:res.pointOk
+      });
+      renderDebug();showResultAction(ok);
+      if(!ok&&!ngLoggedForCurrent){ngLoggedForCurrent=true;recordInspection('NG_AUTO');}
+    }finally{
+      try{m.src.delete();m.gray.delete();wi.src.delete();wi.gray.delete();}catch(_){}
+    }
+  }finally{
+    try{scene.gray.delete();}catch(_){}
+    try{found?.H?.delete();}catch(_){}
+    try{warped?.delete();}catch(_){}
+  }
+}
+
+// =====================================================
+// v32 Hole Pattern Search β
+// 部品固有の穴位置はハードコードしない。
+// Master画像から暗い穴/開口候補を自動抽出し、各穴の「近傍距離比＋形状」を記述子化。
+// 容器画像でも同じ候補を抽出し、記述子照合 → RANSAC Homography で
+// Masterと同じ穴配置を持つ1個体だけを探す。
+// 最終OKは既存の alignOk && outerOk && pointsOk を必須とする。
+// =====================================================
+const HOLE_V32 = {
+  masterMaxW: 1000,
+  sceneMaxW: 1500,
+  minAreaRatio: 0.000015,
+  maxAreaRatio: 0.018,
+  minDarkDelta: 18,
+  maxCandidatesMaster: 80,
+  maxCandidatesScene: 260,
+  neighbors: 4,
+  descriptorTol: 0.34,
+  shapeTol: 0.58,
+  maxTentativeMatches: 180,
+  minInliers: 7,
+  minInlierRatio: 0.16,
+  ransacThr: 8.0,
+  minProjectedAreaRatio: 0.008,
+  maxProjectedAreaRatio: 0.72
+};
+let masterHoleCacheV32=null;
+
+function grayMatFromImageV32(img,maxW){
+  const s=Math.min(1,maxW/Math.max(1,img.width));
+  const c=document.createElement('canvas');
+  c.width=Math.max(2,Math.round(img.width*s));
+  c.height=Math.max(2,Math.round(img.height*s));
+  c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+  const src=cv.imread(c),gray=new cv.Mat();
+  cv.cvtColor(src,gray,cv.COLOR_RGBA2GRAY);
+  src.delete();
+  return {gray,scale:s,w:c.width,h:c.height};
+}
+
+function medianArrayV32(a){
+  if(!a.length)return 0;
+  const b=[...a].sort((x,y)=>x-y),n=b.length;
+  return n%2?b[(n-1)/2]:(b[n/2-1]+b[n/2])/2;
+}
+
+function extractHoleCandidatesV32(gray,maxCount){
+  // CLAHEで局所コントラストを均し、adaptive thresholdで暗い開口を抽出。
+  const eq=new cv.Mat(),bin=new cv.Mat(),morph=new cv.Mat();
+  const clahe=new cv.CLAHE(2.0,new cv.Size(8,8));
+  clahe.apply(gray,eq);
+  cv.adaptiveThreshold(eq,bin,255,cv.ADAPTIVE_THRESH_GAUSSIAN_C,cv.THRESH_BINARY_INV,31,7);
+
+  const k=cv.getStructuringElement(cv.MORPH_ELLIPSE,new cv.Size(3,3));
+  cv.morphologyEx(bin,morph,cv.MORPH_OPEN,k);
+  k.delete();clahe.delete();eq.delete();bin.delete();
+
+  const contours=new cv.MatVector(),hierarchy=new cv.Mat();
+  cv.findContours(morph,contours,hierarchy,cv.RETR_LIST,cv.CHAIN_APPROX_SIMPLE);
+
+  const imgArea=gray.cols*gray.rows;
+  const minA=Math.max(8,imgArea*HOLE_V32.minAreaRatio);
+  const maxA=imgArea*HOLE_V32.maxAreaRatio;
+  const vals=[];
+
+  for(let i=0;i<contours.size();i++){
+    const c=contours.get(i);
+    const area=cv.contourArea(c);
+    if(area<minA||area>maxA)continue;
+    const r=cv.boundingRect(c);
+    if(r.width<3||r.height<3)continue;
+    const aspect=r.width/Math.max(1,r.height);
+    if(aspect<0.18||aspect>5.5)continue;
+
+    const per=cv.arcLength(c,true);
+    if(per<=0)continue;
+    const circ=Math.max(0,Math.min(1,4*Math.PI*area/(per*per)));
+    const extent=area/Math.max(1,r.width*r.height);
+
+    const M=cv.moments(c,false);
+    if(Math.abs(M.m00)<1e-6)continue;
+    const x=M.m10/M.m00,y=M.m01/M.m00;
+
+    // 周囲より暗いことを簡易確認
+    const cx=Math.max(0,Math.min(gray.cols-1,Math.round(x)));
+    const cy=Math.max(0,Math.min(gray.rows-1,Math.round(y)));
+    const rr=Math.max(4,Math.round(Math.max(r.width,r.height)*1.7));
+    const x0=Math.max(0,cx-rr),y0=Math.max(0,cy-rr);
+    const x1=Math.min(gray.cols,cx+rr+1),y1=Math.min(gray.rows,cy+rr+1);
+    const inner=gray.roi(new cv.Rect(r.x,r.y,r.width,r.height));
+    const outer=gray.roi(new cv.Rect(x0,y0,x1-x0,y1-y0));
+    const innerMean=cv.mean(inner)[0],outerMean=cv.mean(outer)[0];
+    inner.delete();outer.delete();
+    const darkDelta=outerMean-innerMean;
+    if(darkDelta<HOLE_V32.minDarkDelta)continue;
+
+    vals.push({
+      x,y,area,w:r.width,h:r.height,
+      aspect,circularity:circ,extent,darkDelta,
+      size:Math.sqrt(area)
+    });
+  }
+
+  contours.delete();hierarchy.delete();morph.delete();
+
+  // 強い穴候補を優先。ただし巨大黒領域だけに寄らないよう暗さ＋円形度＋面積で評価。
+  vals.forEach(v=>{
+    v.quality=(Math.min(80,v.darkDelta)/80)*0.48 +
+              Math.min(1,v.circularity)*0.22 +
+              Math.min(1,v.extent)*0.15 +
+              Math.min(1,v.size/28)*0.15;
+  });
+  vals.sort((a,b)=>b.quality-a.quality);
+  return vals.slice(0,maxCount);
+}
+
+function buildHoleDescriptorsV32(pts){
+  if(pts.length<4)return [];
+  return pts.map((p,idx)=>{
+    const ns=[];
+    for(let j=0;j<pts.length;j++){
+      if(j===idx)continue;
+      const q=pts[j],dx=q.x-p.x,dy=q.y-p.y;
+      ns.push({j,d:Math.hypot(dx,dy),a:Math.atan2(dy,dx)});
+    }
+    ns.sort((a,b)=>a.d-b.d);
+    const take=ns.slice(0,HOLE_V32.neighbors);
+    if(take.length<3)return null;
+    const base=Math.max(1,take[0].d);
+    const ratios=take.map(n=>n.d/base);
+    // 角度は回転依存なので絶対角ではなく隣接角差を使用
+    const angles=take.map(n=>n.a).sort((a,b)=>a-b);
+    const gaps=[];
+    for(let k=0;k<angles.length;k++){
+      let d=angles[(k+1)%angles.length]-angles[k];
+      if(k===angles.length-1)d+=Math.PI*2;
+      gaps.push(d/Math.PI); // 0..2
+    }
+    gaps.sort((a,b)=>a-b);
+    return {
+      idx,
+      x:p.x,y:p.y,
+      aspect:p.aspect,
+      circularity:p.circularity,
+      extent:p.extent,
+      ratios,
+      gaps
+    };
+  }).filter(Boolean);
+}
+
+function descriptorDistanceV32(a,b){
+  if(!a||!b||a.ratios.length!==b.ratios.length)return 999;
+  let dr=0,dg=0;
+  for(let i=0;i<a.ratios.length;i++)dr+=Math.abs(a.ratios[i]-b.ratios[i]);
+  for(let i=0;i<a.gaps.length;i++)dg+=Math.abs(a.gaps[i]-b.gaps[i]);
+  dr/=a.ratios.length; dg/=a.gaps.length;
+  const da=Math.abs(Math.log(Math.max(.05,a.aspect)/Math.max(.05,b.aspect)));
+  const dc=Math.abs(a.circularity-b.circularity);
+  const de=Math.abs(a.extent-b.extent);
+  return dr*0.46 + dg*0.24 + da*0.12 + dc*0.10 + de*0.08;
+}
+
+function getMasterHoleModelV32(){
+  if(!masterImg)throw new Error('Master画像がありません');
+  const key=(currentPart?.partNo||'')+'|'+masterImg.width+'x'+masterImg.height;
+  if(masterHoleCacheV32?.key===key)return masterHoleCacheV32;
+
+  const m=grayMatFromImageV32(masterImg,HOLE_V32.masterMaxW);
+  try{
+    const holes=extractHoleCandidatesV32(m.gray,HOLE_V32.maxCandidatesMaster);
+    const desc=buildHoleDescriptorsV32(holes);
+    if(desc.length<4)throw new Error('Masterから有効な穴パターンを4点以上抽出できません');
+    masterHoleCacheV32={key,w:m.w,h:m.h,scale:m.scale,holes,desc};
+    dbg('v32 Master穴パターン生成',{
+      partNo:currentPart?.partNo||'',
+      holes:holes.length,
+      descriptors:desc.length,
+      process:{w:m.w,h:m.h,scale:m.scale}
+    });
+    return masterHoleCacheV32;
+  } finally {m.gray.delete();}
+}
+
+function matchHoleDescriptorsV32(masterDesc,sceneDesc){
+  const matches=[];
+  for(const s of sceneDesc){
+    let best=null,second=null;
+    for(const m of masterDesc){
+      const d=descriptorDistanceV32(m,s);
+      const item={m,s,d};
+      if(!best||d<best.d){second=best;best=item;}
+      else if(!second||d<second.d){second=item;}
+    }
+    if(!best)continue;
+    // 記述子距離＋簡易ratio test
+    const ratio=second?best.d/Math.max(1e-6,second.d):0;
+    if(best.d<=HOLE_V32.descriptorTol && ratio<0.90){
+      matches.push({...best,ratio});
+    }
+  }
+  matches.sort((a,b)=>a.d-b.d);
+  return matches.slice(0,HOLE_V32.maxTentativeMatches);
+}
+
+function polygonAreaV32(pts){
+  let a=0;
+  for(let i=0;i<pts.length;i++){
+    const p=pts[i],q=pts[(i+1)%pts.length];
+    a+=p.x*q.y-q.x*p.y;
+  }
+  return Math.abs(a)/2;
+}
+
+function homographyMasterToSceneCornersV32(HsceneToMaster,mw,mh){
+  const inv=new cv.Mat();
+  cv.invert(HsceneToMaster,inv,cv.DECOMP_SVD);
+  const src=cv.matFromArray(4,1,cv.CV_32FC2,[0,0,mw,0,mw,mh,0,mh]);
+  const dst=new cv.Mat();
+  cv.perspectiveTransform(src,dst,inv);
+  const d=dst.data32F,pts=[];
+  for(let i=0;i<4;i++)pts.push({x:d[i*2],y:d[i*2+1]});
+  inv.delete();src.delete();dst.delete();
+  return pts;
+}
+
+function findHolePatternHomographyV32(masterModel,sceneHoles,sceneDesc,sceneW,sceneH){
+  const tentative=matchHoleDescriptorsV32(masterModel.desc,sceneDesc);
+  if(tentative.length<4)throw new Error(`穴パターン対応点不足 ${tentative.length}/4`);
+
+  const srcPts=[],dstPts=[];
+  for(const mt of tentative){
+    // H: scene -> master
+    srcPts.push(mt.s.x,mt.s.y);
+    dstPts.push(mt.m.x,mt.m.y);
+  }
+  const src=cv.matFromArray(tentative.length,1,cv.CV_32FC2,srcPts);
+  const dst=cv.matFromArray(tentative.length,1,cv.CV_32FC2,dstPts);
+  const mask=new cv.Mat();
+  const H=cv.findHomography(src,dst,cv.RANSAC,HOLE_V32.ransacThr,mask);
+
+  let inliers=0;
+  for(let i=0;i<mask.rows;i++)if(mask.data[i])inliers++;
+  const ratio=inliers/Math.max(1,tentative.length);
+
+  src.delete();dst.delete();mask.delete();
+  if(H.empty())throw new Error('穴パターンRANSAC失敗');
+
+  const corners=homographyMasterToSceneCornersV32(H,masterModel.w,masterModel.h);
+  const areaRatio=polygonAreaV32(corners)/Math.max(1,sceneW*sceneH);
+  const margin=Math.max(sceneW,sceneH)*0.18;
+  const inside=corners.every(p=>Number.isFinite(p.x)&&Number.isFinite(p.y)&&
+    p.x>=-margin&&p.y>=-margin&&p.x<=sceneW+margin&&p.y<=sceneH+margin);
+
+  const ok=inliers>=HOLE_V32.minInliers &&
+           ratio>=HOLE_V32.minInlierRatio &&
+           areaRatio>=HOLE_V32.minProjectedAreaRatio &&
+           areaRatio<=HOLE_V32.maxProjectedAreaRatio &&
+           inside;
+
+  return {H,inliers,total:tentative.length,ratio,corners,areaRatio,inside,ok,tentative};
+}
+
+function drawHolePatternDebugV32(fullImg,sceneScale,holes,found){
+  const c=$('viewCanvas'),ctx=c.getContext('2d');
+  drawImageFit(c,fullImg);
+  const fit=Math.min(c.width/fullImg.width,c.height/fullImg.height);
+  const ox=(c.width-fullImg.width*fit)/2,oy=(c.height-fullImg.height*fit)/2;
+  const inv=1/Math.max(1e-9,sceneScale);
+  ctx.save();
+  ctx.lineWidth=2;
+  ctx.strokeStyle='rgba(255,216,77,.72)';
+  for(const h of holes.slice(0,120)){
+    ctx.beginPath();
+    ctx.arc(ox+h.x*inv*fit,oy+h.y*inv*fit,Math.max(3,h.size*inv*fit*.55),0,Math.PI*2);
+    ctx.stroke();
+  }
+  if(found?.corners){
+    ctx.strokeStyle='#35dcff';ctx.lineWidth=5;
+    ctx.beginPath();
+    found.corners.forEach((p,i)=>{
+      const x=ox+p.x*inv*fit,y=oy+p.y*inv*fit;
+      i?ctx.lineTo(x,y):ctx.moveTo(x,y);
+    });
+    ctx.closePath();ctx.stroke();
+    ctx.fillStyle='rgba(53,220,255,.15)';ctx.fill();
+  }
+  ctx.restore();
+}
+
+async function captureHolePatternOneV32(){
+  const video=$('captureVideo'),canvas=$('captureCanvas');
+  if(!video||video.readyState<2){setCaptureStatus('カメラ準備中です');return;}
+  if(!cvLoaded){setCaptureStatus('OpenCV.js準備中です');return;}
+  try{
+    setLoading(true);
+    setCaptureStatus('容器全体を撮影 → 穴パターン探索中...');
+    canvas.width=video.videoWidth||1920;canvas.height=video.videoHeight||1080;
+    canvas.getContext('2d').drawImage(video,0,0,canvas.width,canvas.height);
+    const fullImg=await imageFromCanvasV29(canvas);
+    await stopInspectCamera(true);
+    await runHolePatternFromImageV32(fullImg);
+  }catch(e){
+    console.error(e);
+    setBanner('WAIT');setStat('alignStat','--','waitText');setStat('outerStat','--','waitText');setStat('pointStat','判定不能','waitText');
+    log('v32 穴パターン探索エラー: '+e.message);
+    dbg('v32 hole pattern error',{message:e.message,stack:e.stack});
+  }finally{setLoading(false);}
+}
+
+async function runHolePatternFromImageV32(fullImg){
+  drawImageFit($('viewCanvas'),fullImg);$('empty').style.display='none';
+  const model=getMasterHoleModelV32();
+  const scene=grayMatFromImageV32(fullImg,HOLE_V32.sceneMaxW);
+  let found=null,warped=null;
+  try{
+    const holes=extractHoleCandidatesV32(scene.gray,HOLE_V32.maxCandidatesScene);
+    const desc=buildHoleDescriptorsV32(holes);
+    if(desc.length<4)throw new Error('容器画像から穴候補を十分に抽出できません');
+
+    found=findHolePatternHomographyV32(model,holes,desc,scene.w,scene.h);
+    drawHolePatternDebugV32(fullImg,scene.scale,holes,found);
+
+    DEBUG.image={
+      ...(DEBUG.image||{}),
+      mode:'v32-hole-pattern-search',
+      masterHoleCount:model.holes.length,
+      sceneHoleCount:holes.length,
+      masterProcess:{w:model.w,h:model.h,scale:model.scale},
+      sceneProcess:{w:scene.w,h:scene.h,scale:scene.scale}
+    };
+    const hd=found.H.data64F||found.H.data32F;
+    DEBUG.align={
+      mode:'v32-hole-pattern-ransac',
+      inliers:found.inliers,total:found.total,ratio:found.ratio,
+      projectedAreaRatio:found.areaRatio,inside:found.inside,
+      candidateOk:found.ok,
+      H:[hd[0],hd[1],hd[2],hd[3],hd[4],hd[5],hd[6],hd[7],hd[8]]
+    };
+    renderDebug();
+
+    if(!found.ok){
+      setBanner('WAIT');
+      setStat('alignStat',`${found.inliers}/${found.total}`,'ngText');
+      setStat('outerStat','--','waitText');
+      setStat('pointStat','判定不能','waitText');
+      lastInspectionRecord=null;hideResultAction();
+      log(`穴パターン候補は検出しましたが位置合わせ未確定です。
+穴RANSAC: ${found.inliers}/${found.total}
+インライア率: ${(found.ratio*100).toFixed(1)}%
+投影面積: ${(found.areaRatio*100).toFixed(1)}%
+※位置合わせ未確定なのでOK/NG判定しません。`);
+      return;
+    }
+
+    // scene process image -> master process image
+    const sceneColorCanvas=document.createElement('canvas');
+    sceneColorCanvas.width=scene.w;sceneColorCanvas.height=scene.h;
+    sceneColorCanvas.getContext('2d').drawImage(fullImg,0,0,scene.w,scene.h);
+    const sceneSrc=cv.imread(sceneColorCanvas);
+    warped=new cv.Mat();
+    cv.warpPerspective(sceneSrc,warped,found.H,new cv.Size(model.w,model.h));
+    sceneSrc.delete();
+
+    // 既存判定系が使えるよう一時画像へ
+    const wc=document.createElement('canvas');cv.imshow(wc,warped);
+    inspectImg=await imageFromCanvasV29(wc);
+
+    // 穴RANSACで既にMaster座標へwarp済みなので、ここからは外形/検査点を直接比較。
+    const m=matFromImage(masterImg,CONFIG.maxW);
+    const wi=matFromImage(inspectImg,CONFIG.maxW);
+    try{
+      const res=compareAll(m,wi.src,points);
+      const outerOk=res.outerDiff<=CONFIG.outerThr;
+      const pointsOk=(points.length===0)||res.pointAllOk;
+      const alignOk=true; // v32 hole RANSAC candidateOk を通過済み
+      const ok=alignOk&&outerOk&&pointsOk;
+
+      lastInspectionRecord={
+        barcodeRaw:currentBarcodeRaw||currentPart?.partNo||'',
+        masterKey:currentPart?.partNo||'',
+        partNo:currentBarcodeInfo?.partNo||currentPart?.partNo||'',
+        partName:currentBarcodeInfo?.partName||'',
+        qty:currentBarcodeInfo?.qty||'',
+        shipDate:currentBarcodeInfo?.shipDate||'',
+        issueDate:currentBarcodeInfo?.issueDate||'',
+        orderNo:currentBarcodeInfo?.orderNo||'',
+        planNo:currentBarcodeInfo?.planNo||'',
+        process:currentBarcodeInfo?.process||'',
+        traceNo:currentBarcodeInfo?.traceNo||'',
+        barcodeFormat:currentBarcodeInfo?.format||'',
+        result:ok?'OK':'NG',
+        mode:'HOLE_PATTERN_V32',
+        outerMatch:Math.round((res.outerMatch||0)*1000)/10,
+        outerDiff:Math.round((res.outerDiff||0)*1000)/10,
+        pointOk:res.pointOk,pointTotal:points.length,
+        inliers:found.inliers,total:found.total,
+        inlierRatio:Math.round(found.ratio*1000)/1000,
+        projectedAreaRatio:Math.round(found.areaRatio*10000)/10000,
+        alignOk,outerOk,pointsOk,
+        deviceId:getDeviceId(),inspectVersion:INSPECT_VERSION,
+        pointDetails:(res.details||[]).map(p=>({
+          name:p.name,type:p.type,ok:p.ok,
+          match:Math.round((p.match||0)*1000)/10,
+          threshold:Math.round((p.threshold||0)*1000)/10
+        }))
+      };
+
+      setBanner(ok?'OK':'NG');
+      setStat('alignStat',`${found.inliers}/${found.total}`,'okText');
+      setStat('outerStat',(res.outerMatch*100).toFixed(1)+'%',outerOk?'okText':'ngText');
+      setStat('pointStat',points.length?`${res.pointOk}/${points.length}`:'外形のみ',pointsOk?'okText':'ngText');
+      log(`v32 穴パターン判定
+品番: ${currentPart?.partNo||''}
+総合: ${ok?'OK':'NG'}
+穴パターン位置合わせ: OK (${found.inliers}/${found.total})
+外形マッチ率: ${(res.outerMatch*100).toFixed(1)}%
+検査ポイント: ${points.length?res.pointOk+'/'+points.length:'なし（外形のみ）'}`);
+      dbg('v32 hole pattern complete',{ok,outerMatch:res.outerMatch,pointOk:res.pointOk});
+      renderDebug();showResultAction(ok);
+      if(!ok&&!ngLoggedForCurrent){ngLoggedForCurrent=true;recordInspection('NG_AUTO');}
+    } finally {
+      try{m.src.delete();m.gray.delete();wi.src.delete();wi.gray.delete();}catch(_){}
+    }
+  } finally {
+    try{scene.gray.delete();}catch(_){}
+    try{found?.H?.delete();}catch(_){}
+    try{warped?.delete();}catch(_){}
+  }
+}
+
+// =====================================================
+// v29 Mask Shape Search β
+// Master単品画像から明るい製品領域を自動マスク化。
+// 容器画像では「全個体を分割」せず、Masterマスク＋エッジに最も似る1領域だけ探索。
+// 見つけた領域を切り出した後、既存ORB + RANSAC + Homography判定へ渡す。
+// =====================================================
+const MASK_SHAPE_V29 = {
+  masterMaxW: 900,
+  sceneMaxW: 1200,
+  // 容器写真とMaster写真の撮影距離差を許容
+  scales: [0.50,0.60,0.70,0.80,0.90,1.00,1.10,1.20],
+  angles: [-10,-5,0,5,10],
+  maskWeight: 0.58,
+  edgeWeight: 0.42,
+  minScore: 0.30,
+  cropPadding: 0.07
+};
+let masterShapeCacheV29=null;
+
+function imageToCanvasV29(img,maxW){
+  const s=Math.min(1,maxW/Math.max(1,img.width));
+  const c=document.createElement('canvas');
+  c.width=Math.max(2,Math.round(img.width*s));
+  c.height=Math.max(2,Math.round(img.height*s));
+  c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+  return {canvas:c,scale:s};
+}
+function matToCanvasV29(mat){
+  const c=document.createElement('canvas');
+  cv.imshow(c,mat);
+  return c;
+}
+function imageFromCanvasV29(canvas){
+  return new Promise((res,rej)=>{
+    const im=new Image();
+    im.onload=()=>res(im);
+    im.onerror=rej;
+    im.src=canvas.toDataURL('image/jpeg',0.96);
+  });
+}
+function largestHorizontalContourV29(bin){
+  const contours=new cv.MatVector(),hierarchy=new cv.Mat();
+  cv.findContours(bin,contours,hierarchy,cv.RETR_EXTERNAL,cv.CHAIN_APPROX_SIMPLE);
+  let best=-1,bestScore=-1,bestRect=null,bestArea=0;
+  const imgArea=bin.cols*bin.rows;
+  for(let k=0;k<contours.size();k++){
+    const c=contours.get(k), area=cv.contourArea(c);
+    if(area<imgArea*0.008)continue;
+    const r=cv.boundingRect(c);
+    const aspect=r.width/Math.max(1,r.height);
+    // 長尺部品を強く優先。中央寄りの領域を少し優先。
+    const cx=(r.x+r.width/2)/bin.cols, cy=(r.y+r.height/2)/bin.rows;
+    const centerBonus=1-Math.min(0.7,Math.hypot(cx-0.5,cy-0.5));
+    const longBonus=Math.max(0.15,Math.min(4,aspect)/4);
+    const score=area*(0.30+0.70*longBonus)*(0.65+0.35*centerBonus);
+    if(score>bestScore){bestScore=score;best=k;bestRect=r;bestArea=area;}
+  }
+  if(best<0){
+    for(let k=0;k<contours.size();k++){
+      const c=contours.get(k),area=cv.contourArea(c);
+      if(area>bestArea){best=k;bestArea=area;bestRect=cv.boundingRect(c);}
+    }
+  }
+  if(best<0){contours.delete();hierarchy.delete();throw new Error('Master製品マスクを抽出できません');}
+  const mask=cv.Mat.zeros(bin.rows,bin.cols,cv.CV_8UC1);
+  cv.drawContours(mask,contours,best,new cv.Scalar(255),-1);
+  contours.delete();hierarchy.delete();
+  return {mask,rect:bestRect,area:bestArea};
+}
+function buildMasterShapeTemplateV29(){
+  if(!masterImg)throw new Error('Master画像がありません');
+  const key=(currentPart?.partNo||'')+'|'+masterImg.width+'x'+masterImg.height;
+  if(masterShapeCacheV29?.key===key)return masterShapeCacheV29;
+
+  const r=imageToCanvasV29(masterImg,MASK_SHAPE_V29.masterMaxW);
+  let src=cv.imread(r.canvas),gray=new cv.Mat(),blur=new cv.Mat(),bin=new cv.Mat(),morph=new cv.Mat();
+  let cropMask=null,cropGray=null,cropEdge=null,kernel=null;
+  try{
+    cv.cvtColor(src,gray,cv.COLOR_RGBA2GRAY);
+    cv.GaussianBlur(gray,blur,new cv.Size(5,5),0);
+    cv.threshold(blur,bin,0,255,cv.THRESH_BINARY+cv.THRESH_OTSU);
+    kernel=cv.getStructuringElement(cv.MORPH_RECT,new cv.Size(11,11));
+    cv.morphologyEx(bin,morph,cv.MORPH_CLOSE,kernel);
+    const picked=largestHorizontalContourV29(morph);
+    const rr=picked.rect;
+    if(rr.width<80||rr.height<20)throw new Error('Master製品マスクが小さすぎます');
+
+    cropMask=picked.mask.roi(rr).clone();
+    cropGray=gray.roi(rr).clone();
+
+    // マスク外を暗くして、製品内部のエッジだけを特徴として使う
+    let maskedGray=cv.Mat.zeros(cropGray.rows,cropGray.cols,cv.CV_8UC1);
+    cropGray.copyTo(maskedGray,cropMask);
+    cropEdge=new cv.Mat();
+    cv.Canny(maskedGray,cropEdge,60,150);
+    maskedGray.delete();
+    picked.mask.delete();
+
+    masterShapeCacheV29={
+      key,
+      maskCanvas:matToCanvasV29(cropMask),
+      edgeCanvas:matToCanvasV29(cropEdge),
+      rect:{x:rr.x,y:rr.y,w:rr.width,h:rr.height},
+      aspect:rr.width/Math.max(1,rr.height),
+      processScale:r.scale
+    };
+    dbg('v29 Master自動マスク生成',{
+      partNo:currentPart?.partNo||'',
+      rect:masterShapeCacheV29.rect,
+      aspect:masterShapeCacheV29.aspect,
+      processScale:r.scale
+    });
+    return masterShapeCacheV29;
+  } finally {
+    try{src.delete();gray.delete();blur.delete();bin.delete();morph.delete();}catch(_){}
+    try{cropMask?.delete();cropGray?.delete();cropEdge?.delete();kernel?.delete();}catch(_){}
+  }
+}
+function rotateBoundV29(src,angle){
+  if(Math.abs(angle)<0.001)return src.clone();
+  const rad=Math.abs(angle)*Math.PI/180;
+  const cos=Math.cos(rad),sin=Math.sin(rad);
+  const nw=Math.max(2,Math.round(src.cols*cos+src.rows*sin));
+  const nh=Math.max(2,Math.round(src.cols*sin+src.rows*cos));
+  const center=new cv.Point(src.cols/2,src.rows/2);
+  const M=cv.getRotationMatrix2D(center,angle,1);
+  const d=M.data64F;
+  d[2]+=nw/2-center.x;
+  d[5]+=nh/2-center.y;
+  const dst=new cv.Mat();
+  cv.warpAffine(src,dst,M,new cv.Size(nw,nh),cv.INTER_LINEAR,cv.BORDER_CONSTANT,new cv.Scalar(0));
+  M.delete();
+  return dst;
+}
+function prepareSceneV29(img){
+  const r=imageToCanvasV29(img,MASK_SHAPE_V29.sceneMaxW);
+  const src=cv.imread(r.canvas),gray=new cv.Mat(),blur=new cv.Mat(),bin=new cv.Mat(),morph=new cv.Mat(),edge=new cv.Mat();
+  cv.cvtColor(src,gray,cv.COLOR_RGBA2GRAY);
+  cv.GaussianBlur(gray,blur,new cv.Size(5,5),0);
+  cv.threshold(blur,bin,0,255,cv.THRESH_BINARY+cv.THRESH_OTSU);
+  const k=cv.getStructuringElement(cv.MORPH_RECT,new cv.Size(5,5));
+  cv.morphologyEx(bin,morph,cv.MORPH_CLOSE,k);
+  cv.Canny(gray,edge,60,150);
+  k.delete();blur.delete();bin.delete();src.delete();
+  return {gray,morph,edge,scale:r.scale,w:r.canvas.width,h:r.canvas.height};
+}
+function matchOneTemplateV29(sceneMask,sceneEdge,baseMask,baseEdge,scale,angle){
+  const sw=Math.max(24,Math.round(baseMask.cols*scale));
+  const sh=Math.max(12,Math.round(baseMask.rows*scale));
+  if(sw>=sceneMask.cols||sh>=sceneMask.rows)return null;
+
+  const sm=new cv.Mat(),se=new cv.Mat();
+  cv.resize(baseMask,sm,new cv.Size(sw,sh),0,0,cv.INTER_NEAREST);
+  cv.resize(baseEdge,se,new cv.Size(sw,sh),0,0,cv.INTER_LINEAR);
+  const rm=rotateBoundV29(sm,angle),re=rotateBoundV29(se,angle);
+  sm.delete();se.delete();
+  if(rm.cols>=sceneMask.cols||rm.rows>=sceneMask.rows){rm.delete();re.delete();return null;}
+
+  const resM=new cv.Mat(),resE=new cv.Mat(),combo=new cv.Mat();
+  try{
+    cv.matchTemplate(sceneMask,rm,resM,cv.TM_CCOEFF_NORMED);
+    cv.matchTemplate(sceneEdge,re,resE,cv.TM_CCOEFF_NORMED);
+    cv.addWeighted(resM,MASK_SHAPE_V29.maskWeight,resE,MASK_SHAPE_V29.edgeWeight,0,combo);
+    const mm=cv.minMaxLoc(combo);
+    return {
+      score:mm.maxVal,
+      x:mm.maxLoc.x,y:mm.maxLoc.y,
+      w:rm.cols,h:rm.rows,
+      scale,angle,
+      maskScore:resM.floatAt(mm.maxLoc.y,mm.maxLoc.x),
+      edgeScore:resE.floatAt(mm.maxLoc.y,mm.maxLoc.x)
+    };
+  } finally {
+    rm.delete();re.delete();resM.delete();resE.delete();combo.delete();
+  }
+}
+async function findBestMaskShapeV29(img){
+  const tmpl=buildMasterShapeTemplateV29();
+  const scene=prepareSceneV29(img);
+  const baseMask=cv.imread(tmpl.maskCanvas),baseEdge=cv.imread(tmpl.edgeCanvas);
+  let bm=new cv.Mat(),be=new cv.Mat();
+  cv.cvtColor(baseMask,bm,cv.COLOR_RGBA2GRAY);
+  cv.cvtColor(baseEdge,be,cv.COLOR_RGBA2GRAY);
+  baseMask.delete();baseEdge.delete();
+
+  let best=null,passes=0;
+  try{
+    for(const scale of MASK_SHAPE_V29.scales){
+      for(const angle of MASK_SHAPE_V29.angles){
+        const hit=matchOneTemplateV29(scene.morph,scene.edge,bm,be,scale,angle);
+        passes++;
+        if(hit && (!best||hit.score>best.score))best=hit;
+        // UIを固めっぱなしにしない
+        if(passes%8===0){
+          setCaptureStatus(`マスク形状探索中... ${passes}/${MASK_SHAPE_V29.scales.length*MASK_SHAPE_V29.angles.length}`);
+          await sleepMs(0);
+        }
+      }
+    }
+    if(!best)throw new Error('形状候補が見つかりません');
+    best.sceneScale=scene.scale;
+    return best;
+  } finally {
+    bm.delete();be.delete();
+    scene.gray.delete();scene.morph.delete();scene.edge.delete();
+  }
+}
+function drawMaskSearchCandidateV29(fullImg,hit){
+  const c=$('viewCanvas'),ctx=c.getContext('2d');
+  drawImageFit(c,fullImg);
+  const fit=Math.min(c.width/fullImg.width,c.height/fullImg.height);
+  const ox=(c.width-fullImg.width*fit)/2,oy=(c.height-fullImg.height*fit)/2;
+  const inv=1/Math.max(1e-9,hit.sceneScale);
+  const x=hit.x*inv,y=hit.y*inv,w=hit.w*inv,h=hit.h*inv;
+  ctx.save();
+  ctx.strokeStyle='#35dcff';ctx.lineWidth=5;
+  ctx.strokeRect(ox+x*fit,oy+y*fit,w*fit,h*fit);
+  ctx.fillStyle='rgba(0,0,0,.72)';
+  ctx.fillRect(ox+x*fit,Math.max(0,oy+y*fit-30),250,28);
+  ctx.fillStyle='#35dcff';ctx.font='bold 16px system-ui';
+  ctx.fillText(`採用 ${(hit.score*100).toFixed(1)}% / ${hit.angle}°`,ox+x*fit+6,Math.max(18,oy+y*fit-9));
+  ctx.restore();
+}
+async function cropHitToImageV29(fullImg,hit){
+  const inv=1/Math.max(1e-9,hit.sceneScale);
+  let x=hit.x*inv,y=hit.y*inv,w=hit.w*inv,h=hit.h*inv;
+  const pad=Math.max(w,h)*MASK_SHAPE_V29.cropPadding;
+  x=Math.max(0,x-pad);y=Math.max(0,y-pad);
+  w=Math.min(fullImg.width-x,w+pad*2);h=Math.min(fullImg.height-y,h+pad*2);
+  const c=document.createElement('canvas');
+  c.width=Math.max(2,Math.round(w));c.height=Math.max(2,Math.round(h));
+  c.getContext('2d').drawImage(fullImg,x,y,w,h,0,0,c.width,c.height);
+  return {img:await imageFromCanvasV29(c),crop:{x,y,w,h}};
+}
+async function captureMaskShapeOneV29(){
+  const video=$('captureVideo'),canvas=$('captureCanvas');
+  if(!video||video.readyState<2){setCaptureStatus('カメラ準備中です');return;}
+  if(!cvLoaded){setCaptureStatus('OpenCV.js準備中です');return;}
+  try{
+    setLoading(true);
+    setCaptureStatus('容器全体を撮影しています...');
+    canvas.width=video.videoWidth||1920;canvas.height=video.videoHeight||1080;
+    canvas.getContext('2d').drawImage(video,0,0,canvas.width,canvas.height);
+    const fullImg=await imageFromCanvasV29(canvas);
+    await stopInspectCamera(true);
+
+    drawImageFit($('viewCanvas'),fullImg);$('empty').style.display='none';
+    log('v29: Master画像から自動生成したマスク形状で、容器内の最も近い1個を探索中...');
+
+    const hit=await findBestMaskShapeV29(fullImg);
+    drawMaskSearchCandidateV29(fullImg,hit);
+    DEBUG.align={
+      mode:'v29-mask-shape-search',
+      score:hit.score,
+      maskScore:hit.maskScore,
+      edgeScore:hit.edgeScore,
+      templateScale:hit.scale,
+      angle:hit.angle,
+      sceneBox:{x:hit.x,y:hit.y,w:hit.w,h:hit.h},
+      sceneScale:hit.sceneScale
+    };
+    renderDebug();
+
+    if(hit.score<MASK_SHAPE_V29.minScore){
+      setBanner('WAIT');
+      setStat('alignStat',(hit.score*100).toFixed(1)+'%','waitText');
+      setStat('outerStat','--','waitText');
+      setStat('pointStat','判定不能','waitText');
+      log(`マスク形状候補は見つかりましたが確信度不足です。
+形状スコア: ${(hit.score*100).toFixed(1)}%
+マスク一致: ${(hit.maskScore*100).toFixed(1)}%
+エッジ一致: ${(hit.edgeScore*100).toFixed(1)}%
+角度: ${hit.angle}°
+※ 無理にNG判定せず、判定不能にしています。`);
+      return;
+    }
+
+    const cut=await cropHitToImageV29(fullImg,hit);
+    inspectImg=cut.img;
+    DEBUG.image={
+      ...(DEBUG.image||{}),
+      mode:'v29-mask-shape-search',
+      fullScene:{w:fullImg.width,h:fullImg.height},
+      selectedCrop:cut.crop
+    };
+    dbg('v29 マスク形状候補採用',{hit,crop:cut.crop});
+    // 最終確認は従来のORB + RANSAC + Homography + 検査ポイント判定。
+    await runInspect();
+  }catch(e){
+    console.error(e);
+    setBanner('WAIT');
+    setStat('alignStat','--','waitText');
+    setStat('outerStat','--','waitText');
+    setStat('pointStat','判定不能','waitText');
+    log('v29 マスク形状探索エラー: '+e.message);
+    dbg('v29 mask shape error',{message:e.message,stack:e.stack});
+  }finally{
+    setLoading(false);
+  }
+}
+
+// =====================================================
+// v26 Single-RANSAC Container β
+// 容器内を「分割」せず、Masterの特徴点から最も強い1個だけRANSACで探す。
+// 別部品混入検出ではなく、検査可能な1個を拾って既存判定へ渡す用途。
+// =====================================================
+const CONTAINER_RANSAC = {
+  masterMaxW: 900,
+  sceneMaxW: 1400,
+  features: 4000,
+  maxMatches: 260,
+  ransacThr: 5,
+  minInliers: 18,
+  minRatio: 0.065,
+  minAreaRatio: 0.008,
+  maxAreaRatio: 0.70
+};
+
+function polygonArea4(pts){
+  let a=0;
+  for(let i=0;i<4;i++){
+    const p=pts[i],q=pts[(i+1)%4];
+    a+=p.x*q.y-q.x*p.y;
+  }
+  return Math.abs(a)/2;
+}
+function transformMasterCornersToScene(HsceneToMaster,mw,mh){
+  let inv=new cv.Mat();
+  cv.invert(HsceneToMaster,inv,cv.DECOMP_SVD);
+  let src=cv.matFromArray(4,1,cv.CV_32FC2,[0,0,mw,0,mw,mh,0,mh]);
+  let dst=new cv.Mat();
+  cv.perspectiveTransform(src,dst,inv);
+  const d=dst.data32F;
+  const pts=[];
+  for(let i=0;i<4;i++)pts.push({x:d[i*2],y:d[i*2+1]});
+  inv.delete(); src.delete(); dst.delete();
+  return pts;
+}
+function validateContainerCandidate(H,m,i,match){
+  const corners=transformMasterCornersToScene(H,m.w,m.h);
+  const area=polygonArea4(corners);
+  const areaRatio=area/Math.max(1,i.w*i.h);
+  const margin=Math.max(i.w,i.h)*0.18;
+  const finite=corners.every(p=>Number.isFinite(p.x)&&Number.isFinite(p.y));
+  const inLooseFrame=finite && corners.every(p=>p.x>=-margin&&p.y>=-margin&&p.x<=i.w+margin&&p.y<=i.h+margin);
+  const ratio=match.inliers/Math.max(1,match.total);
+  const ok=match.inliers>=CONTAINER_RANSAC.minInliers &&
+           ratio>=CONTAINER_RANSAC.minRatio &&
+           areaRatio>=CONTAINER_RANSAC.minAreaRatio &&
+           areaRatio<=CONTAINER_RANSAC.maxAreaRatio &&
+           inLooseFrame;
+  return {ok,corners,areaRatio,ratio,inLooseFrame};
+}
+function drawContainerFoundDebug(img,corners){
+  try{
+    const c=$('debugCanvas'),ctx=c.getContext('2d');
+    c.width=img.width;c.height=img.height;
+    ctx.drawImage(img,0,0,c.width,c.height);
+    const sx=c.width/(img.width||1),sy=c.height/(img.height||1);
+    ctx.save();ctx.strokeStyle='#35dcff';ctx.lineWidth=Math.max(4,c.width/280);
+    ctx.beginPath();
+    corners.forEach((p,k)=>{const x=p.x/CONTAINER_RANSAC.sceneScaleToOriginalX,y=p.y/CONTAINER_RANSAC.sceneScaleToOriginalY;k?ctx.lineTo(x,y):ctx.moveTo(x,y)});
+    ctx.closePath();ctx.stroke();
+    ctx.fillStyle='rgba(53,220,255,.18)';ctx.fill();
+    ctx.restore();
+  }catch(_){}
+}
+async function captureContainerOne(){
+  const video=$('captureVideo'), canvas=$('captureCanvas');
+  if(!video || video.readyState<2){ setCaptureStatus('カメラ準備中です'); return; }
+  try{
+    setCaptureStatus('容器全体を撮影 → Masterと最も一致する1個を探索します...');
+    canvas.width=video.videoWidth||1920; canvas.height=video.videoHeight||1080;
+    canvas.getContext('2d').drawImage(video,0,0,canvas.width,canvas.height);
+    const dataUrl=canvas.toDataURL('image/jpeg',0.95);
+    inspectImg=await new Promise((res,rej)=>{ const im=new Image(); im.onload=()=>res(im); im.onerror=rej; im.src=dataUrl; });
+    await stopInspectCamera(true);
+    drawImageFit($('viewCanvas'),inspectImg); $('empty').style.display='none';
+    await runInspectContainerOne();
+  }catch(e){ console.error(e); setCaptureStatus('容器撮影エラー: '+e.message); }
+}
+async function runInspectContainerOne(){
+  if(!masterImg||!inspectImg){alert('品番と写真を確認してください');return}
+  hideResultAction();
+  okLoggedForCurrent=false; logSending=false;
+  setLoading(true); setBanner('WAIT');
+  if(!cvLoaded){
+    log('OpenCV.js準備中... 最大20秒待機します');
+    const okCv=await waitForOpenCV(20000);
+    if(!okCv){ setLoading(false); log('OpenCV.js読込タイムアウト。'); return; }
+  }
+  let m=null,i=null,H=null,warped=null;
+  try{
+    log('容器内からMasterと一致する1個を探索中...\n※ 全個体の分離はしません。最も強い1個だけを使います。');
+    const pointNormalizeInfo=DEBUG.image?.pointNormalize;
+    DEBUG={image:{pointNormalize:pointNormalizeInfo,mode:'container-single-ransac'},align:{},points:DEBUG.points||[],logs:DEBUG.logs||[]};
+
+    m=matFromImage(masterImg,CONTAINER_RANSAC.masterMaxW);
+    i=matFromImage(inspectImg,CONTAINER_RANSAC.sceneMaxW);
+    CONTAINER_RANSAC.sceneScaleToOriginalX=i.w/inspectImg.width;
+    CONTAINER_RANSAC.sceneScaleToOriginalY=i.h/inspectImg.height;
+
+    const mt=detectAndMatch(m,i,CONTAINER_RANSAC.features,CONTAINER_RANSAC.maxMatches,CONTAINER_RANSAC.ransacThr);
+    H=mt.H;
+    const valid=validateContainerCandidate(H,m,i,mt);
+
+    DEBUG.image={
+      mode:'container-single-ransac',
+      masterOriginal:{w:masterImg.width,h:masterImg.height},
+      inspectOriginal:{w:inspectImg.width,h:inspectImg.height},
+      processMaster:{w:m.w,h:m.h,scale:m.scale},
+      processScene:{w:i.w,h:i.h,scale:i.scale},
+      pointCount:points.length,
+      pointNormalize:pointNormalizeInfo||undefined
+    };
+    const d=H.data64F||H.data32F;
+    DEBUG.align={
+      mode:'single-best-instance',
+      inliers:mt.inliers,total:mt.total,ratio:valid.ratio,
+      projectedAreaRatio:valid.areaRatio,
+      inLooseFrame:valid.inLooseFrame,
+      bestDistance:mt.bestDistance,medianDistance:mt.medianDistance,
+      candidateOk:valid.ok,
+      corners:valid.corners,
+      H:[d[0],d[1],d[2],d[3],d[4],d[5],d[6],d[7],d[8]]
+    };
+    renderDebug();
+
+    if(!valid.ok){
+      setBanner('WAIT');
+      setStat('alignStat',`${mt.inliers}/${mt.total}`,'waitText');
+      setStat('outerStat','--','waitText');
+      setStat('pointStat','判定不能','waitText');
+      log(`容器内から検査可能な1個を確定できませんでした。
+位置合わせ候補: ${mt.inliers}/${mt.total}
+候補面積: ${(valid.areaRatio*100).toFixed(1)}%
+製品を少し見える状態にするか、端末を近づけて再撮影してください。`);
+      dbg('container candidate rejected',DEBUG.align);
+      return;
+    }
+
+    warped=new cv.Mat();
+    cv.warpPerspective(i.src,warped,H,new cv.Size(m.w,m.h));
+    const res=compareAll(m,warped,points);
+    const outerOk=res.outerDiff<=CONFIG.outerThr;
+    const pointsOk=(points.length===0)||res.pointAllOk;
+    const ok=outerOk&&pointsOk;
+
+    lastInspectionRecord={
+      barcodeRaw: currentBarcodeRaw || currentPart?.partNo || '',
+      masterKey: currentPart?.partNo || '',
+      partNo: currentBarcodeInfo?.partNo || currentPart?.partNo || '',
+      partName: currentBarcodeInfo?.partName || '',
+      qty: currentBarcodeInfo?.qty || '',
+      shipDate: currentBarcodeInfo?.shipDate || '',
+      issueDate: currentBarcodeInfo?.issueDate || '',
+      orderNo: currentBarcodeInfo?.orderNo || '',
+      planNo: currentBarcodeInfo?.planNo || '',
+      process: currentBarcodeInfo?.process || '',
+      traceNo: currentBarcodeInfo?.traceNo || '',
+      barcodeFormat: currentBarcodeInfo?.format || '',
+      result: ok ? 'OK' : 'NG',
+      mode:'CONTAINER_SINGLE_RANSAC',
+      outerMatch: Math.round((res.outerMatch||0)*1000)/10,
+      outerDiff: Math.round((res.outerDiff||0)*1000)/10,
+      pointOk: res.pointOk,
+      pointTotal: points.length,
+      inliers:mt.inliers,total:mt.total,
+      inlierRatio:Math.round(valid.ratio*1000)/1000,
+      projectedAreaRatio:Math.round(valid.areaRatio*10000)/10000,
+      alignOk:true,outerOk,pointsOk,
+      deviceId:getDeviceId(),
+      inspectVersion:INSPECT_VERSION,
+      pointDetails:(res.details||[]).map(p=>({name:p.name,type:p.type,ok:p.ok,match:Math.round((p.match||0)*1000)/10,threshold:Math.round((p.threshold||0)*1000)/10}))
+    };
+
+    setBanner(ok?'OK':'NG');
+    setStat('alignStat',`${mt.inliers}/${mt.total}`,'okText');
+    setStat('outerStat',(res.outerMatch*100).toFixed(1)+'%',outerOk?'okText':'ngText');
+    setStat('pointStat',points.length?`${res.pointOk}/${points.length}`:'外形のみ',pointsOk?'okText':'ngText');
+    log(`容器内から1個検出 → 判定完了
+品番: ${currentPart?.partNo||''}
+総合: ${ok?'OK':'NG'}
+位置合わせ: ${mt.inliers}/${mt.total}
+検出個体の画面占有率: ${(valid.areaRatio*100).toFixed(1)}%
+外形マッチ率: ${(res.outerMatch*100).toFixed(1)}%
+検査ポイント: ${points.length?res.pointOk+'/'+points.length:'なし（外形のみ）'}`);
+    dbg('container single-RANSAC 完了',{ok,align:DEBUG.align,outerMatch:res.outerMatch,points:res.details});
+    renderDebug();
+    showResultAction(ok);
+    if(!ok && !ngLoggedForCurrent){ ngLoggedForCurrent=true; recordInspection('NG_AUTO'); }
+  }catch(e){
+    console.error(e);
+    setBanner('WAIT'); setStat('alignStat','--','waitText'); setStat('outerStat','--','waitText'); setStat('pointStat','判定不能','waitText');
+    log('容器内1個探索エラー: '+e.message+'\n製品が小さすぎる・隠れすぎている場合は近づけて再撮影してください。');
+    dbg('container single-RANSAC error',{message:e.message,stack:e.stack});
+    renderDebug();
+  }finally{
+    try{if(m){m.src.delete();m.gray.delete();}}catch(_){}
+    try{if(i){i.src.delete();i.gray.delete();}}catch(_){}
+    try{if(H)H.delete();}catch(_){}
+    try{if(warped)warped.delete();}catch(_){}
+    setLoading(false);
+  }
+}
+
+async function runInspect(){
+  if(!masterImg||!inspectImg){alert('品番と写真を確認してください');return}
+  hideResultAction();
+  okLoggedForCurrent=false; logSending=false;
+  setLoading(true); setBanner('WAIT');
+  if(!cvLoaded){
+    log('OpenCV.js準備中... 最大20秒待機します');
+    const okCv=await waitForOpenCV(20000);
+    if(!okCv){ setLoading(false); log('OpenCV.js読込タイムアウト。js/opencv.js の配置/キャッシュを確認してください。'); updateActionState(); return; }
+  }
+  try{
+    log('解析中...');
+    const pointNormalizeInfo=DEBUG.image?.pointNormalize;
+    DEBUG={image:{pointNormalize:pointNormalizeInfo},align:{},points:DEBUG.points||[],logs:DEBUG.logs||[]};
+    dbg('解析開始');
+    const m=matFromImage(masterImg,CONFIG.maxW), i=matFromImage(inspectImg,CONFIG.maxW);
+    DEBUG.image={
+      version:'inspect_v12_hole_stable',
+      partNo:currentPart?.partNo||'',
+      masterOriginal:{w:masterImg.width,h:masterImg.height},
+      inspectOriginal:{w:inspectImg.width,h:inspectImg.height},
+      processMaster:{w:m.w,h:m.h,scale:m.scale},
+      processInspect:{w:i.w,h:i.h,scale:i.scale},
+      viewCanvas:{w:$('viewCanvas').width,h:$('viewCanvas').height},
+      pointCount:points.length,
+      pointNormalize:DEBUG.image.pointNormalize||undefined
+    };
+    const {H,inliers,total}=detectAndMatch(m,i,CONFIG.features);
+    let warped=new cv.Mat();
+    cv.warpPerspective(i.src,warped,H,new cv.Size(m.w,m.h));
+    const scale=homographyScale(H);
+    const d=H.data64F||H.data32F;
+    const scaleOk=scale>=CONFIG.scaleMin&&scale<=CONFIG.scaleMax;
+    const alignOk=inliers>=CONFIG.minInliers && (inliers/Math.max(1,total))>=CONFIG.minInlierRatio && scaleOk;
+    DEBUG.align={
+      inliers,total,ratio:inliers/Math.max(1,total),scale,scaleOk,alignOk,
+      H:[d[0],d[1],d[2],d[3],d[4],d[5],d[6],d[7],d[8]],
+      note:'Hはinspect画像→master画像へwarpする変換。検査点はmaster画像座標で評価。'
+    };
+    const res=compareAll(m,warped,points);
+    const outerOk=res.outerDiff<=CONFIG.outerThr;
+    const pointsOk=(points.length===0)||res.pointAllOk;
+    const ok= alignOk && outerOk && pointsOk;
+    lastInspectionRecord={
+      barcodeRaw: currentBarcodeRaw || currentPart?.partNo || '',
+      masterKey: currentPart?.partNo || '',
+      partNo: currentBarcodeInfo?.partNo || currentPart?.partNo || '',
+      partName: currentBarcodeInfo?.partName || '',
+      qty: currentBarcodeInfo?.qty || '',
+      shipDate: currentBarcodeInfo?.shipDate || '',
+      issueDate: currentBarcodeInfo?.issueDate || '',
+      orderNo: currentBarcodeInfo?.orderNo || '',
+      planNo: currentBarcodeInfo?.planNo || '',
+      process: currentBarcodeInfo?.process || '',
+      traceNo: currentBarcodeInfo?.traceNo || '',
+      barcodeFormat: currentBarcodeInfo?.format || '',
+      result: ok ? 'OK' : 'NG',
+      outerMatch: Math.round((res.outerMatch||0)*1000)/10,
+      outerDiff: Math.round((res.outerDiff||0)*1000)/10,
+      pointOk: res.pointOk,
+      pointTotal: points.length,
+      inliers,
+      total,
+      inlierRatio: Math.round((inliers/Math.max(1,total))*1000)/1000,
+      scale: Math.round(scale*1000)/1000,
+      alignOk,
+      outerOk,
+      pointsOk,
+      deviceId: getDeviceId(),
+      inspectVersion: INSPECT_VERSION,
+      pointDetails: (res.details||[]).map(p=>({name:p.name,type:p.type,ok:p.ok,match:Math.round((p.match||0)*1000)/10,threshold:Math.round((p.threshold||0)*1000)/10}))
+    };
+    if(!alignOk){
+      setBanner('WAIT');
+      setStat('alignStat',`${inliers}/${total}`,'ngText');
+      setStat('outerStat','--','waitText');
+      setStat('pointStat','判定不能','waitText');
+      log(`品番: ${currentPart?.partNo||''}
+総合: 判定不能（再撮影）
+位置合わせ: NG (${inliers}/${total}, 倍率${scale.toFixed(3)})
+※位置合わせが成立していないため、外形・検査ポイントが偶然一致してもOK判定しません。`);
+      lastInspectionRecord=null;
+      hideResultAction();
+      dbg('解析終了: 位置合わせNGのため判定不能',{alignOk,inliers,total,scale,outerMatch:res.outerMatch,pointOk:res.pointOk});
+      renderDebug();
+      return;
+    }
+    setBanner(ok?'OK':'NG');
+    setStat('alignStat',`${inliers}/${total}`,'okText');
+    setStat('outerStat',(res.outerMatch*100).toFixed(1)+'%',outerOk?'okText':'ngText');
+    setStat('pointStat',points.length?`${res.pointOk}/${points.length}`:'外形のみ',pointsOk?'okText':'ngText');
+    log(`品番: ${currentPart?.partNo||''}
+総合: ${ok?'OK':'NG'}
+位置合わせ: OK (${inliers}/${total}, 倍率${scale.toFixed(3)})
+外形マッチ率: ${(res.outerMatch*100).toFixed(1)}% ${outerOk?'OK':'NG'}
+検査ポイント: ${points.length?res.pointOk+'/'+points.length:'なし（外形のみ）'}`);
+    dbg('解析完了',{ok,alignOk,outerMatch:res.outerMatch,outerDiff:res.outerDiff,pointOk:res.pointOk,points:res.details});
+    renderDebug();
+    showResultAction(ok);
+    if(!ok && !ngLoggedForCurrent){ ngLoggedForCurrent=true; recordInspection('NG_AUTO'); }
+    m.src.delete(); m.gray.delete(); i.src.delete(); i.gray.delete(); H.delete(); warped.delete();
+  }catch(e){
+    console.error(e); setBanner('NG'); setStat('alignStat','NG','ngText'); log('解析エラー: '+e.message); dbg('解析エラー',{message:e.message,stack:e.stack});
+  }finally{ setLoading(false); }
+}
+</script>
+</body>
+</html>
