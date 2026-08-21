@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>ぴろえんす Inspect v35 Mask Tune β</title>
+<title>ぴろえんす Inspect v35 Mask Tune UI-Fix β</title>
 <style>
 :root{--bg:#06101f;--panel:rgba(5,12,26,.88);--txt:#eef6ff;--muted:#9fb4d9;--green:#35f078;--red:#ff4b5f;--yellow:#ffd84d;--cyan:#35dcff;--line:#29436d}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;width:100%;min-height:100%;background:#000;color:var(--txt);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;overflow-x:hidden;overflow-y:auto}.app{position:relative;width:100%;height:100dvh;min-height:100vh;background:#000;overflow:hidden}.topbar{position:absolute;z-index:10;left:0;right:0;top:0;padding:10px max(10px,env(safe-area-inset-left)) 10px max(10px,env(safe-area-inset-right));background:linear-gradient(180deg,rgba(0,0,0,.88),rgba(0,0,0,.30),transparent);display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}.brand{font-weight:900;letter-spacing:.06em;font-size:14px;color:#dff8ff}.selectRow{display:flex;gap:8px;align-items:center}.selectRow select{flex:1;min-width:0;padding:11px 12px;border-radius:12px;border:1px solid #31517e;background:#071226;color:var(--txt);font-size:15px}.selectRow button,.cameraBtn{border:0;border-radius:12px;padding:11px 14px;background:linear-gradient(90deg,#2aa7ff,#39e0ff);font-weight:900;color:#001225;font-size:14px}.cameraBtn{white-space:nowrap}.photoInput{display:none}.canvasWrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#020711}canvas{width:100%;height:100%;object-fit:contain;display:block}.empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;color:#aabde0;padding:24px;font-size:15px;line-height:1.7}.resultBanner{position:absolute;z-index:12;left:12px;right:12px;top:88px;border-radius:18px;padding:18px 14px;text-align:center;font-size:72px;font-weight:1000;letter-spacing:.14em;line-height:1;box-shadow:0 18px 40px rgba(0,0,0,.45);display:none}.resultBanner::before{content:'総合判定';display:block;font-size:13px;letter-spacing:.16em;margin-bottom:8px;color:#d9e9ff}.resultBanner.ok{display:block;background:rgba(9,65,37,.92);border:3px solid var(--green);color:var(--green)}.resultBanner.ng{display:block;background:rgba(73,18,31,.94);border:3px solid var(--red);color:var(--red)}.bottom{position:absolute;z-index:10;left:0;right:0;bottom:0;padding:10px max(10px,env(safe-area-inset-left)) max(12px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-right));background:linear-gradient(0deg,rgba(0,0,0,.92),rgba(0,0,0,.46),transparent)}.status{background:rgba(7,18,38,.86);border:1px solid var(--line);border-radius:14px;padding:10px 12px;color:#c6d8ff;font-size:12px;line-height:1.45;white-space:pre-line;max-height:160px;overflow:auto}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:7px}.stat{background:rgba(7,18,38,.82);border:1px solid var(--line);border-radius:12px;padding:8px;text-align:center}.stat small{display:block;color:#aabde0;font-size:10px}.stat b{display:block;font-size:18px;margin-top:2px}.okText{color:var(--green)}.ngText{color:var(--red)}.waitText{color:var(--yellow)}.loading{position:absolute;z-index:15;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:#dff8ff}.loading.on{display:flex}.debugPanel{min-height:100dvh;background:#050b16;padding:18px max(14px,env(safe-area-inset-left)) max(28px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-right));border-top:1px solid #20385f}.debugHead{display:flex;align-items:end;justify-content:space-between;gap:10px;margin-bottom:12px}.debugHead h2{margin:0;font-size:20px;letter-spacing:.08em}.debugHint{color:#9fb4d9;font-size:12px}.debugGrid{display:grid;grid-template-columns:1fr;gap:10px}.debugCard{background:rgba(7,18,38,.88);border:1px solid var(--line);border-radius:14px;padding:12px}.debugCard h3{margin:0 0 8px;font-size:14px;color:#dff8ff}.debugPre{margin:0;white-space:pre-wrap;word-break:break-word;color:#c6d8ff;font-size:12px;line-height:1.5}.debugCanvasWrap{background:#020711;border:1px solid #20385f;border-radius:12px;overflow:hidden}.debugCanvasWrap canvas{width:100%;height:auto;display:block}.debugBadge{display:inline-block;padding:3px 8px;border-radius:999px;border:1px solid #31517e;color:#9fb4d9;font-size:11px;margin-left:6px}.barcodeInput{min-width:180px;max-width:260px;padding:11px 12px;border-radius:12px;border:1px solid #31517e;background:#071226;color:var(--txt);font-size:15px}.scanOverlay{position:fixed;z-index:30;inset:0;background:#020711;display:none;align-items:center;justify-content:center;flex-direction:column;padding:max(18px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) max(18px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left));gap:12px}.scanOverlay.on{display:flex}.scanBox{position:relative;width:min(92vw,720px);aspect-ratio:4/3;border:2px solid #31517e;border-radius:18px;overflow:hidden;background:#000;box-shadow:0 20px 60px #000a}.scanBox video,.scanBox canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.scanGuide{position:absolute;left:50%;top:50%;width:58%;height:36%;transform:translate(-50%,-50%);border:4px solid var(--cyan);border-radius:16px;box-shadow:0 0 0 999px rgba(0,0,0,.28);pointer-events:none}.scanTitle{font-size:20px;font-weight:900;color:#dff8ff}.scanStatus{color:#c6d8ff;font-size:14px;text-align:center;min-height:1.6em;white-space:pre-line}.scanClose{width:min(92vw,360px);border:0;border-radius:14px;padding:13px 18px;background:#26395f;color:#eef6ff;font-weight:900;font-size:16px}.qrTorchBtn{width:min(92vw,360px);border:0;border-radius:14px;padding:13px 18px;background:#ffd84d;color:#111;font-weight:900;font-size:16px}.qrTorchBtn.off{background:#26395f;color:#eef6ff}.captureButtons{display:flex;gap:10px;width:min(92vw,520px)}.captureButtons button{flex:1;border:0;border-radius:14px;padding:14px 18px;font-weight:900;font-size:16px}.captureShutter{background:linear-gradient(90deg,#2aa7ff,#39e0ff);color:#001225}.captureClose{background:#26395f;color:#eef6ff}.containerRansacBtn{background:linear-gradient(90deg,#8f7cff,#39e0ff)!important;color:#06101f!important}.focusHint{position:absolute;right:10px;bottom:10px;background:rgba(0,0,0,.6);color:#fff;border-radius:999px;padding:5px 9px;font-size:11px;pointer-events:none}
@@ -51,12 +51,38 @@
 .tuneChk{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:#eef6ff}
 @media(max-width:980px){.tuneGrid{grid-template-columns:repeat(2,minmax(150px,1fr));}}
 @media(max-width:640px){.tuneGrid{grid-template-columns:1fr}.tunePanel{margin:8px 8px 0}}
+
+/* v35 UI FIX: tuning panel must sit above absolute canvas */
+.tunePanel{
+  position:absolute!important;
+  z-index:22!important;
+  top:118px!important;
+  left:12px!important;
+  right:12px!important;
+  margin:0!important;
+  max-height:48vh;
+  overflow:auto;
+  box-shadow:0 12px 34px rgba(0,0,0,.58);
+}
+.tunePanel.collapsed .tuneGrid,
+.tunePanel.collapsed .tuneSub,
+.tunePanel.collapsed .tuneRowButtons{display:none}
+.tunePanel.collapsed{right:auto!important;width:auto;min-width:220px;max-height:none}
+#v35TuneToggleBtn{
+  border:0;border-radius:10px;padding:9px 13px;
+  background:#35dcff;color:#001225;font-weight:900;cursor:pointer
+}
+@media(max-width:759px){
+  .tunePanel{top:154px!important;left:8px!important;right:8px!important;max-height:45vh}
+  .tunePanel.collapsed{right:auto!important;min-width:190px}
+}
+
 </style>
 </head>
 <body class="masterNotReady">
 <div class="app">
   <div class="topbar">
-    <div class="brand">ぴろえんす Inspect v35 / マスク＋パラメータ調整β</div>
+    <div class="brand">ぴろえんす Inspect v35 / マスク＋調整UI修正版β</div>
     <div class="selectRow">
       <input id="barcodeInput" class="barcodeInput" type="text" autocomplete="off" inputmode="none" placeholder="バーコード/QR読取（USBリーダーはここへ）">
       <select id="partSelect"><option>マスター読込中...</option></select>
@@ -71,7 +97,7 @@
   <section class="tunePanel">
     <div class="tuneHead">
       <div>
-        <div class="tuneTitle">v35 検出パラメータ</div>
+        <div class="tuneTitle">v35 検出パラメータ　<button id="v35TuneToggleBtn" type="button">閉じる</button></div>
         <div class="tuneSub">マスクON/OFFと穴条件をバーで微調整できます。厳しすぎる時はまず「黒面積」「黒率」「内外差」を下げてください。</div>
       </div>
       <div class="tuneRowButtons">
@@ -159,7 +185,7 @@
 // 例: const GAS_URL = 'https://script.google.com/macros/s/xxxxxxx/exec';
 // =====================================================
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbzhTwzLskVh0lRNegdW0FnmL-dedZ6LIps2NP9mRrXsPp0aC93ziLRAMUTEmzFiiU_3/exec'; // ←ここを今井さんのGAS URLに置き換え
-const INSPECT_VERSION = 'v35-mask-tune';
+const INSPECT_VERSION = 'v35-mask-tune-ui-fix';
 
 // 固定設定：現場用なので画面には出さない
 const CONFIG = {
@@ -216,6 +242,14 @@ function readV35TuneUi(){
 }
 function initV35TuneUi(){
   syncV35TuneUi();
+  const panel=document.querySelector('.tunePanel');
+  const toggle=$('v35TuneToggleBtn');
+  if(panel&&toggle){
+    toggle.addEventListener('click',()=>{
+      panel.classList.toggle('collapsed');
+      toggle.textContent=panel.classList.contains('collapsed')?'調整を開く':'閉じる';
+    });
+  }
   ['v35UseMask','v35DarkPx','v35Black','v35Delta','v35Area','v35MaskInside','v35MaskBlob'].forEach(id=>{
     const el=$(id); if(!el) return;
     el.addEventListener('input',readV35TuneUi);
