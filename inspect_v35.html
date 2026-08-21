@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>ぴろえんす Inspect v35 Mask Tune + Master Refresh β</title>
+<title>ぴろえんす Inspect v35 Mask Gate + Green Overlay Fix β</title>
 <style>
 :root{--bg:#06101f;--panel:rgba(5,12,26,.88);--txt:#eef6ff;--muted:#9fb4d9;--green:#35f078;--red:#ff4b5f;--yellow:#ffd84d;--cyan:#35dcff;--line:#29436d}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;width:100%;min-height:100%;background:#000;color:var(--txt);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;overflow-x:hidden;overflow-y:auto}.app{position:relative;width:100%;height:100dvh;min-height:100vh;background:#000;overflow:hidden}.topbar{position:absolute;z-index:10;left:0;right:0;top:0;padding:10px max(10px,env(safe-area-inset-left)) 10px max(10px,env(safe-area-inset-right));background:linear-gradient(180deg,rgba(0,0,0,.88),rgba(0,0,0,.30),transparent);display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}.brand{font-weight:900;letter-spacing:.06em;font-size:14px;color:#dff8ff}.selectRow{display:flex;gap:8px;align-items:center}.selectRow select{flex:1;min-width:0;padding:11px 12px;border-radius:12px;border:1px solid #31517e;background:#071226;color:var(--txt);font-size:15px}.selectRow button,.cameraBtn{border:0;border-radius:12px;padding:11px 14px;background:linear-gradient(90deg,#2aa7ff,#39e0ff);font-weight:900;color:#001225;font-size:14px}.cameraBtn{white-space:nowrap}.photoInput{display:none}.canvasWrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#020711}canvas{width:100%;height:100%;object-fit:contain;display:block}.empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;color:#aabde0;padding:24px;font-size:15px;line-height:1.7}.resultBanner{position:absolute;z-index:12;left:12px;right:12px;top:88px;border-radius:18px;padding:18px 14px;text-align:center;font-size:72px;font-weight:1000;letter-spacing:.14em;line-height:1;box-shadow:0 18px 40px rgba(0,0,0,.45);display:none}.resultBanner::before{content:'総合判定';display:block;font-size:13px;letter-spacing:.16em;margin-bottom:8px;color:#d9e9ff}.resultBanner.ok{display:block;background:rgba(9,65,37,.92);border:3px solid var(--green);color:var(--green)}.resultBanner.ng{display:block;background:rgba(73,18,31,.94);border:3px solid var(--red);color:var(--red)}.bottom{position:absolute;z-index:10;left:0;right:0;bottom:0;padding:10px max(10px,env(safe-area-inset-left)) max(12px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-right));background:linear-gradient(0deg,rgba(0,0,0,.92),rgba(0,0,0,.46),transparent)}.status{background:rgba(7,18,38,.86);border:1px solid var(--line);border-radius:14px;padding:10px 12px;color:#c6d8ff;font-size:12px;line-height:1.45;white-space:pre-line;max-height:160px;overflow:auto}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:7px}.stat{background:rgba(7,18,38,.82);border:1px solid var(--line);border-radius:12px;padding:8px;text-align:center}.stat small{display:block;color:#aabde0;font-size:10px}.stat b{display:block;font-size:18px;margin-top:2px}.okText{color:var(--green)}.ngText{color:var(--red)}.waitText{color:var(--yellow)}.loading{position:absolute;z-index:15;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:#dff8ff}.loading.on{display:flex}.debugPanel{min-height:100dvh;background:#050b16;padding:18px max(14px,env(safe-area-inset-left)) max(28px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-right));border-top:1px solid #20385f}.debugHead{display:flex;align-items:end;justify-content:space-between;gap:10px;margin-bottom:12px}.debugHead h2{margin:0;font-size:20px;letter-spacing:.08em}.debugHint{color:#9fb4d9;font-size:12px}.debugGrid{display:grid;grid-template-columns:1fr;gap:10px}.debugCard{background:rgba(7,18,38,.88);border:1px solid var(--line);border-radius:14px;padding:12px}.debugCard h3{margin:0 0 8px;font-size:14px;color:#dff8ff}.debugPre{margin:0;white-space:pre-wrap;word-break:break-word;color:#c6d8ff;font-size:12px;line-height:1.5}.debugCanvasWrap{background:#020711;border:1px solid #20385f;border-radius:12px;overflow:hidden}.debugCanvasWrap canvas{width:100%;height:auto;display:block}.debugBadge{display:inline-block;padding:3px 8px;border-radius:999px;border:1px solid #31517e;color:#9fb4d9;font-size:11px;margin-left:6px}.barcodeInput{min-width:180px;max-width:260px;padding:11px 12px;border-radius:12px;border:1px solid #31517e;background:#071226;color:var(--txt);font-size:15px}.scanOverlay{position:fixed;z-index:30;inset:0;background:#020711;display:none;align-items:center;justify-content:center;flex-direction:column;padding:max(18px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) max(18px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left));gap:12px}.scanOverlay.on{display:flex}.scanBox{position:relative;width:min(92vw,720px);aspect-ratio:4/3;border:2px solid #31517e;border-radius:18px;overflow:hidden;background:#000;box-shadow:0 20px 60px #000a}.scanBox video,.scanBox canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.scanGuide{position:absolute;left:50%;top:50%;width:58%;height:36%;transform:translate(-50%,-50%);border:4px solid var(--cyan);border-radius:16px;box-shadow:0 0 0 999px rgba(0,0,0,.28);pointer-events:none}.scanTitle{font-size:20px;font-weight:900;color:#dff8ff}.scanStatus{color:#c6d8ff;font-size:14px;text-align:center;min-height:1.6em;white-space:pre-line}.scanClose{width:min(92vw,360px);border:0;border-radius:14px;padding:13px 18px;background:#26395f;color:#eef6ff;font-weight:900;font-size:16px}.qrTorchBtn{width:min(92vw,360px);border:0;border-radius:14px;padding:13px 18px;background:#ffd84d;color:#111;font-weight:900;font-size:16px}.qrTorchBtn.off{background:#26395f;color:#eef6ff}.captureButtons{display:flex;gap:10px;width:min(92vw,520px)}.captureButtons button{flex:1;border:0;border-radius:14px;padding:14px 18px;font-weight:900;font-size:16px}.captureShutter{background:linear-gradient(90deg,#2aa7ff,#39e0ff);color:#001225}.captureClose{background:#26395f;color:#eef6ff}.containerRansacBtn{background:linear-gradient(90deg,#8f7cff,#39e0ff)!important;color:#06101f!important}.focusHint{position:absolute;right:10px;bottom:10px;background:rgba(0,0,0,.6);color:#fff;border-radius:999px;padding:5px 9px;font-size:11px;pointer-events:none}
@@ -82,7 +82,7 @@
 <body class="masterNotReady">
 <div class="app">
   <div class="topbar">
-    <div class="brand">ぴろえんす Inspect v35 / Master再解析対応β</div>
+    <div class="brand">ぴろえんす Inspect v35 / マスク実ゲート＋緑表示修正版β</div>
     <div class="selectRow">
       <input id="barcodeInput" class="barcodeInput" type="text" autocomplete="off" inputmode="none" placeholder="バーコード/QR読取（USBリーダーはここへ）">
       <select id="partSelect"><option>マスター読込中...</option></select>
@@ -186,7 +186,7 @@
 // 例: const GAS_URL = 'https://script.google.com/macros/s/xxxxxxx/exec';
 // =====================================================
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbzhTwzLskVh0lRNegdW0FnmL-dedZ6LIps2NP9mRrXsPp0aC93ziLRAMUTEmzFiiU_3/exec'; // ←ここを今井さんのGAS URLに置き換え
-const INSPECT_VERSION = 'v35-mask-tune-master-refresh';
+const INSPECT_VERSION = 'v35-mask-gate-green-fix';
 
 // 固定設定：現場用なので画面には出さない
 const CONFIG = {
@@ -275,7 +275,7 @@ function initV35TuneUi(){
     masterStrictCacheV35=null;
     drawMasterPreview();
     const model=masterStrictCacheV35;
-    log(`Masterに現在の設定を適用しました。
+    log(`Masterに現在の設定を適用しました。\n※マスクON時は緑領域外の穴候補を実際に除外します。
 Master穴候補: ${model?.holes?.length||0}
 マスク: ${V35_TUNE.useMask?'ON':'OFF'}
 黒面積: ${V35_TUNE.sceneMinDarkPixels}px
@@ -316,8 +316,21 @@ function buildSceneSupportMaskV35(gray){
       cv.drawContours(mask,vv,0,new cv.Scalar(255),-1);
       vv.delete(); cnt.delete();
     }
-    const canvas=document.createElement('canvas'); cv.imshow(canvas,mask);
-    return {mask,canvas,nonZero:cv.countNonZero(mask),minBlob};
+    const canvas=document.createElement('canvas');
+    cv.imshow(canvas,mask);
+
+    // v35 FIX: cv.imshow(mask) は白黒表示になる。
+    // 表示専用canvasを source-in で緑色化して、マスク領域が確実に緑で見えるようにする。
+    const overlayCanvas=document.createElement('canvas');
+    overlayCanvas.width=canvas.width; overlayCanvas.height=canvas.height;
+    const ox=overlayCanvas.getContext('2d');
+    ox.drawImage(canvas,0,0);
+    ox.globalCompositeOperation='source-in';
+    ox.fillStyle='#35f078';
+    ox.fillRect(0,0,overlayCanvas.width,overlayCanvas.height);
+    ox.globalCompositeOperation='source-over';
+
+    return {mask,canvas,overlayCanvas,nonZero:cv.countNonZero(mask),minBlob};
   }catch(e){
     mask.delete();
     throw e;
@@ -331,7 +344,7 @@ function drawSceneMaskOverlayV35(fullImg,maskCanvas){
   const fit=Math.min(c.width/fullImg.width,c.height/fullImg.height);
   const w=fullImg.width*fit,h=fullImg.height*fit,ox=(c.width-w)/2,oy=(c.height-h)/2;
   ctx.save();
-  ctx.globalAlpha=0.16;
+  ctx.globalAlpha=0.28;
   ctx.drawImage(maskCanvas,ox,oy,w,h);
   ctx.restore();
 }
@@ -1406,6 +1419,23 @@ function extractStrictAperturesV35(gray,maxCount,isMaster=false,supportMask=null
 
     const M=cv.moments(c,false);if(Math.abs(M.m00)<1e-6)continue;
     const x=M.m10/M.m00,y=M.m01/M.m00;
+
+    // v35 FIX: マスクを「表示だけ」でなく穴候補の実ゲートとして使用。
+    // 中心がマスク外なら即除外。さらにBBoxのマスク内率もバー値で判定。
+    if(supportMask){
+      const cx=Math.max(0,Math.min(supportMask.cols-1,Math.round(x)));
+      const cy=Math.max(0,Math.min(supportMask.rows-1,Math.round(y)));
+      if(!supportMask.ucharPtr(cy,cx)[0]){
+        rejected.push({x,y,size:Math.sqrt(area),reason:'outsideMask'});
+        continue;
+      }
+      const supportRatio=rectSupportRatioV34(supportMask,r);
+      if(supportRatio<pctToRatio(V35_TUNE.maskInsideRatioPct)){
+        rejected.push({x,y,size:Math.sqrt(area),reason:'maskInsideRatio',supportRatio});
+        continue;
+      }
+    }
+
     const st=contourPixelStatsV35(gray,c,r);
     if(!st)continue;
 
@@ -1492,6 +1522,7 @@ function getMasterStrictModelV35(){
       key,w:m.w,h:m.h,scale:m.scale,
       holes:ex.holes,rejected:ex.rejected,desc,proxyRect,
       maskCanvas:maskInfo?.canvas||null,
+      maskOverlayCanvas:maskInfo?.overlayCanvas||null,
       maskPixels:maskInfo?.nonZero||0,
       tune:{...V35_TUNE}
     };
@@ -1554,12 +1585,12 @@ function drawMasterStrictV35(){
     const canvas=$('viewCanvas'),ctx=canvas.getContext('2d');
     const fit=Math.min(canvas.width/masterImg.width,canvas.height/masterImg.height);
     // Masterマスク確認用: 緑半透明で表示
-    if(model.maskCanvas){
+    if(model.maskOverlayCanvas||model.maskCanvas){
       const mw=masterImg.width*fit,mh=masterImg.height*fit;
       const mox=(canvas.width-mw)/2,moy=(canvas.height-mh)/2;
       ctx.save();
-      ctx.globalAlpha=0.16;
-      ctx.drawImage(model.maskCanvas,mox,moy,mw,mh);
+      ctx.globalAlpha=0.28;
+      ctx.drawImage(model.maskOverlayCanvas||model.maskCanvas,mox,moy,mw,mh);
       ctx.restore();
     }
     const ox=(canvas.width-masterImg.width*fit)/2,oy=(canvas.height-masterImg.height*fit)/2;
@@ -1593,7 +1624,7 @@ function drawMasterStrictV35(){
       ctx.fillRect(x-2,y-2,4,4);
     }
     ctx.restore();
-    DEBUG.image={...(DEBUG.image||{}),masterStrictV35:{accepted:holes.length,rejected:model.rejected.length,proxyRect:model.proxyRect,note:'Sceneは任意で製品マスクON。黒画素面積＋黒画素率＋内外輝度差＋明リング率で採用'}};
+    DEBUG.image={...(DEBUG.image||{}),masterStrictV35:{accepted:holes.length,rejected:model.rejected.length,proxyRect:model.proxyRect,note:'マスクON時は中心＋BBox内側率で実ゲート。緑領域外の穴候補は除外。黒画素面積＋黒画素率＋内外輝度差＋明リング率で採用'}};
     renderDebug();
     return holes.length;
   }catch(e){dbg('v35 Master厳格穴可視化失敗',{message:e.message});return 0;}
@@ -1647,7 +1678,7 @@ async function runStrictConstellationFromImageV35(fullImg){
     best=searchBestConstellationV33(master.holes,master.desc,sceneHoles,sceneDesc);
     found=refineStrictHomographyV35(master,sceneHoles,best,scene.w,scene.h);
     drawStrictSceneV35(fullImg,scene.scale,sceneHoles,found,best);
-    if(maskInfo?.canvas) drawSceneMaskOverlayV35(fullImg,maskInfo.canvas);
+    if(maskInfo?.overlayCanvas||maskInfo?.canvas) drawSceneMaskOverlayV35(fullImg,maskInfo.overlayCanvas||maskInfo.canvas);
 
     const hd=found.H.data64F||found.H.data32F;
     DEBUG.image={...(DEBUG.image||{}),mode:'v35-nomask-strict-aperture-constellation',masterHoles:master.holes.length,sceneHoles:sceneHoles.length,sceneRejected:ex.rejected.length,support:best.support,supportRatio:best.ratio,meanError:best.meanErr,proxyRect:master.proxyRect};
