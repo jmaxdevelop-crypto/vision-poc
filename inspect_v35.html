@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>ぴろえんす Inspect v35 DarkArea Strong β</title>
+<title>ぴろえんす Inspect v35 Mask Tune β</title>
 <style>
 :root{--bg:#06101f;--panel:rgba(5,12,26,.88);--txt:#eef6ff;--muted:#9fb4d9;--green:#35f078;--red:#ff4b5f;--yellow:#ffd84d;--cyan:#35dcff;--line:#29436d}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;width:100%;min-height:100%;background:#000;color:var(--txt);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;overflow-x:hidden;overflow-y:auto}.app{position:relative;width:100%;height:100dvh;min-height:100vh;background:#000;overflow:hidden}.topbar{position:absolute;z-index:10;left:0;right:0;top:0;padding:10px max(10px,env(safe-area-inset-left)) 10px max(10px,env(safe-area-inset-right));background:linear-gradient(180deg,rgba(0,0,0,.88),rgba(0,0,0,.30),transparent);display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}.brand{font-weight:900;letter-spacing:.06em;font-size:14px;color:#dff8ff}.selectRow{display:flex;gap:8px;align-items:center}.selectRow select{flex:1;min-width:0;padding:11px 12px;border-radius:12px;border:1px solid #31517e;background:#071226;color:var(--txt);font-size:15px}.selectRow button,.cameraBtn{border:0;border-radius:12px;padding:11px 14px;background:linear-gradient(90deg,#2aa7ff,#39e0ff);font-weight:900;color:#001225;font-size:14px}.cameraBtn{white-space:nowrap}.photoInput{display:none}.canvasWrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#020711}canvas{width:100%;height:100%;object-fit:contain;display:block}.empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;color:#aabde0;padding:24px;font-size:15px;line-height:1.7}.resultBanner{position:absolute;z-index:12;left:12px;right:12px;top:88px;border-radius:18px;padding:18px 14px;text-align:center;font-size:72px;font-weight:1000;letter-spacing:.14em;line-height:1;box-shadow:0 18px 40px rgba(0,0,0,.45);display:none}.resultBanner::before{content:'総合判定';display:block;font-size:13px;letter-spacing:.16em;margin-bottom:8px;color:#d9e9ff}.resultBanner.ok{display:block;background:rgba(9,65,37,.92);border:3px solid var(--green);color:var(--green)}.resultBanner.ng{display:block;background:rgba(73,18,31,.94);border:3px solid var(--red);color:var(--red)}.bottom{position:absolute;z-index:10;left:0;right:0;bottom:0;padding:10px max(10px,env(safe-area-inset-left)) max(12px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-right));background:linear-gradient(0deg,rgba(0,0,0,.92),rgba(0,0,0,.46),transparent)}.status{background:rgba(7,18,38,.86);border:1px solid var(--line);border-radius:14px;padding:10px 12px;color:#c6d8ff;font-size:12px;line-height:1.45;white-space:pre-line;max-height:160px;overflow:auto}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:7px}.stat{background:rgba(7,18,38,.82);border:1px solid var(--line);border-radius:12px;padding:8px;text-align:center}.stat small{display:block;color:#aabde0;font-size:10px}.stat b{display:block;font-size:18px;margin-top:2px}.okText{color:var(--green)}.ngText{color:var(--red)}.waitText{color:var(--yellow)}.loading{position:absolute;z-index:15;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:#dff8ff}.loading.on{display:flex}.debugPanel{min-height:100dvh;background:#050b16;padding:18px max(14px,env(safe-area-inset-left)) max(28px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-right));border-top:1px solid #20385f}.debugHead{display:flex;align-items:end;justify-content:space-between;gap:10px;margin-bottom:12px}.debugHead h2{margin:0;font-size:20px;letter-spacing:.08em}.debugHint{color:#9fb4d9;font-size:12px}.debugGrid{display:grid;grid-template-columns:1fr;gap:10px}.debugCard{background:rgba(7,18,38,.88);border:1px solid var(--line);border-radius:14px;padding:12px}.debugCard h3{margin:0 0 8px;font-size:14px;color:#dff8ff}.debugPre{margin:0;white-space:pre-wrap;word-break:break-word;color:#c6d8ff;font-size:12px;line-height:1.5}.debugCanvasWrap{background:#020711;border:1px solid #20385f;border-radius:12px;overflow:hidden}.debugCanvasWrap canvas{width:100%;height:auto;display:block}.debugBadge{display:inline-block;padding:3px 8px;border-radius:999px;border:1px solid #31517e;color:#9fb4d9;font-size:11px;margin-left:6px}.barcodeInput{min-width:180px;max-width:260px;padding:11px 12px;border-radius:12px;border:1px solid #31517e;background:#071226;color:var(--txt);font-size:15px}.scanOverlay{position:fixed;z-index:30;inset:0;background:#020711;display:none;align-items:center;justify-content:center;flex-direction:column;padding:max(18px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) max(18px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left));gap:12px}.scanOverlay.on{display:flex}.scanBox{position:relative;width:min(92vw,720px);aspect-ratio:4/3;border:2px solid #31517e;border-radius:18px;overflow:hidden;background:#000;box-shadow:0 20px 60px #000a}.scanBox video,.scanBox canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.scanGuide{position:absolute;left:50%;top:50%;width:58%;height:36%;transform:translate(-50%,-50%);border:4px solid var(--cyan);border-radius:16px;box-shadow:0 0 0 999px rgba(0,0,0,.28);pointer-events:none}.scanTitle{font-size:20px;font-weight:900;color:#dff8ff}.scanStatus{color:#c6d8ff;font-size:14px;text-align:center;min-height:1.6em;white-space:pre-line}.scanClose{width:min(92vw,360px);border:0;border-radius:14px;padding:13px 18px;background:#26395f;color:#eef6ff;font-weight:900;font-size:16px}.qrTorchBtn{width:min(92vw,360px);border:0;border-radius:14px;padding:13px 18px;background:#ffd84d;color:#111;font-weight:900;font-size:16px}.qrTorchBtn.off{background:#26395f;color:#eef6ff}.captureButtons{display:flex;gap:10px;width:min(92vw,520px)}.captureButtons button{flex:1;border:0;border-radius:14px;padding:14px 18px;font-weight:900;font-size:16px}.captureShutter{background:linear-gradient(90deg,#2aa7ff,#39e0ff);color:#001225}.captureClose{background:#26395f;color:#eef6ff}.containerRansacBtn{background:linear-gradient(90deg,#8f7cff,#39e0ff)!important;color:#06101f!important}.focusHint{position:absolute;right:10px;bottom:10px;background:rgba(0,0,0,.6);color:#fff;border-radius:999px;padding:5px 9px;font-size:11px;pointer-events:none}
@@ -35,12 +35,28 @@
 #actionRetryBtn{background:linear-gradient(90deg,#2aa7ff,#39e0ff);color:#001225}
 #actionEndBtn{background:#26395f;color:#eef6ff}
 @media(max-width:480px){.actionMsg{font-size:14px}.actionButtons button{font-size:14px;padding:12px 8px}}
+
+.tunePanel{margin:8px 14px 0;padding:10px 12px;border:1px solid rgba(53,220,255,.25);border-radius:14px;background:rgba(6,18,38,.82);backdrop-filter:blur(6px)}
+.tuneHead{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.tuneTitle{font-size:13px;font-weight:800;color:#9ed7ff;letter-spacing:.06em}
+.tuneSub{font-size:11px;color:#9fb3cf}
+.tuneGrid{display:grid;grid-template-columns:repeat(3,minmax(180px,1fr));gap:10px 14px;margin-top:10px}
+.tuneItem{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:8px 10px}
+.tuneItem label{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px;font-weight:700;color:#ddebff;margin-bottom:6px}
+.tuneItem output{min-width:48px;text-align:right;color:#35dcff;font-weight:800}
+.tuneItem input[type=range]{width:100%}
+.tuneRowButtons{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tuneBtn{border:none;border-radius:10px;padding:10px 14px;font-weight:800;background:#29436d;color:#eef6ff;cursor:pointer}
+.tuneBtn.sub{background:#23324f}
+.tuneChk{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:#eef6ff}
+@media(max-width:980px){.tuneGrid{grid-template-columns:repeat(2,minmax(150px,1fr));}}
+@media(max-width:640px){.tuneGrid{grid-template-columns:1fr}.tunePanel{margin:8px 8px 0}}
 </style>
 </head>
 <body class="masterNotReady">
 <div class="app">
   <div class="topbar">
-    <div class="brand">ぴろえんす Inspect v35 / 黒面積強化β</div>
+    <div class="brand">ぴろえんす Inspect v35 / マスク＋パラメータ調整β</div>
     <div class="selectRow">
       <input id="barcodeInput" class="barcodeInput" type="text" autocomplete="off" inputmode="none" placeholder="バーコード/QR読取（USBリーダーはここへ）">
       <select id="partSelect"><option>マスター読込中...</option></select>
@@ -52,6 +68,27 @@
       <input id="holeInspectFile" class="photoInput" type="file" accept="image/*">
     </div>
   </div>
+  <section class="tunePanel">
+    <div class="tuneHead">
+      <div>
+        <div class="tuneTitle">v35 検出パラメータ</div>
+        <div class="tuneSub">マスクON/OFFと穴条件をバーで微調整できます。厳しすぎる時はまず「黒面積」「黒率」「内外差」を下げてください。</div>
+      </div>
+      <div class="tuneRowButtons">
+        <label class="tuneChk"><input id="v35UseMask" type="checkbox" checked>製品マスクを使う</label>
+        <button id="v35ResetTuneBtn" class="tuneBtn sub" type="button">標準に戻す</button>
+        <button id="v35RerunBtn" class="tuneBtn" type="button">最新画像で再解析</button>
+      </div>
+    </div>
+    <div class="tuneGrid">
+      <div class="tuneItem"><label>最低黒面積 <output id="v35DarkPxVal">80 px</output></label><input id="v35DarkPx" type="range" min="20" max="220" step="5" value="80"></div>
+      <div class="tuneItem"><label>黒率 <output id="v35BlackVal">0.34</output></label><input id="v35Black" type="range" min="20" max="70" step="1" value="34"></div>
+      <div class="tuneItem"><label>内外差 <output id="v35DeltaVal">20</output></label><input id="v35Delta" type="range" min="5" max="45" step="1" value="20"></div>
+      <div class="tuneItem"><label>最低穴面積 <output id="v35AreaVal">12 ppm</output></label><input id="v35Area" type="range" min="4" max="40" step="1" value="12"></div>
+      <div class="tuneItem"><label>マスク内側率 <output id="v35MaskInsideVal">0.58</output></label><input id="v35MaskInside" type="range" min="20" max="95" step="1" value="58"></div>
+      <div class="tuneItem"><label>マスク最小塊 <output id="v35MaskBlobVal">0.25 %</output></label><input id="v35MaskBlob" type="range" min="5" max="300" step="5" value="25"></div>
+    </div>
+  </section>
   <div class="canvasWrap"><canvas id="viewCanvas" width="1100" height="760"></canvas></div>
   <div id="empty" class="empty">バーコード/QRを読み取ってください。<br>対応するマスターを自動で呼び出します。<br><small>テスト時はマスターを手動選択してもOK</small></div>
   <div id="banner" class="resultBanner">WAIT</div>
@@ -122,7 +159,7 @@
 // 例: const GAS_URL = 'https://script.google.com/macros/s/xxxxxxx/exec';
 // =====================================================
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbzhTwzLskVh0lRNegdW0FnmL-dedZ6LIps2NP9mRrXsPp0aC93ziLRAMUTEmzFiiU_3/exec'; // ←ここを今井さんのGAS URLに置き換え
-const INSPECT_VERSION = 'v35-darkarea-strong';
+const INSPECT_VERSION = 'v35-mask-tune';
 
 // 固定設定：現場用なので画面には出さない
 const CONFIG = {
@@ -148,6 +185,98 @@ function isLikelyDesktop(){
   const mobile=/Android|iPhone|iPad|iPod|Mobile/i.test(ua);
   return !mobile && window.matchMedia('(pointer:fine)').matches;
 }
+
+function ppmToRatio(ppm){ return ppm/1000000; }
+function pctToRatio(pct){ return pct/100; }
+function syncV35TuneUi(){
+  const set=(id,val)=>{ const el=$(id); if(el) el.textContent=val; };
+  if($('v35UseMask')) $('v35UseMask').checked=!!V35_TUNE.useMask;
+  if($('v35DarkPx')) $('v35DarkPx').value=String(V35_TUNE.sceneMinDarkPixels);
+  if($('v35Black')) $('v35Black').value=String(Math.round(V35_TUNE.sceneBlackRatioPct));
+  if($('v35Delta')) $('v35Delta').value=String(Math.round(V35_TUNE.sceneDarkDelta));
+  if($('v35Area')) $('v35Area').value=String(Math.round(V35_TUNE.sceneMinAreaPPM));
+  if($('v35MaskInside')) $('v35MaskInside').value=String(Math.round(V35_TUNE.maskInsideRatioPct));
+  if($('v35MaskBlob')) $('v35MaskBlob').value=String(Math.round(V35_TUNE.maskMinBlobPct*100));
+  set('v35DarkPxVal', `${V35_TUNE.sceneMinDarkPixels} px`);
+  set('v35BlackVal', `${(V35_TUNE.sceneBlackRatioPct/100).toFixed(2)}`);
+  set('v35DeltaVal', `${V35_TUNE.sceneDarkDelta}`);
+  set('v35AreaVal', `${V35_TUNE.sceneMinAreaPPM} ppm`);
+  set('v35MaskInsideVal', `${(V35_TUNE.maskInsideRatioPct/100).toFixed(2)}`);
+  set('v35MaskBlobVal', `${V35_TUNE.maskMinBlobPct.toFixed(2)} %`);
+}
+function readV35TuneUi(){
+  V35_TUNE.useMask = !!$('v35UseMask')?.checked;
+  V35_TUNE.sceneMinDarkPixels = +($('v35DarkPx')?.value||V35_TUNE_DEFAULTS.sceneMinDarkPixels);
+  V35_TUNE.sceneBlackRatioPct = +($('v35Black')?.value||V35_TUNE_DEFAULTS.sceneBlackRatioPct);
+  V35_TUNE.sceneDarkDelta = +($('v35Delta')?.value||V35_TUNE_DEFAULTS.sceneDarkDelta);
+  V35_TUNE.sceneMinAreaPPM = +($('v35Area')?.value||V35_TUNE_DEFAULTS.sceneMinAreaPPM);
+  V35_TUNE.maskInsideRatioPct = +($('v35MaskInside')?.value||V35_TUNE_DEFAULTS.maskInsideRatioPct);
+  V35_TUNE.maskMinBlobPct = (+($('v35MaskBlob')?.value||Math.round(V35_TUNE_DEFAULTS.maskMinBlobPct*100)))/100;
+  syncV35TuneUi();
+}
+function initV35TuneUi(){
+  syncV35TuneUi();
+  ['v35UseMask','v35DarkPx','v35Black','v35Delta','v35Area','v35MaskInside','v35MaskBlob'].forEach(id=>{
+    const el=$(id); if(!el) return;
+    el.addEventListener('input',readV35TuneUi);
+    el.addEventListener('change',readV35TuneUi);
+  });
+  $('v35ResetTuneBtn')?.addEventListener('click',()=>{
+    Object.assign(V35_TUNE, V35_TUNE_DEFAULTS);
+    syncV35TuneUi();
+    log('v35パラメータを標準に戻しました。');
+  });
+  $('v35RerunBtn')?.addEventListener('click', async()=>{
+    if(!lastStrictImageV35){ log('まだ最新画像がありません。PC画像または撮影を先に実行してください。'); return; }
+    if(!cvLoaded){ log('OpenCV.js準備中です。'); return; }
+    readV35TuneUi();
+    setLoading(true);
+    try{ await runStrictConstellationFromImageV35(lastStrictImageV35); }
+    finally{ setLoading(false); }
+  });
+}
+function buildSceneSupportMaskV35(gray){
+  const blur=new cv.Mat(),bin=new cv.Mat(),morph=new cv.Mat(),mask=cv.Mat.zeros(gray.rows,gray.cols,cv.CV_8UC1);
+  let kClose=null,kOpen=null;
+  const contours=new cv.MatVector(),hier=new cv.Mat();
+  try{
+    cv.GaussianBlur(gray,blur,new cv.Size(5,5),0);
+    cv.threshold(blur,bin,0,255,cv.THRESH_BINARY+cv.THRESH_OTSU);
+    kClose=cv.getStructuringElement(cv.MORPH_ELLIPSE,new cv.Size(17,17));
+    kOpen=cv.getStructuringElement(cv.MORPH_ELLIPSE,new cv.Size(3,3));
+    cv.morphologyEx(bin,morph,cv.MORPH_CLOSE,kClose);
+    cv.morphologyEx(morph,morph,cv.MORPH_OPEN,kOpen);
+    cv.findContours(morph,contours,hier,cv.RETR_EXTERNAL,cv.CHAIN_APPROX_SIMPLE);
+    const imgArea=gray.cols*gray.rows;
+    const minBlob=Math.max(80, imgArea*(V35_TUNE.maskMinBlobPct/100));
+    for(let i=0;i<contours.size();i++){
+      const cnt=contours.get(i);
+      const area=cv.contourArea(cnt);
+      if(area<minBlob){ cnt.delete(); continue; }
+      const vv=new cv.MatVector(); vv.push_back(cnt);
+      cv.drawContours(mask,vv,0,new cv.Scalar(255),-1);
+      vv.delete(); cnt.delete();
+    }
+    const canvas=document.createElement('canvas'); cv.imshow(canvas,mask);
+    return {mask,canvas,nonZero:cv.countNonZero(mask),minBlob};
+  }catch(e){
+    mask.delete();
+    throw e;
+  }finally{
+    try{blur.delete();bin.delete();morph.delete();kClose?.delete();kOpen?.delete();contours.delete();hier.delete();}catch(_){}
+  }
+}
+function drawSceneMaskOverlayV35(fullImg,maskCanvas){
+  if(!maskCanvas) return;
+  const c=$('viewCanvas'),ctx=c.getContext('2d');
+  const fit=Math.min(c.width/fullImg.width,c.height/fullImg.height);
+  const w=fullImg.width*fit,h=fullImg.height*fit,ox=(c.width-w)/2,oy=(c.height-h)/2;
+  ctx.save();
+  ctx.globalAlpha=0.16;
+  ctx.drawImage(maskCanvas,ox,oy,w,h);
+  ctx.restore();
+}
+
 function updatePcFileButton(){
   const b=$('pcFileBtn');
   if(!b)return;
@@ -310,7 +439,7 @@ function waitForOpenCV(timeoutMs=20000){
   });
 }
 window.addEventListener('resize',updatePcFileButton);
-window.addEventListener('load',()=>{ updatePcFileButton();
+window.addEventListener('load',()=>{ updatePcFileButton(); initV35TuneUi();
   if(!appInitStarted && !(window.cv)){
     updateActionState();
     log('OpenCV.js読込待ち... js/opencv.js を確認してください。');
@@ -1111,6 +1240,20 @@ const STRICT_V35 = {
   maxProjectedAreaRatio: 0.62,
   drawLinks: 3
 };
+
+const V35_TUNE_DEFAULTS = {
+  useMask: true,
+  sceneMinAreaPPM: 12,
+  sceneMinDarkPixels: 80,
+  sceneDarkDelta: 20,
+  sceneBlackRatioPct: 34,
+  maskInsideRatioPct: 58,
+  maskMinBlobPct: 0.25
+};
+const V35_TUNE = {...V35_TUNE_DEFAULTS};
+let lastStrictImageV35=null;
+let lastSceneMaskInfoV35=null;
+
 let masterStrictCacheV35=null;
 
 function contourPixelStatsV35(gray,contour,r,outerScale=1.65){
@@ -1169,7 +1312,7 @@ function classifyStrictHoleV35(v){
   return 'irregular';
 }
 
-function extractStrictAperturesV35(gray,maxCount,isMaster=false){
+function extractStrictAperturesV35(gray,maxCount,isMaster=false,supportMask=null){
   const eq=new cv.Mat(),bin=new cv.Mat(),morph=new cv.Mat();
   const clahe=new cv.CLAHE(2.0,new cv.Size(8,8));clahe.apply(gray,eq);
   // 暗い閉領域候補。adaptive thresholdは候補生成のみ、最終採否は黒率/内外輝度差で決める。
@@ -1181,10 +1324,11 @@ function extractStrictAperturesV35(gray,maxCount,isMaster=false){
   cv.findContours(morph,contours,hierarchy,cv.RETR_LIST,cv.CHAIN_APPROX_SIMPLE);
 
   const imgArea=gray.cols*gray.rows;
-  const minA=Math.max(12,imgArea*(isMaster?STRICT_V35.masterMinAreaRatio:STRICT_V35.sceneMinAreaRatio));
+  const sceneMinAreaRatio = ppmToRatio(V35_TUNE.sceneMinAreaPPM);
+  const minA=Math.max(12,imgArea*(isMaster?STRICT_V35.masterMinAreaRatio:sceneMinAreaRatio));
   const maxA=imgArea*STRICT_V35.maxAreaRatio;
-  const minDelta=isMaster?STRICT_V35.masterDarkDelta:STRICT_V35.sceneDarkDelta;
-  const minBlack=isMaster?STRICT_V35.masterBlackRatio:STRICT_V35.sceneBlackRatio;
+  const minDelta=isMaster?STRICT_V35.masterDarkDelta:V35_TUNE.sceneDarkDelta;
+  const minBlack=isMaster?STRICT_V35.masterBlackRatio:pctToRatio(V35_TUNE.sceneBlackRatioPct);
   const accepted=[],rejected=[];
 
   for(let i=0;i<contours.size();i++){
@@ -1205,7 +1349,7 @@ function extractStrictAperturesV35(gray,maxCount,isMaster=false){
     const st=contourPixelStatsV35(gray,c,r);
     if(!st)continue;
 
-    const minDarkPixels=isMaster?STRICT_V35.masterMinDarkPixels:STRICT_V35.sceneMinDarkPixels;
+    const minDarkPixels=isMaster?STRICT_V35.masterMinDarkPixels:V35_TUNE.sceneMinDarkPixels;
     let reason='';
     if(st.darkPixelCount<minDarkPixels)reason='darkArea';
     else if(st.darkDelta<minDelta)reason='contrast';
@@ -1349,7 +1493,7 @@ function drawMasterStrictV35(){
       ctx.fillRect(x-2,y-2,4,4);
     }
     ctx.restore();
-    DEBUG.image={...(DEBUG.image||{}),masterStrictV35:{accepted:holes.length,rejected:model.rejected.length,proxyRect:model.proxyRect,note:'マスクなし。黒画素の実面積＋黒画素率＋内外輝度差＋明リング率で厳格採用'}};
+    DEBUG.image={...(DEBUG.image||{}),masterStrictV35:{accepted:holes.length,rejected:model.rejected.length,proxyRect:model.proxyRect,note:'Sceneは任意で製品マスクON。黒画素面積＋黒画素率＋内外輝度差＋明リング率で採用'}};
     renderDebug();
     return holes.length;
   }catch(e){dbg('v35 Master厳格穴可視化失敗',{message:e.message});return 0;}
@@ -1384,17 +1528,26 @@ async function captureStrictConstellationOneV35(){
 }
 
 async function runStrictConstellationFromImageV35(fullImg){
+  readV35TuneUi();
+  lastStrictImageV35=fullImg;
   drawImageFit($('viewCanvas'),fullImg);$('empty').style.display='none';
   const master=getMasterStrictModelV35();
   const scene=grayMatFromImageV32(fullImg,STRICT_V35.sceneMaxW);
-  let found=null,warped=null,best=null;
+  let found=null,warped=null,best=null,maskInfo=null;
   try{
-    const ex=extractStrictAperturesV35(scene.gray,STRICT_V35.maxScene,false),sceneHoles=ex.holes;
+    if(V35_TUNE.useMask){
+      try{ maskInfo=buildSceneSupportMaskV35(scene.gray); lastSceneMaskInfoV35=maskInfo; }
+      catch(maskErr){ console.warn(maskErr); lastSceneMaskInfoV35=null; log('Sceneマスク生成失敗: '+maskErr.message+'\nマスクなしで続行します。'); maskInfo=null; }
+    }else{
+      lastSceneMaskInfoV35=null;
+    }
+    const ex=extractStrictAperturesV35(scene.gray,STRICT_V35.maxScene,false,maskInfo?.mask||null),sceneHoles=ex.holes;
     const sceneDesc=buildConstellationDescriptorsV33(sceneHoles);
     if(sceneDesc.length<4)throw new Error(`Scene厳格穴候補不足 ${sceneHoles.length}`);
     best=searchBestConstellationV33(master.holes,master.desc,sceneHoles,sceneDesc);
     found=refineStrictHomographyV35(master,sceneHoles,best,scene.w,scene.h);
     drawStrictSceneV35(fullImg,scene.scale,sceneHoles,found,best);
+    if(maskInfo?.canvas) drawSceneMaskOverlayV35(fullImg,maskInfo.canvas);
 
     const hd=found.H.data64F||found.H.data32F;
     DEBUG.image={...(DEBUG.image||{}),mode:'v35-nomask-strict-aperture-constellation',masterHoles:master.holes.length,sceneHoles:sceneHoles.length,sceneRejected:ex.rejected.length,support:best.support,supportRatio:best.ratio,meanError:best.meanErr,proxyRect:master.proxyRect};
@@ -1444,7 +1597,12 @@ Homography: ${found.inliers}/${found.total}
       dbg('v35 strict complete',{ok,support:best.support,supportRatio:best.ratio,homographyInliers:found.inliers,outerMatch:res.outerMatch,pointOk:res.pointOk});
       renderDebug();showResultAction(ok);if(!ok&&!ngLoggedForCurrent){ngLoggedForCurrent=true;recordInspection('NG_AUTO');}
     }finally{try{m.src.delete();m.gray.delete();wi.src.delete();wi.gray.delete();}catch(_){}}
-  }finally{try{scene.gray.delete();}catch(_){}try{found?.H?.delete();}catch(_){}try{warped?.delete();}catch(_){}}
+  }finally{
+    try{scene.gray.delete();}catch(_){}
+    try{maskInfo?.mask?.delete();}catch(_){}
+    try{found?.H?.delete();}catch(_){}
+    try{warped?.delete();}catch(_){}
+  }
 }
 
 // =====================================================
