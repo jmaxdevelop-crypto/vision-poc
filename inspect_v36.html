@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>ぴろえんす Inspect v28 DINO Candidate Search + PC CDN β</title>
+<title>ぴろえんす Inspect v36 DINO Dense All-in β</title>
 <style>
 :root{--bg:#06101f;--panel:rgba(5,12,26,.88);--txt:#eef6ff;--muted:#9fb4d9;--green:#35f078;--red:#ff4b5f;--yellow:#ffd84d;--cyan:#35dcff;--line:#29436d}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;width:100%;min-height:100%;background:#000;color:var(--txt);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;overflow-x:hidden;overflow-y:auto}.app{position:relative;width:100%;height:100dvh;min-height:100vh;background:#000;overflow:hidden}.topbar{position:absolute;z-index:10;left:0;right:0;top:0;padding:10px max(10px,env(safe-area-inset-left)) 10px max(10px,env(safe-area-inset-right));background:linear-gradient(180deg,rgba(0,0,0,.88),rgba(0,0,0,.30),transparent);display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}.brand{font-weight:900;letter-spacing:.06em;font-size:14px;color:#dff8ff}.selectRow{display:flex;gap:8px;align-items:center}.selectRow select{flex:1;min-width:0;padding:11px 12px;border-radius:12px;border:1px solid #31517e;background:#071226;color:var(--txt);font-size:15px}.selectRow button,.cameraBtn{border:0;border-radius:12px;padding:11px 14px;background:linear-gradient(90deg,#2aa7ff,#39e0ff);font-weight:900;color:#001225;font-size:14px}.cameraBtn{white-space:nowrap}.photoInput{display:none}.canvasWrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#020711}canvas{width:100%;height:100%;object-fit:contain;display:block}.empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;color:#aabde0;padding:24px;font-size:15px;line-height:1.7}.resultBanner{position:absolute;z-index:12;left:12px;right:12px;top:88px;border-radius:18px;padding:18px 14px;text-align:center;font-size:72px;font-weight:1000;letter-spacing:.14em;line-height:1;box-shadow:0 18px 40px rgba(0,0,0,.45);display:none}.resultBanner::before{content:'総合判定';display:block;font-size:13px;letter-spacing:.16em;margin-bottom:8px;color:#d9e9ff}.resultBanner.ok{display:block;background:rgba(9,65,37,.92);border:3px solid var(--green);color:var(--green)}.resultBanner.ng{display:block;background:rgba(73,18,31,.94);border:3px solid var(--red);color:var(--red)}.bottom{position:absolute;z-index:10;left:0;right:0;bottom:0;padding:10px max(10px,env(safe-area-inset-left)) max(12px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-right));background:linear-gradient(0deg,rgba(0,0,0,.92),rgba(0,0,0,.46),transparent)}.status{background:rgba(7,18,38,.86);border:1px solid var(--line);border-radius:14px;padding:10px 12px;color:#c6d8ff;font-size:12px;line-height:1.45;white-space:pre-line;max-height:160px;overflow:auto}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:7px}.stat{background:rgba(7,18,38,.82);border:1px solid var(--line);border-radius:12px;padding:8px;text-align:center}.stat small{display:block;color:#aabde0;font-size:10px}.stat b{display:block;font-size:18px;margin-top:2px}.okText{color:var(--green)}.ngText{color:var(--red)}.waitText{color:var(--yellow)}.loading{position:absolute;z-index:15;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:#dff8ff}.loading.on{display:flex}.debugPanel{min-height:100dvh;background:#050b16;padding:18px max(14px,env(safe-area-inset-left)) max(28px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-right));border-top:1px solid #20385f}.debugHead{display:flex;align-items:end;justify-content:space-between;gap:10px;margin-bottom:12px}.debugHead h2{margin:0;font-size:20px;letter-spacing:.08em}.debugHint{color:#9fb4d9;font-size:12px}.debugGrid{display:grid;grid-template-columns:1fr;gap:10px}.debugCard{background:rgba(7,18,38,.88);border:1px solid var(--line);border-radius:14px;padding:12px}.debugCard h3{margin:0 0 8px;font-size:14px;color:#dff8ff}.debugPre{margin:0;white-space:pre-wrap;word-break:break-word;color:#c6d8ff;font-size:12px;line-height:1.5}.debugCanvasWrap{background:#020711;border:1px solid #20385f;border-radius:12px;overflow:hidden}.debugCanvasWrap canvas{width:100%;height:auto;display:block}.debugBadge{display:inline-block;padding:3px 8px;border-radius:999px;border:1px solid #31517e;color:#9fb4d9;font-size:11px;margin-left:6px}.barcodeInput{min-width:180px;max-width:260px;padding:11px 12px;border-radius:12px;border:1px solid #31517e;background:#071226;color:var(--txt);font-size:15px}.scanOverlay{position:fixed;z-index:30;inset:0;background:#020711;display:none;align-items:center;justify-content:center;flex-direction:column;padding:max(18px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) max(18px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left));gap:12px}.scanOverlay.on{display:flex}.scanBox{position:relative;width:min(92vw,720px);aspect-ratio:4/3;border:2px solid #31517e;border-radius:18px;overflow:hidden;background:#000;box-shadow:0 20px 60px #000a}.scanBox video,.scanBox canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.scanGuide{position:absolute;left:50%;top:50%;width:58%;height:36%;transform:translate(-50%,-50%);border:4px solid var(--cyan);border-radius:16px;box-shadow:0 0 0 999px rgba(0,0,0,.28);pointer-events:none}.scanTitle{font-size:20px;font-weight:900;color:#dff8ff}.scanStatus{color:#c6d8ff;font-size:14px;text-align:center;min-height:1.6em;white-space:pre-line}.scanClose{width:min(92vw,360px);border:0;border-radius:14px;padding:13px 18px;background:#26395f;color:#eef6ff;font-weight:900;font-size:16px}.qrTorchBtn{width:min(92vw,360px);border:0;border-radius:14px;padding:13px 18px;background:#ffd84d;color:#111;font-weight:900;font-size:16px}.qrTorchBtn.off{background:#26395f;color:#eef6ff}.captureButtons{display:flex;gap:10px;width:min(92vw,520px)}.captureButtons button{flex:1;border:0;border-radius:14px;padding:14px 18px;font-weight:900;font-size:16px}.captureShutter{background:linear-gradient(90deg,#2aa7ff,#39e0ff);color:#001225}.captureClose{background:#26395f;color:#eef6ff}.containerRansacBtn{background:linear-gradient(90deg,#8f7cff,#39e0ff)!important;color:#06101f!important}.focusHint{position:absolute;right:10px;bottom:10px;background:rgba(0,0,0,.6);color:#fff;border-radius:999px;padding:5px 9px;font-size:11px;pointer-events:none}
@@ -35,16 +35,13 @@
 #actionRetryBtn{background:linear-gradient(90deg,#2aa7ff,#39e0ff);color:#001225}
 #actionEndBtn{background:#26395f;color:#eef6ff}
 @media(max-width:480px){.actionMsg{font-size:14px}.actionButtons button{font-size:14px;padding:12px 8px}}
-
-.noteMini{font-size:11px;color:#9fb6d8}
 </style>
-<script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.20.1/dist/ort.min.js"></script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/onnxruntime-web/1.20.1/ort.min.js"></script>
 </head>
 <body class="masterNotReady">
 <div class="app">
   <div class="topbar">
-    <div class="brand">ぴろえんす Inspect v28 / DINO候補探索＋PC CDNβ</div>
+    <div class="brand">ぴろえんす Inspect v36 / DINO Dense全部盛β</div>
     <div class="selectRow">
       <input id="barcodeInput" class="barcodeInput" type="text" autocomplete="off" inputmode="none" placeholder="バーコード/QR読取（USBリーダーはここへ）">
       <select id="partSelect"><option>マスター読込中...</option></select>
@@ -86,7 +83,7 @@
   <div id="captureStatus" class="scanStatus">カメラ起動中...</div>
   <div class="captureButtons">
     <button id="captureShutterBtn" class="captureShutter" type="button">1個撮影して判定</button>
-    <button id="containerRansacBtn" class="containerRansacBtn" type="button">DINO候補探索で1個探して判定 β</button>
+    <button id="containerRansacBtn" class="containerRansacBtn" type="button">DINOで1個探して判定 β</button>
     <button id="captureCloseBtn" class="captureClose" type="button">閉じる</button>
   </div>
 </div>
@@ -125,18 +122,7 @@
 // 例: const GAS_URL = 'https://script.google.com/macros/s/xxxxxxx/exec';
 // =====================================================
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbzhTwzLskVh0lRNegdW0FnmL-dedZ6LIps2NP9mRrXsPp0aC93ziLRAMUTEmzFiiU_3/exec'; // ←ここを今井さんのGAS URLに置き換え
-const INSPECT_VERSION = 'v28-dino-candidate-search-pc-cdn-beta';
-
-// 開発用: npm不要。ONNX Runtime Web / WASMをjsDelivrから取得。
-// 現場完全オフライン版では、このURLをローカル ./js/ へ差し替える。
-const ORT_CDN_V28 = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.20.1/dist/';
-if(window.ort){
-  try{
-    ort.env.wasm.wasmPaths = ORT_CDN_V28;
-    ort.env.wasm.numThreads = 1;
-  }catch(e){ console.warn('ORT CDN config',e); }
-}
-
+const INSPECT_VERSION = 'v36-dino-dense-allin-beta';
 
 // 固定設定：現場用なので画面には出さない
 const CONFIG = {
@@ -156,15 +142,14 @@ const CONFIG = {
 };
 
 const $=id=>document.getElementById(id);
-function isLikelyDesktopV28(){
+function isLikelyDesktopV36(){
   const ua=navigator.userAgent||'';
   const mobile=/Android|iPhone|iPad|iPod|Mobile/i.test(ua);
   return !mobile && window.matchMedia('(pointer:fine)').matches;
 }
-function updatePcDinoButtonV28(){
-  const b=$('pcDinoBtn');
-  if(!b)return;
-  b.style.display=isLikelyDesktopV28()?'inline-block':'none';
+function updatePcDinoButtonV36(){
+  const b=$('pcDinoBtn'); if(!b)return;
+  b.style.display=isLikelyDesktopV36()?'inline-block':'none';
   b.disabled=!(currentPart&&masterImg);
 }
 
@@ -275,9 +260,9 @@ function updateActionState(){
     btn.textContent = ready ? (cvLoaded ? '撮影' : '準備中') : '読取';
     btn.title = ready ? (cvLoaded ? '部品を撮影します' : 'OpenCV.js準備中です') : 'バーコード/QRを読み取ります';
   }
-  updatePcDinoButtonV28();
+  updatePcDinoButtonV36();
 }
-function resetMasterState(){ masterDinoCacheV28=null; dinoModelReadyV28=dinoModelReadyV28; 
+function resetMasterState(){ masterDinoCacheV36=null;
   hideResultAction();
   currentPart=null; masterImg=null; inspectImg=null; points=[];
   setBanner('WAIT'); setStat('alignStat','--'); setStat('outerStat','--'); setStat('pointStat','--');
@@ -321,8 +306,8 @@ function waitForOpenCV(timeoutMs=20000){
     },100);
   });
 }
-window.addEventListener('resize',updatePcDinoButtonV28);
-window.addEventListener('load',()=>{ updatePcDinoButtonV28();
+window.addEventListener('resize',updatePcDinoButtonV36);
+window.addEventListener('load',()=>{ updatePcDinoButtonV36();
   if(!appInitStarted && !(window.cv)){
     updateActionState();
     log('OpenCV.js読込待ち... js/opencv.js を確認してください。');
@@ -379,7 +364,7 @@ async function loadParts(){
     updateActionState();
   }
 }
-async function loadSelectedPart(){ masterDinoCacheV28=null;  const partNo=$('partSelect').value; if(!partNo)return; try{ hideResultAction(); setLoading(true); log('マスター読込中...'); setBanner('WAIT'); const res=await fetch(GAS_URL+'?action=get&partNo='+encodeURIComponent(partNo)); const js=await res.json(); if(!js.ok) throw new Error(js.error||'get失敗'); currentPart=js.part; if(!currentBarcodeRaw){ currentBarcodeRaw=String(currentPart.partNo||partNo); currentBarcodeInfo=parseQRCode(currentBarcodeRaw); } masterImg=await loadImageFromDataUrl(currentPart.topData); points=normalizePointsToImage(currentPart.points||[], masterImg); drawMasterPreview(); $('empty').style.display='none'; setStat('alignStat','--'); setStat('outerStat','--'); setStat('pointStat',points.length?('0/'+points.length):'外形のみ'); log('マスター読込OK: '+partNo+'\n検査ポイント: '+points.length+'件\n撮影準備OK。右上ボタンが「撮影」に切り替わりました。'); updateActionState(); }catch(e){ console.error(e); log('マスター読込エラー: '+e.message); updateActionState(); }finally{ setLoading(false); } }
+async function loadSelectedPart(){ masterDinoCacheV36=null; const partNo=$('partSelect').value; if(!partNo)return; try{ hideResultAction(); setLoading(true); log('マスター読込中...'); setBanner('WAIT'); const res=await fetch(GAS_URL+'?action=get&partNo='+encodeURIComponent(partNo)); const js=await res.json(); if(!js.ok) throw new Error(js.error||'get失敗'); currentPart=js.part; if(!currentBarcodeRaw){ currentBarcodeRaw=String(currentPart.partNo||partNo); currentBarcodeInfo=parseQRCode(currentBarcodeRaw); } masterImg=await loadImageFromDataUrl(currentPart.topData); points=normalizePointsToImage(currentPart.points||[], masterImg); drawMasterPreview(); $('empty').style.display='none'; setStat('alignStat','--'); setStat('outerStat','--'); setStat('pointStat',points.length?('0/'+points.length):'外形のみ'); log('マスター読込OK: '+partNo+'\n検査ポイント: '+points.length+'件\n撮影準備OK。右上ボタンが「撮影」に切り替わりました。'); updateActionState(); }catch(e){ console.error(e); log('マスター読込エラー: '+e.message); updateActionState(); }finally{ setLoading(false); } }
 
 function normalizeBarcodeText(raw){ return String(raw||'').replace(/[\r\n]+$/g,'').trim(); }
 
@@ -876,32 +861,14 @@ $('captureShutterBtn').onclick=()=>captureInspectPhoto();
 $('containerRansacBtn')?.addEventListener('click',captureContainerOne);
 
 $('pcDinoBtn')?.addEventListener('click',()=>{
-  if(!(currentPart&&masterImg)){
-    log('先にMasterを読み込んでください。');
-    return;
-  }
-  if(!cvLoaded){
-    log('OpenCV.js準備中です。');
-    return;
-  }
+  if(!(currentPart&&masterImg)){log('先にMasterを読み込んでください。');return;}
+  if(!cvLoaded){log('OpenCV.js準備中です。');return;}
   $('pcDinoFile').click();
 });
 $('pcDinoFile')?.addEventListener('change',async e=>{
-  const f=e.target.files?.[0];
-  e.target.value='';
-  if(!f)return;
-  try{
-    inspectImg=await loadImageFromFile(f);
-    drawImageFit($('viewCanvas'),inspectImg);
-    $('empty').style.display='none';
-    await runInspectContainerOne();
-  }catch(err){
-    console.error(err);
-    setBanner('WAIT');
-    lastInspectionRecord=null;
-    hideResultAction();
-    log('PC画像 DINO探索エラー: '+err.message);
-  }
+  const f=e.target.files?.[0];e.target.value='';if(!f)return;
+  try{inspectImg=await loadImageFromFile(f);drawImageFit($('viewCanvas'),inspectImg);$('empty').style.display='none';await runInspectContainerOne();}
+  catch(err){console.error(err);setBanner('WAIT');lastInspectionRecord=null;hideResultAction();log('PC画像 DINO探索エラー: '+err.message);}
 });
 
 $('captureCloseBtn').onclick=()=>stopInspectCamera(true);
@@ -1081,437 +1048,193 @@ function compareAll(m,warped,points){
 // =====================================================
 
 // =====================================================
-// v28 DINO Candidate Search β
-// ベースは v26。
-// 手動Master / QR / GAS / runInspect はそのまま。
-// 「容器から1個探す」だけを
-// DINO埋め込み(候補探索) -> ORB/RANSAC(確定) -> runInspect()
-// に変更する。
-// ------------------------------------------------------------
-// 必要ファイル:
-//   ./js/ort.min.js
-//   ./js/ort-wasm*.wasm  (onnxruntime-web同梱)
-//   ./models/dino_embed.onnx
-// ------------------------------------------------------------
-// 想定モデル:
-//   224x224 RGB float input 1x3x224x224
-//   出力は以下のどれか:
-//   - [1, C] のグローバル埋め込み
-//   - [1, N, C] のtoken列（CLS含む/含まないどちらでも可）
-//   いずれの場合も mean pooling して 1本の埋め込みベクトルへ変換する。
-// =============================================================
-const CONTAINER_RANSAC = {
-  masterMaxW: 900,
-  sceneMaxW: 1400,
-  features: 4000,
-  maxMatches: 260,
-  ransacThr: 5,
-  minInliers: 18,
-  minRatio: 0.065,
-  minAreaRatio: 0.008,
-  maxAreaRatio: 0.70,
-
-  // DINO候補探索用
-  modelPath: './models/dino_embed.onnx',
-  inputSize: 224,
-  sceneShortRatios: [0.10,0.14,0.19,0.25,0.33,0.43,0.55],
-  stepRatio: 0.30,
-  topK: 18,
-  rerankK: 8,
-  nmsIou: 0.32,
-  cropPadRatio: 0.12
+// v36 DINO Dense All-in β
+// v26のMaster/QR/GAS/通常runInspectを保持。
+// DINOv2 Small INT8をWebから直接ロードし、
+// Master/Sceneを1回ずつDense特徴化 -> ヒートマップ -> 候補 -> ORB/RANSAC。
+// 穴検出 / マスク / 星座は使用しない。
+// =====================================================
+const CONTAINER_RANSAC={
+  masterMaxW:900,sceneMaxW:1400,
+  features:4000,maxMatches:260,ransacThr:5,
+  minInliers:12,minRatio:0.10,
+  modelUrl:'https://huggingface.co/onnx-community/dinov2-small-ONNX/resolve/main/onnx/model_int8.onnx?download=true',
+  ortBase:'https://cdnjs.cloudflare.com/ajax/libs/onnxruntime-web/1.20.1/',
+  preferredInput:518,fallbackInput:224,
+  patchSize:14,
+  topPeaks:20,
+  candidateScales:[0.10,0.14,0.19,0.25,0.33,0.43,0.55],
+  nmsIou:0.34,rerankK:10,cropPadRatio:0.12
 };
+let dinoSessionV36=null, masterDinoCacheV36=null;
 
-let dinoSessionV28 = null;
-let dinoModelReadyV28 = false;
-let dinoWarmupTriedV28 = false;
-let masterDinoCacheV28 = null;
-
-function polygonArea4(pts){
-  let a=0;
-  for(let i=0;i<4;i++){
-    const p=pts[i],q=pts[(i+1)%4];
-    a+=p.x*q.y-q.x*p.y;
-  }
-  return Math.abs(a)/2;
+function v36Norm(a){let n=0;for(let i=0;i<a.length;i++)n+=a[i]*a[i];n=Math.sqrt(n)+1e-9;const o=new Float32Array(a.length);for(let i=0;i<a.length;i++)o[i]=a[i]/n;return o;}
+function v36Cos(a,b){let s=0,n=Math.min(a.length,b.length);for(let i=0;i<n;i++)s+=a[i]*b[i];return s;}
+function v36Iou(a,b){const x1=Math.max(a.x,b.x),y1=Math.max(a.y,b.y),x2=Math.min(a.x+a.w,b.x+b.w),y2=Math.min(a.y+a.h,b.y+b.h),q=Math.max(0,x2-x1)*Math.max(0,y2-y1);return q/Math.max(1,a.w*a.h+b.w*b.h-q);}
+function v36Canvas(img,w,h){
+  const c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);return c;
 }
-function iouRectV28(a,b){
-  const x1=Math.max(a.x,b.x),y1=Math.max(a.y,b.y),x2=Math.min(a.x+a.w,b.x+b.w),y2=Math.min(a.y+a.h,b.y+b.h);
-  const inter=Math.max(0,x2-x1)*Math.max(0,y2-y1);
-  return inter/Math.max(1,a.w*a.h+b.w*b.h-inter);
-}
-function normVecV28(arr){
-  let n=0; for(let i=0;i<arr.length;i++) n+=arr[i]*arr[i];
-  n=Math.sqrt(n)+1e-9;
-  const out=new Float32Array(arr.length);
-  for(let i=0;i<arr.length;i++) out[i]=arr[i]/n;
+function v36TensorFromImage(img,size){
+  const c=v36Canvas(img,size,size),d=c.getContext('2d',{willReadFrequently:true}).getImageData(0,0,size,size).data;
+  const out=new Float32Array(3*size*size),mean=[.485,.456,.406],std=[.229,.224,.225],ss=size*size;
+  for(let p=0;p<ss;p++){const j=p*4;out[p]=(d[j]/255-mean[0])/std[0];out[ss+p]=(d[j+1]/255-mean[1])/std[1];out[2*ss+p]=(d[j+2]/255-mean[2])/std[2];}
   return out;
 }
-function cosVecV28(a,b){
-  const n=Math.min(a.length,b.length); let s=0;
-  for(let i=0;i<n;i++) s+=a[i]*b[i];
-  return s;
-}
-function drawImageTo224DataV28(imgLike,size=224){
-  const c=document.createElement('canvas');
-  c.width=size; c.height=size;
-  const ctx=c.getContext('2d',{willReadFrequently:true});
-  ctx.fillStyle='#000'; ctx.fillRect(0,0,size,size);
-
-  const sw=imgLike.width||imgLike.videoWidth, sh=imgLike.height||imgLike.videoHeight;
-  const r=Math.min(size/sw,size/sh);
-  const dw=Math.max(1,Math.round(sw*r)), dh=Math.max(1,Math.round(sh*r));
-  const dx=Math.round((size-dw)/2), dy=Math.round((size-dh)/2);
-  ctx.drawImage(imgLike,0,0,sw,sh,dx,dy,dw,dh);
-
-  const id=ctx.getImageData(0,0,size,size).data;
-  const chw=new Float32Array(1*3*size*size);
-  const mean=[0.485,0.456,0.406], std=[0.229,0.224,0.225];
-  for(let y=0;y<size;y++){
-    for(let x=0;x<size;x++){
-      const idx=(y*size+x)*4;
-      const r=(id[idx]/255-mean[0])/std[0];
-      const g=(id[idx+1]/255-mean[1])/std[1];
-      const b=(id[idx+2]/255-mean[2])/std[2];
-      const p=y*size+x;
-      chw[p]=r;
-      chw[size*size+p]=g;
-      chw[2*size*size+p]=b;
-    }
-  }
-  return chw;
-}
-async function ensureDinoV28(){
-  if(dinoModelReadyV28 && dinoSessionV28) return true;
-  if(typeof ort==='undefined'){
-    log('onnxruntime-web を読み込めません。ネット接続/CDNアクセスを確認してください。');
-    return false;
-  }
+async function ensureDinoV36(){
+  if(dinoSessionV36)return true;
+  if(!window.ort){log('ONNX Runtime読込失敗。ネット接続を確認してください。');return false;}
   try{
-    if(!dinoWarmupTriedV28){
-      dinoWarmupTriedV28=true;
-      try{
-        ort.env.wasm.numThreads=1;
-        ort.env.wasm.simd=true;
-      }catch(_){}
-    }
-    log('DINOモデル読込中...');
-    dinoSessionV28 = await ort.InferenceSession.create(CONTAINER_RANSAC.modelPath,{
-      executionProviders:['wasm'],
-      graphOptimizationLevel:'all'
-    });
-    dinoModelReadyV28 = true;
+    ort.env.wasm.wasmPaths=CONTAINER_RANSAC.ortBase;
+    ort.env.wasm.numThreads=1;
+    log('DINOv2 Small INT8 モデル読込中... 約24MB');
+    dinoSessionV36=await ort.InferenceSession.create(CONTAINER_RANSAC.modelUrl,{executionProviders:['wasm'],graphOptimizationLevel:'all'});
     log('DINOモデル読込OK');
     return true;
-  }catch(e){
-    console.error(e);
-    log('DINOモデル読込失敗: '+e.message+'\nmodels/dino_embed.onnx の配置とネット接続を確認してください。');
-    return false;
+  }catch(e){console.error(e);log('DINOモデル読込失敗: '+e.message);return false;}
+}
+function chooseDinoOutputV36(outputs){
+  const arr=Object.values(outputs||{});
+  if(!arr.length)throw new Error('DINO出力なし');
+  const tok=arr.find(t=>t?.dims?.length===3 && t.dims[t.dims.length-1]===384);
+  if(tok)return tok;
+  const pool=arr.find(t=>t?.dims?.length===2 && t.dims[t.dims.length-1]===384);
+  return pool||arr[0];
+}
+async function inferDinoV36(img,size){
+  const ready=await ensureDinoV36();if(!ready)throw new Error('DINO利用不可');
+  const inputName=dinoSessionV36.inputNames[0],feeds={};
+  feeds[inputName]=new ort.Tensor('float32',v36TensorFromImage(img,size),[1,3,size,size]);
+  const o=await dinoSessionV36.run(feeds);
+  return chooseDinoOutputV36(o);
+}
+async function inferDinoAutoV36(img){
+  try{return {tensor:await inferDinoV36(img,CONTAINER_RANSAC.preferredInput),size:CONTAINER_RANSAC.preferredInput};}
+  catch(e){
+    console.warn('518 inference fallback to 224',e);
+    return {tensor:await inferDinoV36(img,CONTAINER_RANSAC.fallbackInput),size:CONTAINER_RANSAC.fallbackInput};
   }
 }
-function firstOutputTensorV28(outputMap){
-  const keys=Object.keys(outputMap||{});
-  if(!keys.length) throw new Error('DINO出力が空です');
-  return outputMap[keys[0]];
-}
-function poolEmbeddingV28(tensor){
-  // tensor.data: Float32Array
-  const dims=tensor.dims||[];
-  const data=tensor.data;
-  if(!data || !data.length) throw new Error('DINO出力tensorが空です');
-  // [1,C]
-  if(dims.length===2){
-    return normVecV28(data);
-  }
-  // [1,N,C] あるいは [N,C]
+function tokenMatrixV36(t){
+  const dims=t.dims||[],data=t.data;
   if(dims.length===3){
-    const N=dims[1], C=dims[2];
-    const start = (N>1)? C : 0; // CLSらしき先頭1トークンを雑に飛ばす
-    const count = Math.max(1, N - (N>1?1:0));
-    const out=new Float32Array(C);
-    for(let n=(N>1?1:0); n<N; n++){
-      const base=n*C;
-      for(let c=0;c<C;c++) out[c]+=data[base+c];
-    }
-    for(let c=0;c<C;c++) out[c]/=count;
-    return normVecV28(out);
+    const N=dims[1],C=dims[2],start=N>1?1:0,rows=[];
+    for(let n=start;n<N;n++){const a=new Float32Array(C);for(let c=0;c<C;c++)a[c]=data[n*C+c];rows.push(v36Norm(a));}
+    return rows;
   }
-  if(dims.length===4){
-    // [1,C,H,W] なら global average pooling
-    const C=dims[1], H=dims[2], W=dims[3];
-    const out=new Float32Array(C);
-    const hw=Math.max(1,H*W);
-    for(let c=0;c<C;c++){
-      let s=0;
-      const off=c*H*W;
-      for(let i=0;i<H*W;i++) s+=data[off+i];
-      out[c]=s/hw;
-    }
-    return normVecV28(out);
+  if(dims.length===2){
+    const C=dims[1],a=new Float32Array(C);for(let c=0;c<C;c++)a[c]=data[c];return [v36Norm(a)];
   }
-  return normVecV28(data);
+  throw new Error('DINO出力shape未対応: '+JSON.stringify(dims));
 }
-async function inferEmbeddingV28(imgLike){
-  const ok=await ensureDinoV28();
-  if(!ok) throw new Error('DINOモデルが使えません');
-  const size=CONTAINER_RANSAC.inputSize;
-  const inputData=drawImageTo224DataV28(imgLike,size);
-  const inputName=dinoSessionV28.inputNames[0];
-  const feeds={};
-  feeds[inputName]=new ort.Tensor('float32', inputData, [1,3,size,size]);
-  const out=await dinoSessionV28.run(feeds);
-  const t=firstOutputTensorV28(out);
-  return poolEmbeddingV28(t);
+function meanTokenV36(tokens){
+  const C=tokens[0].length,o=new Float32Array(C);
+  for(const t of tokens)for(let c=0;c<C;c++)o[c]+=t[c];
+  for(let c=0;c<C;c++)o[c]/=tokens.length;
+  return v36Norm(o);
 }
-function autoCropMasterBoxV28(img){
-  const m=matFromImage(img,CONTAINER_RANSAC.masterMaxW);
-  const blur=new cv.Mat(), bin=new cv.Mat(), contours=new cv.MatVector(), hier=new cv.Mat();
-  try{
-    cv.GaussianBlur(m.gray,blur,new cv.Size(5,5),0);
-    cv.threshold(blur,bin,0,255,cv.THRESH_BINARY+cv.THRESH_OTSU);
-    cv.findContours(bin,contours,hier,cv.RETR_EXTERNAL,cv.CHAIN_APPROX_SIMPLE);
-    const total=m.w*m.h;
-    let best=null,bestScore=-1;
-    for(let i=0;i<contours.size();i++){
-      const c=contours.get(i), area=cv.contourArea(c);
-      if(area<total*0.006) continue;
-      const r=cv.boundingRect(c);
-      const cx=(r.x+r.width/2)/m.w, cy=(r.y+r.height/2)/m.h;
-      const center=1-Math.min(.9,Math.hypot(cx-.5,cy-.5));
-      const touches=r.x<=2||r.y<=2||r.x+r.width>=m.w-2||r.y+r.height>=m.h-2;
-      const score=area*(.80+.20*center)*(touches?.55:1);
-      if(score>bestScore){bestScore=score; best=r;}
-    }
-    if(!best) best={x:0,y:0,width:m.w,height:m.h};
-    const pad=Math.round(Math.max(best.width,best.height)*.05);
-    const x=Math.max(0,best.x-pad), y=Math.max(0,best.y-pad);
-    const x2=Math.min(m.w,best.x+best.width+pad), y2=Math.min(m.h,best.y+best.height+pad);
-    return {x,y,w:Math.max(2,x2-x),h:Math.max(2,y2-y)};
-  }finally{
-    try{m.src.delete();m.gray.delete();}catch(_){}
-    blur.delete(); bin.delete(); contours.delete(); hier.delete();
-  }
-}
-async function getMasterDinoModelV28(){
-  if(!masterImg) throw new Error('Master画像がありません');
+async function getMasterDinoV36(){
   const key=(currentPart?.partNo||'')+'|'+masterImg.width+'x'+masterImg.height;
-  if(masterDinoCacheV28?.key===key) return masterDinoCacheV28;
-  const box=autoCropMasterBoxV28(masterImg);
-
-  const cc=document.createElement('canvas');
-  cc.width=box.w; cc.height=box.h;
-  cc.getContext('2d').drawImage(masterImg,box.x,box.y,box.w,box.h,0,0,cc.width,cc.height);
-
-  const emb=await inferEmbeddingV28(cc);
-  masterDinoCacheV28={
-    key, box, aspect:box.w/Math.max(1,box.h), emb
-  };
-  return masterDinoCacheV28;
+  if(masterDinoCacheV36?.key===key)return masterDinoCacheV36;
+  log('MasterをDINO特徴化中...');
+  const r=await inferDinoAutoV36(masterImg),tokens=tokenMatrixV36(r.tensor),mean=meanTokenV36(tokens);
+  masterDinoCacheV36={key,tokens,mean,size:r.size,aspect:masterImg.width/Math.max(1,masterImg.height)};
+  return masterDinoCacheV36;
 }
-function createSceneCandidatesV28(img, masterAspect){
-  const short=Math.min(img.width,img.height);
-  const list=[];
-  for(const sr of CONTAINER_RANSAC.sceneShortRatios){
-    const base=Math.max(28,Math.round(short*sr));
-    let ww,hh;
-    if(masterAspect>=1){ hh=base; ww=Math.round(base*masterAspect); }
-    else { ww=base; hh=Math.round(base/Math.max(.10,masterAspect)); }
-    if(ww>img.width||hh>img.height||ww<24||hh<24) continue;
-
-    const step=Math.max(12,Math.round(Math.min(ww,hh)*CONTAINER_RANSAC.stepRatio));
-    for(let y=0;y+hh<=img.height;y+=step){
-      for(let x=0;x+ww<=img.width;x+=step){
-        list.push({x,y,w:ww,h:hh});
-      }
+function sceneHeatV36(sceneTokens,masterTokens){
+  // 各Scene patchがMasterのどれかの局所特徴にどれだけ似るか
+  const h=new Float32Array(sceneTokens.length);
+  const stride=Math.max(1,Math.floor(masterTokens.length/96)); // master最大約96 tokenを比較
+  for(let i=0;i<sceneTokens.length;i++){
+    let best=-1;
+    for(let j=0;j<masterTokens.length;j+=stride)best=Math.max(best,v36Cos(sceneTokens[i],masterTokens[j]));
+    h[i]=best;
+  }
+  return h;
+}
+function peaksToCandidatesV36(heat,grid,img,aspect){
+  const ids=[...heat.keys()].sort((a,b)=>heat[b]-heat[a]).slice(0,CONTAINER_RANSAC.topPeaks);
+  const raw=[];
+  for(const id of ids){
+    const gy=Math.floor(id/grid),gx=id%grid,cx=(gx+.5)/grid*img.width,cy=(gy+.5)/grid*img.height;
+    for(const sr of CONTAINER_RANSAC.candidateScales){
+      const base=Math.min(img.width,img.height)*sr;let w,h;
+      if(aspect>=1){h=base;w=base*aspect;}else{w=base;h=base/Math.max(.1,aspect);}
+      if(w>img.width||h>img.height)continue;
+      const x=Math.max(0,Math.min(img.width-w,cx-w/2)),y=Math.max(0,Math.min(img.height-h,cy-h/2));
+      raw.push({x:Math.round(x),y:Math.round(y),w:Math.round(w),h:Math.round(h),score:heat[id]});
     }
   }
-  // NMS only on geometry after scoring, not here.
-  return list;
-}
-async function scoreCandidatesByDinoV28(img, master){
-  const raw=createSceneCandidatesV28(img, master.aspect);
-  const scored=[];
-  for(let i=0;i<raw.length;i++){
-    const c=raw[i];
-    const canvas=document.createElement('canvas');
-    canvas.width=c.w; canvas.height=c.h;
-    canvas.getContext('2d').drawImage(img,c.x,c.y,c.w,c.h,0,0,c.w,c.h);
-    const emb=await inferEmbeddingV28(canvas);
-    const score=cosVecV28(master.emb,emb);
-    scored.push({...c,score});
-    if((i+1)%12===0) await new Promise(r=>setTimeout(r,0)); // UI breathing
-  }
-  scored.sort((a,b)=>b.score-a.score);
-  const kept=[];
-  for(const c of scored){
-    if(kept.every(k=>iouRectV28(c,k)<CONTAINER_RANSAC.nmsIou)) kept.push(c);
-    if(kept.length>=CONTAINER_RANSAC.topK) break;
-  }
+  raw.sort((a,b)=>b.score-a.score);const kept=[];
+  for(const c of raw){if(kept.every(k=>v36Iou(c,k)<CONTAINER_RANSAC.nmsIou))kept.push(c);if(kept.length>=24)break;}
   return kept;
 }
-function rerankByRansacV28(masterImgLocal, sceneImgLocal, candidates){
-  const m=matFromImage(masterImgLocal,CONTAINER_RANSAC.masterMaxW);
-  const result=[];
+function ransacCropV36(master,scene,c){
+  const cc=document.createElement('canvas');cc.width=c.w;cc.height=c.h;cc.getContext('2d').drawImage(scene,c.x,c.y,c.w,c.h,0,0,c.w,c.h);
+  let m=null,i=null,H=null;
   try{
-    for(const c of candidates.slice(0,CONTAINER_RANSAC.rerankK)){
-      let sceneCanvas=document.createElement('canvas');
-      sceneCanvas.width=c.w; sceneCanvas.height=c.h;
-      sceneCanvas.getContext('2d').drawImage(sceneImgLocal,c.x,c.y,c.w,c.h,0,0,c.w,c.h);
-      let i=null,H=null;
-      try{
-        i=matFromImage(sceneCanvas,CONTAINER_RANSAC.sceneMaxW);
-        const mt=detectAndMatch(m,i,CONTAINER_RANSAC.features,CONTAINER_RANSAC.maxMatches,CONTAINER_RANSAC.ransacThr);
-        H=mt.H;
-        const ratio=mt.inliers/Math.max(1,mt.total);
-        const ok=mt.inliers>=CONTAINER_RANSAC.minInliers && ratio>=CONTAINER_RANSAC.minRatio;
-        result.push({...c,inliers:mt.inliers,total:mt.total,ratio,ok,combined:c.score+(ok?.28:0)+Math.min(.14,ratio*.14)});
-      }catch(err){
-        result.push({...c,inliers:0,total:0,ratio:0,ok:false,combined:c.score,error:err.message});
-      }finally{
-        try{if(H)H.delete();}catch(_){}
-        try{if(i){i.src.delete();i.gray.delete();}}catch(_){}
-      }
-    }
-  }finally{
-    try{m.src.delete();m.gray.delete();}catch(_){}
-  }
-  result.sort((a,b)=>b.combined-a.combined);
-  return result;
+    m=matFromImage(master,CONTAINER_RANSAC.masterMaxW);i=matFromImage(cc,CONTAINER_RANSAC.sceneMaxW);
+    const mt=detectAndMatch(m,i,CONTAINER_RANSAC.features,CONTAINER_RANSAC.maxMatches,CONTAINER_RANSAC.ransacThr);H=mt.H;
+    const ratio=mt.inliers/Math.max(1,mt.total),ok=mt.inliers>=CONTAINER_RANSAC.minInliers&&ratio>=CONTAINER_RANSAC.minRatio;
+    return {...c,inliers:mt.inliers,total:mt.total,ratio,ok,combined:c.score+(ok?.30:0)+Math.min(.18,ratio*.18)};
+  }catch(e){return {...c,inliers:0,total:0,ratio:0,ok:false,combined:c.score,error:e.message};}
+  finally{try{H?.delete();}catch(_){}try{m?.src?.delete();m?.gray?.delete();i?.src?.delete();i?.gray?.delete();}catch(_){}}
 }
-function drawDinoCandidatesV28(img, ranked, best){
-  const c=$('debugCanvas'), ctx=c.getContext('2d');
-  c.width=img.width; c.height=img.height;
-  ctx.clearRect(0,0,c.width,c.height);
-  ctx.drawImage(img,0,0,c.width,c.height);
+function drawDenseDebugV36(img,heat,grid,ranked,best){
+  const c=$('debugCanvas'),ctx=c.getContext('2d');c.width=img.width;c.height=img.height;ctx.drawImage(img,0,0);
+  let lo=Math.min(...heat),hi=Math.max(...heat),den=Math.max(1e-6,hi-lo);
   ctx.save();
-  ctx.font='bold 18px system-ui';
-  for(let i=0;i<Math.min(8,ranked.length);i++){
-    const r=ranked[i];
-    ctx.strokeStyle=(r===best)?'#35f078':'#ffd84d';
-    ctx.lineWidth=(r===best)?7:3;
-    ctx.strokeRect(r.x,r.y,r.w,r.h);
-    ctx.fillStyle='rgba(0,0,0,.72)';
-    ctx.fillRect(r.x,r.y-26,260,26);
-    ctx.fillStyle='#fff';
-    ctx.fillText(`#${i+1} DINO ${r.score.toFixed(3)}  R ${r.inliers||0}/${r.total||0}`,r.x+5,r.y-6);
-  }
+  for(let y=0;y<grid;y++)for(let x=0;x<grid;x++){const id=y*grid+x;if(id>=heat.length)continue;const t=(heat[id]-lo)/den;ctx.fillStyle=`rgba(255,${Math.round(220*(1-t))},0,${.03+.22*t})`;ctx.fillRect(x/grid*c.width,y/grid*c.height,c.width/grid+1,c.height/grid+1);}
+  for(let i=0;i<Math.min(8,ranked.length);i++){const r=ranked[i];ctx.strokeStyle=r===best?'#35f078':'#ffd84d';ctx.lineWidth=r===best?7:3;ctx.strokeRect(r.x,r.y,r.w,r.h);ctx.fillStyle='rgba(0,0,0,.72)';ctx.fillRect(r.x,r.y-25,250,25);ctx.fillStyle='#fff';ctx.font='bold 18px system-ui';ctx.fillText(`#${i+1} D ${r.score.toFixed(3)} R ${r.inliers}/${r.total}`,r.x+4,r.y-6);}
   ctx.restore();
 }
-function cropBestCandidateV28(img,best){
-  const pad=Math.round(Math.max(best.w,best.h)*CONTAINER_RANSAC.cropPadRatio);
-  const x1=Math.max(0,best.x-pad), y1=Math.max(0,best.y-pad);
-  const x2=Math.min(img.width,best.x+best.w+pad), y2=Math.min(img.height,best.y+best.h+pad);
-  const cc=document.createElement('canvas');
-  cc.width=Math.max(2,x2-x1); cc.height=Math.max(2,y2-y1);
-  cc.getContext('2d').drawImage(img,x1,y1,x2-x1,y2-y1,0,0,cc.width,cc.height);
-  return new Promise((res,rej)=>{
-    const im=new Image(); im.onload=()=>res(im); im.onerror=rej; im.src=cc.toDataURL('image/jpeg',0.95);
-  });
+function cropBestV36(img,b){
+  const p=Math.round(Math.max(b.w,b.h)*CONTAINER_RANSAC.cropPadRatio),x1=Math.max(0,b.x-p),y1=Math.max(0,b.y-p),x2=Math.min(img.width,b.x+b.w+p),y2=Math.min(img.height,b.y+b.h+p);
+  const c=document.createElement('canvas');c.width=x2-x1;c.height=y2-y1;c.getContext('2d').drawImage(img,x1,y1,x2-x1,y2-y1,0,0,c.width,c.height);
+  return new Promise((res,rej)=>{const im=new Image();im.onload=()=>res(im);im.onerror=rej;im.src=c.toDataURL('image/jpeg',.95);});
 }
-
 async function captureContainerOne(){
-  const video=$('captureVideo'), canvas=$('captureCanvas');
-  if(!video || video.readyState<2){ setCaptureStatus('カメラ準備中です'); return; }
-  try{
-    setCaptureStatus('容器全体を撮影 → DINO候補探索中...');
-    canvas.width=video.videoWidth||1920;
-    canvas.height=video.videoHeight||1080;
-    canvas.getContext('2d').drawImage(video,0,0,canvas.width,canvas.height);
-    const dataUrl=canvas.toDataURL('image/jpeg',0.95);
-    inspectImg=await new Promise((res,rej)=>{const im=new Image();im.onload=()=>res(im);im.onerror=rej;im.src=dataUrl;});
-    await stopInspectCamera(true);
-    drawImageFit($('viewCanvas'),inspectImg);
-    $('empty').style.display='none';
-    await runInspectContainerOne();
-  }catch(e){
-    console.error(e);
-    setCaptureStatus('容器撮影エラー: '+e.message);
-  }
+  const v=$('captureVideo'),c=$('captureCanvas');if(!v||v.readyState<2){setCaptureStatus('カメラ準備中です');return;}
+  try{setCaptureStatus('DINO Dense探索用に撮影中...');c.width=v.videoWidth||1920;c.height=v.videoHeight||1080;c.getContext('2d').drawImage(v,0,0,c.width,c.height);inspectImg=await new Promise((res,rej)=>{const im=new Image();im.onload=()=>res(im);im.onerror=rej;im.src=c.toDataURL('image/jpeg',.95);});await stopInspectCamera(true);drawImageFit($('viewCanvas'),inspectImg);$('empty').style.display='none';await runInspectContainerOne();}
+  catch(e){console.error(e);setCaptureStatus('DINO撮影エラー: '+e.message);}
 }
-
 async function runInspectContainerOne(){
   if(!masterImg||!inspectImg){alert('品番と写真を確認してください');return}
-  hideResultAction();
-  lastInspectionRecord=null;
-  okLoggedForCurrent=false;
-  ngLoggedForCurrent=false;
-  logSending=false;
-  setLoading(true);
-  setBanner('WAIT');
-
-  if(!cvLoaded){
-    log('OpenCV.js準備中... 最大20秒待機します');
-    const okCv=await waitForOpenCV(20000);
-    if(!okCv){setLoading(false);log('OpenCV.js読込タイムアウト。');return;}
-  }
-
+  hideResultAction();lastInspectionRecord=null;okLoggedForCurrent=false;ngLoggedForCurrent=false;logSending=false;setLoading(true);setBanner('WAIT');
   try{
-    log('DINO候補探索を開始します...');
-    const ready=await ensureDinoV28();
-    if(!ready){ setLoading(false); return; }
-
-    const master=await getMasterDinoModelV28();
-    log('候補窓をDINO埋め込みで評価中...');
-    const coarse=await scoreCandidatesByDinoV28(inspectImg, master);
-    if(!coarse.length) throw new Error('DINO候補を作れませんでした');
-
-    log('上位候補をRANSACで再確認中...');
-    const ranked=rerankByRansacV28(masterImg, inspectImg, coarse);
-    const best=ranked.find(r=>r.ok) || ranked[0];
-
-    drawDinoCandidatesV28(inspectImg, ranked, best);
-    DEBUG.image={
-      ...(DEBUG.image||{}),
-      mode:'dino-candidate-search',
-      masterAspect:master.aspect,
-      candidateCount:coarse.length,
-      rerankedCount:ranked.length,
-      bestBox:{x:best.x,y:best.y,w:best.w,h:best.h},
-      bestDino:best.score
-    };
-    DEBUG.align={
-      mode:'dino-ransac',
-      inliers:best.inliers||0,total:best.total||0,ratio:best.ratio||0,
-      candidateOk:!!best.ok
-    };
-    renderDebug();
-
+    const ready=await ensureDinoV36();if(!ready)return;
+    const master=await getMasterDinoV36();
+    log('集合写真をDINO Dense特徴化中...');
+    const sr=await inferDinoAutoV36(inspectImg),sceneTokens=tokenMatrixV36(sr.tensor);
+    const grid=Math.round(Math.sqrt(sceneTokens.length));
+    if(grid*grid!==sceneTokens.length)throw new Error('patch grid判定失敗: '+sceneTokens.length);
+    log('DINO局所類似ヒートマップ作成中...');
+    const heat=sceneHeatV36(sceneTokens,master.tokens),cands=peaksToCandidatesV36(heat,grid,inspectImg,master.aspect);
+    if(!cands.length)throw new Error('DINO候補なし');
+    log('上位候補をORB/RANSACで確認中...');
+    const ranked=cands.slice(0,CONTAINER_RANSAC.rerankK).map(c=>ransacCropV36(masterImg,inspectImg,c)).sort((a,b)=>b.combined-a.combined);
+    const best=ranked.find(r=>r.ok)||ranked[0];
+    drawDenseDebugV36(inspectImg,heat,grid,ranked,best);
+    DEBUG.image={...(DEBUG.image||{}),mode:'v36-dino-dense',dinoInput:sr.size,grid,candidateCount:cands.length,bestDino:best.score,bestBox:{x:best.x,y:best.y,w:best.w,h:best.h}};
+    DEBUG.align={mode:'v36-dino-ransac',inliers:best.inliers,total:best.total,ratio:best.ratio,candidateOk:best.ok};renderDebug();
     if(!best.ok){
-      setBanner('WAIT');
-      setStat('alignStat',`${best.inliers||0}/${best.total||0}`,'waitText');
-      setStat('outerStat','--','waitText');
-      setStat('pointStat','判定不能','waitText');
-      lastInspectionRecord=null;
-      hideResultAction();
-      log(`DINO候補探索：候補はありますが確定できません。
+      setBanner('WAIT');setStat('alignStat',`${best.inliers}/${best.total}`,'waitText');setStat('outerStat','--','waitText');setStat('pointStat','判定不能','waitText');lastInspectionRecord=null;hideResultAction();
+      log(`DINO候補は見つかりましたがRANSAC未確定
 DINO類似度: ${best.score.toFixed(3)}
-候補RANSAC: ${(best.inliers||0)}/${(best.total||0)}
-※位置合わせ未確定なのでOK/NG判定しません。`);
+RANSAC: ${best.inliers}/${best.total} (${(best.ratio*100).toFixed(1)}%)
+※OK/NG判定しません。`);
       return;
     }
-
-    inspectImg=await cropBestCandidateV28(inspectImg,best);
-    drawImageFit($('viewCanvas'),inspectImg);
-
-    // 最終判定は v26 の既存runInspect()
+    inspectImg=await cropBestV36(inspectImg,best);drawImageFit($('viewCanvas'),inspectImg);
     await runInspect();
-
     const old=$('status')?.textContent||'';
-    log(`DINO候補探索で候補確定
+    log(`v36 DINO候補確定
 DINO類似度: ${best.score.toFixed(3)}
-候補RANSAC: ${(best.inliers||0)}/${(best.total||0)}
+候補RANSAC: ${best.inliers}/${best.total}
 
 ${old}`);
   }catch(e){
-    console.error(e);
-    setBanner('WAIT'); setStat('alignStat','--','waitText'); setStat('outerStat','--','waitText'); setStat('pointStat','判定不能','waitText');
-    lastInspectionRecord=null; hideResultAction();
-    log('DINO候補探索エラー: '+e.message);
-    dbg('dino candidate search error',{message:e.message,stack:e.stack});
-    renderDebug();
-  }finally{
-    setLoading(false);
-  }
+    console.error(e);setBanner('WAIT');setStat('alignStat','--','waitText');setStat('outerStat','--','waitText');setStat('pointStat','判定不能','waitText');lastInspectionRecord=null;hideResultAction();log('v36 DINO探索エラー: '+e.message);dbg('v36 DINO error',{message:e.message,stack:e.stack});renderDebug();
+  }finally{setLoading(false);}
 }
 
 async function runInspect(){
