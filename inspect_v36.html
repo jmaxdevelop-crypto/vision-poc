@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>ぴろえんす Inspect v36 DINO Dense All-in β</title>
+<title>ぴろえんす Inspect v36 DINO 1st Candidate Display β</title>
 <style>
 :root{--bg:#06101f;--panel:rgba(5,12,26,.88);--txt:#eef6ff;--muted:#9fb4d9;--green:#35f078;--red:#ff4b5f;--yellow:#ffd84d;--cyan:#35dcff;--line:#29436d}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;width:100%;min-height:100%;background:#000;color:var(--txt);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;overflow-x:hidden;overflow-y:auto}.app{position:relative;width:100%;height:100dvh;min-height:100vh;background:#000;overflow:hidden}.topbar{position:absolute;z-index:10;left:0;right:0;top:0;padding:10px max(10px,env(safe-area-inset-left)) 10px max(10px,env(safe-area-inset-right));background:linear-gradient(180deg,rgba(0,0,0,.88),rgba(0,0,0,.30),transparent);display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}.brand{font-weight:900;letter-spacing:.06em;font-size:14px;color:#dff8ff}.selectRow{display:flex;gap:8px;align-items:center}.selectRow select{flex:1;min-width:0;padding:11px 12px;border-radius:12px;border:1px solid #31517e;background:#071226;color:var(--txt);font-size:15px}.selectRow button,.cameraBtn{border:0;border-radius:12px;padding:11px 14px;background:linear-gradient(90deg,#2aa7ff,#39e0ff);font-weight:900;color:#001225;font-size:14px}.cameraBtn{white-space:nowrap}.photoInput{display:none}.canvasWrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#020711}canvas{width:100%;height:100%;object-fit:contain;display:block}.empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;color:#aabde0;padding:24px;font-size:15px;line-height:1.7}.resultBanner{position:absolute;z-index:12;left:12px;right:12px;top:88px;border-radius:18px;padding:18px 14px;text-align:center;font-size:72px;font-weight:1000;letter-spacing:.14em;line-height:1;box-shadow:0 18px 40px rgba(0,0,0,.45);display:none}.resultBanner::before{content:'総合判定';display:block;font-size:13px;letter-spacing:.16em;margin-bottom:8px;color:#d9e9ff}.resultBanner.ok{display:block;background:rgba(9,65,37,.92);border:3px solid var(--green);color:var(--green)}.resultBanner.ng{display:block;background:rgba(73,18,31,.94);border:3px solid var(--red);color:var(--red)}.bottom{position:absolute;z-index:10;left:0;right:0;bottom:0;padding:10px max(10px,env(safe-area-inset-left)) max(12px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-right));background:linear-gradient(0deg,rgba(0,0,0,.92),rgba(0,0,0,.46),transparent)}.status{background:rgba(7,18,38,.86);border:1px solid var(--line);border-radius:14px;padding:10px 12px;color:#c6d8ff;font-size:12px;line-height:1.45;white-space:pre-line;max-height:160px;overflow:auto}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:7px}.stat{background:rgba(7,18,38,.82);border:1px solid var(--line);border-radius:12px;padding:8px;text-align:center}.stat small{display:block;color:#aabde0;font-size:10px}.stat b{display:block;font-size:18px;margin-top:2px}.okText{color:var(--green)}.ngText{color:var(--red)}.waitText{color:var(--yellow)}.loading{position:absolute;z-index:15;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:#dff8ff}.loading.on{display:flex}.debugPanel{min-height:100dvh;background:#050b16;padding:18px max(14px,env(safe-area-inset-left)) max(28px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-right));border-top:1px solid #20385f}.debugHead{display:flex;align-items:end;justify-content:space-between;gap:10px;margin-bottom:12px}.debugHead h2{margin:0;font-size:20px;letter-spacing:.08em}.debugHint{color:#9fb4d9;font-size:12px}.debugGrid{display:grid;grid-template-columns:1fr;gap:10px}.debugCard{background:rgba(7,18,38,.88);border:1px solid var(--line);border-radius:14px;padding:12px}.debugCard h3{margin:0 0 8px;font-size:14px;color:#dff8ff}.debugPre{margin:0;white-space:pre-wrap;word-break:break-word;color:#c6d8ff;font-size:12px;line-height:1.5}.debugCanvasWrap{background:#020711;border:1px solid #20385f;border-radius:12px;overflow:hidden}.debugCanvasWrap canvas{width:100%;height:auto;display:block}.debugBadge{display:inline-block;padding:3px 8px;border-radius:999px;border:1px solid #31517e;color:#9fb4d9;font-size:11px;margin-left:6px}.barcodeInput{min-width:180px;max-width:260px;padding:11px 12px;border-radius:12px;border:1px solid #31517e;background:#071226;color:var(--txt);font-size:15px}.scanOverlay{position:fixed;z-index:30;inset:0;background:#020711;display:none;align-items:center;justify-content:center;flex-direction:column;padding:max(18px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) max(18px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left));gap:12px}.scanOverlay.on{display:flex}.scanBox{position:relative;width:min(92vw,720px);aspect-ratio:4/3;border:2px solid #31517e;border-radius:18px;overflow:hidden;background:#000;box-shadow:0 20px 60px #000a}.scanBox video,.scanBox canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.scanGuide{position:absolute;left:50%;top:50%;width:58%;height:36%;transform:translate(-50%,-50%);border:4px solid var(--cyan);border-radius:16px;box-shadow:0 0 0 999px rgba(0,0,0,.28);pointer-events:none}.scanTitle{font-size:20px;font-weight:900;color:#dff8ff}.scanStatus{color:#c6d8ff;font-size:14px;text-align:center;min-height:1.6em;white-space:pre-line}.scanClose{width:min(92vw,360px);border:0;border-radius:14px;padding:13px 18px;background:#26395f;color:#eef6ff;font-weight:900;font-size:16px}.qrTorchBtn{width:min(92vw,360px);border:0;border-radius:14px;padding:13px 18px;background:#ffd84d;color:#111;font-weight:900;font-size:16px}.qrTorchBtn.off{background:#26395f;color:#eef6ff}.captureButtons{display:flex;gap:10px;width:min(92vw,520px)}.captureButtons button{flex:1;border:0;border-radius:14px;padding:14px 18px;font-weight:900;font-size:16px}.captureShutter{background:linear-gradient(90deg,#2aa7ff,#39e0ff);color:#001225}.captureClose{background:#26395f;color:#eef6ff}.containerRansacBtn{background:linear-gradient(90deg,#8f7cff,#39e0ff)!important;color:#06101f!important}.focusHint{position:absolute;right:10px;bottom:10px;background:rgba(0,0,0,.6);color:#fff;border-radius:999px;padding:5px 9px;font-size:11px;pointer-events:none}
@@ -41,7 +41,7 @@
 <body class="masterNotReady">
 <div class="app">
   <div class="topbar">
-    <div class="brand">ぴろえんす Inspect v36 / DINO Dense全部盛β</div>
+    <div class="brand">ぴろえんす Inspect v36 / DINO 1位候補表示β</div>
     <div class="selectRow">
       <input id="barcodeInput" class="barcodeInput" type="text" autocomplete="off" inputmode="none" placeholder="バーコード/QR読取（USBリーダーはここへ）">
       <select id="partSelect"><option>マスター読込中...</option></select>
@@ -122,7 +122,7 @@
 // 例: const GAS_URL = 'https://script.google.com/macros/s/xxxxxxx/exec';
 // =====================================================
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbzhTwzLskVh0lRNegdW0FnmL-dedZ6LIps2NP9mRrXsPp0aC93ziLRAMUTEmzFiiU_3/exec'; // ←ここを今井さんのGAS URLに置き換え
-const INSPECT_VERSION = 'v36-dino-dense-allin-beta';
+const INSPECT_VERSION = 'v36-dino-best-candidate-display';
 
 // 固定設定：現場用なので画面には出さない
 const CONFIG = {
@@ -1058,7 +1058,7 @@ const CONTAINER_RANSAC={
   masterMaxW:900,sceneMaxW:1400,
   features:4000,maxMatches:260,ransacThr:5,
   minInliers:12,minRatio:0.10,
-  modelUrl:'https://huggingface.co/onnx-community/dinov2-small-ONNX/resolve/main/onnx/model.onnx?download=true',
+  modelUrl:'https://huggingface.co/onnx-community/dinov2-small-ONNX/resolve/main/onnx/model_int8.onnx?download=true',
   ortBase:'https://cdnjs.cloudflare.com/ajax/libs/onnxruntime-web/1.20.1/',
   preferredInput:518,fallbackInput:224,
   patchSize:14,
@@ -1179,6 +1179,44 @@ function ransacCropV36(master,scene,c){
   }catch(e){return {...c,inliers:0,total:0,ratio:0,ok:false,combined:c.score,error:e.message};}
   finally{try{H?.delete();}catch(_){}try{m?.src?.delete();m?.gray?.delete();i?.src?.delete();i?.gray?.delete();}catch(_){}}
 }
+
+function drawBestCandidateMainV36(img,best){
+  if(!img||!best)return;
+  const c=$('viewCanvas'),ctx=c.getContext('2d');
+  drawImageFit(c,img);
+
+  // drawImageFit と同じ contain 座標へ変換
+  const fit=Math.min(c.width/img.width,c.height/img.height);
+  const dw=img.width*fit,dh=img.height*fit;
+  const ox=(c.width-dw)/2,oy=(c.height-dh)/2;
+
+  const x=ox+best.x*fit;
+  const y=oy+best.y*fit;
+  const w=best.w*fit;
+  const h=best.h*fit;
+
+  ctx.save();
+  const confirmed=!!best.ok;
+  ctx.strokeStyle=confirmed?'#35f078':'#ffd84d';
+  ctx.lineWidth=Math.max(4,Math.min(c.width,c.height)/180);
+  ctx.setLineDash(confirmed?[]:[14,8]);
+  ctx.strokeRect(x,y,w,h);
+
+  const label=`DINO 1位  ${best.score.toFixed(3)}  RANSAC ${best.inliers||0}/${best.total||0}`;
+  ctx.setLineDash([]);
+  ctx.font='bold 17px system-ui,-apple-system,"Segoe UI",sans-serif';
+  const pad=7;
+  const tw=ctx.measureText(label).width+pad*2;
+  const th=28;
+  const lx=Math.max(4,Math.min(c.width-tw-4,x));
+  const ly=(y-th-5>=4)?y-th-5:Math.min(c.height-th-4,y+5);
+  ctx.fillStyle='rgba(0,0,0,.78)';
+  ctx.fillRect(lx,ly,tw,th);
+  ctx.fillStyle=confirmed?'#35f078':'#ffd84d';
+  ctx.fillText(label,lx+pad,ly+19);
+  ctx.restore();
+}
+
 function drawDenseDebugV36(img,heat,grid,ranked,best){
   const c=$('debugCanvas'),ctx=c.getContext('2d');c.width=img.width;c.height=img.height;ctx.drawImage(img,0,0);
   let lo=Math.min(...heat),hi=Math.max(...heat),den=Math.max(1e-6,hi-lo);
@@ -1213,6 +1251,10 @@ async function runInspectContainerOne(){
     log('上位候補をORB/RANSACで確認中...');
     const ranked=cands.slice(0,CONTAINER_RANSAC.rerankK).map(c=>ransacCropV36(masterImg,inspectImg,c)).sort((a,b)=>b.combined-a.combined);
     const best=ranked.find(r=>r.ok)||ranked[0];
+
+    // 通常画面には1位候補だけ表示。
+    // RANSAC未確定=黄色点線、確定=緑実線。
+    drawBestCandidateMainV36(inspectImg,best);
     drawDenseDebugV36(inspectImg,heat,grid,ranked,best);
     DEBUG.image={...(DEBUG.image||{}),mode:'v36-dino-dense',dinoInput:sr.size,grid,candidateCount:cands.length,bestDino:best.score,bestBox:{x:best.x,y:best.y,w:best.w,h:best.h}};
     DEBUG.align={mode:'v36-dino-ransac',inliers:best.inliers,total:best.total,ratio:best.ratio,candidateOk:best.ok};renderDebug();
@@ -1220,7 +1262,9 @@ async function runInspectContainerOne(){
       setBanner('WAIT');setStat('alignStat',`${best.inliers}/${best.total}`,'waitText');setStat('outerStat','--','waitText');setStat('pointStat','判定不能','waitText');lastInspectionRecord=null;hideResultAction();
       log(`DINO候補は見つかりましたがRANSAC未確定
 DINO類似度: ${best.score.toFixed(3)}
+候補位置: x=${best.x}, y=${best.y}, w=${best.w}, h=${best.h}
 RANSAC: ${best.inliers}/${best.total} (${(best.ratio*100).toFixed(1)}%)
+※黄色枠がDINO 1位候補です。
 ※OK/NG判定しません。`);
       return;
     }
