@@ -1,0 +1,1 @@
+SETUP_LIGHTGLUE.bat が ONNX Runtime Web のファイルをここへ取得します。
