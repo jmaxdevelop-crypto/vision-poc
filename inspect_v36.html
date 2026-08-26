@@ -41,7 +41,7 @@
 <body class="masterNotReady">
 <div class="app">
   <div class="topbar">
-    <div class="brand">ぴろえんす Inspect v36 / LightGlue Local β</div>
+    <div class="brand">ぴろえんす Inspect v36 / SuperPoint + LightGlue β</div>
     <div class="selectRow">
       <input id="barcodeInput" class="barcodeInput" type="text" autocomplete="off" inputmode="none" placeholder="バーコード/QR読取（USBリーダーはここへ）">
       <select id="partSelect"><option>マスター読込中...</option></select>
@@ -122,7 +122,7 @@
 // 例: const GAS_URL = 'https://script.google.com/macros/s/xxxxxxx/exec';
 // =====================================================
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbzhTwzLskVh0lRNegdW0FnmL-dedZ6LIps2NP9mRrXsPp0aC93ziLRAMUTEmzFiiU_3/exec'; // ←ここを今井さんのGAS URLに置き換え
-const INSPECT_VERSION = 'v36-superpoint-lightglue-local';
+const INSPECT_VERSION = 'v36-superpoint-lightglue-local-master-safe';
 
 // 固定設定：現場用なので画面には出さない
 const CONFIG = {
@@ -262,7 +262,7 @@ function updateActionState(){
   }
   updatePcDinoButtonV36();
 }
-function resetMasterState(){
+function resetMasterState(){ masterDinoCacheV36=null;
   hideResultAction();
   currentPart=null; masterImg=null; inspectImg=null; points=[];
   setBanner('WAIT'); setStat('alignStat','--'); setStat('outerStat','--'); setStat('pointStat','--');
@@ -364,7 +364,7 @@ async function loadParts(){
     updateActionState();
   }
 }
-async function loadSelectedPart(){ const partNo=$('partSelect').value; if(!partNo)return; try{ hideResultAction(); setLoading(true); log('マスター読込中...'); setBanner('WAIT'); const res=await fetch(GAS_URL+'?action=get&partNo='+encodeURIComponent(partNo)); const js=await res.json(); if(!js.ok) throw new Error(js.error||'get失敗'); currentPart=js.part; if(!currentBarcodeRaw){ currentBarcodeRaw=String(currentPart.partNo||partNo); currentBarcodeInfo=parseQRCode(currentBarcodeRaw); } masterImg=await loadImageFromDataUrl(currentPart.topData); points=normalizePointsToImage(currentPart.points||[], masterImg); drawMasterPreview(); $('empty').style.display='none'; setStat('alignStat','--'); setStat('outerStat','--'); setStat('pointStat',points.length?('0/'+points.length):'外形のみ'); log('マスター読込OK: '+partNo+'\n検査ポイント: '+points.length+'件\n撮影準備OK。右上ボタンが「撮影」に切り替わりました。'); updateActionState(); }catch(e){ console.error(e); log('マスター読込エラー: '+e.message); updateActionState(); }finally{ setLoading(false); } }
+async function loadSelectedPart(){ masterDinoCacheV36=null; const partNo=$('partSelect').value; if(!partNo)return; try{ hideResultAction(); setLoading(true); log('マスター読込中...'); setBanner('WAIT'); const res=await fetch(GAS_URL+'?action=get&partNo='+encodeURIComponent(partNo)); const js=await res.json(); if(!js.ok) throw new Error(js.error||'get失敗'); currentPart=js.part; if(!currentBarcodeRaw){ currentBarcodeRaw=String(currentPart.partNo||partNo); currentBarcodeInfo=parseQRCode(currentBarcodeRaw); } masterImg=await loadImageFromDataUrl(currentPart.topData); points=normalizePointsToImage(currentPart.points||[], masterImg); drawMasterPreview(); $('empty').style.display='none'; setStat('alignStat','--'); setStat('outerStat','--'); setStat('pointStat',points.length?('0/'+points.length):'外形のみ'); log('マスター読込OK: '+partNo+'\n検査ポイント: '+points.length+'件\n撮影準備OK。右上ボタンが「撮影」に切り替わりました。'); updateActionState(); }catch(e){ console.error(e); log('マスター読込エラー: '+e.message); updateActionState(); }finally{ setLoading(false); } }
 
 function normalizeBarcodeText(raw){ return String(raw||'').replace(/[\r\n]+$/g,'').trim(); }
 
@@ -1054,29 +1054,7 @@ function compareAll(m,warped,points){
 // Master/Sceneを1回ずつDense特徴化 -> ヒートマップ -> 候補 -> ORB/RANSAC。
 // 穴検出 / マスク / 星座は使用しない。
 // =====================================================
-
-// =====================================================
-// v36 SuperPoint + LightGlue β
-//
-// 目的:
-//   Master画像1枚と集合写真1枚を直接ローカル特徴マッチング。
-//   固定ウィンドウ / DINO / 穴検出 / マスク / 星座は使わない。
-//
-// 流れ:
-//   1) Master + Scene を同一 512x512 letterbox へ変換
-//   2) SuperPoint + LightGlue end-to-end ONNX
-//   3) 対応点を元画像座標へ復元
-//   4) cv.findHomography(Master -> Scene, RANSAC)
-//   5) Master四隅をSceneへ射影し、1個体として妥当かゲート
-//   6) 射影個体を黄色/緑枠表示
-//   7) 最良個体をCropし、v26由来の既存 runInspect() へ渡す
-//
-// Model:
-//   fabio-sim/LightGlue-ONNX v2.0
-//   superpoint_lightglue_pipeline.onnx
-//   Input : [2,1,H,W]
-//   Output: keypoints [2,K,2], matches [M,3], scores [M]
-// =====================================================
+let masterDinoCacheV36=null; // compatibility only; keeps original Master load/reset code unchanged
 const CONTAINER_RANSAC = {
   modelUrl: './models/superpoint_lightglue_pipeline.onnx',
   ortBase: './js/',
