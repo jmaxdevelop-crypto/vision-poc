@@ -1,0 +1,1 @@
+SETUP_LIGHTGLUE.bat が superpoint_lightglue_pipeline.onnx をここへ取得します。
