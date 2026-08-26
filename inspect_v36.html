@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>ぴろえんす Inspect v36 DINO 1st Candidate Display β</title>
+<title>ぴろえんす Inspect v36 SuperPoint + LightGlue β</title>
 <style>
 :root{--bg:#06101f;--panel:rgba(5,12,26,.88);--txt:#eef6ff;--muted:#9fb4d9;--green:#35f078;--red:#ff4b5f;--yellow:#ffd84d;--cyan:#35dcff;--line:#29436d}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;width:100%;min-height:100%;background:#000;color:var(--txt);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;overflow-x:hidden;overflow-y:auto}.app{position:relative;width:100%;height:100dvh;min-height:100vh;background:#000;overflow:hidden}.topbar{position:absolute;z-index:10;left:0;right:0;top:0;padding:10px max(10px,env(safe-area-inset-left)) 10px max(10px,env(safe-area-inset-right));background:linear-gradient(180deg,rgba(0,0,0,.88),rgba(0,0,0,.30),transparent);display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}.brand{font-weight:900;letter-spacing:.06em;font-size:14px;color:#dff8ff}.selectRow{display:flex;gap:8px;align-items:center}.selectRow select{flex:1;min-width:0;padding:11px 12px;border-radius:12px;border:1px solid #31517e;background:#071226;color:var(--txt);font-size:15px}.selectRow button,.cameraBtn{border:0;border-radius:12px;padding:11px 14px;background:linear-gradient(90deg,#2aa7ff,#39e0ff);font-weight:900;color:#001225;font-size:14px}.cameraBtn{white-space:nowrap}.photoInput{display:none}.canvasWrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#020711}canvas{width:100%;height:100%;object-fit:contain;display:block}.empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;color:#aabde0;padding:24px;font-size:15px;line-height:1.7}.resultBanner{position:absolute;z-index:12;left:12px;right:12px;top:88px;border-radius:18px;padding:18px 14px;text-align:center;font-size:72px;font-weight:1000;letter-spacing:.14em;line-height:1;box-shadow:0 18px 40px rgba(0,0,0,.45);display:none}.resultBanner::before{content:'総合判定';display:block;font-size:13px;letter-spacing:.16em;margin-bottom:8px;color:#d9e9ff}.resultBanner.ok{display:block;background:rgba(9,65,37,.92);border:3px solid var(--green);color:var(--green)}.resultBanner.ng{display:block;background:rgba(73,18,31,.94);border:3px solid var(--red);color:var(--red)}.bottom{position:absolute;z-index:10;left:0;right:0;bottom:0;padding:10px max(10px,env(safe-area-inset-left)) max(12px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-right));background:linear-gradient(0deg,rgba(0,0,0,.92),rgba(0,0,0,.46),transparent)}.status{background:rgba(7,18,38,.86);border:1px solid var(--line);border-radius:14px;padding:10px 12px;color:#c6d8ff;font-size:12px;line-height:1.45;white-space:pre-line;max-height:160px;overflow:auto}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:7px}.stat{background:rgba(7,18,38,.82);border:1px solid var(--line);border-radius:12px;padding:8px;text-align:center}.stat small{display:block;color:#aabde0;font-size:10px}.stat b{display:block;font-size:18px;margin-top:2px}.okText{color:var(--green)}.ngText{color:var(--red)}.waitText{color:var(--yellow)}.loading{position:absolute;z-index:15;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:#dff8ff}.loading.on{display:flex}.debugPanel{min-height:100dvh;background:#050b16;padding:18px max(14px,env(safe-area-inset-left)) max(28px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-right));border-top:1px solid #20385f}.debugHead{display:flex;align-items:end;justify-content:space-between;gap:10px;margin-bottom:12px}.debugHead h2{margin:0;font-size:20px;letter-spacing:.08em}.debugHint{color:#9fb4d9;font-size:12px}.debugGrid{display:grid;grid-template-columns:1fr;gap:10px}.debugCard{background:rgba(7,18,38,.88);border:1px solid var(--line);border-radius:14px;padding:12px}.debugCard h3{margin:0 0 8px;font-size:14px;color:#dff8ff}.debugPre{margin:0;white-space:pre-wrap;word-break:break-word;color:#c6d8ff;font-size:12px;line-height:1.5}.debugCanvasWrap{background:#020711;border:1px solid #20385f;border-radius:12px;overflow:hidden}.debugCanvasWrap canvas{width:100%;height:auto;display:block}.debugBadge{display:inline-block;padding:3px 8px;border-radius:999px;border:1px solid #31517e;color:#9fb4d9;font-size:11px;margin-left:6px}.barcodeInput{min-width:180px;max-width:260px;padding:11px 12px;border-radius:12px;border:1px solid #31517e;background:#071226;color:var(--txt);font-size:15px}.scanOverlay{position:fixed;z-index:30;inset:0;background:#020711;display:none;align-items:center;justify-content:center;flex-direction:column;padding:max(18px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) max(18px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left));gap:12px}.scanOverlay.on{display:flex}.scanBox{position:relative;width:min(92vw,720px);aspect-ratio:4/3;border:2px solid #31517e;border-radius:18px;overflow:hidden;background:#000;box-shadow:0 20px 60px #000a}.scanBox video,.scanBox canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.scanGuide{position:absolute;left:50%;top:50%;width:58%;height:36%;transform:translate(-50%,-50%);border:4px solid var(--cyan);border-radius:16px;box-shadow:0 0 0 999px rgba(0,0,0,.28);pointer-events:none}.scanTitle{font-size:20px;font-weight:900;color:#dff8ff}.scanStatus{color:#c6d8ff;font-size:14px;text-align:center;min-height:1.6em;white-space:pre-line}.scanClose{width:min(92vw,360px);border:0;border-radius:14px;padding:13px 18px;background:#26395f;color:#eef6ff;font-weight:900;font-size:16px}.qrTorchBtn{width:min(92vw,360px);border:0;border-radius:14px;padding:13px 18px;background:#ffd84d;color:#111;font-weight:900;font-size:16px}.qrTorchBtn.off{background:#26395f;color:#eef6ff}.captureButtons{display:flex;gap:10px;width:min(92vw,520px)}.captureButtons button{flex:1;border:0;border-radius:14px;padding:14px 18px;font-weight:900;font-size:16px}.captureShutter{background:linear-gradient(90deg,#2aa7ff,#39e0ff);color:#001225}.captureClose{background:#26395f;color:#eef6ff}.containerRansacBtn{background:linear-gradient(90deg,#8f7cff,#39e0ff)!important;color:#06101f!important}.focusHint{position:absolute;right:10px;bottom:10px;background:rgba(0,0,0,.6);color:#fff;border-radius:999px;padding:5px 9px;font-size:11px;pointer-events:none}
@@ -36,12 +36,12 @@
 #actionEndBtn{background:#26395f;color:#eef6ff}
 @media(max-width:480px){.actionMsg{font-size:14px}.actionButtons button{font-size:14px;padding:12px 8px}}
 </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/onnxruntime-web/1.20.1/ort.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.22.0/dist/ort.min.js"></script>
 </head>
 <body class="masterNotReady">
 <div class="app">
   <div class="topbar">
-    <div class="brand">ぴろえんす Inspect v36 / DINO 1位候補表示β</div>
+    <div class="brand">ぴろえんす Inspect v36 / SuperPoint + LightGlue β</div>
     <div class="selectRow">
       <input id="barcodeInput" class="barcodeInput" type="text" autocomplete="off" inputmode="none" placeholder="バーコード/QR読取（USBリーダーはここへ）">
       <select id="partSelect"><option>マスター読込中...</option></select>
@@ -83,7 +83,7 @@
   <div id="captureStatus" class="scanStatus">カメラ起動中...</div>
   <div class="captureButtons">
     <button id="captureShutterBtn" class="captureShutter" type="button">1個撮影して判定</button>
-    <button id="containerRansacBtn" class="containerRansacBtn" type="button">DINOで1個探して判定 β</button>
+    <button id="containerRansacBtn" class="containerRansacBtn" type="button">LightGlueで1個探して判定 β</button>
     <button id="captureCloseBtn" class="captureClose" type="button">閉じる</button>
   </div>
 </div>
@@ -122,7 +122,7 @@
 // 例: const GAS_URL = 'https://script.google.com/macros/s/xxxxxxx/exec';
 // =====================================================
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbzhTwzLskVh0lRNegdW0FnmL-dedZ6LIps2NP9mRrXsPp0aC93ziLRAMUTEmzFiiU_3/exec'; // ←ここを今井さんのGAS URLに置き換え
-const INSPECT_VERSION = 'v36-dino-best-candidate-display';
+const INSPECT_VERSION = 'v36-superpoint-lightglue-beta';
 
 // 固定設定：現場用なので画面には出さない
 const CONFIG = {
@@ -262,7 +262,7 @@ function updateActionState(){
   }
   updatePcDinoButtonV36();
 }
-function resetMasterState(){ masterDinoCacheV36=null;
+function resetMasterState(){
   hideResultAction();
   currentPart=null; masterImg=null; inspectImg=null; points=[];
   setBanner('WAIT'); setStat('alignStat','--'); setStat('outerStat','--'); setStat('pointStat','--');
@@ -364,7 +364,7 @@ async function loadParts(){
     updateActionState();
   }
 }
-async function loadSelectedPart(){ masterDinoCacheV36=null; const partNo=$('partSelect').value; if(!partNo)return; try{ hideResultAction(); setLoading(true); log('マスター読込中...'); setBanner('WAIT'); const res=await fetch(GAS_URL+'?action=get&partNo='+encodeURIComponent(partNo)); const js=await res.json(); if(!js.ok) throw new Error(js.error||'get失敗'); currentPart=js.part; if(!currentBarcodeRaw){ currentBarcodeRaw=String(currentPart.partNo||partNo); currentBarcodeInfo=parseQRCode(currentBarcodeRaw); } masterImg=await loadImageFromDataUrl(currentPart.topData); points=normalizePointsToImage(currentPart.points||[], masterImg); drawMasterPreview(); $('empty').style.display='none'; setStat('alignStat','--'); setStat('outerStat','--'); setStat('pointStat',points.length?('0/'+points.length):'外形のみ'); log('マスター読込OK: '+partNo+'\n検査ポイント: '+points.length+'件\n撮影準備OK。右上ボタンが「撮影」に切り替わりました。'); updateActionState(); }catch(e){ console.error(e); log('マスター読込エラー: '+e.message); updateActionState(); }finally{ setLoading(false); } }
+async function loadSelectedPart(){ const partNo=$('partSelect').value; if(!partNo)return; try{ hideResultAction(); setLoading(true); log('マスター読込中...'); setBanner('WAIT'); const res=await fetch(GAS_URL+'?action=get&partNo='+encodeURIComponent(partNo)); const js=await res.json(); if(!js.ok) throw new Error(js.error||'get失敗'); currentPart=js.part; if(!currentBarcodeRaw){ currentBarcodeRaw=String(currentPart.partNo||partNo); currentBarcodeInfo=parseQRCode(currentBarcodeRaw); } masterImg=await loadImageFromDataUrl(currentPart.topData); points=normalizePointsToImage(currentPart.points||[], masterImg); drawMasterPreview(); $('empty').style.display='none'; setStat('alignStat','--'); setStat('outerStat','--'); setStat('pointStat',points.length?('0/'+points.length):'外形のみ'); log('マスター読込OK: '+partNo+'\n検査ポイント: '+points.length+'件\n撮影準備OK。右上ボタンが「撮影」に切り替わりました。'); updateActionState(); }catch(e){ console.error(e); log('マスター読込エラー: '+e.message); updateActionState(); }finally{ setLoading(false); } }
 
 function normalizeBarcodeText(raw){ return String(raw||'').replace(/[\r\n]+$/g,'').trim(); }
 
@@ -868,7 +868,7 @@ $('pcDinoBtn')?.addEventListener('click',()=>{
 $('pcDinoFile')?.addEventListener('change',async e=>{
   const f=e.target.files?.[0];e.target.value='';if(!f)return;
   try{inspectImg=await loadImageFromFile(f);drawImageFit($('viewCanvas'),inspectImg);$('empty').style.display='none';await runInspectContainerOne();}
-  catch(err){console.error(err);setBanner('WAIT');lastInspectionRecord=null;hideResultAction();log('PC画像 DINO探索エラー: '+err.message);}
+  catch(err){console.error(err);setBanner('WAIT');lastInspectionRecord=null;hideResultAction();log('PC画像 LightGlue探索エラー: '+err.message);}
 });
 
 $('captureCloseBtn').onclick=()=>stopInspectCamera(true);
@@ -1054,231 +1054,485 @@ function compareAll(m,warped,points){
 // Master/Sceneを1回ずつDense特徴化 -> ヒートマップ -> 候補 -> ORB/RANSAC。
 // 穴検出 / マスク / 星座は使用しない。
 // =====================================================
-const CONTAINER_RANSAC={
-  masterMaxW:900,sceneMaxW:1400,
-  features:4000,maxMatches:260,ransacThr:5,
-  minInliers:12,minRatio:0.10,
-  modelUrl:'https://huggingface.co/onnx-community/dinov2-small-ONNX/resolve/main/onnx/model.onnx?download=true',
-  ortBase:'https://cdnjs.cloudflare.com/ajax/libs/onnxruntime-web/1.20.1/',
-  preferredInput:518,fallbackInput:224,
-  patchSize:14,
-  topPeaks:20,
-  candidateScales:[0.10,0.14,0.19,0.25,0.33,0.43,0.55],
-  nmsIou:0.34,rerankK:10,cropPadRatio:0.12
-};
-let dinoSessionV36=null, masterDinoCacheV36=null;
 
-function v36Norm(a){let n=0;for(let i=0;i<a.length;i++)n+=a[i]*a[i];n=Math.sqrt(n)+1e-9;const o=new Float32Array(a.length);for(let i=0;i<a.length;i++)o[i]=a[i]/n;return o;}
-function v36Cos(a,b){let s=0,n=Math.min(a.length,b.length);for(let i=0;i<n;i++)s+=a[i]*b[i];return s;}
-function v36Iou(a,b){const x1=Math.max(a.x,b.x),y1=Math.max(a.y,b.y),x2=Math.min(a.x+a.w,b.x+b.w),y2=Math.min(a.y+a.h,b.y+b.h),q=Math.max(0,x2-x1)*Math.max(0,y2-y1);return q/Math.max(1,a.w*a.h+b.w*b.h-q);}
-function v36Canvas(img,w,h){
-  const c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);return c;
+// =====================================================
+// v36 SuperPoint + LightGlue β
+//
+// 目的:
+//   Master画像1枚と集合写真1枚を直接ローカル特徴マッチング。
+//   固定ウィンドウ / DINO / 穴検出 / マスク / 星座は使わない。
+//
+// 流れ:
+//   1) Master + Scene を同一 512x512 letterbox へ変換
+//   2) SuperPoint + LightGlue end-to-end ONNX
+//   3) 対応点を元画像座標へ復元
+//   4) cv.findHomography(Master -> Scene, RANSAC)
+//   5) Master四隅をSceneへ射影し、1個体として妥当かゲート
+//   6) 射影個体を黄色/緑枠表示
+//   7) 最良個体をCropし、v26由来の既存 runInspect() へ渡す
+//
+// Model:
+//   fabio-sim/LightGlue-ONNX v2.0
+//   superpoint_lightglue_pipeline.onnx
+//   Input : [2,1,H,W]
+//   Output: keypoints [2,K,2], matches [M,3], scores [M]
+// =====================================================
+const CONTAINER_RANSAC = {
+  modelUrl: 'https://github.com/fabio-sim/LightGlue-ONNX/releases/download/v2.0/superpoint_lightglue_pipeline.onnx',
+  ortBase: 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.22.0/dist/',
+  inputSize: 512,
+
+  minRawMatches: 10,
+  minInliers: 8,
+  minInlierRatio: 0.28,
+  ransacThrPx: 7.0,
+
+  minProjectedAreaRatio: 0.003,
+  maxProjectedAreaRatio: 0.72,
+  maxCornerMarginRatio: 0.18,
+
+  cropPadRatio: 0.10
+};
+
+let lightGlueSessionV36 = null;
+
+function polygonAreaV36(pts){
+  let a=0;
+  for(let i=0;i<pts.length;i++){
+    const p=pts[i],q=pts[(i+1)%pts.length];
+    a += p.x*q.y-q.x*p.y;
+  }
+  return Math.abs(a)/2;
 }
-function v36TensorFromImage(img,size){
-  const c=v36Canvas(img,size,size),d=c.getContext('2d',{willReadFrequently:true}).getImageData(0,0,size,size).data;
-  const out=new Float32Array(3*size*size),mean=[.485,.456,.406],std=[.229,.224,.225],ss=size*size;
-  for(let p=0;p<ss;p++){const j=p*4;out[p]=(d[j]/255-mean[0])/std[0];out[ss+p]=(d[j+1]/255-mean[1])/std[1];out[2*ss+p]=(d[j+2]/255-mean[2])/std[2];}
-  return out;
+
+function makeLetterboxGrayV36(img,size){
+  const canvas=document.createElement('canvas');
+  canvas.width=size; canvas.height=size;
+  const ctx=canvas.getContext('2d',{willReadFrequently:true});
+  ctx.fillStyle='#000';
+  ctx.fillRect(0,0,size,size);
+
+  const s=Math.min(size/img.width,size/img.height);
+  const w=Math.max(1,Math.round(img.width*s));
+  const h=Math.max(1,Math.round(img.height*s));
+  const ox=Math.round((size-w)/2);
+  const oy=Math.round((size-h)/2);
+  ctx.drawImage(img,0,0,img.width,img.height,ox,oy,w,h);
+
+  const rgba=ctx.getImageData(0,0,size,size).data;
+  const gray=new Float32Array(size*size);
+  for(let i=0,p=0;i<rgba.length;i+=4,p++){
+    // SuperPoint input: grayscale [0,1].
+    gray[p]=(0.299*rgba[i]+0.587*rgba[i+1]+0.114*rgba[i+2])/255;
+  }
+  return {canvas,data:gray,scale:s,ox,oy,w,h,size};
 }
-async function ensureDinoV36(){
-  if(dinoSessionV36)return true;
-  if(!window.ort){log('ONNX Runtime読込失敗。ネット接続を確認してください。');return false;}
+
+function modelPointToImageV36(x,y,meta,img){
+  return {
+    x:(x-meta.ox)/meta.scale,
+    y:(y-meta.oy)/meta.scale
+  };
+}
+
+function clampPointV36(p,img){
+  return {
+    x:Math.max(-img.width,Math.min(img.width*2,p.x)),
+    y:Math.max(-img.height,Math.min(img.height*2,p.y))
+  };
+}
+
+async function ensureLightGlueV36(){
+  if(lightGlueSessionV36) return true;
+  if(!window.ort){
+    log('ONNX Runtime読込失敗。ネット接続を確認してください。');
+    return false;
+  }
   try{
     ort.env.wasm.wasmPaths=CONTAINER_RANSAC.ortBase;
     ort.env.wasm.numThreads=1;
-    log('DINOv2 Small INT8 モデル読込中... 約24MB');
-    dinoSessionV36=await ort.InferenceSession.create(CONTAINER_RANSAC.modelUrl,{executionProviders:['wasm'],graphOptimizationLevel:'all'});
-    log('DINOモデル読込OK');
+    log('SuperPoint + LightGlue モデル読込中...');
+    lightGlueSessionV36=await ort.InferenceSession.create(
+      CONTAINER_RANSAC.modelUrl,
+      {executionProviders:['wasm'],graphOptimizationLevel:'all'}
+    );
+    log('SuperPoint + LightGlue モデル読込OK');
     return true;
-  }catch(e){console.error(e);log('DINOモデル読込失敗: '+e.message);return false;}
-}
-function chooseDinoOutputV36(outputs){
-  const arr=Object.values(outputs||{});
-  if(!arr.length)throw new Error('DINO出力なし');
-  const tok=arr.find(t=>t?.dims?.length===3 && t.dims[t.dims.length-1]===384);
-  if(tok)return tok;
-  const pool=arr.find(t=>t?.dims?.length===2 && t.dims[t.dims.length-1]===384);
-  return pool||arr[0];
-}
-async function inferDinoV36(img,size){
-  const ready=await ensureDinoV36();if(!ready)throw new Error('DINO利用不可');
-  const inputName=dinoSessionV36.inputNames[0],feeds={};
-  feeds[inputName]=new ort.Tensor('float32',v36TensorFromImage(img,size),[1,3,size,size]);
-  const o=await dinoSessionV36.run(feeds);
-  return chooseDinoOutputV36(o);
-}
-async function inferDinoAutoV36(img){
-  try{return {tensor:await inferDinoV36(img,CONTAINER_RANSAC.preferredInput),size:CONTAINER_RANSAC.preferredInput};}
-  catch(e){
-    console.warn('518 inference fallback to 224',e);
-    return {tensor:await inferDinoV36(img,CONTAINER_RANSAC.fallbackInput),size:CONTAINER_RANSAC.fallbackInput};
+  }catch(e){
+    console.error(e);
+    log('LightGlueモデル読込失敗: '+e.message);
+    return false;
   }
-}
-function tokenMatrixV36(t){
-  const dims=t.dims||[],data=t.data;
-  if(dims.length===3){
-    const N=dims[1],C=dims[2],start=N>1?1:0,rows=[];
-    for(let n=start;n<N;n++){const a=new Float32Array(C);for(let c=0;c<C;c++)a[c]=data[n*C+c];rows.push(v36Norm(a));}
-    return rows;
-  }
-  if(dims.length===2){
-    const C=dims[1],a=new Float32Array(C);for(let c=0;c<C;c++)a[c]=data[c];return [v36Norm(a)];
-  }
-  throw new Error('DINO出力shape未対応: '+JSON.stringify(dims));
-}
-function meanTokenV36(tokens){
-  const C=tokens[0].length,o=new Float32Array(C);
-  for(const t of tokens)for(let c=0;c<C;c++)o[c]+=t[c];
-  for(let c=0;c<C;c++)o[c]/=tokens.length;
-  return v36Norm(o);
-}
-async function getMasterDinoV36(){
-  const key=(currentPart?.partNo||'')+'|'+masterImg.width+'x'+masterImg.height;
-  if(masterDinoCacheV36?.key===key)return masterDinoCacheV36;
-  log('MasterをDINO特徴化中...');
-  const r=await inferDinoAutoV36(masterImg),tokens=tokenMatrixV36(r.tensor),mean=meanTokenV36(tokens);
-  masterDinoCacheV36={key,tokens,mean,size:r.size,aspect:masterImg.width/Math.max(1,masterImg.height)};
-  return masterDinoCacheV36;
-}
-function sceneHeatV36(sceneTokens,masterTokens){
-  // 各Scene patchがMasterのどれかの局所特徴にどれだけ似るか
-  const h=new Float32Array(sceneTokens.length);
-  const stride=Math.max(1,Math.floor(masterTokens.length/96)); // master最大約96 tokenを比較
-  for(let i=0;i<sceneTokens.length;i++){
-    let best=-1;
-    for(let j=0;j<masterTokens.length;j+=stride)best=Math.max(best,v36Cos(sceneTokens[i],masterTokens[j]));
-    h[i]=best;
-  }
-  return h;
-}
-function peaksToCandidatesV36(heat,grid,img,aspect){
-  const ids=[...heat.keys()].sort((a,b)=>heat[b]-heat[a]).slice(0,CONTAINER_RANSAC.topPeaks);
-  const raw=[];
-  for(const id of ids){
-    const gy=Math.floor(id/grid),gx=id%grid,cx=(gx+.5)/grid*img.width,cy=(gy+.5)/grid*img.height;
-    for(const sr of CONTAINER_RANSAC.candidateScales){
-      const base=Math.min(img.width,img.height)*sr;let w,h;
-      if(aspect>=1){h=base;w=base*aspect;}else{w=base;h=base/Math.max(.1,aspect);}
-      if(w>img.width||h>img.height)continue;
-      const x=Math.max(0,Math.min(img.width-w,cx-w/2)),y=Math.max(0,Math.min(img.height-h,cy-h/2));
-      raw.push({x:Math.round(x),y:Math.round(y),w:Math.round(w),h:Math.round(h),score:heat[id]});
-    }
-  }
-  raw.sort((a,b)=>b.score-a.score);const kept=[];
-  for(const c of raw){if(kept.every(k=>v36Iou(c,k)<CONTAINER_RANSAC.nmsIou))kept.push(c);if(kept.length>=24)break;}
-  return kept;
-}
-function ransacCropV36(master,scene,c){
-  const cc=document.createElement('canvas');cc.width=c.w;cc.height=c.h;cc.getContext('2d').drawImage(scene,c.x,c.y,c.w,c.h,0,0,c.w,c.h);
-  let m=null,i=null,H=null;
-  try{
-    m=matFromImage(master,CONTAINER_RANSAC.masterMaxW);i=matFromImage(cc,CONTAINER_RANSAC.sceneMaxW);
-    const mt=detectAndMatch(m,i,CONTAINER_RANSAC.features,CONTAINER_RANSAC.maxMatches,CONTAINER_RANSAC.ransacThr);H=mt.H;
-    const ratio=mt.inliers/Math.max(1,mt.total),ok=mt.inliers>=CONTAINER_RANSAC.minInliers&&ratio>=CONTAINER_RANSAC.minRatio;
-    return {...c,inliers:mt.inliers,total:mt.total,ratio,ok,combined:c.score+(ok?.30:0)+Math.min(.18,ratio*.18)};
-  }catch(e){return {...c,inliers:0,total:0,ratio:0,ok:false,combined:c.score,error:e.message};}
-  finally{try{H?.delete();}catch(_){}try{m?.src?.delete();m?.gray?.delete();i?.src?.delete();i?.gray?.delete();}catch(_){}}
 }
 
-function drawBestCandidateMainV36(img,best){
-  if(!img||!best)return;
+function tensorByShapeV36(outputs,predicate){
+  for(const [name,t] of Object.entries(outputs||{})){
+    if(t && predicate(t.dims||[],t,name)) return t;
+  }
+  return null;
+}
+
+function asNumberV36(v){
+  return typeof v==='bigint' ? Number(v) : Number(v);
+}
+
+async function runLightGluePairV36(master,scene){
+  const ready=await ensureLightGlueV36();
+  if(!ready) throw new Error('LightGlueモデルを使用できません');
+
+  const S=CONTAINER_RANSAC.inputSize;
+  const m=makeLetterboxGrayV36(master,S);
+  const s=makeLetterboxGrayV36(scene,S);
+
+  // [Master, Scene] = [2,1,S,S]
+  const plane=S*S;
+  const batch=new Float32Array(2*plane);
+  batch.set(m.data,0);
+  batch.set(s.data,plane);
+
+  const inputName=lightGlueSessionV36.inputNames[0];
+  const feeds={};
+  feeds[inputName]=new ort.Tensor('float32',batch,[2,1,S,S]);
+
+  const outputs=await lightGlueSessionV36.run(feeds);
+
+  // v2 pipeline: keypoints [2,K,2], matches [M,3], scores [M]
+  const keyT=tensorByShapeV36(outputs,d=>d.length===3 && d[0]===2 && d[2]===2);
+  const matchT=tensorByShapeV36(outputs,d=>d.length===2 && d[1]===3);
+  const scoreT=tensorByShapeV36(outputs,d=>d.length===1);
+
+  if(!keyT) throw new Error('LightGlue keypoints出力を認識できません');
+  if(!matchT) throw new Error('LightGlue matches出力を認識できません');
+
+  const K=keyT.dims[1];
+  const kd=keyT.data;
+  const md=matchT.data;
+  const M=matchT.dims[0];
+
+  const masterPts=[];
+  const scenePts=[];
+  const scores=[];
+
+  for(let r=0;r<M;r++){
+    const base=r*3;
+    const batchId=asNumberV36(md[base]);
+    const i0=asNumberV36(md[base+1]);
+    const i1=asNumberV36(md[base+2]);
+    if(batchId!==0) continue;
+    if(i0<0||i0>=K||i1<0||i1>=K) continue;
+
+    const k0=(0*K+i0)*2;
+    const k1=(1*K+i1)*2;
+
+    const pm=modelPointToImageV36(Number(kd[k0]),Number(kd[k0+1]),m,master);
+    const ps=modelPointToImageV36(Number(kd[k1]),Number(kd[k1+1]),s,scene);
+
+    // Letterbox外へ出たkeypointは無視。
+    if(pm.x<0||pm.y<0||pm.x>=master.width||pm.y>=master.height) continue;
+    if(ps.x<0||ps.y<0||ps.x>=scene.width||ps.y>=scene.height) continue;
+
+    masterPts.push(pm);
+    scenePts.push(ps);
+    if(scoreT && r<scoreT.data.length) scores.push(Number(scoreT.data[r]));
+  }
+
+  return {masterPts,scenePts,scores,rawMatches:M,keypointsPerImage:K};
+}
+
+function homographyFromMatchesV36(masterPts,scenePts){
+  if(masterPts.length<4) throw new Error('対応点が4点未満です');
+
+  const src=[];
+  const dst=[];
+  for(let i=0;i<masterPts.length;i++){
+    src.push(masterPts[i].x,masterPts[i].y);
+    dst.push(scenePts[i].x,scenePts[i].y);
+  }
+
+  const srcMat=cv.matFromArray(masterPts.length,1,cv.CV_32FC2,src);
+  const dstMat=cv.matFromArray(scenePts.length,1,cv.CV_32FC2,dst);
+  const mask=new cv.Mat();
+  let H=null;
+
+  try{
+    H=cv.findHomography(srcMat,dstMat,cv.RANSAC,CONTAINER_RANSAC.ransacThrPx,mask);
+    if(!H || H.empty()) throw new Error('LightGlue対応点からHomographyを計算できません');
+
+    let inliers=0;
+    for(let i=0;i<mask.rows;i++){
+      if(mask.ucharPtr(i)[0]) inliers++;
+    }
+    return {H,inliers,total:masterPts.length,ratio:inliers/Math.max(1,masterPts.length),mask:mask.clone()};
+  }finally{
+    srcMat.delete();
+    dstMat.delete();
+    mask.delete();
+  }
+}
+
+function projectMasterCornersV36(H,master){
+  const src=cv.matFromArray(4,1,cv.CV_32FC2,[
+    0,0,
+    master.width,0,
+    master.width,master.height,
+    0,master.height
+  ]);
+  const dst=new cv.Mat();
+  try{
+    cv.perspectiveTransform(src,dst,H);
+    const d=dst.data32F;
+    return [
+      {x:d[0],y:d[1]},
+      {x:d[2],y:d[3]},
+      {x:d[4],y:d[5]},
+      {x:d[6],y:d[7]}
+    ];
+  }finally{
+    src.delete();dst.delete();
+  }
+}
+
+function validateLightGlueCandidateV36(H,match,master,scene){
+  const corners=projectMasterCornersV36(H,master);
+  const finite=corners.every(p=>Number.isFinite(p.x)&&Number.isFinite(p.y));
+  const area=finite?polygonAreaV36(corners):0;
+  const areaRatio=area/Math.max(1,scene.width*scene.height);
+  const margin=Math.max(scene.width,scene.height)*CONTAINER_RANSAC.maxCornerMarginRatio;
+  const inLooseFrame=finite && corners.every(p=>
+    p.x>=-margin && p.y>=-margin &&
+    p.x<=scene.width+margin && p.y<=scene.height+margin
+  );
+
+  // 四辺が極端に潰れたHomographyを除外。
+  const lens=[];
+  for(let i=0;i<4;i++){
+    const a=corners[i],b=corners[(i+1)%4];
+    lens.push(Math.hypot(a.x-b.x,a.y-b.y));
+  }
+  const minSide=Math.min(...lens);
+  const maxSide=Math.max(...lens);
+  const sideOk=finite && minSide>8 && maxSide/Math.max(1,minSide)<30;
+
+  const ok=
+    match.total>=CONTAINER_RANSAC.minRawMatches &&
+    match.inliers>=CONTAINER_RANSAC.minInliers &&
+    match.ratio>=CONTAINER_RANSAC.minInlierRatio &&
+    areaRatio>=CONTAINER_RANSAC.minProjectedAreaRatio &&
+    areaRatio<=CONTAINER_RANSAC.maxProjectedAreaRatio &&
+    inLooseFrame &&
+    sideOk;
+
+  return {ok,corners,areaRatio,inLooseFrame,sideOk,lens};
+}
+
+function drawLightGlueCandidateMainV36(img,corners,ok,match){
   const c=$('viewCanvas'),ctx=c.getContext('2d');
   drawImageFit(c,img);
 
-  // drawImageFit と同じ contain 座標へ変換
   const fit=Math.min(c.width/img.width,c.height/img.height);
   const dw=img.width*fit,dh=img.height*fit;
   const ox=(c.width-dw)/2,oy=(c.height-dh)/2;
 
-  const x=ox+best.x*fit;
-  const y=oy+best.y*fit;
-  const w=best.w*fit;
-  const h=best.h*fit;
-
   ctx.save();
-  const confirmed=!!best.ok;
-  ctx.strokeStyle=confirmed?'#35f078':'#ffd84d';
-  ctx.lineWidth=Math.max(4,Math.min(c.width,c.height)/180);
-  ctx.setLineDash(confirmed?[]:[14,8]);
-  ctx.strokeRect(x,y,w,h);
+  ctx.strokeStyle=ok?'#35f078':'#ffd84d';
+  ctx.lineWidth=Math.max(4,Math.min(c.width,c.height)/170);
+  ctx.setLineDash(ok?[]:[14,8]);
 
-  const label=`DINO 1位  ${best.score.toFixed(3)}  RANSAC ${best.inliers||0}/${best.total||0}`;
+  ctx.beginPath();
+  corners.forEach((p,i)=>{
+    const x=ox+p.x*fit,y=oy+p.y*fit;
+    if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+  });
+  ctx.closePath();
+  ctx.stroke();
+
+  const label=`LightGlue  ${match.inliers}/${match.total}  ${(match.ratio*100).toFixed(1)}%`;
   ctx.setLineDash([]);
   ctx.font='bold 17px system-ui,-apple-system,"Segoe UI",sans-serif';
-  const pad=7;
-  const tw=ctx.measureText(label).width+pad*2;
-  const th=28;
-  const lx=Math.max(4,Math.min(c.width-tw-4,x));
-  const ly=(y-th-5>=4)?y-th-5:Math.min(c.height-th-4,y+5);
-  ctx.fillStyle='rgba(0,0,0,.78)';
+  const pad=7,tw=ctx.measureText(label).width+pad*2,th=28;
+  const first=corners[0];
+  const lx=Math.max(4,Math.min(c.width-tw-4,ox+first.x*fit));
+  const rawY=oy+first.y*fit-th-5;
+  const ly=rawY>=4?rawY:4;
+  ctx.fillStyle='rgba(0,0,0,.80)';
   ctx.fillRect(lx,ly,tw,th);
-  ctx.fillStyle=confirmed?'#35f078':'#ffd84d';
+  ctx.fillStyle=ok?'#35f078':'#ffd84d';
   ctx.fillText(label,lx+pad,ly+19);
   ctx.restore();
 }
 
-function drawDenseDebugV36(img,heat,grid,ranked,best){
-  const c=$('debugCanvas'),ctx=c.getContext('2d');c.width=img.width;c.height=img.height;ctx.drawImage(img,0,0);
-  let lo=Math.min(...heat),hi=Math.max(...heat),den=Math.max(1e-6,hi-lo);
-  ctx.save();
-  for(let y=0;y<grid;y++)for(let x=0;x<grid;x++){const id=y*grid+x;if(id>=heat.length)continue;const t=(heat[id]-lo)/den;ctx.fillStyle=`rgba(255,${Math.round(220*(1-t))},0,${.03+.22*t})`;ctx.fillRect(x/grid*c.width,y/grid*c.height,c.width/grid+1,c.height/grid+1);}
-  for(let i=0;i<Math.min(8,ranked.length);i++){const r=ranked[i];ctx.strokeStyle=r===best?'#35f078':'#ffd84d';ctx.lineWidth=r===best?7:3;ctx.strokeRect(r.x,r.y,r.w,r.h);ctx.fillStyle='rgba(0,0,0,.72)';ctx.fillRect(r.x,r.y-25,250,25);ctx.fillStyle='#fff';ctx.font='bold 18px system-ui';ctx.fillText(`#${i+1} D ${r.score.toFixed(3)} R ${r.inliers}/${r.total}`,r.x+4,r.y-6);}
-  ctx.restore();
+function drawLightGlueDebugV36(img,masterPts,scenePts,mask,corners){
+  try{
+    const c=$('debugCanvas'),ctx=c.getContext('2d');
+    c.width=img.width;c.height=img.height;
+    ctx.drawImage(img,0,0,c.width,c.height);
+    ctx.save();
+
+    // Scene側のinlier点だけ表示。
+    ctx.fillStyle='#35dcff';
+    for(let i=0;i<scenePts.length;i++){
+      if(mask && i<mask.rows && !mask.ucharPtr(i)[0]) continue;
+      const p=scenePts[i];
+      ctx.beginPath();ctx.arc(p.x,p.y,4,0,Math.PI*2);ctx.fill();
+    }
+
+    ctx.strokeStyle='#35f078';
+    ctx.lineWidth=Math.max(4,c.width/300);
+    ctx.beginPath();
+    corners.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));
+    ctx.closePath();ctx.stroke();
+    ctx.restore();
+  }catch(e){console.warn('drawLightGlueDebugV36',e);}
 }
-function cropBestV36(img,b){
-  const p=Math.round(Math.max(b.w,b.h)*CONTAINER_RANSAC.cropPadRatio),x1=Math.max(0,b.x-p),y1=Math.max(0,b.y-p),x2=Math.min(img.width,b.x+b.w+p),y2=Math.min(img.height,b.y+b.h+p);
-  const c=document.createElement('canvas');c.width=x2-x1;c.height=y2-y1;c.getContext('2d').drawImage(img,x1,y1,x2-x1,y2-y1,0,0,c.width,c.height);
-  return new Promise((res,rej)=>{const im=new Image();im.onload=()=>res(im);im.onerror=rej;im.src=c.toDataURL('image/jpeg',.95);});
+
+function candidateCropFromPolygonV36(img,corners){
+  let minX=Math.min(...corners.map(p=>p.x));
+  let minY=Math.min(...corners.map(p=>p.y));
+  let maxX=Math.max(...corners.map(p=>p.x));
+  let maxY=Math.max(...corners.map(p=>p.y));
+
+  const w=maxX-minX,h=maxY-minY;
+  const pad=Math.max(w,h)*CONTAINER_RANSAC.cropPadRatio;
+  minX=Math.max(0,Math.floor(minX-pad));
+  minY=Math.max(0,Math.floor(minY-pad));
+  maxX=Math.min(img.width,Math.ceil(maxX+pad));
+  maxY=Math.min(img.height,Math.ceil(maxY+pad));
+
+  if(maxX-minX<20||maxY-minY<20) throw new Error('LightGlue候補Cropが小さすぎます');
+
+  const cc=document.createElement('canvas');
+  cc.width=maxX-minX;cc.height=maxY-minY;
+  cc.getContext('2d').drawImage(
+    img,minX,minY,maxX-minX,maxY-minY,
+    0,0,cc.width,cc.height
+  );
+
+  return new Promise((res,rej)=>{
+    const im=new Image();
+    im.onload=()=>res(im);im.onerror=rej;
+    im.src=cc.toDataURL('image/jpeg',0.95);
+  });
 }
+
 async function captureContainerOne(){
-  const v=$('captureVideo'),c=$('captureCanvas');if(!v||v.readyState<2){setCaptureStatus('カメラ準備中です');return;}
-  try{setCaptureStatus('DINO Dense探索用に撮影中...');c.width=v.videoWidth||1920;c.height=v.videoHeight||1080;c.getContext('2d').drawImage(v,0,0,c.width,c.height);inspectImg=await new Promise((res,rej)=>{const im=new Image();im.onload=()=>res(im);im.onerror=rej;im.src=c.toDataURL('image/jpeg',.95);});await stopInspectCamera(true);drawImageFit($('viewCanvas'),inspectImg);$('empty').style.display='none';await runInspectContainerOne();}
-  catch(e){console.error(e);setCaptureStatus('DINO撮影エラー: '+e.message);}
+  const v=$('captureVideo'),c=$('captureCanvas');
+  if(!v||v.readyState<2){setCaptureStatus('カメラ準備中です');return;}
+  try{
+    setCaptureStatus('SuperPoint + LightGlue 探索用に撮影中...');
+    c.width=v.videoWidth||1920;c.height=v.videoHeight||1080;
+    c.getContext('2d').drawImage(v,0,0,c.width,c.height);
+    inspectImg=await new Promise((res,rej)=>{
+      const im=new Image();im.onload=()=>res(im);im.onerror=rej;
+      im.src=c.toDataURL('image/jpeg',0.95);
+    });
+    await stopInspectCamera(true);
+    drawImageFit($('viewCanvas'),inspectImg);
+    $('empty').style.display='none';
+    await runInspectContainerOne();
+  }catch(e){
+    console.error(e);
+    setCaptureStatus('LightGlue撮影エラー: '+e.message);
+  }
 }
+
 async function runInspectContainerOne(){
   if(!masterImg||!inspectImg){alert('品番と写真を確認してください');return}
-  hideResultAction();lastInspectionRecord=null;okLoggedForCurrent=false;ngLoggedForCurrent=false;logSending=false;setLoading(true);setBanner('WAIT');
-  try{
-    const ready=await ensureDinoV36();if(!ready)return;
-    const master=await getMasterDinoV36();
-    log('集合写真をDINO Dense特徴化中...');
-    const sr=await inferDinoAutoV36(inspectImg),sceneTokens=tokenMatrixV36(sr.tensor);
-    const grid=Math.round(Math.sqrt(sceneTokens.length));
-    if(grid*grid!==sceneTokens.length)throw new Error('patch grid判定失敗: '+sceneTokens.length);
-    log('DINO局所類似ヒートマップ作成中...');
-    const heat=sceneHeatV36(sceneTokens,master.tokens),cands=peaksToCandidatesV36(heat,grid,inspectImg,master.aspect);
-    if(!cands.length)throw new Error('DINO候補なし');
-    log('上位候補をORB/RANSACで確認中...');
-    const ranked=cands.slice(0,CONTAINER_RANSAC.rerankK).map(c=>ransacCropV36(masterImg,inspectImg,c)).sort((a,b)=>b.combined-a.combined);
-    const best=ranked.find(r=>r.ok)||ranked[0];
 
-    // 通常画面には1位候補だけ表示。
-    // RANSAC未確定=黄色点線、確定=緑実線。
-    drawBestCandidateMainV36(inspectImg,best);
-    drawDenseDebugV36(inspectImg,heat,grid,ranked,best);
-    DEBUG.image={...(DEBUG.image||{}),mode:'v36-dino-dense',dinoInput:sr.size,grid,candidateCount:cands.length,bestDino:best.score,bestBox:{x:best.x,y:best.y,w:best.w,h:best.h}};
-    DEBUG.align={mode:'v36-dino-ransac',inliers:best.inliers,total:best.total,ratio:best.ratio,candidateOk:best.ok};renderDebug();
-    if(!best.ok){
-      setBanner('WAIT');setStat('alignStat',`${best.inliers}/${best.total}`,'waitText');setStat('outerStat','--','waitText');setStat('pointStat','判定不能','waitText');lastInspectionRecord=null;hideResultAction();
-      log(`DINO候補は見つかりましたがRANSAC未確定
-DINO類似度: ${best.score.toFixed(3)}
-候補位置: x=${best.x}, y=${best.y}, w=${best.w}, h=${best.h}
-RANSAC: ${best.inliers}/${best.total} (${(best.ratio*100).toFixed(1)}%)
-※黄色枠がDINO 1位候補です。
+  hideResultAction();
+  lastInspectionRecord=null;
+  okLoggedForCurrent=false;
+  ngLoggedForCurrent=false;
+  logSending=false;
+  setLoading(true);
+  setBanner('WAIT');
+
+  let H=null, inlierMask=null;
+  try{
+    log('SuperPoint + LightGlue で Master ↔ 集合写真を直接照合中...');
+
+    const pair=await runLightGluePairV36(masterImg,inspectImg);
+    if(pair.masterPts.length<CONTAINER_RANSAC.minRawMatches){
+      throw new Error(`LightGlue対応点不足: ${pair.masterPts.length}`);
+    }
+
+    const hm=homographyFromMatchesV36(pair.masterPts,pair.scenePts);
+    H=hm.H;
+    inlierMask=hm.mask;
+
+    const valid=validateLightGlueCandidateV36(H,hm,masterImg,inspectImg);
+
+    // 通常画面には「推定された1個体」だけ表示。
+    drawLightGlueCandidateMainV36(inspectImg,valid.corners,valid.ok,hm);
+    drawLightGlueDebugV36(inspectImg,pair.masterPts,pair.scenePts,inlierMask,valid.corners);
+
+    DEBUG.image={
+      ...(DEBUG.image||{}),
+      mode:'v36-superpoint-lightglue',
+      modelInput:CONTAINER_RANSAC.inputSize,
+      keypointsPerImage:pair.keypointsPerImage,
+      rawModelMatches:pair.rawMatches,
+      usableMatches:pair.masterPts.length,
+      projectedAreaRatio:valid.areaRatio
+    };
+    const hd=H.data64F||H.data32F;
+    DEBUG.align={
+      mode:'v36-superpoint-lightglue-ransac',
+      inliers:hm.inliers,total:hm.total,ratio:hm.ratio,
+      candidateOk:valid.ok,
+      areaRatio:valid.areaRatio,
+      inLooseFrame:valid.inLooseFrame,
+      sideOk:valid.sideOk,
+      corners:valid.corners,
+      H:[hd[0],hd[1],hd[2],hd[3],hd[4],hd[5],hd[6],hd[7],hd[8]]
+    };
+    renderDebug();
+
+    if(!valid.ok){
+      setBanner('WAIT');
+      setStat('alignStat',`${hm.inliers}/${hm.total}`,'waitText');
+      setStat('outerStat','--','waitText');
+      setStat('pointStat','判定不能','waitText');
+      lastInspectionRecord=null;
+      hideResultAction();
+
+      log(`LightGlue候補は見つかりましたがRANSAC未確定
+対応点: ${hm.inliers}/${hm.total} (${(hm.ratio*100).toFixed(1)}%)
+候補面積: ${(valid.areaRatio*100).toFixed(1)}%
+※黄色枠が推定された1個体です。
 ※OK/NG判定しません。`);
       return;
     }
-    inspectImg=await cropBestV36(inspectImg,best);drawImageFit($('viewCanvas'),inspectImg);
+
+    // Green polygon is the geometrically validated instance.
+    const originalScene=inspectImg;
+    inspectImg=await candidateCropFromPolygonV36(originalScene,valid.corners);
+    drawImageFit($('viewCanvas'),inspectImg);
+
+    // Final judgement remains the v26-derived safe runInspect.
     await runInspect();
+
     const old=$('status')?.textContent||'';
-    log(`v36 DINO候補確定
-DINO類似度: ${best.score.toFixed(3)}
-候補RANSAC: ${best.inliers}/${best.total}
+    log(`SuperPoint + LightGlue 個体確定
+LightGlue/RANSAC: ${hm.inliers}/${hm.total} (${(hm.ratio*100).toFixed(1)}%)
+候補面積: ${(valid.areaRatio*100).toFixed(1)}%
 
 ${old}`);
   }catch(e){
-    console.error(e);setBanner('WAIT');setStat('alignStat','--','waitText');setStat('outerStat','--','waitText');setStat('pointStat','判定不能','waitText');lastInspectionRecord=null;hideResultAction();log('v36 DINO探索エラー: '+e.message);dbg('v36 DINO error',{message:e.message,stack:e.stack});renderDebug();
-  }finally{setLoading(false);}
+    console.error(e);
+    setBanner('WAIT');
+    setStat('alignStat','--','waitText');
+    setStat('outerStat','--','waitText');
+    setStat('pointStat','判定不能','waitText');
+    lastInspectionRecord=null;
+    hideResultAction();
+    log('v36 LightGlue探索エラー: '+e.message);
+    dbg('v36 LightGlue error',{message:e.message,stack:e.stack});
+    renderDebug();
+  }finally{
+    try{H?.delete();}catch(_){}
+    try{inlierMask?.delete();}catch(_){}
+    setLoading(false);
+  }
 }
 
 async function runInspect(){
