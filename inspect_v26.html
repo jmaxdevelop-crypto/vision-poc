@@ -3,11 +3,10 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>ぴろえんす Inspect v26 Align Gate Fix</title>
+<title>J-MAX Inspect v53</title>
 <style>
 :root{--bg:#06101f;--panel:rgba(5,12,26,.88);--txt:#eef6ff;--muted:#9fb4d9;--green:#35f078;--red:#ff4b5f;--yellow:#ffd84d;--cyan:#35dcff;--line:#29436d}
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;width:100%;min-height:100%;background:#000;color:var(--txt);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;overflow-x:hidden;overflow-y:auto}.app{position:relative;width:100%;height:100dvh;min-height:100vh;background:#000;overflow:hidden}.topbar{position:absolute;z-index:10;left:0;right:0;top:0;padding:10px max(10px,env(safe-area-inset-left)) 10px max(10px,env(safe-area-inset-right));background:linear-gradient(180deg,rgba(0,0,0,.88),rgba(0,0,0,.30),transparent);display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}.brand{font-weight:900;letter-spacing:.06em;font-size:14px;color:#dff8ff}.selectRow{display:flex;gap:8px;align-items:center}.selectRow select{flex:1;min-width:0;padding:11px 12px;border-radius:12px;border:1px solid #31517e;background:#071226;color:var(--txt);font-size:15px}.selectRow button,.cameraBtn{border:0;border-radius:12px;padding:11px 14px;background:linear-gradient(90deg,#2aa7ff,#39e0ff);font-weight:900;color:#001225;font-size:14px}.cameraBtn{white-space:nowrap}.photoInput{display:none}.canvasWrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#020711}canvas{width:100%;height:100%;object-fit:contain;display:block}.empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;color:#aabde0;padding:24px;font-size:15px;line-height:1.7}.resultBanner{position:absolute;z-index:12;left:12px;right:12px;top:88px;border-radius:18px;padding:18px 14px;text-align:center;font-size:72px;font-weight:1000;letter-spacing:.14em;line-height:1;box-shadow:0 18px 40px rgba(0,0,0,.45);display:none}.resultBanner::before{content:'総合判定';display:block;font-size:13px;letter-spacing:.16em;margin-bottom:8px;color:#d9e9ff}.resultBanner.ok{display:block;background:rgba(9,65,37,.92);border:3px solid var(--green);color:var(--green)}.resultBanner.ng{display:block;background:rgba(73,18,31,.94);border:3px solid var(--red);color:var(--red)}.bottom{position:absolute;z-index:10;left:0;right:0;bottom:0;padding:10px max(10px,env(safe-area-inset-left)) max(12px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-right));background:linear-gradient(0deg,rgba(0,0,0,.92),rgba(0,0,0,.46),transparent)}.status{background:rgba(7,18,38,.86);border:1px solid var(--line);border-radius:14px;padding:10px 12px;color:#c6d8ff;font-size:12px;line-height:1.45;white-space:pre-line;max-height:160px;overflow:auto}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:7px}.stat{background:rgba(7,18,38,.82);border:1px solid var(--line);border-radius:12px;padding:8px;text-align:center}.stat small{display:block;color:#aabde0;font-size:10px}.stat b{display:block;font-size:18px;margin-top:2px}.okText{color:var(--green)}.ngText{color:var(--red)}.waitText{color:var(--yellow)}.loading{position:absolute;z-index:15;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:#dff8ff}.loading.on{display:flex}.debugPanel{min-height:100dvh;background:#050b16;padding:18px max(14px,env(safe-area-inset-left)) max(28px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-right));border-top:1px solid #20385f}.debugHead{display:flex;align-items:end;justify-content:space-between;gap:10px;margin-bottom:12px}.debugHead h2{margin:0;font-size:20px;letter-spacing:.08em}.debugHint{color:#9fb4d9;font-size:12px}.debugGrid{display:grid;grid-template-columns:1fr;gap:10px}.debugCard{background:rgba(7,18,38,.88);border:1px solid var(--line);border-radius:14px;padding:12px}.debugCard h3{margin:0 0 8px;font-size:14px;color:#dff8ff}.debugPre{margin:0;white-space:pre-wrap;word-break:break-word;color:#c6d8ff;font-size:12px;line-height:1.5}.debugCanvasWrap{background:#020711;border:1px solid #20385f;border-radius:12px;overflow:hidden}.debugCanvasWrap canvas{width:100%;height:auto;display:block}.debugBadge{display:inline-block;padding:3px 8px;border-radius:999px;border:1px solid #31517e;color:#9fb4d9;font-size:11px;margin-left:6px}.barcodeInput{min-width:180px;max-width:260px;padding:11px 12px;border-radius:12px;border:1px solid #31517e;background:#071226;color:var(--txt);font-size:15px}.scanOverlay{position:fixed;z-index:30;inset:0;background:#020711;display:none;align-items:center;justify-content:center;flex-direction:column;padding:max(18px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) max(18px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left));gap:12px}.scanOverlay.on{display:flex}.scanBox{position:relative;width:min(92vw,720px);aspect-ratio:4/3;border:2px solid #31517e;border-radius:18px;overflow:hidden;background:#000;box-shadow:0 20px 60px #000a}.scanBox video,.scanBox canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.scanGuide{position:absolute;left:50%;top:50%;width:58%;height:36%;transform:translate(-50%,-50%);border:4px solid var(--cyan);border-radius:16px;box-shadow:0 0 0 999px rgba(0,0,0,.28);pointer-events:none}.scanTitle{font-size:20px;font-weight:900;color:#dff8ff}.scanStatus{color:#c6d8ff;font-size:14px;text-align:center;min-height:1.6em;white-space:pre-line}.scanClose{width:min(92vw,360px);border:0;border-radius:14px;padding:13px 18px;background:#26395f;color:#eef6ff;font-weight:900;font-size:16px}.qrTorchBtn{width:min(92vw,360px);border:0;border-radius:14px;padding:13px 18px;background:#ffd84d;color:#111;font-weight:900;font-size:16px}.qrTorchBtn.off{background:#26395f;color:#eef6ff}.captureButtons{display:flex;gap:10px;width:min(92vw,520px)}.captureButtons button{flex:1;border:0;border-radius:14px;padding:14px 18px;font-weight:900;font-size:16px}.captureShutter{background:linear-gradient(90deg,#2aa7ff,#39e0ff);color:#001225}.captureClose{background:#26395f;color:#eef6ff}.containerRansacBtn{background:linear-gradient(90deg,#8f7cff,#39e0ff)!important;color:#06101f!important}.focusHint{position:absolute;right:10px;bottom:10px;background:rgba(0,0,0,.6);color:#fff;border-radius:999px;padding:5px 9px;font-size:11px;pointer-events:none}
-@media(max-width:480px){.topbar{grid-template-columns:1fr}.resultBanner{font-size:58px;top:118px}.brand{display:none}.selectRow select{font-size:14px}.barcodeInput{min-width:0;max-width:none;width:100%;font-size:14px}.stats{grid-template-columns:repeat(3,1fr)}.stat b{font-size:16px}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;width:100%;min-height:100%;background:#000;color:var(--txt);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;overflow-x:hidden;overflow-y:auto}.app{position:relative;width:100%;height:100dvh;min-height:100vh;background:#000;overflow:hidden}.topbar{position:absolute;z-index:10;left:0;right:0;top:0;padding:10px max(10px,env(safe-area-inset-left)) 10px max(10px,env(safe-area-inset-right));background:linear-gradient(180deg,rgba(0,0,0,.88),rgba(0,0,0,.30),transparent);display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}.brand{font-weight:900;letter-spacing:.06em;font-size:14px;color:#dff8ff}.selectRow{display:flex;gap:8px;align-items:center}.selectRow select{flex:1;min-width:0;padding:11px 12px;border-radius:12px;border:1px solid #31517e;background:#071226;color:var(--txt);font-size:15px}.selectRow button,.cameraBtn{border:0;border-radius:12px;padding:11px 14px;background:linear-gradient(90deg,#2aa7ff,#39e0ff);font-weight:900;color:#001225;font-size:14px}.cameraBtn{white-space:nowrap}.photoInput{display:none}.canvasWrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#020711}canvas{width:100%;height:100%;object-fit:contain;display:block}.empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;color:#aabde0;padding:24px;font-size:15px;line-height:1.7}.resultBanner{position:absolute;z-index:12;left:12px;right:12px;top:88px;border-radius:18px;padding:18px 14px;text-align:center;font-size:72px;font-weight:1000;letter-spacing:.14em;line-height:1;box-shadow:0 18px 40px rgba(0,0,0,.45);display:none}.resultBanner::before{content:'総合判定';display:block;font-size:13px;letter-spacing:.16em;margin-bottom:8px;color:#d9e9ff}.resultBanner.ok{display:block;background:rgba(9,65,37,.92);border:3px solid var(--green);color:var(--green)}.resultBanner.ng{display:block;background:rgba(73,18,31,.94);border:3px solid var(--red);color:var(--red)}.bottom{position:absolute;z-index:10;left:0;right:0;bottom:0;padding:10px max(10px,env(safe-area-inset-left)) max(12px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-right));background:linear-gradient(0deg,rgba(0,0,0,.92),rgba(0,0,0,.46),transparent)}.status{background:rgba(7,18,38,.86);border:1px solid var(--line);border-radius:14px;padding:10px 12px;color:#c6d8ff;font-size:12px;line-height:1.45;white-space:pre-line;max-height:160px;overflow:auto}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:7px}.stat{background:rgba(7,18,38,.82);border:1px solid var(--line);border-radius:12px;padding:8px;text-align:center}.stat small{display:block;color:#aabde0;font-size:10px}.stat b{display:block;font-size:18px;margin-top:2px}.okText{color:var(--green)}.ngText{color:var(--red)}.waitText{color:var(--yellow)}.loading{position:absolute;z-index:15;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:#dff8ff}.loading.on{display:flex}.debugPanel{min-height:100dvh;background:#050b16;padding:18px max(14px,env(safe-area-inset-left)) max(28px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-right));border-top:1px solid #20385f}.debugHead{display:flex;align-items:end;justify-content:space-between;gap:10px;margin-bottom:12px}.debugHead h2{margin:0;font-size:20px;letter-spacing:.08em}.debugHint{color:#9fb4d9;font-size:12px}.debugGrid{display:grid;grid-template-columns:1fr;gap:10px}.debugCard{background:rgba(7,18,38,.88);border:1px solid var(--line);border-radius:14px;padding:12px}.debugCard h3{margin:0 0 8px;font-size:14px;color:#dff8ff}.debugPre{margin:0;white-space:pre-wrap;word-break:break-word;color:#c6d8ff;font-size:12px;line-height:1.5}.debugCanvasWrap{background:#020711;border:1px solid #20385f;border-radius:12px;overflow:hidden}.debugCanvasWrap canvas{width:100%;height:auto;display:block}.debugBadge{display:inline-block;padding:3px 8px;border-radius:999px;border:1px solid #31517e;color:#9fb4d9;font-size:11px;margin-left:6px}.barcodeInput{min-width:180px;max-width:260px;padding:11px 12px;border-radius:12px;border:1px solid #31517e;background:#071226;color:var(--txt);font-size:15px}.scanOverlay{position:fixed;z-index:30;inset:0;background:#020711;display:none;align-items:center;justify-content:center;flex-direction:column;padding:max(18px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) max(18px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left));gap:12px}.scanOverlay.on{display:flex}.scanBox{position:relative;width:min(92vw,720px);aspect-ratio:4/3;border:2px solid #31517e;border-radius:18px;overflow:hidden;background:#000;box-shadow:0 20px 60px #000a}.scanBox video,.scanBox canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.scanGuide{position:absolute;left:50%;top:50%;width:min(64%,360px);aspect-ratio:1/1;height:auto;transform:translate(-50%,-50%);border:4px solid var(--cyan);border-radius:16px;box-shadow:0 0 0 999px rgba(0,0,0,.28);pointer-events:none}.scanTitle{font-size:20px;font-weight:900;color:#dff8ff}.scanStatus{color:#c6d8ff;font-size:14px;text-align:center;min-height:1.6em;white-space:pre-line}.scanClose{width:min(92vw,360px);border:0;border-radius:14px;padding:13px 18px;background:#26395f;color:#eef6ff;font-weight:900;font-size:16px}@media(max-width:480px){.topbar{grid-template-columns:1fr}.resultBanner{font-size:58px;top:118px}.brand{display:none}.selectRow select{font-size:14px}.barcodeInput{min-width:0;max-width:none;width:100%;font-size:14px}.stats{grid-template-columns:repeat(3,1fr)}.stat b{font-size:16px}}
 
 /* v18: iPhone向けに操作を1ボタン化 */
 .topbar{grid-template-columns:1fr}
@@ -40,9 +39,9 @@
 <body class="masterNotReady">
 <div class="app">
   <div class="topbar">
-    <div class="brand">ぴろえんす Inspect v20</div>
+    <div class="brand">J-MAX Inspect v53</div>
     <div class="selectRow">
-      <input id="barcodeInput" class="barcodeInput" type="text" autocomplete="off" inputmode="none" placeholder="バーコード/QR読取（USBリーダーはここへ）">
+      <input id="barcodeInput" class="barcodeInput" type="text" autocomplete="off" inputmode="none" placeholder="QR読取（手入力も可）">
       <select id="partSelect"><option>マスター読込中...</option></select>
       <button id="reloadBtn" type="button">更新</button>
       <button id="actionBtn" type="button">読取</button>
@@ -50,7 +49,7 @@
     </div>
   </div>
   <div class="canvasWrap"><canvas id="viewCanvas" width="1100" height="760"></canvas></div>
-  <div id="empty" class="empty">バーコード/QRを読み取ってください。<br>対応するマスターを自動で呼び出します。<br><small>テスト時はマスターを手動選択してもOK</small></div>
+  <div id="empty" class="empty">QRを読み取ってください。<br>対応するマスターを自動で呼び出します。<br><small>テスト時はマスターを手動選択してもOK</small></div>
   <div id="banner" class="resultBanner">WAIT</div>
   <div id="loading" class="loading">解析中...</div>
   <div class="bottom">
@@ -70,29 +69,16 @@
     </div>
   </div>
 </div>
-<div id="captureOverlay" class="scanOverlay">
-  <div class="scanTitle">現物撮影（対応端末はライト自動ON）</div>
-  <div id="captureBox" class="scanBox">
-    <video id="captureVideo" playsinline muted></video>
-    <canvas id="captureCanvas" width="1280" height="720" style="display:none"></canvas>
-    <div class="focusHint">画面タップ：ピント合わせ</div>
-  </div>
-  <div id="captureStatus" class="scanStatus">カメラ起動中...</div>
-  <div class="captureButtons">
-    <button id="captureShutterBtn" class="captureShutter" type="button">1個撮影して判定</button>
-    <button id="containerRansacBtn" class="containerRansacBtn" type="button">容器から1個探して判定 β</button>
-    <button id="captureCloseBtn" class="captureClose" type="button">閉じる</button>
-  </div>
-</div>
 <div id="scanOverlay" class="scanOverlay">
-  <div class="scanTitle">バーコード / QR 読取</div>
-  <div id="scanBox" class="scanBox">
+  <div class="scanTitle">QR 読取</div>
+  <div class="scanBox">
     <video id="scanVideo" playsinline muted></video>
     <canvas id="scanCanvas" width="640" height="480" style="display:none"></canvas>
     <div class="scanGuide"></div>
   </div>
   <div id="scanStatus" class="scanStatus">カメラ起動中...</div>
-  <button id="qrTorchBtn" class="qrTorchBtn" type="button">ライトOFF</button>
+  <input id="qrPhotoInput" class="photoInput" type="file" accept="image/*" capture="environment">
+  <button id="qrPhotoBtn" class="scanClose" type="button">小さいQRは写真で読む</button>
   <button id="scanCloseBtn" class="scanClose" type="button">閉じる</button>
 </div>
 <section id="debugPanel" class="debugPanel">
@@ -119,18 +105,19 @@
 // 例: const GAS_URL = 'https://script.google.com/macros/s/xxxxxxx/exec';
 // =====================================================
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbzhTwzLskVh0lRNegdW0FnmL-dedZ6LIps2NP9mRrXsPp0aC93ziLRAMUTEmzFiiU_3/exec'; // ←ここを今井さんのGAS URLに置き換え
-const INSPECT_VERSION = 'v26-align-gate-fix';
+const INSPECT_VERSION = 'v53-matrix-type-fix';
 
 // 固定設定：現場用なので画面には出さない
 const CONFIG = {
   edgeThr: 100,
   tol: 6,
-  maxW: 700,
-  features: 1500,      // 1500→2000
-  minInliers: 30,      // 30→15
-  minInlierRatio: 0.60,// 0.60→0.30
-  scaleMin: 0.80,      // 0.80→0.50
-  scaleMax: 1.25,      // 1.25→2.00
+  maxW: 1000,
+  features: 3000,      // 1500→2000
+  minInliers: 12,      // 30→15
+  minInlierRatio: 0.35,// 0.60→0.30
+  scaleMin: 0.65,      // 0.80→0.50
+  scaleMax: 1.50,
+  coarseMaxAngleDeg: 30,      // 1.25→2.00
   outerThr: 0.60,      // 6%→60%
   defaultPointThr: 0.50,
   holeMatchThr: 0.45,
@@ -234,7 +221,7 @@ function endInspectionToScanMode(){
   resetMasterState();
   const ps=$('partSelect'); if(ps) ps.value='';
   const bi=$('barcodeInput'); if(bi){ bi.value=''; setTimeout(()=>bi.focus(),80); }
-  log('次のバーコード/QRを読み取ってください。');
+  log('次のQRを読み取ってください。');
 }
 function updateActionState(){
   const ready=!!(currentPart&&masterImg);
@@ -562,289 +549,306 @@ function normalizePointsToImage(rawPoints,img){
 }
 
 
-
-// =====================================================
-// Android camera boost v2 / QR FAST RESCUE
-// - QR: rear camera + TORCH ON by default + OFF/ON button + up to 3x zoom + continuous AF + tap focus
-// - QR primary: ZXing continuous decode
-// - QR rescue: BarcodeDetector + jsQR at short intervals (full frame)
-// - QR glare rescue: request slight negative exposure compensation when supported
-// - Inspect photo: rear camera + torch ON when supported + tap focus
-// Unsupported constraints are ignored so PC/iPhone behavior is preserved.
-// =====================================================
-function sleepMs(ms){ return new Promise(r=>setTimeout(r,ms)); }
-async function getVideoTrackFromElement(video, tries=20){
-  for(let n=0;n<tries;n++){
-    const s=video && video.srcObject;
-    const t=s && s.getVideoTracks && s.getVideoTracks()[0];
-    if(t) return t;
-    await sleepMs(50);
-  }
-  return null;
-}
-function capHasMode(caps,key,mode){
-  const v=caps && caps[key];
-  return Array.isArray(v) ? v.includes(mode) : false;
-}
-function clampCapNumber(cap,target){
-  if(!cap || typeof cap!=='object') return null;
-  const min=Number.isFinite(Number(cap.min))?Number(cap.min):target;
-  const max=Number.isFinite(Number(cap.max))?Number(cap.max):target;
-  return Math.max(min,Math.min(max,target));
-}
-async function applyCameraBoost(video,opt={}){
-  const track=await getVideoTrackFromElement(video);
-  if(!track || !track.applyConstraints) return {track:null,caps:{},zoom:null,torch:false,exposure:null};
-  let caps={};
-  try{ caps=track.getCapabilities ? track.getCapabilities() : {}; }catch(_){ caps={}; }
-  const advanced=[];
-  if(capHasMode(caps,'focusMode','continuous')) advanced.push({focusMode:'continuous'});
-  let appliedZoom=null;
-  if(opt.zoom && caps.zoom){
-    appliedZoom=clampCapNumber(caps.zoom,Number(opt.zoom));
-    if(appliedZoom!=null) advanced.push({zoom:appliedZoom});
-  }
-  let exposure=null;
-  // Slight under-exposure helps specular white-out on labels/QR. Ignore if unsupported.
-  if(opt.qrExposure && caps.exposureCompensation){
-    exposure=clampCapNumber(caps.exposureCompensation,-0.7);
-    if(exposure!=null) advanced.push({exposureCompensation:exposure});
-  }
-  let torch=false;
-  if(opt.torch && caps.torch){ advanced.push({torch:true}); torch=true; }
-  if(advanced.length){
-    try{ await track.applyConstraints({advanced}); }
-    catch(e){ console.warn('camera boost applyConstraints failed',e); }
-  }
-  return {track,caps,zoom:appliedZoom,torch,exposure};
-}
-async function tapFocus(video,ev,statusEl){
-  try{
-    const track=await getVideoTrackFromElement(video,4); if(!track || !track.applyConstraints) return false;
-    const caps=track.getCapabilities ? track.getCapabilities() : {};
-    const rect=video.getBoundingClientRect();
-    const rx=Math.max(0,Math.min(1,(ev.clientX-rect.left)/Math.max(1,rect.width)));
-    const ry=Math.max(0,Math.min(1,(ev.clientY-rect.top)/Math.max(1,rect.height)));
-    const adv={};
-    if(caps.pointsOfInterest){
-      adv.pointsOfInterest=[{x:rx*(video.videoWidth||1000),y:ry*(video.videoHeight||1000)}];
-    }
-    if(capHasMode(caps,'focusMode','single-shot')) adv.focusMode='single-shot';
-    else if(capHasMode(caps,'focusMode','continuous')) adv.focusMode='continuous';
-    if(!Object.keys(adv).length){
-      if(statusEl) statusEl.textContent='この端末はタップAF制御非対応です（通常AFで継続）';
-      return false;
-    }
-    await track.applyConstraints({advanced:[adv]});
-    if(statusEl) statusEl.textContent='ピント合わせ中...';
-    if(capHasMode(caps,'focusMode','continuous')){
-      setTimeout(()=>track.applyConstraints({advanced:[{focusMode:'continuous'}]}).catch(()=>{}),550);
-    }
-    return true;
-  }catch(e){ console.warn('tap focus failed',e); return false; }
-}
-
-let inspectCameraStream=null, inspectCameraTrack=null;
-function setCaptureStatus(s){ const el=$('captureStatus'); if(el) el.textContent=s; }
-async function startInspectCamera(){
-  if(!currentPart||!masterImg) return;
-  const ov=$('captureOverlay'), video=$('captureVideo');
-  ov.classList.add('on'); setCaptureStatus('カメラ起動中...');
-  try{
-    await stopInspectCamera(false);
-    inspectCameraStream=await navigator.mediaDevices.getUserMedia({
-      video:{facingMode:{ideal:'environment'},width:{ideal:1920},height:{ideal:1080}},audio:false
-    });
-    video.srcObject=inspectCameraStream; await video.play();
-    const result=await applyCameraBoost(video,{torch:true});
-    inspectCameraTrack=result.track;
-    setCaptureStatus(result.torch ? 'ライトON / タップAF → 1個撮影 または 容器から1個探索' : 'ライト制御非対応 / タップAF → 1個撮影 または 容器から1個探索');
-  }catch(e){
-    console.warn('inspect camera failed; file input fallback',e);
-    setCaptureStatus('カメラ直接起動に失敗。標準カメラへ切替します。');
-    await stopInspectCamera(true);
-    $('inspectFile').click();
-  }
-}
-async function captureInspectPhoto(){
-  const video=$('captureVideo'), canvas=$('captureCanvas');
-  if(!video || video.readyState<2){ setCaptureStatus('カメラ準備中です'); return; }
-  try{
-    canvas.width=video.videoWidth||1920; canvas.height=video.videoHeight||1080;
-    canvas.getContext('2d').drawImage(video,0,0,canvas.width,canvas.height);
-    const dataUrl=canvas.toDataURL('image/jpeg',0.94);
-    inspectImg=await new Promise((res,rej)=>{ const im=new Image(); im.onload=()=>res(im); im.onerror=rej; im.src=dataUrl; });
-    await stopInspectCamera(true);
-    drawImageFit($('viewCanvas'),inspectImg); $('empty').style.display='none';
-    await runInspect();
-  }catch(e){ console.error(e); setCaptureStatus('撮影エラー: '+e.message); }
-}
-async function stopInspectCamera(close=true){
-  try{ if(inspectCameraTrack && inspectCameraTrack.applyConstraints){ await inspectCameraTrack.applyConstraints({advanced:[{torch:false}]}).catch(()=>{}); } }catch(_){}
-  try{ if(inspectCameraStream){ inspectCameraStream.getTracks().forEach(t=>t.stop()); } }catch(_){}
-  inspectCameraStream=null; inspectCameraTrack=null;
-  const video=$('captureVideo'); if(video){ try{video.pause();video.srcObject=null;}catch(_){} }
-  if(close) $('captureOverlay')?.classList.remove('on');
-}
-
 let scanControls=null, scanStream=null, scanLoopOn=false;
-let scanRescueTimer=null, scanRescueBusy=false, scanDetector=null, scanFound=false;
-const QR_RESCUE_INTERVAL_MS=70;
-const QR_JSQR_EVERY=2; // BarcodeDetector every pass; jsQR every 2nd pass to keep UI responsive.
-let qrRescuePass=0;
 function setScanStatus(s){ const el=$('scanStatus'); if(el) el.textContent=s; }
-let qrTorchOn=false;
-function updateQrTorchButton(){
-  const b=$('qrTorchBtn'); if(!b)return;
-  b.textContent=qrTorchOn?'ライトOFF':'ライトON';
-  b.classList.toggle('off',!qrTorchOn);
-}
-async function setQrTorch(on){
-  try{
-    const video=$('scanVideo'), track=await getVideoTrackFromElement(video,4);
-    if(!track||!track.applyConstraints){qrTorchOn=false;updateQrTorchButton();return false;}
-    const caps=track.getCapabilities?track.getCapabilities():{};
-    if(!caps.torch){qrTorchOn=false;updateQrTorchButton();return false;}
-    await track.applyConstraints({advanced:[{torch:!!on}]});
-    qrTorchOn=!!on;updateQrTorchButton();return true;
-  }catch(e){console.warn('QR torch control failed',e);qrTorchOn=false;updateQrTorchButton();return false;}
-}
-async function finishBarcodeScan(raw,source='QR'){
-  if(scanFound || !raw) return;
-  scanFound=true;
-  setScanStatus('読取OK ('+source+'): '+raw+'\nマスター読込中...');
-  await stopBarcodeScan(false);
-  await selectMasterByBarcode(raw);
-}
-function ensureQrDetector(){
-  if(scanDetector!==null) return scanDetector;
-  scanDetector=false;
-  if(!('BarcodeDetector' in window)) return scanDetector;
-  try{ scanDetector=new BarcodeDetector({formats:['qr_code']}); }catch(_){ scanDetector=false; }
-  return scanDetector;
-}
-function drawQrFrame(video,canvas,maxW=1280){
-  const vw=video.videoWidth||0,vh=video.videoHeight||0;
-  if(!vw||!vh)return null;
-  const scale=Math.min(1,maxW/vw);
-  canvas.width=Math.max(2,Math.round(vw*scale));
-  canvas.height=Math.max(2,Math.round(vh*scale));
-  const ctx=canvas.getContext('2d',{willReadFrequently:true});
-  ctx.drawImage(video,0,0,canvas.width,canvas.height);
-  return ctx;
-}
-function makeQrVariant(srcCanvas,mode){
-  const c=document.createElement('canvas'); c.width=srcCanvas.width; c.height=srcCanvas.height;
-  const x=c.getContext('2d',{willReadFrequently:true}); x.drawImage(srcCanvas,0,0);
-  const im=x.getImageData(0,0,c.width,c.height),d=im.data;
-  // Fast luminance transforms. These cannot reconstruct clipped pixels, but help near-white glare / low contrast.
-  for(let i=0;i<d.length;i+=4){
-    const y=(d[i]*77+d[i+1]*150+d[i+2]*29)>>8;
-    let v=y;
-    if(mode==='dark'){ v=Math.max(0,Math.min(255,(y-24)*1.18)); }
-    else if(mode==='contrast'){ v=Math.max(0,Math.min(255,(y-128)*1.55+128)); }
-    d[i]=d[i+1]=d[i+2]=v;
-  }
-  x.putImageData(im,0,0); return c;
-}
-async function qrRescueOnce(){
-  if(!scanLoopOn || scanFound || scanRescueBusy)return;
-  const video=$('scanVideo'),canvas=$('scanCanvas');
-  if(!video || video.readyState<2)return;
-  scanRescueBusy=true;
-  try{
-    const ctx=drawQrFrame(video,canvas,1280); if(!ctx)return;
-    const detector=ensureQrDetector();
-    if(detector){
-      try{
-        const codes=await detector.detect(canvas);
-        if(codes&&codes.length&&codes[0].rawValue){ await finishBarcodeScan(codes[0].rawValue,'BarcodeDetector'); return; }
-      }catch(_){ }
-    }
-    qrRescuePass++;
-    if(window.jsQR && qrRescuePass%QR_JSQR_EVERY===0){
-      const variants=[canvas,makeQrVariant(canvas,'contrast'),makeQrVariant(canvas,'dark')];
-      for(const c of variants){
-        const cx=c.getContext('2d',{willReadFrequently:true}); const img=cx.getImageData(0,0,c.width,c.height);
-        const code=jsQR(img.data,c.width,c.height,{inversionAttempts:'attemptBoth'});
-        if(code&&code.data){ await finishBarcodeScan(code.data,'jsQR'); return; }
-      }
-    }
-  }catch(e){ console.warn('QR rescue',e); }
-  finally{ scanRescueBusy=false; }
-}
-function startQrRescueLoop(){
-  scanLoopOn=true; qrRescuePass=0; scanFound=false;
-  if(scanRescueTimer)clearInterval(scanRescueTimer);
-  scanRescueTimer=setInterval(()=>{ qrRescueOnce(); },QR_RESCUE_INTERVAL_MS);
-  qrRescueOnce();
-}
 async function startBarcodeScan(){
   const overlay=$('scanOverlay'), video=$('scanVideo');
   if(!overlay||!video){ return; }
-  await stopBarcodeScan(false);
-  scanFound=false; overlay.classList.add('on'); setScanStatus('カメラ起動中...');
+  overlay.classList.add('on');
+  setScanStatus('カメラ起動中...');
   try{
-    // ZXing is the primary continuous decoder. Rescue loop races it using the same live video.
+    // 安定優先：ZXing BrowserMultiFormatReaderを主役にする。
+    // jsQR/BarcodeDetectorのQR専用補助は並走させるが、検査処理には触らない。
     if(window.ZXingBrowser && ZXingBrowser.BrowserMultiFormatReader){
       const reader=new ZXingBrowser.BrowserMultiFormatReader();
       scanControls=await reader.decodeFromVideoDevice(null, video, async (result, err, controls)=>{
-        if(result && !scanFound){
+        if(result){
           const raw=(result.getText?result.getText():String(result.text||result));
+          setScanStatus('読取OK: '+raw+'\nマスター読込中...');
           try{ if(controls)controls.stop(); }catch(_){}
-          await finishBarcodeScan(raw,'ZXing');
+          await stopBarcodeScan(false);
+          await selectMasterByBarcode(raw);
         }
       });
-      const qrBoost=await applyCameraBoost(video,{zoom:3,qrExposure:true,torch:true});
-      startQrRescueLoop();
-      const extras=[];
-      if(qrBoost.zoom)extras.push('ズーム '+qrBoost.zoom.toFixed(1)+'x');
-      if(qrBoost.exposure!=null)extras.push('白飛び抑制');if(qrBoost.torch)extras.push('ライトON');
-      setScanStatus('最速QR読取中'+(extras.length?' / '+extras.join(' / '):'')+'\n画面タップでピント合わせ');
+      scanLoopOn=true;
+      setScanStatus('QRを正方形ガイド付近に入れてください。画面全体から補助読取もします。');
+      scanLoop();
       return;
     }
   }catch(e){
-    console.warn('ZXing起動失敗。高速救済スキャナへフォールバック',e);
+    console.warn('ZXing起動失敗。jsQR/BarcodeDetectorへフォールバック',e);
   }
   try{
     scanStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:1920},height:{ideal:1080}},audio:false});
-    video.srcObject=scanStream; await video.play();
-    const qrBoost=await applyCameraBoost(video,{zoom:3,qrExposure:true,torch:true});
-    startQrRescueLoop();
-    setScanStatus('高速QR読取中'+(qrBoost.zoom?' / ズーム '+qrBoost.zoom.toFixed(1)+'x':'')+(qrBoost.torch?' / ライトON':'')+'\n画面タップでピント合わせ');
+    video.srcObject=scanStream;
+    await video.play();
+    scanLoopOn=true;
+    setScanStatus('QRを枠内に入れてください');
+    scanLoop();
   }catch(e){
     console.error(e);
     setScanStatus('カメラ起動エラー: '+e.message+'\nUSBリーダーの場合は入力欄にフォーカスして読んでください。');
   }
 }
-// Compatibility entry point: v2 uses the interval rescue loop instead of requestAnimationFrame.
-async function scanLoop(){ startQrRescueLoop(); }
+let qrAssistFrame=0;
+async function scanLoop(){
+  if(!scanLoopOn)return;
+  const video=$('scanVideo'), canvas=$('scanCanvas');
+  const ctx=canvas.getContext('2d',{willReadFrequently:true});
+  try{
+    if(video.readyState>=2 && video.videoWidth && video.videoHeight){
+      qrAssistFrame++;
+      const found=await decodeQrAssistFromVideo(video, canvas, ctx, qrAssistFrame);
+      if(found){ await stopBarcodeScan(false); await selectMasterByBarcode(found); return; }
+    }
+  }catch(e){ console.warn('QR補助読取エラー',e); }
+  requestAnimationFrame(scanLoop);
+}
+async function decodeQrAssistFromVideo(video, canvas, ctx, frame){
+  const vw=video.videoWidth||640, vh=video.videoHeight||480;
+  const maxSide=1280;
+  const baseScale=Math.min(1, maxSide/Math.max(vw,vh));
+  canvas.width=Math.max(1,Math.round(vw*baseScale));
+  canvas.height=Math.max(1,Math.round(vh*baseScale));
+  ctx.filter='none';
+  ctx.drawImage(video,0,0,canvas.width,canvas.height);
+
+  // 1) BarcodeDetectorはQR専用。対応端末だけ低頻度で使う。
+  if(window.BarcodeDetector && frame%6===0){
+    try{
+      const detector=new BarcodeDetector({formats:['qr_code']});
+      const codes=await detector.detect(canvas);
+      if(codes&&codes.length&&codes[0].rawValue) return codes[0].rawValue;
+    }catch(_){/* unsupported */}
+  }
+
+  if(!window.jsQR) return '';
+  const tryCanvas=()=>{
+    const img=ctx.getImageData(0,0,canvas.width,canvas.height);
+    const code=jsQR(img.data,img.width,img.height,{inversionAttempts:'attemptBoth'});
+    return code&&code.data ? code.data : '';
+  };
+
+  // 2) 原画像を毎回。ここは軽い。
+  let hit=tryCanvas();
+  if(hit) return hit;
+
+  // 3) 明るさ/コントラスト補正。3フレームに1回。
+  if(frame%3===0){
+    ctx.filter='contrast(150%) brightness(112%)';
+    ctx.drawImage(video,0,0,canvas.width,canvas.height);
+    hit=tryCanvas();
+    if(hit) return hit;
+  }
+
+  // 4) 軽いシャープ風。少し拡大＋補正を5フレームに1回だけ。
+  if(frame%5===0){
+    const scale=Math.min(1.45, 1600/Math.max(vw,vh));
+    if(scale>1.02){
+      canvas.width=Math.round(vw*scale); canvas.height=Math.round(vh*scale);
+      ctx.imageSmoothingEnabled=false;
+      ctx.filter='contrast(165%) brightness(108%)';
+      ctx.drawImage(video,0,0,canvas.width,canvas.height);
+      ctx.imageSmoothingEnabled=true;
+      hit=tryCanvas();
+      if(hit) return hit;
+    }
+  }
+  ctx.filter='none';
+  return '';
+}
+
+function loadQrPhotoImage(file){
+  return new Promise((res,rej)=>{
+    const img=new Image();
+    img.onload=()=>res(img);
+    img.onerror=rej;
+    img.src=URL.createObjectURL(file);
+  });
+}
+async function decodeQrFromStillImage(img){
+  const canvas=$('scanCanvas') || document.createElement('canvas');
+  const ctx=canvas.getContext('2d',{willReadFrequently:true});
+  const maxSides=[2600,2000,1500,1100];
+  const filters=['none','contrast(150%) brightness(112%)','contrast(185%) brightness(105%) grayscale(100%)'];
+  for(const maxSide of maxSides){
+    const s=Math.min(1,maxSide/Math.max(img.width,img.height));
+    canvas.width=Math.max(1,Math.round(img.width*s));
+    canvas.height=Math.max(1,Math.round(img.height*s));
+    for(const filter of filters){
+      ctx.imageSmoothingEnabled=false;
+      ctx.filter=filter;
+      ctx.drawImage(img,0,0,canvas.width,canvas.height);
+      ctx.filter='none';
+      if(window.BarcodeDetector){
+        try{
+          const detector=new BarcodeDetector({formats:['qr_code']});
+          const codes=await detector.detect(canvas);
+          if(codes&&codes.length&&codes[0].rawValue) return codes[0].rawValue;
+        }catch(_){/* unsupported */}
+      }
+      if(window.jsQR){
+        const data=ctx.getImageData(0,0,canvas.width,canvas.height);
+        const code=jsQR(data.data,data.width,data.height,{inversionAttempts:'attemptBoth'});
+        if(code&&code.data) return code.data;
+      }
+    }
+  }
+  return '';
+}
+async function readQrFromPhotoFile(file){
+  try{
+    if(!file)return;
+    setScanStatus('高解像度写真からQR読取中...');
+    const img=await loadQrPhotoImage(file);
+    const text=await decodeQrFromStillImage(img);
+    if(text){
+      await stopBarcodeScan(false);
+      await selectMasterByBarcode(text);
+      return;
+    }
+    setScanStatus('写真からQRを読めませんでした。QRが入るように少し離して再撮影してください。');
+  }catch(e){
+    console.error(e);
+    setScanStatus('写真QR読取エラー: '+e.message);
+  }
+}
+
 async function stopBarcodeScan(close=true){
-  try{await setQrTorch(false);}catch(_){}
-  scanLoopOn=false; scanRescueBusy=false;
-  if(scanRescueTimer){clearInterval(scanRescueTimer);scanRescueTimer=null;}
+  scanLoopOn=false;
   try{ if(scanControls){ scanControls.stop(); scanControls=null; } }catch(_){}
   try{ if(scanStream){ scanStream.getTracks().forEach(t=>t.stop()); scanStream=null; } }catch(_){}
-  const video=$('scanVideo');
-  if(video){
-    try{ const s=video.srcObject; if(s&&s.getTracks) s.getTracks().forEach(t=>t.stop()); }catch(_){}
-    try{video.pause(); video.srcObject=null;}catch(_){}
-  }
-  $('scanOverlay')?.classList.remove('on');
+  const video=$('scanVideo'); if(video){ try{video.pause(); video.srcObject=null;}catch(_){} }
+  if(close) $('scanOverlay')?.classList.remove('on'); else $('scanOverlay')?.classList.remove('on');
 }
 
 function escapeHtml(s){ return String(s??'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m])); }
+let inspectBusyV50=false;
+const HID_SCANNER_V43={
+  buffer:'',
+  firstAt:0,
+  lastAt:0,
+  resetGapMs:180,
+  minChars:3,
+  busy:false,
+  flashTimer:null
+};
+
+function hidBadgeV43(state='ready',text=''){
+  const b=$('hidBadgeV43'); if(!b)return;
+  b.classList.remove('rx','ok');
+  if(state==='rx')b.classList.add('rx');
+  if(state==='ok')b.classList.add('ok');
+  b.textContent=text || (state==='rx'?'USB HID READING':state==='ok'?'USB HID OK':'USB HID READY');
+}
+function hidInputFlashV43(on){
+  const bi=$('barcodeInput'); if(bi)bi.classList.toggle('hidRxV43',!!on);
+}
+function resetHidV43(){
+  HID_SCANNER_V43.buffer='';
+  HID_SCANNER_V43.firstAt=0;
+  HID_SCANNER_V43.lastAt=0;
+  hidInputFlashV43(false);
+  if(!HID_SCANNER_V43.busy)hidBadgeV43('ready');
+}
+function hidCanReceiveV43(){
+  // カメラ・QR・AIタップ処理中だけ誤入力を避ける
+  if($('scanOverlay')?.classList.contains('on'))return false;
+  if($('captureOverlay')?.classList.contains('on'))return false;
+  if(HID_SCANNER_V43.busy || logSending || inspectBusyV50)return false;
+  return true;
+}
+async function commitHidScanV43(raw,source='USB-HID'){
+  if(!hidCanReceiveV43())return false;
+  raw=String(raw||'').replace(/[\r\n]+$/g,'').trim();
+  if(raw.length<HID_SCANNER_V43.minChars){resetHidV43();return false;}
+  HID_SCANNER_V43.busy=true;
+  hidBadgeV43('ok','USB HID / MASTER読込');
+  const bi=$('barcodeInput'); if(bi)bi.value=raw;
+  try{
+    const ok=await selectMasterByBarcode(raw);
+    hidBadgeV43(ok?'ok':'ready',ok?'USB HID OK':'USB HID READY');
+    return ok;
+  }catch(e){
+    console.error('USB HID scan error',e);
+    log('USBバーコード読取エラー: '+e.message);
+    hidBadgeV43('ready');
+    return false;
+  }finally{
+    HID_SCANNER_V43.busy=false;
+    HID_SCANNER_V43.buffer='';
+    HID_SCANNER_V43.firstAt=0;
+    HID_SCANNER_V43.lastAt=0;
+    hidInputFlashV43(false);
+  }
+}
+
+// barcodeInput自身にフォーカスがある場合は、従来のinput+Enter処理を使う。
+// それ以外の場所にフォーカスがあっても、HIDスキャナの文字列をここで受ける。
+document.addEventListener('keydown',async e=>{
+  const bi=$('barcodeInput');
+  if(!hidCanReceiveV43())return;
+  if(e.target===bi)return;  // existing handler handles it
+  if(e.ctrlKey||e.altKey||e.metaKey)return;
+
+  const now=performance.now();
+  const finish=(e.key==='Enter'||e.key==='Tab');
+
+  if(finish){
+    if(now-HID_SCANNER_V43.lastAt>HID_SCANNER_V43.resetGapMs){resetHidV43();return;}
+    if(HID_SCANNER_V43.buffer.length>=HID_SCANNER_V43.minChars){
+      e.preventDefault();e.stopPropagation();
+      const raw=HID_SCANNER_V43.buffer;
+      await commitHidScanV43(raw);
+    }else{
+      resetHidV43();
+    }
+    return;
+  }
+
+  if(e.key.length!==1)return;
+
+  if(HID_SCANNER_V43.lastAt && now-HID_SCANNER_V43.lastAt>HID_SCANNER_V43.resetGapMs){
+    HID_SCANNER_V43.buffer='';
+    HID_SCANNER_V43.firstAt=0;
+  }
+  if(!HID_SCANNER_V43.firstAt)HID_SCANNER_V43.firstAt=now;
+  HID_SCANNER_V43.lastAt=now;
+  HID_SCANNER_V43.buffer+=e.key;
+
+  // Dedicated terminal前提。スキャナ文字がselect/button等に流れないよう抑止。
+  e.preventDefault();e.stopPropagation();
+  hidBadgeV43('rx');
+  hidInputFlashV43(true);
+},true);
+
+// barcodeInputに直接入ったHID入力も見た目を明確にする
+$('barcodeInput')?.addEventListener('input',()=>{
+  hidBadgeV43('rx');
+  hidInputFlashV43(true);
+});
+$('barcodeInput')?.addEventListener('blur',()=>{
+  setTimeout(()=>{ if(!HID_SCANNER_V43.busy)hidInputFlashV43(false); },120);
+});
+
+// Android復帰時はHID受付状態を明示。フォーカスは必須ではない。
+document.addEventListener('visibilitychange',()=>{
+  if(!document.hidden && !HID_SCANNER_V43.busy){
+    hidBadgeV43('ready');
+  }
+});
+window.addEventListener('load',()=>{
+  hidBadgeV43('ready');
+  setTimeout(()=>{ try{$('barcodeInput')?.focus({preventScroll:true});}catch(_){} },250);
+});
+
 $('reloadBtn').onclick=loadParts;
 $('partSelect').onchange=async()=>{ if($('partSelect').value){ currentBarcodeRaw=$('partSelect').value; lastInspectionRecord=null; ngLoggedForCurrent=false; okLoggedForCurrent=false; logSending=false; await loadSelectedPart(); } else resetMasterState(); };
-$('actionBtn').onclick=async()=>{ if(currentPart&&masterImg){ if(!cvLoaded){ log('OpenCV.js準備中です。しばらく待ってください。'); updateActionState(); return; } await startInspectCamera(); } else { await startBarcodeScan(); } };
-$('qrTorchBtn')?.addEventListener('click',async e=>{e.stopPropagation();await setQrTorch(!qrTorchOn);setScanStatus(qrTorchOn?'ライトON / 高速QR読取中\n画面タップでピント合わせ':'ライトOFF / 高速QR読取中\n画面タップでピント合わせ');});
+$('actionBtn').onclick=async()=>{ if(currentPart&&masterImg){ if(!cvLoaded){ log('OpenCV.js準備中です。しばらく待ってください。'); updateActionState(); return; } $('inspectFile').click(); } else { await startBarcodeScan(); } };
 $('scanCloseBtn').onclick=()=>stopBarcodeScan(true);
-$('scanBox')?.addEventListener('click',e=>tapFocus($('scanVideo'),e,$('scanStatus')));
-$('captureBox')?.addEventListener('click',e=>tapFocus($('captureVideo'),e,$('captureStatus')));
-$('captureShutterBtn').onclick=()=>captureInspectPhoto();
-$('containerRansacBtn')?.addEventListener('click',captureContainerOne);
-$('captureCloseBtn').onclick=()=>stopInspectCamera(true);
-$('barcodeInput').addEventListener('keydown',async e=>{ if(e.key==='Enter'){ e.preventDefault(); await selectMasterByBarcode(e.target.value); }});
+$('qrPhotoBtn').onclick=()=>{$('qrPhotoInput').click();};
+$('qrPhotoInput').onchange=async e=>{const f=e.target.files&&e.target.files[0]; await readQrFromPhotoFile(f); e.target.value='';};
+$('barcodeInput').addEventListener('keydown',async e=>{ if(e.key==='Enter'||e.key==='Tab'){ e.preventDefault(); await commitHidScanV43(e.target.value); }});
 $('actionRegisterBtn').onclick=async()=>{
   const btn=$('actionRegisterBtn');
   if(logSending || okLoggedForCurrent){ return; }
@@ -857,43 +861,347 @@ $('actionRegisterBtn').onclick=async()=>{
     alert('検査ログを保存できませんでした。通信/GASを確認してください。');
   }
 };
-$('actionRetryBtn').onclick=async()=>{ hideResultAction(); if(currentPart&&masterImg){ await startInspectCamera(); } };
+$('actionRetryBtn').onclick=()=>{ hideResultAction(); if(currentPart&&masterImg){ $('inspectFile').click(); } };
 $('actionEndBtn').onclick=()=>{ endInspectionToScanMode(); };
 $('inspectFile').onchange=async e=>{ const f=e.target.files&&e.target.files[0]; if(!f)return; inspectImg=await loadImageFromFile(f); drawImageFit($('viewCanvas'),inspectImg); $('empty').style.display='none'; await runInspect(); e.target.value=''; };
 
 function matFromImage(img,maxW){ const scale=Math.min(1,maxW/img.width); const c=document.createElement('canvas'); c.width=Math.round(img.width*scale); c.height=Math.round(img.height*scale); const x=c.getContext('2d'); x.drawImage(img,0,0,c.width,c.height); let src=cv.imread(c); let gray=new cv.Mat(); cv.cvtColor(src,gray,cv.COLOR_RGBA2GRAY); return{src,gray,scale,w:c.width,h:c.height,canvas:c}; }
 function edgeMask(gray,edgeThr){ let blur=new cv.Mat(),edges=new cv.Mat(); cv.GaussianBlur(gray,blur,new cv.Size(3,3),0); cv.Canny(blur,edges,edgeThr,edgeThr*2); blur.delete(); return edges; }
 function hasNearbyEdge(edge,x,y,w,h,tol){ for(let dy=-tol;dy<=tol;dy++){ for(let dx=-tol;dx<=tol;dx++){ let nx=x+dx,ny=y+dy; if(nx>=0&&ny>=0&&nx<w&&ny<h&&edge.ucharPtr(ny,nx)[0]) return true; } } return false; }
-function detectAndMatch(m,i,features,maxMatches=120,ransacThr=5){
-  let orb=new cv.ORB(features);
-  let kp1=new cv.KeyPointVector(),kp2=new cv.KeyPointVector(),des1=new cv.Mat(),des2=new cv.Mat();
-  let emptyMask1=new cv.Mat(),emptyMask2=new cv.Mat();
-  orb.detectAndCompute(m.gray,emptyMask1,kp1,des1);
-  orb.detectAndCompute(i.gray,emptyMask2,kp2,des2);
-  emptyMask1.delete(); emptyMask2.delete();
-  if(des1.empty()||des2.empty()) throw new Error('特徴点が少なすぎます');
-  let matcher=new cv.BFMatcher(cv.NORM_HAMMING,true);
-  let matches=new cv.DMatchVector(); matcher.match(des1,des2,matches);
-  let arr=[]; for(let k=0;k<matches.size();k++)arr.push(matches.get(k));
-  arr.sort((a,b)=>a.distance-b.distance);
-  arr=arr.slice(0,Math.min(maxMatches,arr.length));
-  if(arr.length<8) throw new Error('対応特徴点が不足しています');
-  let srcPts=[],dstPts=[];
-  for(const mt of arr){
-    let p1=kp1.get(mt.queryIdx).pt,p2=kp2.get(mt.trainIdx).pt;
-    srcPts.push(p1.x,p1.y); dstPts.push(p2.x,p2.y);
+function featureGrayV48(gray){
+  const out=new cv.Mat();
+  try{
+    if(cv.CLAHE){
+      const clahe=new cv.CLAHE(2.0,new cv.Size(8,8));
+      clahe.apply(gray,out); clahe.delete();
+    }else cv.equalizeHist(gray,out);
+  }catch(e){
+    try{cv.equalizeHist(gray,out);}catch(_){gray.copyTo(out);}
   }
-  let srcMat=cv.matFromArray(arr.length,1,cv.CV_32FC2,srcPts);
-  let dstMat=cv.matFromArray(arr.length,1,cv.CV_32FC2,dstPts);
-  let mask=new cv.Mat();
-  let H=cv.findHomography(dstMat,srcMat,cv.RANSAC,ransacThr,mask);
-  let inliers=0; for(let k=0;k<mask.rows;k++) if(mask.data[k]) inliers++;
-  const bestDistance=arr.length?arr[0].distance:999, medianDistance=arr.length?arr[Math.floor(arr.length/2)].distance:999;
-  orb.delete(); kp1.delete(); kp2.delete(); des1.delete(); des2.delete(); matcher.delete(); matches.delete(); srcMat.delete(); dstMat.delete(); mask.delete();
-  if(H.empty()) throw new Error('位置合わせ失敗');
-  return{H,inliers,total:arr.length,bestDistance,medianDistance};
+  return out;
 }
-function homographyScale(H){ let d=H.data64F||H.data32F; let a=d[0],b=d[1],c=d[3],e=d[4]; return Math.sqrt(Math.abs(a*e-b*c)); }
+function applySimV48(t,p){return{x:t.A*p.x-t.B*p.y+t.tx,y:t.B*p.x+t.A*p.y+t.ty};}
+function invertSimPointV48(t,p){
+  const dx=p.x-t.tx,dy=p.y-t.ty,den=t.A*t.A+t.B*t.B;
+  if(den<1e-9)return{x:NaN,y:NaN};
+  return{x:(t.A*dx+t.B*dy)/den,y:(-t.B*dx+t.A*dy)/den};
+}
+function insideBoxPadV48(p,b,padRatio=0.08){
+  const px=b.w*padRatio,py=b.h*padRatio;
+  return p.x>=b.x-px&&p.x<=b.x+b.w+px&&p.y>=b.y-py&&p.y<=b.y+b.h+py;
+}
+const POP8_V48=(()=>{
+  const a=new Uint8Array(256);
+  for(let n=0;n<256;n++){let v=n,c=0;while(v){c+=v&1;v>>=1;}a[n]=c;}
+  return a;
+})();
+function descriptorHammingV48(des1,q,des2,t){
+  const len=Math.min(des1.cols,des2.cols),d1=des1.data,d2=des2.data;
+  let s=0,b1=q*des1.cols,b2=t*des2.cols;
+  for(let k=0;k<len;k++)s+=POP8_V48[d1[b1+k]^d2[b2+k]];
+  return s;
+}
+function buildKpGridV48(kp2,box,cell){
+  const g=new Map(),pts=new Array(kp2.size());
+  for(let k=0;k<kp2.size();k++){
+    const p=kp2.get(k).pt;pts[k]={x:p.x,y:p.y};
+    if(!insideBoxPadV48(p,box,0.10))continue;
+    const key=Math.floor(p.x/cell)+','+Math.floor(p.y/cell),a=g.get(key)||[];
+    a.push(k);g.set(key,a);
+  }
+  return{g,pts,cell};
+}
+function spatialBalancePairsV48(pairs,m,maxMatches){
+  const cols=CONFIG.matchGridCols||7,rows=CONFIG.matchGridRows||4,cap=CONFIG.maxMatchesPerGrid||8;
+  const buckets=new Map(),sorted=[...pairs].sort((a,b)=>a.score-b.score);
+  for(const q of sorted){
+    const gx=Math.max(0,Math.min(cols-1,Math.floor(q.master.x/Math.max(1,m.w)*cols)));
+    const gy=Math.max(0,Math.min(rows-1,Math.floor(q.master.y/Math.max(1,m.h)*rows)));
+    const key=gx+','+gy,a=buckets.get(key)||[];
+    if(a.length<cap){a.push(q);buckets.set(key,a);}
+  }
+  let r=[];for(const a of buckets.values())r.push(...a);
+  r.sort((a,b)=>a.score-b.score);
+  return r.slice(0,Math.min(maxMatches,r.length));
+}
+function guidedMatchesV48(m,i,kp1,kp2,des1,des2,mBox,iBox,sim,radius,maxHam,localRatio,maxMatches){
+  const cell=Math.max(18,Math.round(radius*0.72)),grid=buildKpGridV48(kp2,iBox,cell),cand=[];
+  for(let q=0;q<kp1.size();q++){
+    const p0=kp1.get(q).pt,pm={x:p0.x,y:p0.y};
+    if(!insideBoxPadV48(pm,mBox,0.08))continue;
+    const pred=invertSimPointV48(sim,pm);
+    if(!Number.isFinite(pred.x)||!insideBoxPadV48(pred,iBox,0.16))continue;
+    const gx0=Math.floor((pred.x-radius)/cell),gx1=Math.floor((pred.x+radius)/cell);
+    const gy0=Math.floor((pred.y-radius)/cell),gy1=Math.floor((pred.y+radius)/cell);
+    let best=null,second=null;
+    for(let gy=gy0;gy<=gy1;gy++)for(let gx=gx0;gx<=gx1;gx++){
+      const a=grid.g.get(gx+','+gy);if(!a)continue;
+      for(const t of a){
+        const pi=grid.pts[t],geom=Math.hypot(pi.x-pred.x,pi.y-pred.y);
+        if(geom>radius)continue;
+        const ham=descriptorHammingV48(des1,q,des2,t);
+        const z={queryIdx:q,trainIdx:t,distance:ham,geom,master:pm,inspect:{x:pi.x,y:pi.y}};
+        if(!best||ham<best.distance||(ham===best.distance&&geom<best.geom)){second=best;best=z;}
+        else if(!second||ham<second.distance)second=z;
+      }
+    }
+    if(!best||best.distance>maxHam)continue;
+    if(second&&!(best.distance<localRatio*Math.max(1,second.distance)))continue;
+    best.score=best.distance+18*(best.geom/Math.max(1,radius));cand.push(best);
+  }
+  cand.sort((a,b)=>a.score-b.score);
+  const used=new Set(),unique=[];
+  for(const q of cand){if(used.has(q.trainIdx))continue;used.add(q.trainIdx);unique.push(q);}
+  return spatialBalancePairsV48(unique,m,maxMatches);
+}
+function simFromTwoV48(a,b){
+  const qx=b.inspect.x-a.inspect.x,qy=b.inspect.y-a.inspect.y;
+  const px=b.master.x-a.master.x,py=b.master.y-a.master.y,den=qx*qx+qy*qy;
+  if(den<144)return null;
+  const A=(px*qx+py*qy)/den,B=(py*qx-px*qy)/den;
+  const scale=Math.hypot(A,B),angleDeg=Math.atan2(B,A)*180/Math.PI;
+  if(scale<CONFIG.scaleMin||scale>CONFIG.scaleMax||Math.abs(angleDeg)>(CONFIG.coarseMaxAngleDeg||14))return null;
+  return{A,B,tx:a.master.x-A*a.inspect.x+B*a.inspect.y,ty:a.master.y-B*a.inspect.x-A*a.inspect.y,scale,angleDeg};
+}
+function refineSimV48(pairs,mask){
+  const inl=[];for(let k=0;k<pairs.length;k++)if(mask[k])inl.push(pairs[k]);
+  if(inl.length<2)return null;
+  let qx=0,qy=0,px=0,py=0;
+  for(const z of inl){qx+=z.inspect.x;qy+=z.inspect.y;px+=z.master.x;py+=z.master.y;}
+  qx/=inl.length;qy/=inl.length;px/=inl.length;py/=inl.length;
+  let aa=0,bb=0,dd=0;
+  for(const z of inl){
+    const x=z.inspect.x-qx,y=z.inspect.y-qy,u=z.master.x-px,v=z.master.y-py;
+    aa+=x*u+y*v;bb+=x*v-y*u;dd+=x*x+y*y;
+  }
+  if(dd<1e-9)return null;
+  const A=aa/dd,B=bb/dd,scale=Math.hypot(A,B),angleDeg=Math.atan2(B,A)*180/Math.PI;
+  return{A,B,tx:px-A*qx+B*qy,ty:py-B*qx-A*qy,scale,angleDeg};
+}
+function evalSimV48(sim,pairs,thr){
+  const mask=new Array(pairs.length).fill(false),errs=new Array(pairs.length),inlierErrs=[];
+  let count=0,xmin=1e9,xmax=-1e9,ymin=1e9,ymax=-1e9;
+  for(let k=0;k<pairs.length;k++){
+    const z=pairs[k],p=applySimV48(sim,z.inspect),e=Math.hypot(p.x-z.master.x,p.y-z.master.y);
+    errs[k]=e;
+    if(e<=thr){
+      mask[k]=true;count++;inlierErrs.push(e);
+      xmin=Math.min(xmin,z.master.x);xmax=Math.max(xmax,z.master.x);ymin=Math.min(ymin,z.master.y);ymax=Math.max(ymax,z.master.y);
+    }
+  }
+  inlierErrs.sort((a,b)=>a-b);
+  return{mask,errs,count,median:inlierErrs.length?inlierErrs[Math.floor(inlierErrs.length/2)]:999,
+    spreadX:count?(xmax-xmin):0,spreadY:count?(ymax-ymin):0};
+}
+function ransacSimilarityV48(pairs,thr){
+  if(pairs.length<2)return null;
+  const seeds=[...pairs].sort((a,b)=>a.score-b.score).slice(0,Math.min(80,pairs.length));
+  let best=null;
+  for(let a=0;a<seeds.length-1;a++)for(let b=a+1;b<seeds.length;b++){
+    const sim=simFromTwoV48(seeds[a],seeds[b]);if(!sim)continue;
+    const ev=evalSimV48(sim,pairs,thr),quality=ev.count*1000-ev.median;
+    if(!best||quality>best.quality)best={sim,ev,quality};
+  }
+  if(!best||best.ev.count<2)return null;
+  const ref=refineSimV48(pairs,best.ev.mask)||best.sim,ev2=evalSimV48(ref,pairs,thr);
+  const ref2=refineSimV48(pairs,ev2.mask)||ref,ev3=evalSimV48(ref2,pairs,thr);
+  return{sim:ref2,...ev3};
+}
+function simToHMatV48(sim){
+  return cv.matFromArray(3,3,cv.CV_32FC1,[sim.A,-sim.B,sim.tx,sim.B,sim.A,sim.ty,0,0,1]);
+}
+
+// v50: 全画面の相互・比率マッチで初期位置を決定。横帯や上下の形状を仮定しない。
+
+function projectiveMatchV51(pairs,m,i){
+  let src,dst,mask,H;let keep=false;
+  const diag={inliers:0,total:pairs.length,valid:false};
+  try{
+    src=cv.matFromArray(pairs.length,1,cv.CV_32FC2,pairs.flatMap(z=>[z.inspect.x,z.inspect.y]));
+    dst=cv.matFromArray(pairs.length,1,cv.CV_32FC2,pairs.flatMap(z=>[z.master.x,z.master.y]));mask=new cv.Mat();
+    H=cv.findHomography(src,dst,cv.RANSAC,4,mask);
+    if(H.empty())return {diag};
+    const d=Array.from(matrixValuesV53(H));
+    const project=p=>{const w=d[6]*p.x+d[7]*p.y+d[8];return{x:(d[0]*p.x+d[1]*p.y+d[2])/w,y:(d[3]*p.x+d[4]*p.y+d[5])/w,w};};
+    const good=pairs.filter((z,k)=>!!mask.data[k]);diag.inliers=good.length;
+    const errs=good.map(z=>{const p=project(z.inspect);return Math.hypot(p.x-z.master.x,p.y-z.master.y)}).sort((a,b)=>a-b);
+    const xs=good.map(z=>z.master.x),ys=good.map(z=>z.master.y);
+    const sx=good.length?(Math.max(...xs)-Math.min(...xs))/m.w:0,sy=good.length?(Math.max(...ys)-Math.min(...ys))/m.h:0;
+    const cells=new Set(good.map(z=>Math.floor(z.master.x/m.w*4)+','+Math.floor(z.master.y/m.h*4))).size;
+    const corners=[{x:0,y:0},{x:i.w,y:0},{x:i.w,y:i.h},{x:0,y:i.h}].map(project);
+    const crosses=corners.map((a,k)=>{const b=corners[(k+1)%4],c=corners[(k+2)%4];return (b.x-a.x)*(c.y-b.y)-(b.y-a.y)*(c.x-b.x)});
+    const lengths=corners.map((a,k)=>{const b=corners[(k+1)%4];return Math.hypot(b.x-a.x,b.y-a.y)/(k%2?i.h:i.w)});
+    const shapeOk=corners.every(p=>Number.isFinite(p.x)&&Number.isFinite(p.y)&&p.w>0.25&&p.w<4)&&crosses.every(v=>v>0)&&lengths.every(v=>v>=0.5&&v<=2)&&Math.max(...lengths)/Math.min(...lengths)<1.8;
+    const median=errs.length?errs[Math.floor(errs.length/2)]:999;
+    const valid=good.length>=12&&good.length/pairs.length>=CONFIG.minInlierRatio&&sx>=.25&&sy>=.12&&cells>=4&&median<=3&&shapeOk;
+    Object.assign(diag,{valid,spreadX:sx,spreadY:sy,cells,medianReprojError:median,shapeOk,H:d});
+    if(!valid)return {diag};
+    keep=true;return {H,diag,inliers:good.length,total:pairs.length,geometryOk:true,spreadX:sx,spreadY:sy,cells,medianReprojError:median,method:'GLOBAL-MUTUAL-HOMOGRAPHY'};
+  }catch(e){diag.error=String(e.message||e);return {diag};}
+  finally{for(const o of [src,dst,mask])if(o)o.delete();if(H&&!keep)H.delete();}
+}
+function drawOverlayV51(m,warped,label){
+  const canvas=$('viewCanvas'),ctx=canvas.getContext('2d');
+  const r=Math.min(canvas.width/m.w,canvas.height/m.h),ox=(canvas.width-m.w*r)/2,oy=(canvas.height-m.h*r)/2;
+  const tmp=document.createElement('canvas');cv.imshow(tmp,warped);
+  ctx.save();ctx.clearRect(0,0,canvas.width,canvas.height);ctx.fillStyle='#05070b';ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.drawImage(tmp,ox,oy,m.w*r,m.h*r);ctx.globalAlpha=.45;ctx.drawImage(m.canvas,ox,oy,m.w*r,m.h*r);ctx.globalAlpha=1;
+  if(label){ctx.fillStyle='#ffd84d';ctx.font='bold 20px sans-serif';ctx.fillText(label,ox+12,oy+28);}
+  ctx.restore();
+  const dc=$('debugCanvas');if(dc){const c=dc.getContext('2d');c.clearRect(0,0,dc.width,dc.height);c.drawImage(canvas,0,0,dc.width,dc.height);}
+}
+function detectAndMatchDirectV51(m,i,features){
+  const owned=[]; const own=x=>(owned.push(x),x);
+  try{
+    const mg=own(featureGrayV48(m.gray)),ig=own(featureGrayV48(i.gray));
+    const orb=own(new cv.ORB(features)),k1=own(new cv.KeyPointVector()),k2=own(new cv.KeyPointVector());
+    const d1=own(new cv.Mat()),d2=own(new cv.Mat()),empty=own(new cv.Mat());
+    orb.detectAndCompute(mg,empty,k1,d1); orb.detectAndCompute(ig,empty,k2,d2);
+    if(d1.empty()||d2.empty())throw new Error('位置合わせ失敗: 特徴点不足');
+    const bf=own(new cv.BFMatcher(cv.NORM_HAMMING,false));
+    const fw=own(new cv.DMatchVectorVector()),bw=own(new cv.DMatchVectorVector());
+    bf.knnMatch(d1,d2,fw,2);bf.knnMatch(d2,d1,bw,2);
+    function accepted(vec){
+      const out=new Map();
+      for(let j=0;j<vec.size();j++){
+        const row=vec.get(j);
+        try{if(row.size()>=2){const a=row.get(0),b=row.get(1);
+          if(a.distance<=80 && a.distance<0.88*b.distance)out.set(a.queryIdx,{trainIdx:a.trainIdx,distance:a.distance});
+        }}finally{row.delete();}
+      }return out;
+    }
+    const forward=accepted(fw),backward=accepted(bw),raw=[];
+    for(const [q,a] of forward){
+      if(backward.get(a.trainIdx)?.trainIdx!==q)continue;
+      const pm=k1.get(q).pt,pi=k2.get(a.trainIdx).pt;
+      raw.push({queryIdx:q,trainIdx:a.trainIdx,distance:a.distance,score:a.distance,master:{x:pm.x,y:pm.y},inspect:{x:pi.x,y:pi.y}});
+    }
+    const pairs=spatialBalancePairsV48(raw,m,240);
+    DEBUG.align={stage:'相互対応点',keypointsMaster:k1.size(),keypointsInspect:k2.size(),mutualMatches:raw.length,balancedMatches:pairs.length,ratioTest:0.88};
+    if(pairs.length<12)throw new Error('位置合わせ失敗: 相互対応点不足 ('+pairs.length+')');
+    const initial=ransacSimilarityV48(pairs,4);
+    DEBUG.align.similarityInliers=initial?.count||0;
+    DEBUG.align.similarityMedianError=initial?.median??null;
+    // 撮影角度の違いは相似変換では表せないため、射影変換も独立に検証する。
+    const projective=projectiveMatchV51(pairs,m,i);
+    DEBUG.align.projective=projective.diag;
+    if(projective.H && (!initial || projective.inliers>=initial.count+4 || initial.count<12)){
+      return projective;
+    }
+    if(projective.H)projective.H.delete();
+    if(!initial||initial.count<12)throw new Error('位置合わせ失敗: RANSAC支持点不足 (相似'+(initial?.count||0)+' / 射影'+projective.diag.inliers+' / 候補'+pairs.length+')');
+    const mb={x:0,y:0,w:m.w,h:m.h},ib={x:0,y:0,w:i.w,h:i.h};
+    const guided=guidedMatchesV48(m,i,k1,k2,d1,d2,mb,ib,initial.sim,12,72,0.85,240);
+    const refined=guided.length>=12?ransacSimilarityV48(guided,4):null;
+    // 局所探索で作った一致だけで合格しない。初期の独立した対応点も再確認する。
+    let sim=initial.sim;
+    if(refined){const check=evalSimV48(refined.sim,pairs,4);
+      if(check.count>=initial.count && check.median<=initial.median+0.5)sim=refined.sim;
+    }
+    const ev=evalSimV48(sim,pairs,4);
+    const cells=new Set();
+    pairs.forEach((z,k)=>{if(ev.mask[k])cells.add(Math.floor(z.master.x/m.w*4)+','+Math.floor(z.master.y/m.h*4));});
+    const spreadX=ev.spreadX/m.w,spreadY=ev.spreadY/m.h;
+    const geometryOk=Number.isFinite(sim.scale)&&sim.scale>=CONFIG.scaleMin&&sim.scale<=CONFIG.scaleMax&&
+      Math.abs(sim.angleDeg)<=CONFIG.coarseMaxAngleDeg&&spreadX>=0.25&&spreadY>=0.12&&cells.size>=4&&ev.median<=3;
+    return {H:simToHMatV48(sim),inliers:ev.count,total:pairs.length,geometryOk,
+      spreadX,spreadY,cells:cells.size,medianReprojError:ev.median,angleDeg:sim.angleDeg,
+      method:'GLOBAL-MUTUAL-SIMILARITY',matchPairs:pairs.map((z,k)=>({...z,inlier:ev.mask[k]}))};
+  }finally{for(const o of owned.reverse())o.delete();}
+}
+
+// v52: 全体輪郭の相関 → 狭い近傍の特徴点 → 射影RANSAC。
+// 上/下/左右の特定の形状を仮定しない。相関スコアだけでは合格しない。
+function edgeGrayV52(gray){
+  const blur=new cv.Mat(),edge=new cv.Mat();
+  try{cv.GaussianBlur(gray,blur,new cv.Size(3,3),0);cv.Canny(blur,edge,60,120);return edge;}
+  catch(e){edge.delete();throw e;}finally{blur.delete();}
+}
+function globalEdgeSeedV52(me,ie){
+  const own=[],keep=x=>(own.push(x),x),factor=400/me.cols;
+  try{
+    const a=keep(new cv.Mat()),b=keep(new cv.Mat());
+    cv.resize(me,a,new cv.Size(400,Math.round(me.rows*factor)));
+    cv.resize(ie,b,new cv.Size(Math.round(ie.cols*factor),Math.round(ie.rows*factor)));
+    cv.threshold(a,a,35,1,cv.THRESH_BINARY);cv.threshold(b,b,35,1,cv.THRESH_BINARY);
+    const inv=keep(new cv.Mat());b.copyTo(inv);
+    for(let k=0;k<inv.data.length;k++)inv.data[k]=1-inv.data[k];
+    const dist=keep(new cv.Mat());cv.distanceTransform(inv,dist,cv.DIST_L2,3);
+    for(let k=0;k<dist.data32F.length;k++)dist.data32F[k]=Math.max(0,1-dist.data32F[k]/3);
+    const field=keep(new cv.Mat()),pad=120;
+    cv.copyMakeBorder(dist,field,pad,pad,pad,pad,cv.BORDER_CONSTANT,new cv.Scalar(0));
+    const af=keep(new cv.Mat());a.convertTo(af,cv.CV_32F);
+    const rotated=keep(new cv.Mat()),temp=keep(new cv.Mat()),corr=keep(new cv.Mat());
+    let best=null;
+    for(const angle of [0,-6,6,-12,12]){
+      const R=cv.getRotationMatrix2D(new cv.Point(af.cols/2,af.rows/2),angle,1);
+      try{
+        cv.warpAffine(af,rotated,R,new cv.Size(af.cols,af.rows));
+        for(let n=0;n<=20;n++){
+          const scale=.8+n*.02;
+          cv.resize(rotated,temp,new cv.Size(Math.round(rotated.cols*scale),Math.round(rotated.rows*scale)));
+          if(temp.cols>field.cols||temp.rows>field.rows)continue;
+          let sum=0;for(const x of temp.data32F)sum+=x;
+          if(sum<40)continue;
+          cv.matchTemplate(field,temp,corr,cv.TM_CCORR);
+          const mm=cv.minMaxLoc(corr),score=mm.maxVal/sum;
+          if(!best||score>best.score){
+            const d=matrixValuesV53(R);
+            // master→inspect at full working resolution; invert to obtain inspect→master.
+            const A=scale*d[0],B=scale*d[3];
+            const tx=(scale*d[2]+mm.maxLoc.x-pad)/factor,ty=(scale*d[5]+mm.maxLoc.y-pad)/factor,den=A*A+B*B;
+            best={score,angle,searchScale:scale,sim:{A:A/den,B:-B/den,tx:(-A*tx-B*ty)/den,ty:(B*tx-A*ty)/den,scale:1/scale,angleDeg:angle}};
+          }
+        }
+      }finally{R.delete();}
+    }
+    if(!best)throw new Error('全体輪郭の情報不足');
+    return best;
+  }finally{for(const x of own.reverse())x.delete();}
+}
+function detectAndMatch(m,i,features){
+  let directError;
+  try{const r=detectAndMatchDirectV51(m,i,features);if(r.geometryOk&&r.inliers>=CONFIG.minInliers&&r.inliers/Math.max(1,r.total)>=CONFIG.minInlierRatio)return r;r.H.delete();throw new Error('初期対応の分布・支持率不足');}catch(e){directError=e;}
+  const previous={...DEBUG.align};
+  let candidateH=null;
+  const own=[],keep=x=>(own.push(x),x);
+  try{
+    const me=keep(edgeGrayV52(m.gray)),ie=keep(edgeGrayV52(i.gray));
+    const seed=globalEdgeSeedV52(me,ie);
+    DEBUG.align={stage:'全体輪郭＋近傍対応',direct:previous,globalScore:seed.score,seed:seed.sim,searchAngle:seed.angle};
+    const mg=keep(new cv.Mat()),ig=keep(new cv.Mat());
+    cv.GaussianBlur(me,mg,new cv.Size(5,5),0);cv.GaussianBlur(ie,ig,new cv.Size(5,5),0);
+    const orb=keep(new cv.ORB(5000)),k1=keep(new cv.KeyPointVector()),k2=keep(new cv.KeyPointVector()),d1=keep(new cv.Mat()),d2=keep(new cv.Mat()),z=keep(new cv.Mat());
+    orb.detectAndCompute(mg,z,k1,d1);orb.detectAndCompute(ig,z,k2,d2);
+    if(d1.empty()||d2.empty())throw new Error('輪郭特徴点不足');
+    const pairs=guidedMatchesV48(m,i,k1,k2,d1,d2,{x:0,y:0,w:m.w,h:m.h},{x:0,y:0,w:i.w,h:i.h},seed.sim,18,90,.85,240);
+    DEBUG.align.guidedPairs=pairs.length;
+    if(pairs.length<12)throw new Error('輪郭近傍の対応点不足');
+    const fit=projectiveMatchV51(pairs,m,i);candidateH=fit.H;DEBUG.align.projective=fit.diag;
+    if(!fit.H)throw new Error('輪郭近傍のRANSAC不成立: '+fit.diag.inliers+'/'+pairs.length);
+    // 学習に用いていない全画面輪郭でも確認。局所的な一致への寄りを排除。
+    const warped=keep(new cv.Mat());cv.warpPerspective(ie,warped,fit.H,new cv.Size(m.w,m.h));
+    let count=0,hit=0;const occupied=new Map();
+    for(let y=3;y<m.h-3;y+=3)for(let x=3;x<m.w-3;x+=3){
+      if(!me.ucharPtr(y,x)[0])continue;count++;
+      const found=hasNearbyEdge(warped,x,y,m.w,m.h,5);if(found)hit++;
+      const key=Math.floor(x/m.w*4)+','+Math.floor(y/m.h*4),c=occupied.get(key)||[0,0];c[0]++;if(found)c[1]++;occupied.set(key,c);
+    }
+    const edgeCoverage=hit/Math.max(1,count),supportedCells=[...occupied.values()].filter(c=>c[0]>=8&&c[1]/c[0]>=.30).length;
+    DEBUG.align.edgeCoverage=edgeCoverage;DEBUG.align.edgeCells=supportedCells;
+    if(edgeCoverage<.30||supportedCells<4){throw new Error('輪郭全体の一致不足');}
+    fit.method='GLOBAL-EDGE-GUIDED-HOMOGRAPHY';candidateH=null;return fit;
+  }catch(e){throw new Error('位置合わせNG: '+e.message+'（初期: '+directError.message+'）');}
+  finally{if(candidateH)candidateH.delete();for(const x of own.reverse())x.delete();}
+}
+
+function matrixValuesV53(mat){
+  const type=mat.type();
+  if(type===cv.CV_64FC1)return mat.data64F;
+  if(type===cv.CV_32FC1)return mat.data32F;
+  throw new Error('変換行列の型が不正: '+type);
+}
+function homographyScale(H){ let d=matrixValuesV53(H); let a=d[0],b=d[1],c=d[3],e=d[4]; return Math.sqrt(Math.abs(a*e-b*c)); }
 function clamp01(v){ return Math.max(0, Math.min(1, v)); }
 function percentile(sortedVals, q){
   if(!sortedVals.length) return 0;
@@ -951,7 +1259,8 @@ function compareAll(m,warped,points){
   ctx.fillStyle='#05070b'; ctx.fillRect(0,0,result.width,result.height);
   const r=Math.min(result.width/m.w,result.height/m.h), ox=(result.width-m.w*r)/2, oy=(result.height-m.h*r)/2;
   let tmp=document.createElement('canvas'); cv.imshow(tmp,warped); ctx.drawImage(tmp,ox,oy,m.w*r,m.h*r);
-  // v14: 撮影後もマスター画像を薄く重ねる。ズレ・回転・穴位置の目視確認用。
+  ctx.save(); ctx.globalAlpha=0.45; ctx.drawImage(m.canvas,ox,oy,m.w*r,m.h*r); ctx.restore();
+  // 撮影画像55%＋マスター45%。判定処理は元の画像同士で行う。
   let outerMismatch=0,outerDenom=0;
   ctx.save(); ctx.translate(ox,oy); ctx.scale(r,r);
   for(let yy=0;yy<m.h;yy+=2){
@@ -1012,230 +1321,29 @@ function compareAll(m,warped,points){
   return{outerDiff, outerMatch, pointOk:okCount, pointAllOk:okCount===points.length, maxPointDiff, details};
 }
 
-
-// =====================================================
-// v26 Single-RANSAC Container β
-// 容器内を「分割」せず、Masterの特徴点から最も強い1個だけRANSACで探す。
-// 別部品混入検出ではなく、検査可能な1個を拾って既存判定へ渡す用途。
-// =====================================================
-const CONTAINER_RANSAC = {
-  masterMaxW: 900,
-  sceneMaxW: 1400,
-  features: 4000,
-  maxMatches: 260,
-  ransacThr: 5,
-  minInliers: 18,
-  minRatio: 0.065,
-  minAreaRatio: 0.008,
-  maxAreaRatio: 0.70
-};
-
-function polygonArea4(pts){
-  let a=0;
-  for(let i=0;i<4;i++){
-    const p=pts[i],q=pts[(i+1)%4];
-    a+=p.x*q.y-q.x*p.y;
-  }
-  return Math.abs(a)/2;
-}
-function transformMasterCornersToScene(HsceneToMaster,mw,mh){
-  let inv=new cv.Mat();
-  cv.invert(HsceneToMaster,inv,cv.DECOMP_SVD);
-  let src=cv.matFromArray(4,1,cv.CV_32FC2,[0,0,mw,0,mw,mh,0,mh]);
-  let dst=new cv.Mat();
-  cv.perspectiveTransform(src,dst,inv);
-  const d=dst.data32F;
-  const pts=[];
-  for(let i=0;i<4;i++)pts.push({x:d[i*2],y:d[i*2+1]});
-  inv.delete(); src.delete(); dst.delete();
-  return pts;
-}
-function validateContainerCandidate(H,m,i,match){
-  const corners=transformMasterCornersToScene(H,m.w,m.h);
-  const area=polygonArea4(corners);
-  const areaRatio=area/Math.max(1,i.w*i.h);
-  const margin=Math.max(i.w,i.h)*0.18;
-  const finite=corners.every(p=>Number.isFinite(p.x)&&Number.isFinite(p.y));
-  const inLooseFrame=finite && corners.every(p=>p.x>=-margin&&p.y>=-margin&&p.x<=i.w+margin&&p.y<=i.h+margin);
-  const ratio=match.inliers/Math.max(1,match.total);
-  const ok=match.inliers>=CONTAINER_RANSAC.minInliers &&
-           ratio>=CONTAINER_RANSAC.minRatio &&
-           areaRatio>=CONTAINER_RANSAC.minAreaRatio &&
-           areaRatio<=CONTAINER_RANSAC.maxAreaRatio &&
-           inLooseFrame;
-  return {ok,corners,areaRatio,ratio,inLooseFrame};
-}
-function drawContainerFoundDebug(img,corners){
-  try{
-    const c=$('debugCanvas'),ctx=c.getContext('2d');
-    c.width=img.width;c.height=img.height;
-    ctx.drawImage(img,0,0,c.width,c.height);
-    const sx=c.width/(img.width||1),sy=c.height/(img.height||1);
-    ctx.save();ctx.strokeStyle='#35dcff';ctx.lineWidth=Math.max(4,c.width/280);
-    ctx.beginPath();
-    corners.forEach((p,k)=>{const x=p.x/CONTAINER_RANSAC.sceneScaleToOriginalX,y=p.y/CONTAINER_RANSAC.sceneScaleToOriginalY;k?ctx.lineTo(x,y):ctx.moveTo(x,y)});
-    ctx.closePath();ctx.stroke();
-    ctx.fillStyle='rgba(53,220,255,.18)';ctx.fill();
-    ctx.restore();
-  }catch(_){}
-}
-async function captureContainerOne(){
-  const video=$('captureVideo'), canvas=$('captureCanvas');
-  if(!video || video.readyState<2){ setCaptureStatus('カメラ準備中です'); return; }
-  try{
-    setCaptureStatus('容器全体を撮影 → Masterと最も一致する1個を探索します...');
-    canvas.width=video.videoWidth||1920; canvas.height=video.videoHeight||1080;
-    canvas.getContext('2d').drawImage(video,0,0,canvas.width,canvas.height);
-    const dataUrl=canvas.toDataURL('image/jpeg',0.95);
-    inspectImg=await new Promise((res,rej)=>{ const im=new Image(); im.onload=()=>res(im); im.onerror=rej; im.src=dataUrl; });
-    await stopInspectCamera(true);
-    drawImageFit($('viewCanvas'),inspectImg); $('empty').style.display='none';
-    await runInspectContainerOne();
-  }catch(e){ console.error(e); setCaptureStatus('容器撮影エラー: '+e.message); }
-}
-async function runInspectContainerOne(){
-  if(!masterImg||!inspectImg){alert('品番と写真を確認してください');return}
-  hideResultAction();
-  okLoggedForCurrent=false; logSending=false;
-  setLoading(true); setBanner('WAIT');
-  if(!cvLoaded){
-    log('OpenCV.js準備中... 最大20秒待機します');
-    const okCv=await waitForOpenCV(20000);
-    if(!okCv){ setLoading(false); log('OpenCV.js読込タイムアウト。'); return; }
-  }
-  let m=null,i=null,H=null,warped=null;
-  try{
-    log('容器内からMasterと一致する1個を探索中...\n※ 全個体の分離はしません。最も強い1個だけを使います。');
-    const pointNormalizeInfo=DEBUG.image?.pointNormalize;
-    DEBUG={image:{pointNormalize:pointNormalizeInfo,mode:'container-single-ransac'},align:{},points:DEBUG.points||[],logs:DEBUG.logs||[]};
-
-    m=matFromImage(masterImg,CONTAINER_RANSAC.masterMaxW);
-    i=matFromImage(inspectImg,CONTAINER_RANSAC.sceneMaxW);
-    CONTAINER_RANSAC.sceneScaleToOriginalX=i.w/inspectImg.width;
-    CONTAINER_RANSAC.sceneScaleToOriginalY=i.h/inspectImg.height;
-
-    const mt=detectAndMatch(m,i,CONTAINER_RANSAC.features,CONTAINER_RANSAC.maxMatches,CONTAINER_RANSAC.ransacThr);
-    H=mt.H;
-    const valid=validateContainerCandidate(H,m,i,mt);
-
-    DEBUG.image={
-      mode:'container-single-ransac',
-      masterOriginal:{w:masterImg.width,h:masterImg.height},
-      inspectOriginal:{w:inspectImg.width,h:inspectImg.height},
-      processMaster:{w:m.w,h:m.h,scale:m.scale},
-      processScene:{w:i.w,h:i.h,scale:i.scale},
-      pointCount:points.length,
-      pointNormalize:pointNormalizeInfo||undefined
-    };
-    const d=H.data64F||H.data32F;
-    DEBUG.align={
-      mode:'single-best-instance',
-      inliers:mt.inliers,total:mt.total,ratio:valid.ratio,
-      projectedAreaRatio:valid.areaRatio,
-      inLooseFrame:valid.inLooseFrame,
-      bestDistance:mt.bestDistance,medianDistance:mt.medianDistance,
-      candidateOk:valid.ok,
-      corners:valid.corners,
-      H:[d[0],d[1],d[2],d[3],d[4],d[5],d[6],d[7],d[8]]
-    };
-    renderDebug();
-
-    if(!valid.ok){
-      setBanner('WAIT');
-      setStat('alignStat',`${mt.inliers}/${mt.total}`,'waitText');
-      setStat('outerStat','--','waitText');
-      setStat('pointStat','判定不能','waitText');
-      log(`容器内から検査可能な1個を確定できませんでした。
-位置合わせ候補: ${mt.inliers}/${mt.total}
-候補面積: ${(valid.areaRatio*100).toFixed(1)}%
-製品を少し見える状態にするか、端末を近づけて再撮影してください。`);
-      dbg('container candidate rejected',DEBUG.align);
-      return;
-    }
-
-    warped=new cv.Mat();
-    cv.warpPerspective(i.src,warped,H,new cv.Size(m.w,m.h));
-    const res=compareAll(m,warped,points);
-    const outerOk=res.outerDiff<=CONFIG.outerThr;
-    const pointsOk=(points.length===0)||res.pointAllOk;
-    const ok=outerOk&&pointsOk;
-
-    lastInspectionRecord={
-      barcodeRaw: currentBarcodeRaw || currentPart?.partNo || '',
-      masterKey: currentPart?.partNo || '',
-      partNo: currentBarcodeInfo?.partNo || currentPart?.partNo || '',
-      partName: currentBarcodeInfo?.partName || '',
-      qty: currentBarcodeInfo?.qty || '',
-      shipDate: currentBarcodeInfo?.shipDate || '',
-      issueDate: currentBarcodeInfo?.issueDate || '',
-      orderNo: currentBarcodeInfo?.orderNo || '',
-      planNo: currentBarcodeInfo?.planNo || '',
-      process: currentBarcodeInfo?.process || '',
-      traceNo: currentBarcodeInfo?.traceNo || '',
-      barcodeFormat: currentBarcodeInfo?.format || '',
-      result: ok ? 'OK' : 'NG',
-      mode:'CONTAINER_SINGLE_RANSAC',
-      outerMatch: Math.round((res.outerMatch||0)*1000)/10,
-      outerDiff: Math.round((res.outerDiff||0)*1000)/10,
-      pointOk: res.pointOk,
-      pointTotal: points.length,
-      inliers:mt.inliers,total:mt.total,
-      inlierRatio:Math.round(valid.ratio*1000)/1000,
-      projectedAreaRatio:Math.round(valid.areaRatio*10000)/10000,
-      alignOk:true,outerOk,pointsOk,
-      deviceId:getDeviceId(),
-      inspectVersion:INSPECT_VERSION,
-      pointDetails:(res.details||[]).map(p=>({name:p.name,type:p.type,ok:p.ok,match:Math.round((p.match||0)*1000)/10,threshold:Math.round((p.threshold||0)*1000)/10}))
-    };
-
-    setBanner(ok?'OK':'NG');
-    setStat('alignStat',`${mt.inliers}/${mt.total}`,'okText');
-    setStat('outerStat',(res.outerMatch*100).toFixed(1)+'%',outerOk?'okText':'ngText');
-    setStat('pointStat',points.length?`${res.pointOk}/${points.length}`:'外形のみ',pointsOk?'okText':'ngText');
-    log(`容器内から1個検出 → 判定完了
-品番: ${currentPart?.partNo||''}
-総合: ${ok?'OK':'NG'}
-位置合わせ: ${mt.inliers}/${mt.total}
-検出個体の画面占有率: ${(valid.areaRatio*100).toFixed(1)}%
-外形マッチ率: ${(res.outerMatch*100).toFixed(1)}%
-検査ポイント: ${points.length?res.pointOk+'/'+points.length:'なし（外形のみ）'}`);
-    dbg('container single-RANSAC 完了',{ok,align:DEBUG.align,outerMatch:res.outerMatch,points:res.details});
-    renderDebug();
-    showResultAction(ok);
-    if(!ok && !ngLoggedForCurrent){ ngLoggedForCurrent=true; recordInspection('NG_AUTO'); }
-  }catch(e){
-    console.error(e);
-    setBanner('WAIT'); setStat('alignStat','--','waitText'); setStat('outerStat','--','waitText'); setStat('pointStat','判定不能','waitText');
-    log('容器内1個探索エラー: '+e.message+'\n製品が小さすぎる・隠れすぎている場合は近づけて再撮影してください。');
-    dbg('container single-RANSAC error',{message:e.message,stack:e.stack});
-    renderDebug();
-  }finally{
-    try{if(m){m.src.delete();m.gray.delete();}}catch(_){}
-    try{if(i){i.src.delete();i.gray.delete();}}catch(_){}
-    try{if(H)H.delete();}catch(_){}
-    try{if(warped)warped.delete();}catch(_){}
-    setLoading(false);
-  }
-}
-
 async function runInspect(){
+  if(inspectBusyV50)return;
   if(!masterImg||!inspectImg){alert('品番と写真を確認してください');return}
+  inspectBusyV50=true;
   hideResultAction();
+  lastInspectionRecord=null; DEBUG.points=[];
+  setStat('alignStat','--'); setStat('outerStat','--'); setStat('pointStat','--');
   okLoggedForCurrent=false; logSending=false;
   setLoading(true); setBanner('WAIT');
   if(!cvLoaded){
     log('OpenCV.js準備中... 最大20秒待機します');
     const okCv=await waitForOpenCV(20000);
-    if(!okCv){ setLoading(false); log('OpenCV.js読込タイムアウト。js/opencv.js の配置/キャッシュを確認してください。'); updateActionState(); return; }
+    if(!okCv){ inspectBusyV50=false; setLoading(false); log('OpenCV.js読込タイムアウト。js/opencv.js の配置/キャッシュを確認してください。'); updateActionState(); return; }
   }
+  let m,i,H,warped;
   try{
     log('解析中...');
     const pointNormalizeInfo=DEBUG.image?.pointNormalize;
     DEBUG={image:{pointNormalize:pointNormalizeInfo},align:{},points:DEBUG.points||[],logs:DEBUG.logs||[]};
     dbg('解析開始');
-    const m=matFromImage(masterImg,CONFIG.maxW), i=matFromImage(inspectImg,CONFIG.maxW);
+    m=matFromImage(masterImg,CONFIG.maxW); i=matFromImage(inspectImg,CONFIG.maxW);
     DEBUG.image={
-      version:'inspect_v12_hole_stable',
+      version:INSPECT_VERSION,
       partNo:currentPart?.partNo||'',
       masterOriginal:{w:masterImg.width,h:masterImg.height},
       inspectOriginal:{w:inspectImg.width,h:inspectImg.height},
@@ -1245,18 +1353,21 @@ async function runInspect(){
       pointCount:points.length,
       pointNormalize:DEBUG.image.pointNormalize||undefined
     };
-    const {H,inliers,total}=detectAndMatch(m,i,CONFIG.features);
-    let warped=new cv.Mat();
-    cv.warpPerspective(i.src,warped,H,new cv.Size(m.w,m.h));
+    const mt=detectAndMatch(m,i,CONFIG.features);
+    H=mt.H; const {inliers,total}=mt;
     const scale=homographyScale(H);
-    const d=H.data64F||H.data32F;
+    const d=matrixValuesV53(H);
     const scaleOk=scale>=CONFIG.scaleMin&&scale<=CONFIG.scaleMax;
-    const alignOk=inliers>=CONFIG.minInliers && (inliers/Math.max(1,total))>=CONFIG.minInlierRatio && scaleOk;
-    DEBUG.align={
+    const alignOk=inliers>=CONFIG.minInliers && (inliers/Math.max(1,total))>=CONFIG.minInlierRatio && scaleOk && mt.geometryOk;
+    DEBUG.align={...DEBUG.align,
       inliers,total,ratio:inliers/Math.max(1,total),scale,scaleOk,alignOk,
+      method:mt.method,spreadX:mt.spreadX,spreadY:mt.spreadY,cells:mt.cells,medianReprojError:mt.medianReprojError,angleDeg:mt.angleDeg,
       H:[d[0],d[1],d[2],d[3],d[4],d[5],d[6],d[7],d[8]],
       note:'Hはinspect画像→master画像へwarpする変換。検査点はmaster画像座標で評価。'
     };
+    if(!alignOk)throw new Error('位置合わせNG: 対応点の数・分布・倍率・誤差を確認してください');
+    warped=new cv.Mat();
+    cv.warpPerspective(i.src,warped,H,new cv.Size(m.w,m.h));
     const res=compareAll(m,warped,points);
     const outerOk=res.outerDiff<=CONFIG.outerThr;
     const pointsOk=(points.length===0)||res.pointAllOk;
@@ -1290,39 +1401,38 @@ async function runInspect(){
       inspectVersion: INSPECT_VERSION,
       pointDetails: (res.details||[]).map(p=>({name:p.name,type:p.type,ok:p.ok,match:Math.round((p.match||0)*1000)/10,threshold:Math.round((p.threshold||0)*1000)/10}))
     };
-    if(!alignOk){
-      setBanner('WAIT');
-      setStat('alignStat',`${inliers}/${total}`,'ngText');
-      setStat('outerStat','--','waitText');
-      setStat('pointStat','判定不能','waitText');
-      lastInspectionRecord=null;
-      hideResultAction();
-      log(`品番: ${currentPart?.partNo||''}
-総合: 判定不能（再撮影）
-位置合わせ: NG (${inliers}/${total}, 倍率${scale.toFixed(3)})
-※位置合わせが成立していないため、外形・検査ポイントが偶然一致してもOK判定しません。`);
-      dbg('解析終了: 位置合わせNGのため判定不能',{alignOk,inliers,total,scale,outerMatch:res.outerMatch,pointOk:res.pointOk});
-      renderDebug();
-      return;
-    }
-
     setBanner(ok?'OK':'NG');
-    setStat('alignStat',`${inliers}/${total}`,'okText');
+    setStat('alignStat',`${inliers}/${total}`,alignOk?'okText':'ngText');
     setStat('outerStat',(res.outerMatch*100).toFixed(1)+'%',outerOk?'okText':'ngText');
     setStat('pointStat',points.length?`${res.pointOk}/${points.length}`:'外形のみ',pointsOk?'okText':'ngText');
     log(`品番: ${currentPart?.partNo||''}
 総合: ${ok?'OK':'NG'}
-位置合わせ: OK (${inliers}/${total}, 倍率${scale.toFixed(3)})
+位置合わせ: ${alignOk?'OK':'NG'} (${inliers}/${total}, 倍率${scale.toFixed(3)})
 外形マッチ率: ${(res.outerMatch*100).toFixed(1)}% ${outerOk?'OK':'NG'}
 検査ポイント: ${points.length?res.pointOk+'/'+points.length:'なし（外形のみ）'}`);
-    dbg('解析完了',{ok,alignOk,outerMatch:res.outerMatch,outerDiff:res.outerDiff,pointOk:res.pointOk,points:res.details});
+    dbg('解析完了',{ok,outerMatch:res.outerMatch,outerDiff:res.outerDiff,pointOk:res.pointOk,points:res.details});
     renderDebug();
     showResultAction(ok);
     if(!ok && !ngLoggedForCurrent){ ngLoggedForCurrent=true; recordInspection('NG_AUTO'); }
-    m.src.delete(); m.gray.delete(); i.src.delete(); i.gray.delete(); H.delete(); warped.delete();
+
   }catch(e){
-    console.error(e); setBanner('NG'); setStat('alignStat','NG','ngText'); log('解析エラー: '+e.message); dbg('解析エラー',{message:e.message,stack:e.stack});
-  }finally{ setLoading(false); }
+    console.error(e); lastInspectionRecord=null; DEBUG.points=[];
+    // 成立していない変換を検査に使用しない。重ね画像は未補正の参考表示。
+    if(m&&i){
+      let preview=new cv.Mat();
+      try{cv.resize(i.src,preview,new cv.Size(m.w,m.h));drawOverlayV51(m,preview,'未位置合わせ：参考重ね画像');}
+      catch(previewError){drawImageFit($('viewCanvas'),inspectImg);DEBUG.align.previewError=String(previewError.message||previewError);}
+      finally{preview.delete();}
+    }else drawImageFit($('viewCanvas'),inspectImg);
+    DEBUG.align={...DEBUG.align,alignOk:false,failure:e.message};
+    setBanner('NG'); setStat('alignStat','NG','ngText');
+    setStat('outerStat','未判定','waitText'); setStat('pointStat','未判定','waitText');
+    log('総合: NG\n'+e.message+'\n位置合わせが成立しないため、外形・検査ポイントは未判定です。');
+    dbg('解析NG',{message:e.message,stack:e.stack}); showResultAction(false);
+  }finally{
+    for(const obj of [warped,H,i?.gray,i?.src,m?.gray,m?.src])if(obj)obj.delete();
+    inspectBusyV50=false; setLoading(false);
+  }
 }
 </script>
 </body>
