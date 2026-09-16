@@ -18,7 +18,7 @@ details.diag{margin-top:14px;background:#fff;border:1px solid var(--line);border
 </style>
 </head>
 <body>
-<header><h1>J-MAX Shipping</h1><div><span class="ver">GitHub Pages v4.0 Simple</span>　<button class="btn btn-secondary" style="padding:7px 10px" id="settingsBtn">設定</button></div></header>
+<header><h1>J-MAX Shipping</h1><div><span class="ver">GitHub Pages v4.1 FastAck</span>　<button class="btn btn-secondary" style="padding:7px 10px" id="settingsBtn">設定</button></div></header>
 <div class="wrap">
 <section class="card top"><div class="metric"><b>現在の便</b><div id="shipmentId" class="shipment-id">最初のQRを読み取ってください</div></div><div class="metric"><b>読取件数</b><div id="count" class="num">0</div></div><div class="metric"><b>合計数量</b><div id="totalQty" class="num">0</div></div></section>
 <section class="card scan-card"><div class="scan-head"><strong>QR / バーコード待機</strong><span id="syncText" class="sync">端末待機</span></div><div id="status" class="status">設定後、QRを読み取ってください</div><div id="last" class="last"><div><b>品番</b><span id="lastPart"></span></div><div><b>品名</b><span id="lastName"></span></div><div><b>数量</b><span id="lastQty"></span></div></div><div class="actions"><button id="completeBtn" class="btn btn-primary" disabled>積 載 完 了</button></div><details class="diag"><summary>診断情報</summary><pre id="diag">—</pre></details></section>
@@ -29,7 +29,7 @@ details.diag{margin-top:14px;background:#fff;border:1px solid var(--line);border
 <script>
 (()=>{
 'use strict';
-const APP_VERSION='4.0';
+const APP_VERSION='4.1';
 const LS={url:'jm_shipping_gas_url',key:'jm_shipping_api_key',terminal:'jm_shipping_terminal',client:'jm_shipping_client_id',queue:'jm_shipping_pending_queue'};
 const $=id=>document.getElementById(id), dialog=$('settingsDialog'), statusEl=$('status');
 const clientId=localStorage.getItem(LS.client)||(()=>{const v='c_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,9);localStorage.setItem(LS.client,v);return v;})();
@@ -111,13 +111,37 @@ async function completeShipment(){
 $('completeBtn').addEventListener('click',completeShipment);
 
 async function apiPost(payload){
- const url=getUrl();const ctl=new AbortController();const timer=setTimeout(()=>ctl.abort(),15000);
+ const url=getUrl();const ctl=new AbortController();const timer=setTimeout(()=>ctl.abort(),10000);
  try{
    const res=await fetch(url,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload),cache:'no-store',redirect:'follow',credentials:'omit',signal:ctl.signal});
    if(!res.ok)throw new Error('HTTP '+res.status);
    const text=await res.text();let data;try{data=JSON.parse(text)}catch(_){throw new Error('GAS応答がJSONではありません');}
    if(data.status==='error')throw new Error(data.message||'GASエラー');return data;
- }catch(e){if(e&&e.name==='AbortError')throw new Error('GAS応答タイムアウト');throw e;}finally{clearTimeout(timer);}
+ }catch(e){
+   // POSTの応答だけが遅延/欠落しても、commitIdでGoogle側の保存完了をGET確認する。
+   if(payload&&payload.action==='commit_shipment'&&payload.commitId){
+     const confirmed=await waitCommitConfirmation(payload.commitId,8,1200);
+     if(confirmed)return confirmed;
+   }
+   if(e&&e.name==='AbortError')throw new Error('GAS応答タイムアウト（保存確認もできません）');
+   throw e;
+ }finally{clearTimeout(timer);}
+}
+async function waitCommitConfirmation(commitId,maxTries=8,intervalMs=1200){
+ for(let i=0;i<maxTries;i++){
+   if(i)await new Promise(r=>setTimeout(r,intervalMs));
+   try{
+     const q=new URLSearchParams({action:'commit_status',key:getKey(),clientId,commitId,_t:String(Date.now())});
+     const ctl=new AbortController();const timer=setTimeout(()=>ctl.abort(),4000);
+     try{
+       const res=await fetch(getUrl()+'?'+q.toString(),{cache:'no-store',redirect:'follow',credentials:'omit',signal:ctl.signal});
+       if(!res.ok)continue;
+       const text=await res.text();let data;try{data=JSON.parse(text)}catch(_){continue;}
+       if(data&&data.status==='completed')return data;
+     }finally{clearTimeout(timer);}
+   }catch(_){ }
+ }
+ return null;
 }
 async function apiGet(action){
  const q=new URLSearchParams({action,key:getKey(),clientId,_t:String(Date.now())});
