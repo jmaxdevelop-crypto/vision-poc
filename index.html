@@ -26,7 +26,7 @@
 </style>
 </head>
 <body>
-<header><h1>J-MAX Shipping</h1><div><span class="ver">GitHub Pages v2.5</span>　<button class="btn btn-secondary" style="padding:7px 10px" id="settingsBtn">設定</button></div></header>
+<header><h1>J-MAX Shipping</h1><div><span class="ver">GitHub Pages v2.8</span>　<button class="btn btn-secondary" style="padding:7px 10px" id="settingsBtn">設定</button></div></header>
 <div class="wrap">
   <section class="card top">
     <div class="metric"><b>現在の便</b><div id="shipmentId" class="shipment-id">最初のQRを読み取ってください</div></div>
@@ -60,7 +60,7 @@
 <script>
 (() => {
   'use strict';
-  const APP_VERSION = '2.6';
+  const APP_VERSION = '2.8';
   const IDLE_MS = 500;
   const LS = {url:'jm_shipping_gas_url', key:'jm_shipping_api_key', terminal:'jm_shipping_terminal', client:'jm_shipping_client_id', queue:'jm_shipping_pending_queue'};
   const $ = id => document.getElementById(id);
@@ -68,6 +68,33 @@
   let idleTimer=null, sending=false, completing=false, currentState=null, scanSerial=0, latestScanSerial=0;
   let queue = safeJson(localStorage.getItem(LS.queue), []);
   const seenRaw = new Set();
+
+  // v2.8: 旧版でlocalStorageに残った不完全/解析不能な読取は、
+  // Google送信待ちとして扱わず自動破棄する。正常解析できる項目だけが送信キュー。
+  function isValidQueueItem(item){
+    if(!item || !item.raw) return false;
+    const raw=normalizeRaw(item.raw);
+    if(!raw) return false;
+    const p=parseBarcode(raw);
+    return p && p.parseStatus==='OK';
+  }
+  function pruneInvalidQueue(){
+    const before=queue.length;
+    const kept=[];
+    for(const item of queue){
+      if(!isValidQueueItem(item)){
+        try{ seenRaw.delete(normalizeRaw(item&&item.raw||'')); }catch(_){}
+        continue;
+      }
+      // 現行パーサで再解析し、古いparsedキャッシュも更新する。
+      item.raw=normalizeRaw(item.raw);
+      item.parsed=parseBarcode(item.raw);
+      kept.push(item);
+    }
+    queue=kept;
+    if(queue.length!==before) saveQueue();
+    return before-queue.length;
+  }
   let buffer='';
   let scanStartedAt=0, lastKeyAt=0, maxKeyGap=0, receivedKeys=0, lastTerminator='', ignoredTerminators=0;
 
@@ -79,7 +106,13 @@
     focusScanner();
     if (!configured()) { dialog.showModal(); setStatus('最初に接続設定をしてください', 'warning'); return; }
     restoreLocalState();
-    setStatus('読み取り待機中','');
+    const purged=pruneInvalidQueue();
+    if(purged>0){
+      setStatus(`旧キャッシュの読み取り不全 ${purged}件を自動削除しました`,'warning');
+      setTimeout(()=>{ if(!sending&&!scanStartedAt) setStatus('読み取り待機中',''); },1200);
+    } else {
+      setStatus('読み取り待機中','');
+    }
     if(!queue.length || !currentState?.currentShipmentId) await refreshState();
     else setSync(false,'送信待ちあり');
     pumpQueue();
@@ -170,6 +203,8 @@
   }
 
   async function pumpQueue(){
+    // 不完全な旧キャッシュは送信しない・完了ボタンも塞がせない。
+    pruneInvalidQueue();
     if(sending||completing||!configured()||!queue.length){updateCompleteButton();return;}
     sending=true; renderPending(); updateCompleteButton();
     const item=queue[0];
@@ -206,17 +241,43 @@
   }
 
   async function completeShipment(){
-    if(completing||sending||queue.length) return;
+    // 旧版由来の不完全読取キャッシュはここでも必ず掃除する。
+    const purged=pruneInvalidQueue();
+    if(completing||sending) return;
+    if(queue.length){
+      setStatus(`Googleへの正常データ送信待ちが ${queue.length}件あります。送信完了後に積載完了できます。`,'warning');
+      pumpQueue();
+      return;
+    }
     if(!currentState?.currentShipmentId){setStatus('まだバーコードが読み取られていません。','warning');return;}
+
+    // 前回の読取エラー/警告を、積載完了操作に持ち越さない。
+    clearTimeout(idleTimer); idleTimer=null;
+    scanner.value='';
+    scanStartedAt=0; lastKeyAt=0; maxKeyGap=0; receivedKeys=0; lastTerminator=''; ignoredTerminators=0;
+    hideParsed();
+    setStatus('積載完了処理中…','');
+
     completing=true; updateCompleteButton();
     const localSummary={shipmentId:currentState.currentShipmentId,count:Number(currentState.count||0),totalQuantity:Number(currentState.totalQuantity||0)};
     try{
       const r=await api('complete',{shipmentId:currentState.currentShipmentId});
       const s=(r.status==='completed'&&r.completedShipment)?r.completedShipment:localSummary;
       if(r.status!=='completed'&&r.status!=='sent_unconfirmed') throw new Error(r.message||'完了できませんでした');
+
+      // 完了した瞬間に必ず成功表示へ上書きする。
+      // これで直前の「読み取り失敗」「通信エラー」が画面へ残らない。
+      setStatus(`✓ 積載完了　${s.shipmentId}`,'ok');
+      hideParsed();
+      $('diag').textContent='—';
       $('overlayId').textContent=s.shipmentId; $('overlayCount').textContent=s.count; $('overlayQty').textContent=s.totalQuantity; $('overlay').style.display='flex';
       currentState={status:'state',currentShipmentId:'',count:0,totalQuantity:0,items:[]}; renderState(currentState); seenRaw.clear(); saveLocalState();
-      setTimeout(()=>{$('overlay').style.display='none';setStatus('次の便：最初のQRを読み取ってください','');focusScanner();},1600);
+      setTimeout(()=>{
+        $('overlay').style.display='none';
+        setStatus('次の便：最初のQRを読み取ってください','');
+        hideParsed();
+        focusScanner();
+      },1600);
       beep(1050,.08); setTimeout(()=>beep(1320,.1),110);
     }catch(e){setStatus('⚠ '+(e.message||e),'error');}
     completing=false; updateCompleteButton();
@@ -356,8 +417,16 @@
   function clearPreviousFeedbackForNewScan(){setStatus('読み取り中…','');hideParsed();}
   function setStatus(t,c){statusEl.textContent=t;statusEl.className='status'+(c?' '+c:'');}
   function setSync(ok,t){$('syncText').textContent=t;$('syncText').className='sync'+(ok?'':' bad');}
-  function renderPending(){$('pendingText').textContent=queue.length?`送信待ち ${queue.length}件`:'';saveQueue();}
-  function updateCompleteButton(){$('completeBtn').disabled=!currentState?.currentShipmentId||sending||queue.length||completing;}
+  function renderPending(){
+    const invalid=queue.filter(x=>!isValidQueueItem(x)).length;
+    $('pendingText').textContent=queue.length ? (invalid?`送信待ち ${queue.length-invalid}件 / 不完全キャッシュ ${invalid}件`:`送信待ち ${queue.length}件`) : '';
+    saveQueue();
+  }
+  function updateCompleteButton(){
+    // 不完全キャッシュは完了可否の条件にしない。正常な未送信データだけをブロックする。
+    const validPending=queue.some(isValidQueueItem);
+    $('completeBtn').disabled=!currentState?.currentShipmentId||sending||validPending||completing;
+  }
   function saveQueue(){localStorage.setItem(LS.queue,JSON.stringify(queue));}
   function focusScanner(){setTimeout(()=>{try{if(!dialog.open)scanner.focus({preventScroll:true});}catch{}},20);}
   function timeOnly(s){const m=String(s||'').match(/(\d{2}:\d{2}:\d{2})$/);return m?m[1]:s||'';}
