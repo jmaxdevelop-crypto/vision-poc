@@ -26,7 +26,7 @@
 </style>
 </head>
 <body>
-<header><h1>J-MAX Shipping</h1><div><span class="ver">GitHub Pages v2.8</span>　<button class="btn btn-secondary" style="padding:7px 10px" id="settingsBtn">設定</button></div></header>
+<header><h1>J-MAX Shipping</h1><div><span class="ver">GitHub Pages v2.9</span>　<button class="btn btn-secondary" style="padding:7px 10px" id="settingsBtn">設定</button></div></header>
 <div class="wrap">
   <section class="card top">
     <div class="metric"><b>現在の便</b><div id="shipmentId" class="shipment-id">最初のQRを読み取ってください</div></div>
@@ -60,7 +60,7 @@
 <script>
 (() => {
   'use strict';
-  const APP_VERSION = '2.8';
+  const APP_VERSION = '2.9';
   const IDLE_MS = 500;
   const LS = {url:'jm_shipping_gas_url', key:'jm_shipping_api_key', terminal:'jm_shipping_terminal', client:'jm_shipping_client_id', queue:'jm_shipping_pending_queue'};
   const $ = id => document.getElementById(id);
@@ -81,20 +81,32 @@
   function pruneInvalidQueue(){
     const before=queue.length;
     const kept=[];
+    const seenPending=new Set();
+    let migrated=0, collapsed=0;
     for(const item of queue){
       if(!isValidQueueItem(item)){
         try{ seenRaw.delete(normalizeRaw(item&&item.raw||'')); }catch(_){}
         continue;
       }
-      // 現行パーサで再解析し、古いparsedキャッシュも更新する。
       item.raw=normalizeRaw(item.raw);
       item.parsed=parseBarcode(item.raw);
+      if(!item.eventId){
+        item.eventId=clientId+'_migrated_'+String(item.createdAt||Date.now())+'_'+Math.random().toString(36).slice(2,8);
+        migrated++;
+      }
+      const key=String(item.shipmentId||'')+'\u0001'+item.raw;
+      if(seenPending.has(key)){
+        collapsed++;
+        continue;
+      }
+      seenPending.add(key);
       kept.push(item);
     }
     queue=kept;
-    if(queue.length!==before) saveQueue();
-    return before-queue.length;
+    if(queue.length!==before || migrated) saveQueue();
+    return {purged: before-kept.length-collapsed, collapsed, migrated};
   }
+
   let buffer='';
   let scanStartedAt=0, lastKeyAt=0, maxKeyGap=0, receivedKeys=0, lastTerminator='', ignoredTerminators=0;
 
@@ -106,9 +118,12 @@
     focusScanner();
     if (!configured()) { dialog.showModal(); setStatus('最初に接続設定をしてください', 'warning'); return; }
     restoreLocalState();
-    const purged=pruneInvalidQueue();
-    if(purged>0){
-      setStatus(`旧キャッシュの読み取り不全 ${purged}件を自動削除しました`,'warning');
+    const qfix=pruneInvalidQueue();
+    for(const q of queue){ if(q && q.raw) seenRaw.add(normalizeRaw(q.raw)); }
+    for(const it of (currentState?.items||[])){ if(it && it.raw) seenRaw.add(normalizeRaw(it.raw)); }
+    if(qfix.purged>0 || qfix.collapsed>0){
+      const msgs=[]; if(qfix.purged>0) msgs.push(`読み取り不全 ${qfix.purged}件削除`); if(qfix.collapsed>0) msgs.push(`重複送信待ち ${qfix.collapsed}件整理`);
+      setStatus(`旧キャッシュを整理しました：${msgs.join(' / ')}`,'warning');
       setTimeout(()=>{ if(!sending&&!scanStartedAt) setStatus('読み取り待機中',''); },1200);
     } else {
       setStatus('読み取り待機中','');
@@ -197,9 +212,10 @@
     seenRaw.add(raw);
     const seq=++scanSerial; latestScanSerial=seq;
     const shipmentId=ensureLocalShipmentId();
-    applyLocalScan(parsed);
+    const eventId=clientId+'_'+Date.now().toString(36)+'_'+seq;
+    applyLocalScan(parsed,raw,eventId);
     showParsed(parsed); setStatus(`✓ ${parsed.partNo}　読み取りOK\nGoogleへ保存中…`,'ok'); beep(880,.06);
-    queue.push({raw,seq,parsed,shipmentId,eventId:clientId+'_'+Date.now().toString(36)+'_'+seq,createdAt:Date.now()}); saveQueue(); renderPending(); pumpQueue();
+    queue.push({raw,seq,parsed,shipmentId,eventId,createdAt:Date.now()}); saveQueue(); renderPending(); pumpQueue();
   }
 
   async function pumpQueue(){
@@ -399,9 +415,9 @@
     currentState.currentShipmentId=day+'-'+String(n).padStart(3,'0'); currentState.count=0; currentState.totalQuantity=0; currentState.items=[];
     saveLocalState(); renderState(currentState); return currentState.currentShipmentId;
   }
-  function applyLocalScan(parsed){
+  function applyLocalScan(parsed,raw,eventId){
     if(!currentState) currentState={status:'state',currentShipmentId:'',count:0,totalQuantity:0,items:[]};
-    const item={scannedAt:new Date().toLocaleString('ja-JP',{hour12:false}),type:parsed.type,partNo:parsed.partNo,partName:parsed.partName,quantity:parsed.quantity,fNo:parsed.fNo||''};
+    const item={scannedAt:new Date().toLocaleString('ja-JP',{hour12:false}),type:parsed.type,partNo:parsed.partNo,partName:parsed.partName,quantity:parsed.quantity,fNo:parsed.fNo||'',raw:raw||'',eventId:eventId||''};
     currentState.items=[item,...(currentState.items||[])].slice(0,100); currentState.count=Number(currentState.count||0)+1; currentState.totalQuantity=Number(currentState.totalQuantity||0)+(Number(parsed.quantity)||0);
     saveLocalState(); renderState(currentState);
   }
