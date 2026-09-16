@@ -26,7 +26,7 @@
 </style>
 </head>
 <body>
-<header><h1>J-MAX Shipping</h1><div><span class="ver">GitHub Pages v2.3</span>　<button class="btn btn-secondary" style="padding:7px 10px" id="settingsBtn">設定</button></div></header>
+<header><h1>J-MAX Shipping</h1><div><span class="ver">GitHub Pages v2.5</span>　<button class="btn btn-secondary" style="padding:7px 10px" id="settingsBtn">設定</button></div></header>
 <div class="wrap">
   <section class="card top">
     <div class="metric"><b>現在の便</b><div id="shipmentId" class="shipment-id">最初のQRを読み取ってください</div></div>
@@ -36,7 +36,7 @@
 
   <section class="card scan-card">
     <div class="scan-head"><strong>QR / バーコード待機</strong><span id="syncText" class="sync">未接続</span></div>
-    <input id="scanner" autocomplete="off" autocapitalize="off" spellcheck="false" inputmode="none">
+    <textarea id="scanner" autocomplete="off" autocapitalize="off" spellcheck="false" inputmode="none" aria-label="バーコード入力"></textarea>
     <div id="status" class="status">設定後、QRを読み取ってください</div>
     <div id="last" class="last"><div><b>品番</b><span id="lastPart"></span></div><div><b>品名</b><span id="lastName"></span></div><div><b>数量</b><span id="lastQty"></span></div></div>
     <div class="actions"><button id="completeBtn" class="btn btn-primary" disabled>積 載 完 了</button></div>
@@ -60,7 +60,7 @@
 <script>
 (() => {
   'use strict';
-  const APP_VERSION = '2.3';
+  const APP_VERSION = '2.5';
   const IDLE_MS = 500;
   const LS = {url:'jm_shipping_gas_url', key:'jm_shipping_api_key', terminal:'jm_shipping_terminal', client:'jm_shipping_client_id', queue:'jm_shipping_pending_queue'};
   const $ = id => document.getElementById(id);
@@ -69,7 +69,7 @@
   let queue = safeJson(localStorage.getItem(LS.queue), []);
   const seenRaw = new Set();
   let buffer='';
-  let scanStartedAt=0, lastKeyAt=0, maxKeyGap=0, receivedKeys=0, lastTerminator='';
+  let scanStartedAt=0, lastKeyAt=0, maxKeyGap=0, receivedKeys=0, lastTerminator='', ignoredTerminators=0;
 
   const clientId = localStorage.getItem(LS.client) || (()=>{const v='c_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,9);localStorage.setItem(LS.client,v);return v;})();
 
@@ -78,108 +78,95 @@
     document.body.addEventListener('click', e=>{if(!e.target.closest('button')&&!e.target.closest('input')&&!e.target.closest('dialog')) focusScanner();});
     focusScanner();
     if (!configured()) { dialog.showModal(); setStatus('最初に接続設定をしてください', 'warning'); return; }
+    restoreLocalState();
     setStatus('読み取り待機中','');
-    await refreshState();
+    if(!queue.length || !currentState?.currentShipmentId) await refreshState();
+    else setSync(false,'送信待ちあり');
     pumpQueue();
   });
 
-  // USB HID は J-MAX Inspect と同じ「document keydown 直取り」方式で受信する。
-  // DOM input.value を1文字ごとに消す方式は高速スキャナ/IMEで欠落し得るため使わない。
-  document.addEventListener('keydown', e=>{
-    // 設定ダイアログで文字入力している間は通常入力を優先。
-    if(dialog.open) return;
-    if(e.ctrlKey || e.altKey || e.metaKey) return;
+  // v2.5: Excelに近い受信方式。document keydown横取りをやめ、
+  // フォーカス中のtextareaへOS/ブラウザが入力した全文をそのまま保持する。
+  function beginScanIfNeeded(now){
+    if(scanStartedAt) return;
+    clearPreviousFeedbackForNewScan();
+    scanStartedAt=now; lastKeyAt=now; maxKeyGap=0; receivedKeys=0; lastTerminator=''; ignoredTerminators=0;
+  }
 
+  scanner.addEventListener('keydown', e=>{
+    if(dialog.open) return;
     const now=performance.now();
-    const finish=(e.key==='Enter' || e.key==='Tab');
-    if(finish){
+    if(e.key==='Enter' || e.key==='Tab'){
       e.preventDefault();
-      e.stopImmediatePropagation();
-      if(buffer.length>=3){
-        lastTerminator=e.key;
-        finalizeScan('terminator');
-      }
+      beginScanIfNeeded(now);
+      const gap=now-lastKeyAt; if(gap>maxKeyGap) maxKeyGap=gap; lastKeyAt=now;
+      scanner.value += (e.key==='Enter' ? '\n' : '\t');
+      receivedKeys=scanner.value.length; ignoredTerminators++; lastTerminator=e.key;
+      scheduleFinalize();
       return;
     }
-    if(e.key==='Escape'){
-      e.preventDefault();
-      e.stopImmediatePropagation();
-      return;
-    }
-    if(e.key.length!==1) return;
+    if(e.key==='Escape'){ e.preventDefault(); return; }
+  });
 
-    if(!buffer){
-      clearPreviousFeedbackForNewScan();
-      scanStartedAt=now;
-      lastKeyAt=now;
-      maxKeyGap=0;
-      receivedKeys=0;
-      lastTerminator='';
-    }else{
-      const gap=now-lastKeyAt;
-      if(gap>maxKeyGap) maxKeyGap=gap;
-      lastKeyAt=now;
-    }
-
-    buffer+=e.key;
-    receivedKeys++;
-    e.preventDefault();
-    e.stopImmediatePropagation();
-    scheduleFinalize();
-  }, true);
-
-  // 診断用：コピー済みRAWをページ上で貼り付けても同じ経路で確認できる。
-  document.addEventListener('paste', e=>{
+  scanner.addEventListener('input', ()=>{
     if(dialog.open) return;
-    const target=e.target;
-    if(target && /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName||'') && target!==scanner) return;
-    const t=(e.clipboardData||window.clipboardData)?.getData('text')||'';
-    if(!t) return;
-    e.preventDefault();
-    if(!buffer){
-      clearPreviousFeedbackForNewScan();
-      scanStartedAt=performance.now();
-      lastKeyAt=scanStartedAt;
-      maxKeyGap=0;
-      receivedKeys=0;
-      lastTerminator='paste';
-    }
-    buffer+=t;
-    receivedKeys+=t.length;
+    const now=performance.now();
+    beginScanIfNeeded(now);
+    const gap=now-lastKeyAt; if(lastKeyAt && gap>maxKeyGap) maxKeyGap=gap; lastKeyAt=now;
+    receivedKeys=scanner.value.length;
     scheduleFinalize();
-  }, true);
+  });
+
+  scanner.addEventListener('paste', ()=>{ beginScanIfNeeded(performance.now()); lastTerminator='paste'; });
 
   function scheduleFinalize(){
     clearTimeout(idleTimer);
-    const n=normalizeRaw(buffer);
-    // 既知のJ-MAX固定長票は141文字が揃った瞬間に確定。
-    if(n.length===141){ finalizeScan('length141'); return; }
-    // Honda等の可変長やサフィックスなしリーダーは500ms無入力で確定。
-    idleTimer=setTimeout(()=>finalizeScan('idle500'),IDLE_MS);
+    // 141文字で即確定しない。今回確認された長尺QRは141文字を通過してさらに続くため、
+    // Excelと同じく「入力が止まった」ことを基準にする。
+    idleTimer=setTimeout(()=>attemptFinalizeAfterIdle(),IDLE_MS);
+  }
+
+  function attemptFinalizeAfterIdle(){
+    clearTimeout(idleTimer); idleTimer=null;
+    const raw=normalizeRaw(scanner.value);
+    if(!raw) return;
+    const parsed=parseBarcode(raw);
+    if(parsed.parseStatus==='OK'){
+      finalizeScan('idle500');
+      return;
+    }
+    // 500ms時点でまだ有効な伝票になっていなければ、内部区切り後の続きを少し待つ。
+    setStatus(`読み取り継続待ち…（現在 ${raw.length}文字）`,'');
+    idleTimer=setTimeout(()=>finalizeScan('idle3000'),2500);
   }
 
   function finalizeScan(reason='unknown'){
     clearTimeout(idleTimer); idleTimer=null;
     const finishedAt=performance.now();
-    let raw=normalizeRaw(buffer);
+    const rawOriginal=scanner.value;
+    let raw=normalizeRaw(rawOriginal);
     const duration=scanStartedAt ? Math.max(0,finishedAt-scanStartedAt) : 0;
     const diagKeys=receivedKeys;
     const diagGap=maxKeyGap;
     const diagTerm=lastTerminator || reason;
-    buffer=''; scanner.value='';
-    scanStartedAt=0; lastKeyAt=0; maxKeyGap=0; receivedKeys=0; lastTerminator='';
+    const diagIgnored=ignoredTerminators;
+    scanner.value='';
+    scanStartedAt=0; lastKeyAt=0; maxKeyGap=0; receivedKeys=0; lastTerminator=''; ignoredTerminators=0;
     if(!raw) return;
 
     const parsed=parseBarcode(raw);
-    $('diag').textContent = `受信長: ${raw.length}\nキー数: ${diagKeys}\n読取時間: ${Math.round(duration)} ms\n最大キー間隔: ${diagGap.toFixed(1)} ms\n確定理由: ${diagTerm}\n種別: ${parsed.type}\n解析状態: ${parsed.parseStatus}\nRAW:\n${visibleRaw(raw)}`;
+    const ctrlCount=(rawOriginal.match(/[\x00-\x1F\x7F]/g)||[]).length;
+    $('diag').textContent = `受信長(正規化後): ${raw.length}\n入力欄長(生): ${rawOriginal.length}\n制御文字数: ${ctrlCount}\n入力イベント観測長: ${diagKeys}\n読取時間: ${Math.round(duration)} ms\n最大入力間隔: ${diagGap.toFixed(1)} ms\n確定理由: ${diagTerm}\nEnter/Tab保持: ${diagIgnored}回\n種別: ${parsed.type}\n解析状態: ${parsed.parseStatus}\nRAW:\n${visibleRaw(raw)}`;
     if(parsed.parseStatus!=='OK'){
       setStatus(`⚠ 読み取り失敗（${raw.length}文字）\nもう一度QRを読み取ってください`, 'error'); hideParsed(); beep(180,.18); setTimeout(()=>beep(180,.18),220); return;
     }
     if(seenRaw.has(raw)){ setStatus('⚠ すでに読み取り済みです。記録しません。','duplicate'); hideParsed(); beep(260,.15); return; }
     seenRaw.add(raw);
     const seq=++scanSerial; latestScanSerial=seq;
+    const shipmentId=ensureLocalShipmentId();
+    applyLocalScan(parsed);
     showParsed(parsed); setStatus(`✓ ${parsed.partNo}　読み取りOK\nGoogleへ保存中…`,'ok'); beep(880,.06);
-    queue.push({raw,seq,parsed,createdAt:Date.now()}); saveQueue(); renderPending(); pumpQueue();
+    queue.push({raw,seq,parsed,shipmentId,eventId:clientId+'_'+Date.now().toString(36)+'_'+seq,createdAt:Date.now()}); saveQueue(); renderPending(); pumpQueue();
   }
 
   async function pumpQueue(){
@@ -187,13 +174,15 @@
     sending=true; renderPending(); updateCompleteButton();
     const item=queue[0];
     try{
-      const r=await api('scan',{raw:item.raw});
-      if(r.status==='ok'||r.status==='warning'||r.status==='duplicate'){
+      const r=await api('scan',{raw:item.raw,shipmentId:item.shipmentId||currentState?.currentShipmentId||'',eventId:item.eventId||''});
+      if(r.status==='ok'||r.status==='warning'||r.status==='duplicate'||r.status==='sent_unconfirmed'){
         queue.shift(); saveQueue();
-        currentState=r; renderState(r);
+        if(r.status!=='sent_unconfirmed'){ currentState=r; renderState(r); }
         if(r.status==='duplicate') seenRaw.add(item.raw);
+        if(r.status==='sent_unconfirmed') setSync(true,'送信済み（確認なし）');
         if(item.seq===latestScanSerial){
           if(r.status==='duplicate'){setStatus('⚠ すでに読み取り済みです。記録しません。','duplicate');hideParsed();}
+          else if(r.status==='sent_unconfirmed'){setStatus(`✓ ${item.parsed.partNo}　読み取りOK\nGoogleへ送信済み（応答確認なし）`,'ok');showParsed(item.parsed);}
           else {setStatus(`✓ ${r.parsed?.partNo||item.parsed.partNo}　保存完了`,'ok');showParsed(r.parsed||item.parsed);}
         }
       } else if(r.status==='invalid'||r.status==='error'){
@@ -213,18 +202,20 @@
 
   async function refreshState(){
     try{const r=await api('state',{});currentState=r;renderState(r);setSync(true,'接続中');}
-    catch(e){setSync(false,'未接続');setStatus('⚠ GASへ接続できません。設定を確認してください','error');}
+    catch(e){setSync(false,'応答確認なし'); if(!currentState?.currentShipmentId) setStatus('読み取り待機中（Google応答確認なし）','warning');}
   }
 
   async function completeShipment(){
     if(completing||sending||queue.length) return;
     if(!currentState?.currentShipmentId){setStatus('まだバーコードが読み取られていません。','warning');return;}
     completing=true; updateCompleteButton();
+    const localSummary={shipmentId:currentState.currentShipmentId,count:Number(currentState.count||0),totalQuantity:Number(currentState.totalQuantity||0)};
     try{
-      const r=await api('complete',{});
-      if(r.status!=='completed') throw new Error(r.message||'完了できませんでした');
-      const s=r.completedShipment; $('overlayId').textContent=s.shipmentId; $('overlayCount').textContent=s.count; $('overlayQty').textContent=s.totalQuantity; $('overlay').style.display='flex';
-      currentState=r; renderState(r); seenRaw.clear();
+      const r=await api('complete',{shipmentId:currentState.currentShipmentId});
+      const s=(r.status==='completed'&&r.completedShipment)?r.completedShipment:localSummary;
+      if(r.status!=='completed'&&r.status!=='sent_unconfirmed') throw new Error(r.message||'完了できませんでした');
+      $('overlayId').textContent=s.shipmentId; $('overlayCount').textContent=s.count; $('overlayQty').textContent=s.totalQuantity; $('overlay').style.display='flex';
+      currentState={status:'state',currentShipmentId:'',count:0,totalQuantity:0,items:[]}; renderState(currentState); seenRaw.clear(); saveLocalState();
       setTimeout(()=>{$('overlay').style.display='none';setStatus('次の便：最初のQRを読み取ってください','');focusScanner();},1600);
       beep(1050,.08); setTimeout(()=>beep(1320,.1),110);
     }catch(e){setStatus('⚠ '+(e.message||e),'error');}
@@ -236,36 +227,48 @@
     const url=(localStorage.getItem(LS.url)||'').trim();
     const key=(localStorage.getItem(LS.key)||'').trim();
     if(!url||!key) throw new Error('接続設定がありません');
-    const q=new URLSearchParams({
-      action, key, clientId,
-      terminal:localStorage.getItem(LS.terminal)||'',
-      _t:String(Date.now()),
-      ...params
-    });
-    const controller=new AbortController();
-    const timer=setTimeout(()=>controller.abort(),12000);
+    const payload={action,key,clientId,terminal:localStorage.getItem(LS.terminal)||'',_t:String(Date.now()),...params};
+
+    if(action==='scan' || action==='complete'){
+      try{
+        const controller=new AbortController(); const timer=setTimeout(()=>controller.abort(),12000);
+        try{
+          const res=await fetch(url,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload),cache:'no-store',redirect:'follow',credentials:'omit',signal:controller.signal});
+          const text=await res.text(); let data;
+          try{data=JSON.parse(text)}catch(_){throw new Error('GAS応答がJSONではありません')}
+          if(data && data.status==='error') throw new Error(data.message||'GASエラー');
+          return data;
+        }finally{clearTimeout(timer)}
+      }catch(firstErr){
+        await fetch(url,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload),cache:'no-store',redirect:'follow',credentials:'omit'});
+        return {status:'sent_unconfirmed',message:'Googleへ送信しました（応答確認なし）'};
+      }
+    }
+
+    const q=new URLSearchParams(payload);
+    const controller=new AbortController(); const timer=setTimeout(()=>controller.abort(),8000);
     try{
-      // J-MAX Inspect / Visitor と同じ、GitHub Pages → 公開GAS /exec の直接GET方式。
-      const res=await fetch(url+(url.includes('?')?'&':'?')+q.toString(),{
-        method:'GET', cache:'no-store', redirect:'follow', signal:controller.signal
-      });
+      const res=await fetch(url+(url.includes('?')?'&':'?')+q.toString(),{method:'GET',cache:'no-store',redirect:'follow',credentials:'omit',signal:controller.signal});
       if(!res.ok) throw new Error('GAS HTTP '+res.status);
-      const text=await res.text();
-      let data;
-      try{ data=JSON.parse(text); }
-      catch(_){ throw new Error('GAS応答がJSONではありません'); }
+      const text=await res.text(); let data;
+      try{data=JSON.parse(text)}catch(_){throw new Error('GAS応答がJSONではありません')}
       if(data && data.status==='error') throw new Error(data.message||'GASエラー');
       return data;
-    }catch(e){
-      if(e && e.name==='AbortError') throw new Error('GAS応答タイムアウト');
-      throw e;
-    }finally{ clearTimeout(timer); }
+    }catch(e){if(e && e.name==='AbortError') throw new Error('GAS応答タイムアウト'); throw e;}
+    finally{clearTimeout(timer)}
   }
 
   function parseBarcode(raw){
-    if(raw.length===141) return parseFixed141(raw);
+    // 長尺QRを141文字の途中で誤判定しないよう、固定長141は構造まで確認する。
+    if(isFixed141(raw)) return parseFixed141(raw);
+    const longHonda=parseHondaLong(raw); if(longHonda) return longHonda;
     const h=parseHonda(raw); if(h) return h;
     return {type:'未判定',partNo:'',partName:'',quantity:null,orderNo:'',ticketDate:'',fNo:'',machineCode:'',nextProcess:'',tailCode:'',parseStatus:'要確認'};
+  }
+  function isFixed141(raw){
+    if(raw.length!==141) return false;
+    const dateRaw=raw.slice(8,16), part=raw.slice(16,46).trim();
+    return /^20\d{6}$/.test(dateRaw) && /^[0-9A-Z-]{8,30}$/i.test(part) && part.includes('-');
   }
   function parseFixed141(raw){
     const orderRaw=raw.slice(0,8).trim(), dateRaw=raw.slice(8,16).trim(), partNo=raw.slice(16,46).trim(), partName=raw.slice(46,76).trim();
@@ -273,9 +276,32 @@
     let type='固定長141票'; if(nextMatch&&/^S\d{2}$/.test(nextMatch[0])) type='J-MAX 現品票(溶接)'; else if(/^TR/i.test(machineCode)) type='J-MAX 現品票(プレス品)'; else if(!machineCode) type='外製搬入伝票(支払い用)';
     return {type,partNo,partName,quantity:qtyMatch?Number(qtyMatch[0]):null,orderNo:orderRaw.replace(/^0+/,''),ticketDate:ymd(dateRaw),fNo,machineCode,nextProcess:nextMatch?nextMatch[0]:'',tailCode,parseStatus:(partNo&&partName&&qtyMatch)?'OK':'要確認'};
   }
+  function parseHondaLong(raw){
+    const text=String(raw);
+    const nameRe=/[A-Z][A-Z .\/-]{1,28},[A-Z][A-Z .\/,\-]{1,28}/g;
+    let nm, partName='', nameStart=-1, nameEnd=-1;
+    while((nm=nameRe.exec(text))){
+      const c=nm[0].trim();
+      if(!/J-MAX|CO\.?[, ]?LTD|CORPORATION/i.test(c)) { partName=c; nameStart=nm.index; nameEnd=nm.index+nm[0].length; break; }
+    }
+    if(nameStart<0) return null;
+    const candidates=[];
+    const pr=/(\d{5})([A-Z]{3})\s+([0-9A-Z]{4})\s+([0-9A-Z]{2})/g;
+    let pm;
+    while((pm=pr.exec(text))){ if(pm.index<nameStart) candidates.push(pm); }
+    if(!candidates.length) return null;
+    const best=candidates[candidates.length-1];
+    const partNo=[best[1],best[2],best[3],best[4]].join('-').toUpperCase();
+    let quantity=null;
+    const after=text.slice(nameEnd,nameEnd+80);
+    const q=after.match(/^\D*(\d{8})/);
+    if(q) quantity=Number(q[1]);
+    return {type:'Honda 現品票（長尺）',partNo,partName,quantity,orderNo:'',ticketDate:'',fNo:'',machineCode:'',nextProcess:'',tailCode:'',parseStatus:(partNo&&partName&&quantity!==null)?'OK':'要確認'};
+  }
   function parseHonda(raw){
     const text=String(raw);
-    const pm=text.match(/(\d{5})\s*[- ]?\s*([0-9A-Z]{3})\s*[- ]?\s*([0-9A-Z]{4})\s*[- ]?\s*([0-9A-Z]{2})/i);
+    // 通常Honda票はハイフン付き品番を優先。数字列の途中を品番と誤認しない。
+    const pm=text.match(/(\d{5})\s*-\s*([0-9A-Z]{3})\s*-\s*([0-9A-Z]{4})\s*-\s*([0-9A-Z]{2})/i);
     if(!pm)return null;
     const partNo=[pm[1],pm[2],pm[3],pm[4]].join('-').toUpperCase();
     let partName='',nameEnd=-1; const re=/[A-Z][A-Z .\/-]{1,28},[A-Z][A-Z .\/,\-]{1,28}/g; let m;
@@ -292,8 +318,27 @@
   function ymd(s){return /^\d{8}$/.test(s)?`${s.slice(0,4)}/${s.slice(4,6)}/${s.slice(6,8)}`:s;}
   function visibleRaw(s){return s.replace(/ /g,'·');}
 
+  function todayId(){const d=new Date();return String(d.getFullYear())+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0');}
+  function ensureLocalShipmentId(){
+    if(!currentState) currentState={status:'state',currentShipmentId:'',count:0,totalQuantity:0,items:[]};
+    if(currentState.currentShipmentId) return currentState.currentShipmentId;
+    const day=todayId(), dk='jm_shipping_seq_date', nk='jm_shipping_seq_no';
+    let n=(localStorage.getItem(dk)===day)?Number(localStorage.getItem(nk)||0):0; n++;
+    localStorage.setItem(dk,day); localStorage.setItem(nk,String(n));
+    currentState.currentShipmentId=day+'-'+String(n).padStart(3,'0'); currentState.count=0; currentState.totalQuantity=0; currentState.items=[];
+    saveLocalState(); renderState(currentState); return currentState.currentShipmentId;
+  }
+  function applyLocalScan(parsed){
+    if(!currentState) currentState={status:'state',currentShipmentId:'',count:0,totalQuantity:0,items:[]};
+    const item={scannedAt:new Date().toLocaleString('ja-JP',{hour12:false}),type:parsed.type,partNo:parsed.partNo,partName:parsed.partName,quantity:parsed.quantity,fNo:parsed.fNo||''};
+    currentState.items=[item,...(currentState.items||[])].slice(0,100); currentState.count=Number(currentState.count||0)+1; currentState.totalQuantity=Number(currentState.totalQuantity||0)+(Number(parsed.quantity)||0);
+    saveLocalState(); renderState(currentState);
+  }
+  function saveLocalState(){try{localStorage.setItem('jm_shipping_local_state',JSON.stringify(currentState||{}));}catch{}}
+  function restoreLocalState(){try{const x=JSON.parse(localStorage.getItem('jm_shipping_local_state')||'null');if(x&&x.currentShipmentId){currentState=x;renderState(x);}}catch{}}
+
   function renderState(state){
-    if(!state)return; currentState=state; const sid=state.currentShipmentId||''; $('shipmentId').textContent=sid||'最初のQRを読み取ってください'; $('count').textContent=state.count||0; $('totalQty').textContent=state.totalQuantity||0; renderItems(state.items||[]); updateCompleteButton();
+    if(!state)return; currentState=state; saveLocalState(); const sid=state.currentShipmentId||''; $('shipmentId').textContent=sid||'最初のQRを読み取ってください'; $('count').textContent=state.count||0; $('totalQty').textContent=state.totalQuantity||0; renderItems(state.items||[]); updateCompleteButton();
   }
   function renderItems(items){const tb=$('tbody');tb.innerHTML='';$('empty').style.display=items.length?'none':'block';for(const it of items){const tr=document.createElement('tr');tr.innerHTML=`<td>${esc(timeOnly(it.scannedAt))}</td><td>${esc(it.type)}</td><td><b>${esc(it.partNo)}</b></td><td>${esc(it.partName)}</td><td class="td-num">${esc(it.quantity)}</td><td>${esc(it.fNo)}</td>`;tb.appendChild(tr);}}
   function showParsed(p){$('last').style.display='grid';$('lastPart').textContent=p?.partNo||'—';$('lastName').textContent=p?.partName||'—';$('lastQty').textContent=p?.quantity??'—';}
@@ -304,15 +349,15 @@
   function renderPending(){$('pendingText').textContent=queue.length?`送信待ち ${queue.length}件`:'';saveQueue();}
   function updateCompleteButton(){$('completeBtn').disabled=!currentState?.currentShipmentId||sending||queue.length||completing;}
   function saveQueue(){localStorage.setItem(LS.queue,JSON.stringify(queue));}
-  function focusScanner(){ /* v2.3: HIDはdocument keydownで受信するためフォーカス不要 */ }
+  function focusScanner(){setTimeout(()=>{try{if(!dialog.open)scanner.focus({preventScroll:true});}catch{}},20);}
   function timeOnly(s){const m=String(s||'').match(/(\d{2}:\d{2}:\d{2})$/);return m?m[1]:s||'';}
   function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
   function safeJson(s,d){try{const v=JSON.parse(s);return Array.isArray(v)?v:d}catch{return d}}
   function beep(freq,dur){try{const A=window.AudioContext||window.webkitAudioContext;const c=new A(),o=c.createOscillator(),g=c.createGain();o.frequency.value=freq;o.connect(g);g.connect(c.destination);g.gain.setValueAtTime(.05,c.currentTime);o.start();o.stop(c.currentTime+dur);o.onended=()=>c.close();}catch{}}
 
-  $('settingsBtn').addEventListener('click',()=>{loadSettingsForm();dialog.showModal();});
+  $('settingsBtn').addEventListener('click',()=>{scanner.blur();loadSettingsForm();dialog.showModal();});
   $('saveBtn').addEventListener('click',async()=>{saveSettingsForm();dialog.close();setStatus('接続確認中…','');await refreshState();pumpQueue();focusScanner();});
-  $('testBtn').addEventListener('click',async()=>{saveSettingsForm();$('settingMsg').textContent='接続確認中…';try{const r=await api('ping',{});$('settingMsg').textContent=`✓ 接続OK / API ${r.version||''}`;}catch(e){$('settingMsg').textContent='✕ '+(e.message||e);}});
+  $('testBtn').addEventListener('click',async()=>{saveSettingsForm();$('settingMsg').textContent='接続確認中…';try{const r=await api('ping',{});$('settingMsg').textContent=`✓ 接続OK / API ${r.version||''}`;}catch(e){$('settingMsg').textContent='△ 応答確認は不可。保存はPOSTフォールバックで継続します。';}});
   function configured(){return !!(localStorage.getItem(LS.url)&&localStorage.getItem(LS.key));}
   function loadSettingsForm(){$('gasUrl').value=localStorage.getItem(LS.url)||'';$('apiKey').value=localStorage.getItem(LS.key)||'';$('terminalName').value=localStorage.getItem(LS.terminal)||'';$('settingMsg').textContent='';}
   function saveSettingsForm(){localStorage.setItem(LS.url,$('gasUrl').value.trim());localStorage.setItem(LS.key,$('apiKey').value.trim());localStorage.setItem(LS.terminal,$('terminalName').value.trim());}
