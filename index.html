@@ -26,7 +26,7 @@
 </style>
 </head>
 <body>
-<header><h1>J-MAX Shipping</h1><div><span class="ver">GitHub Pages v3.5</span>　<button class="btn btn-secondary" style="padding:7px 10px" id="settingsBtn">設定</button></div></header>
+<header><h1>J-MAX Shipping</h1><div><span class="ver">GitHub Pages v3.6</span>　<button class="btn btn-secondary" style="padding:7px 10px" id="settingsBtn">設定</button></div></header>
 <div class="wrap">
   <section class="card top">
     <div class="metric"><b>現在の便</b><div id="shipmentId" class="shipment-id">最初のQRを読み取ってください</div></div>
@@ -60,7 +60,7 @@
 <script>
 (() => {
   'use strict';
-  const APP_VERSION = '3.5';
+  const APP_VERSION = '3.6';
   const BATCH_MAX = 20;
   const BATCH_DELAY_MS = 700;
   const IDLE_MS = 500;
@@ -409,11 +409,44 @@
   }
 
   function parseBarcode(raw){
-    // 長尺QRを141文字の途中で誤判定しないよう、固定長141は構造まで確認する。
-    if(isFixed141(raw)) return parseFixed141(raw);
+    // J-MAX/外製の固定長系を最優先。141文字ぴったりでなくても構造で判定する。
+    // これにより末尾サフィックスや区切り文字差で141からズレても旧票を退行させない。
+    const fixed=parseFixedFlexible(raw); if(fixed) return fixed;
     const longHonda=parseHondaLong(raw); if(longHonda) return longHonda;
     const h=parseHonda(raw); if(h) return h;
     return {type:'未判定',partNo:'',partName:'',quantity:null,orderNo:'',ticketDate:'',fNo:'',machineCode:'',nextProcess:'',tailCode:'',parseStatus:'要確認'};
+  }
+  function parseFixedFlexible(raw){
+    const text=String(raw||'').replace(/^\s+|\s+$/g,'');
+    if(isFixed141(text)) return parseFixed141(text);
+
+    // 可変長フォールバック：先頭8桁手配No + YYYYMMDD + ハイフン品番、
+    // その後の「品名 / 数量 / 後続情報」を空白区切りで復元する。
+    // J-MAXプレス・J-MAX溶接・外製搬入の既知3形式を同じ入口で扱う。
+    const head=text.match(/^(\d{8})(20\d{6})\s*(\d{5}-[0-9A-Z]{3}-[0-9A-Z]{4,5}(?:-[0-9A-Z]{2,3})?)\s{2,}([\s\S]+)$/i);
+    if(!head) return null;
+    const orderRaw=head[1], dateRaw=head[2], partNo=head[3].toUpperCase(), rest=head[4];
+    const body=rest.match(/^([A-Z0-9][A-Z0-9 ,./()\-]*?)\s{2,}(\d{1,5})([A-Z]\d{2})?([\s\S]*)$/i);
+    if(!body) return null;
+    const partName=body[1].trim(), quantity=Number(body[2]), nextProcess=(body[3]||'').toUpperCase(), tail=body[4]||'';
+    if(!partName || !Number.isFinite(quantity)) return null;
+
+    let type='固定長票', machineCode='', fNo='', tailCode='';
+    // 末尾は既知票で「機番 + F番号8桁 + tail8桁」または「F番号8桁 + tail8桁」。
+    let m=tail.match(/(?:^|\s)(TR\d+)\s+([0-9A-Z]{8})([0-9A-Z]{8})\s*$/i);
+    if(m){ type='J-MAX 現品票(プレス品)'; machineCode=m[1].toUpperCase(); fNo=m[2]; tailCode=m[3]; }
+    else {
+      m=tail.match(/(?:^|\s)([A-Z]\d{2})\s+([0-9A-Z]{8})([0-9A-Z]{8})\s*$/i);
+      if(m){ machineCode=m[1].toUpperCase(); fNo=m[2]; tailCode=m[3]; }
+      else {
+        m=tail.match(/([0-9A-Z]{8})([0-9A-Z]{8})\s*$/i);
+        if(m){ fNo=m[1]; tailCode=m[2]; }
+      }
+      if(nextProcess && /^S\d{2}$/.test(nextProcess)) type='J-MAX 現品票(溶接)';
+      else if(/20\d{6}/.test(tail) && !machineCode) type='外製搬入伝票(支払い用)';
+      else if(machineCode) type='J-MAX 現品票(溶接)';
+    }
+    return {type,partNo,partName,quantity,orderNo:orderRaw.replace(/^0+/,''),ticketDate:ymd(dateRaw),fNo,machineCode,nextProcess,tailCode,parseStatus:'OK'};
   }
   function isFixed141(raw){
     if(raw.length!==141) return false;
