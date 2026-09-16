@@ -26,7 +26,7 @@
 </style>
 </head>
 <body>
-<header><h1>J-MAX Shipping</h1><div><span class="ver">GitHub Pages v2.0</span>　<button class="btn btn-secondary" style="padding:7px 10px" id="settingsBtn">設定</button></div></header>
+<header><h1>J-MAX Shipping</h1><div><span class="ver">GitHub Pages v2.3</span>　<button class="btn btn-secondary" style="padding:7px 10px" id="settingsBtn">設定</button></div></header>
 <div class="wrap">
   <section class="card top">
     <div class="metric"><b>現在の便</b><div id="shipmentId" class="shipment-id">最初のQRを読み取ってください</div></div>
@@ -60,7 +60,7 @@
 <script>
 (() => {
   'use strict';
-  const APP_VERSION = '2.0';
+  const APP_VERSION = '2.3';
   const IDLE_MS = 500;
   const LS = {url:'jm_shipping_gas_url', key:'jm_shipping_api_key', terminal:'jm_shipping_terminal', client:'jm_shipping_client_id', queue:'jm_shipping_pending_queue'};
   const $ = id => document.getElementById(id);
@@ -69,6 +69,7 @@
   let queue = safeJson(localStorage.getItem(LS.queue), []);
   const seenRaw = new Set();
   let buffer='';
+  let scanStartedAt=0, lastKeyAt=0, maxKeyGap=0, receivedKeys=0, lastTerminator='';
 
   const clientId = localStorage.getItem(LS.client) || (()=>{const v='c_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,9);localStorage.setItem(LS.client,v);return v;})();
 
@@ -82,40 +83,95 @@
     pumpQueue();
   });
 
-  // USBキーボード型リーダーの文字だけを蓄積。Enter/Tab等は終了判定に使わない。
-  scanner.addEventListener('keydown', e=>{
-    if (e.key === 'Enter' || e.key === 'Tab' || e.key === 'Escape') { e.preventDefault(); return; }
-  });
-  scanner.addEventListener('input', ()=>{
-    const added = scanner.value;
-    scanner.value='';
-    if (!added) return;
-    if (!buffer) clearPreviousFeedbackForNewScan();
-    buffer += added;
-    scheduleFinalize();
-  });
-  // ペースト試験にも対応
-  scanner.addEventListener('paste', e=>{
+  // USB HID は J-MAX Inspect と同じ「document keydown 直取り」方式で受信する。
+  // DOM input.value を1文字ごとに消す方式は高速スキャナ/IMEで欠落し得るため使わない。
+  document.addEventListener('keydown', e=>{
+    // 設定ダイアログで文字入力している間は通常入力を優先。
+    if(dialog.open) return;
+    if(e.ctrlKey || e.altKey || e.metaKey) return;
+
+    const now=performance.now();
+    const finish=(e.key==='Enter' || e.key==='Tab');
+    if(finish){
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      if(buffer.length>=3){
+        lastTerminator=e.key;
+        finalizeScan('terminator');
+      }
+      return;
+    }
+    if(e.key==='Escape'){
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      return;
+    }
+    if(e.key.length!==1) return;
+
+    if(!buffer){
+      clearPreviousFeedbackForNewScan();
+      scanStartedAt=now;
+      lastKeyAt=now;
+      maxKeyGap=0;
+      receivedKeys=0;
+      lastTerminator='';
+    }else{
+      const gap=now-lastKeyAt;
+      if(gap>maxKeyGap) maxKeyGap=gap;
+      lastKeyAt=now;
+    }
+
+    buffer+=e.key;
+    receivedKeys++;
     e.preventDefault();
-    const t=(e.clipboardData||window.clipboardData).getData('text');
-    if (!buffer) clearPreviousFeedbackForNewScan();
-    buffer += t;
+    e.stopImmediatePropagation();
     scheduleFinalize();
-  });
+  }, true);
+
+  // 診断用：コピー済みRAWをページ上で貼り付けても同じ経路で確認できる。
+  document.addEventListener('paste', e=>{
+    if(dialog.open) return;
+    const target=e.target;
+    if(target && /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName||'') && target!==scanner) return;
+    const t=(e.clipboardData||window.clipboardData)?.getData('text')||'';
+    if(!t) return;
+    e.preventDefault();
+    if(!buffer){
+      clearPreviousFeedbackForNewScan();
+      scanStartedAt=performance.now();
+      lastKeyAt=scanStartedAt;
+      maxKeyGap=0;
+      receivedKeys=0;
+      lastTerminator='paste';
+    }
+    buffer+=t;
+    receivedKeys+=t.length;
+    scheduleFinalize();
+  }, true);
 
   function scheduleFinalize(){
     clearTimeout(idleTimer);
-    const n = normalizeRaw(buffer);
-    if (n.length === 141) { finalizeScan(); return; }
-    idleTimer=setTimeout(finalizeScan,IDLE_MS);
+    const n=normalizeRaw(buffer);
+    // 既知のJ-MAX固定長票は141文字が揃った瞬間に確定。
+    if(n.length===141){ finalizeScan('length141'); return; }
+    // Honda等の可変長やサフィックスなしリーダーは500ms無入力で確定。
+    idleTimer=setTimeout(()=>finalizeScan('idle500'),IDLE_MS);
   }
 
-  function finalizeScan(){
+  function finalizeScan(reason='unknown'){
     clearTimeout(idleTimer); idleTimer=null;
-    let raw=normalizeRaw(buffer); buffer=''; scanner.value=''; focusScanner();
+    const finishedAt=performance.now();
+    let raw=normalizeRaw(buffer);
+    const duration=scanStartedAt ? Math.max(0,finishedAt-scanStartedAt) : 0;
+    const diagKeys=receivedKeys;
+    const diagGap=maxKeyGap;
+    const diagTerm=lastTerminator || reason;
+    buffer=''; scanner.value='';
+    scanStartedAt=0; lastKeyAt=0; maxKeyGap=0; receivedKeys=0; lastTerminator='';
     if(!raw) return;
+
     const parsed=parseBarcode(raw);
-    $('diag').textContent = `受信長: ${raw.length}\n種別: ${parsed.type}\n解析状態: ${parsed.parseStatus}\nRAW:\n${visibleRaw(raw)}`;
+    $('diag').textContent = `受信長: ${raw.length}\nキー数: ${diagKeys}\n読取時間: ${Math.round(duration)} ms\n最大キー間隔: ${diagGap.toFixed(1)} ms\n確定理由: ${diagTerm}\n種別: ${parsed.type}\n解析状態: ${parsed.parseStatus}\nRAW:\n${visibleRaw(raw)}`;
     if(parsed.parseStatus!=='OK'){
       setStatus(`⚠ 読み取り失敗（${raw.length}文字）\nもう一度QRを読み取ってください`, 'error'); hideParsed(); beep(180,.18); setTimeout(()=>beep(180,.18),220); return;
     }
@@ -176,19 +232,34 @@
   }
   $('completeBtn').addEventListener('click',completeShipment);
 
-  function api(action, params){
-    return new Promise((resolve,reject)=>{
-      const url=localStorage.getItem(LS.url)||''; const key=localStorage.getItem(LS.key)||'';
-      if(!url||!key){reject(new Error('接続設定がありません'));return;}
-      const cb='__jmcb_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2);
-      const q=new URLSearchParams({action,callback:cb,key,clientId,terminal:localStorage.getItem(LS.terminal)||'',_t:String(Date.now()),...params});
-      const script=document.createElement('script'); let done=false;
-      const timer=setTimeout(()=>finish(new Error('GAS応答タイムアウト')),12000);
-      function finish(err,data){if(done)return;done=true;clearTimeout(timer);try{script.remove();}catch{};try{delete window[cb];}catch{};err?reject(err):resolve(data);}
-      window[cb]=data=>finish(null,data);
-      script.onerror=()=>finish(new Error('GASへ接続できません'));
-      script.src=url+(url.includes('?')?'&':'?')+q.toString(); document.head.appendChild(script);
+  async function api(action, params){
+    const url=(localStorage.getItem(LS.url)||'').trim();
+    const key=(localStorage.getItem(LS.key)||'').trim();
+    if(!url||!key) throw new Error('接続設定がありません');
+    const q=new URLSearchParams({
+      action, key, clientId,
+      terminal:localStorage.getItem(LS.terminal)||'',
+      _t:String(Date.now()),
+      ...params
     });
+    const controller=new AbortController();
+    const timer=setTimeout(()=>controller.abort(),12000);
+    try{
+      // J-MAX Inspect / Visitor と同じ、GitHub Pages → 公開GAS /exec の直接GET方式。
+      const res=await fetch(url+(url.includes('?')?'&':'?')+q.toString(),{
+        method:'GET', cache:'no-store', redirect:'follow', signal:controller.signal
+      });
+      if(!res.ok) throw new Error('GAS HTTP '+res.status);
+      const text=await res.text();
+      let data;
+      try{ data=JSON.parse(text); }
+      catch(_){ throw new Error('GAS応答がJSONではありません'); }
+      if(data && data.status==='error') throw new Error(data.message||'GASエラー');
+      return data;
+    }catch(e){
+      if(e && e.name==='AbortError') throw new Error('GAS応答タイムアウト');
+      throw e;
+    }finally{ clearTimeout(timer); }
   }
 
   function parseBarcode(raw){
@@ -233,7 +304,7 @@
   function renderPending(){$('pendingText').textContent=queue.length?`送信待ち ${queue.length}件`:'';saveQueue();}
   function updateCompleteButton(){$('completeBtn').disabled=!currentState?.currentShipmentId||sending||queue.length||completing;}
   function saveQueue(){localStorage.setItem(LS.queue,JSON.stringify(queue));}
-  function focusScanner(){setTimeout(()=>scanner.focus(),10);}
+  function focusScanner(){ /* v2.3: HIDはdocument keydownで受信するためフォーカス不要 */ }
   function timeOnly(s){const m=String(s||'').match(/(\d{2}:\d{2}:\d{2})$/);return m?m[1]:s||'';}
   function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
   function safeJson(s,d){try{const v=JSON.parse(s);return Array.isArray(v)?v:d}catch{return d}}
