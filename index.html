@@ -1,281 +1,251 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
-<title>Vision PoC - CAD Line Overlay</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>J-MAX Shipping</title>
 <style>
-  :root{--bg:#0b0f14;--panel:#121922;--line:#00ff88;--warn:#ff3355;--txt:#f4f7fb;--muted:#8fa1b3;}
-  *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--txt);font-family:Arial,"Hiragino Sans","Meiryo",sans-serif;overflow:hidden;}
-  #app{height:100vh;display:grid;grid-template-rows:auto 1fr auto;}
-  header{display:flex;gap:10px;align-items:center;padding:10px;background:#081018;border-bottom:1px solid #263445;flex-wrap:wrap;}
-  input,button{font-size:16px;padding:11px 14px;border-radius:8px;border:1px solid #3a4a5d;background:#fff;color:#111;}
-  button{cursor:pointer;font-weight:700;}
-  button.primary{background:#0b84ff;color:#fff;border-color:#0b84ff;}
-  button.ghost{background:#1a2532;color:#fff;}
-  .status{font-weight:700;padding:9px 12px;border-radius:999px;background:#1d2a38;color:#cde0f5;}
-  .status.ok{background:#063d25;color:#7cffb4;}
-  .status.ng{background:#3d0614;color:#ff9aac;}
-  main{position:relative;overflow:hidden;background:#05080c;}
-  video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#000;}
-  #overlayCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;}
-  #hud{position:absolute;left:12px;bottom:12px;background:rgba(0,0,0,.6);padding:12px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.15);min-width:240px;}
-  #score{font-size:34px;font-weight:900;letter-spacing:.03em;}
-  #drop{position:absolute;inset:18%;display:flex;align-items:center;justify-content:center;text-align:center;border:2px dashed #6e8194;border-radius:18px;background:rgba(8,16,24,.86);font-size:24px;font-weight:900;color:#dcecff;z-index:5;}
-  #drop.hide{display:none;}
-  #bigOverlay{position:fixed;inset:0;display:none;align-items:center;justify-content:center;font-size:18vw;font-weight:1000;z-index:20;color:#fff;text-shadow:0 8px 30px rgba(0,0,0,.5);}
-  #bigOverlay.ok{display:flex;background:rgba(0,220,80,.72);}
-  #bigOverlay.ng{display:flex;background:rgba(255,0,40,.72);}
-  footer{display:flex;gap:8px;align-items:center;padding:8px 10px;background:#081018;border-top:1px solid #263445;color:#9db0c4;font-size:13px;}
-  #hidden3d{display:none;}
+  :root{--navy:#143b5d;--blue:#1f5f99;--line:#d8e0e8;--bg:#f4f7fa;--ok:#0b6b3e;--warn:#9a5b00;--err:#a61b1b}
+  *{box-sizing:border-box} body{margin:0;background:var(--bg);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:#1d2b36}
+  header{height:62px;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 20px;box-shadow:0 1px 4px #0002}
+  header h1{font-size:20px;margin:0} header .ver{font-size:12px;opacity:.85}
+  .wrap{max-width:980px;margin:18px auto;padding:0 14px 30px}.card{background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 2px 8px #0000000a}
+  .top{display:grid;grid-template-columns:1.5fr .5fr .5fr;gap:12px;padding:16px}.metric{border:1px solid var(--line);border-radius:10px;padding:13px;background:#fbfcfd}
+  .metric b{display:block;color:#637180;font-size:12px;margin-bottom:5px}.shipment-id{font-size:26px;font-weight:900;color:var(--navy)}.num{font-size:26px;font-weight:900;text-align:right}
+  .scan-card{margin-top:14px;padding:16px}.scan-head{display:flex;align-items:center;justify-content:space-between;gap:12px}.scan-head strong{font-size:16px}
+  #scanner{position:absolute;left:-10000px;width:1px;height:1px;opacity:0}.status{margin-top:12px;min-height:74px;border-radius:10px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:21px;font-weight:850;padding:12px;background:#edf2f7;color:#5b6874;white-space:pre-wrap}
+  .status.ok{background:#e7f7ef;color:var(--ok)}.status.duplicate,.status.warning{background:#fff3df;color:var(--warn)}.status.error{background:#fdecec;color:var(--err)}
+  .last{margin-top:12px;display:none;grid-template-columns:1fr 1.25fr .5fr;gap:10px}.last>div{border:1px solid var(--line);border-radius:8px;padding:10px;background:#fff}.last b{display:block;font-size:11px;color:#617080;margin-bottom:4px}.last span{font-weight:850;overflow-wrap:anywhere}
+  .actions{display:flex;gap:10px;margin-top:14px}.btn{border:0;border-radius:10px;padding:13px 18px;font-weight:800;cursor:pointer}.btn-primary{background:var(--blue);color:#fff;flex:1;font-size:18px}.btn-secondary{background:#e8eef4;color:#27445d}.btn:disabled{opacity:.45;cursor:not-allowed}
+  .list-card{margin-top:14px;overflow:hidden}.list-head{padding:13px 15px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}.table-wrap{max-height:420px;overflow:auto}table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:9px 10px;border-bottom:1px solid #edf1f4;text-align:left}th{position:sticky;top:0;background:#f8fafc;color:#52606d}.td-num{text-align:right;font-weight:800}.empty{padding:28px;text-align:center;color:#7b8793}
+  .sync{font-size:12px;color:#697887}.sync.bad{color:var(--err);font-weight:700}
+  dialog{border:0;border-radius:12px;padding:0;max-width:620px;width:calc(100% - 30px);box-shadow:0 18px 60px #0005}dialog::backdrop{background:#0006}.dlg{padding:18px}.dlg h2{margin:0 0 12px}.field{margin:12px 0}.field label{display:block;font-size:12px;font-weight:700;color:#566575;margin-bottom:5px}.field input{width:100%;padding:10px 11px;border:1px solid #b9c6d2;border-radius:8px;font:14px monospace}.dlg-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
+  details.diag{margin-top:14px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 12px}details.diag pre{white-space:pre-wrap;word-break:break-all;font-size:11px;background:#f7f9fb;padding:10px;border-radius:8px;max-height:180px;overflow:auto}
+  .overlay{display:none;position:fixed;inset:0;background:#0d2740e8;z-index:30;align-items:center;justify-content:center}.overlay-box{background:white;border-radius:16px;padding:30px 36px;text-align:center;min-width:320px}.overlay-box .ov-id{font-size:32px;font-weight:900;color:var(--navy)}.overlay-box p{font-size:18px;margin:10px 0 0}
+  @media(max-width:760px){.top{grid-template-columns:1fr 1fr}.top .metric:first-child{grid-column:1/3}.last{grid-template-columns:1fr}.shipment-id{font-size:22px}th:nth-child(1),td:nth-child(1),th:nth-child(2),td:nth-child(2){display:none}}
 </style>
 </head>
 <body>
-<div id="app">
-  <header>
-    <input id="partNo" placeholder="品番入力" />
-    <button class="primary" id="camBtn">カメラ起動</button>
-    <button class="ghost" id="topBtn">上面</button>
-    <button class="ghost" id="sideBtn">側面</button>
-    <button id="resetBtn">リセット</button>
-    <span id="phase" class="status">STL待ち</span>
-  </header>
+<header><h1>J-MAX Shipping</h1><div><span class="ver">GitHub Pages v2.0</span>　<button class="btn btn-secondary" style="padding:7px 10px" id="settingsBtn">設定</button></div></header>
+<div class="wrap">
+  <section class="card top">
+    <div class="metric"><b>現在の便</b><div id="shipmentId" class="shipment-id">最初のQRを読み取ってください</div></div>
+    <div class="metric"><b>読取件数</b><div id="count" class="num">0</div></div>
+    <div class="metric"><b>合計数量</b><div id="totalQty" class="num">0</div></div>
+  </section>
 
-  <main id="stage">
-    <video id="video" autoplay playsinline muted></video>
-    <canvas id="overlayCanvas"></canvas>
-    <div id="drop">STLをドラッグ＆ドロップ<br><small>上面・側面シルエットを自動生成します</small></div>
-    <div id="hud">
-      <div>VIEW: <b id="viewLabel">TOP</b></div>
-      <div id="score">--%</div>
-      <div>上面: <b id="topState">未</b> / 側面: <b id="sideState">未</b></div>
-      <div style="color:#9db0c4;margin-top:4px;">CAD線画に実物を合わせる</div>
-    </div>
-  </main>
+  <section class="card scan-card">
+    <div class="scan-head"><strong>QR / バーコード待機</strong><span id="syncText" class="sync">未接続</span></div>
+    <input id="scanner" autocomplete="off" autocapitalize="off" spellcheck="false" inputmode="none">
+    <div id="status" class="status">設定後、QRを読み取ってください</div>
+    <div id="last" class="last"><div><b>品番</b><span id="lastPart"></span></div><div><b>品名</b><span id="lastName"></span></div><div><b>数量</b><span id="lastQty"></span></div></div>
+    <div class="actions"><button id="completeBtn" class="btn btn-primary" disabled>積 載 完 了</button></div>
+    <details class="diag"><summary>診断情報</summary><pre id="diag">—</pre></details>
+  </section>
 
-  <footer>
-    PoC v3 / STL→CAD線画 / 動画フレーム簡易マッチング / 上面OK後に側面へ自動遷移
-  </footer>
+  <section class="card list-card">
+    <div class="list-head"><strong>現在便の積載リスト</strong><span id="pendingText" class="sync"></span></div>
+    <div class="table-wrap"><table><thead><tr><th>時刻</th><th>種別</th><th>品番</th><th>品名</th><th>数量</th><th>エフNo.</th></tr></thead><tbody id="tbody"></tbody></table><div id="empty" class="empty">まだ読み取りはありません</div></div>
+  </section>
 </div>
-<div id="bigOverlay"></div>
-<div id="hidden3d"></div>
 
-<script type="module">
-import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
-import { STLLoader } from 'https://unpkg.com/three@0.160.0/examples/jsm/loaders/STLLoader.js';
+<dialog id="settingsDialog"><div class="dlg"><h2>接続設定</h2><p style="font-size:13px;color:#566575">このPCだけに保存されます。GitHubには保存されません。</p>
+  <div class="field"><label>GAS WebアプリURL（/exec）</label><input id="gasUrl" placeholder="https://script.google.com/macros/s/.../exec"></div>
+  <div class="field"><label>APIキー</label><input id="apiKey" placeholder="setupSystem() 実行ログに表示されるキー"></div>
+  <div class="field"><label>端末名（任意）</label><input id="terminalName" placeholder="例：出荷場PC1"></div>
+  <div id="settingMsg" style="font-size:13px"></div><div class="dlg-actions"><button class="btn btn-secondary" id="testBtn">接続テスト</button><button class="btn btn-primary" style="flex:none;font-size:14px" id="saveBtn">保存</button></div></div></dialog>
 
-const video = document.getElementById('video');
-const overlay = document.getElementById('overlayCanvas');
-const octx = overlay.getContext('2d', { willReadFrequently:true });
-const drop = document.getElementById('drop');
-const phaseEl = document.getElementById('phase');
-const scoreEl = document.getElementById('score');
-const viewLabel = document.getElementById('viewLabel');
-const topState = document.getElementById('topState');
-const sideState = document.getElementById('sideState');
-const big = document.getElementById('bigOverlay');
+<div id="overlay" class="overlay"><div class="overlay-box"><div>✓ 積載登録 完了</div><div id="overlayId" class="ov-id"></div><p><span id="overlayCount"></span>件 / 合計 <span id="overlayQty"></span></p></div></div>
 
-let silhouettes = { top:null, side:null };
-let currentView = 'top';
-let topOK = false, sideOK = false;
-let running = false;
-let lastOkTime = 0;
-let threshold = 0.62; // PoC用。現場では調整。
+<script>
+(() => {
+  'use strict';
+  const APP_VERSION = '2.0';
+  const IDLE_MS = 500;
+  const LS = {url:'jm_shipping_gas_url', key:'jm_shipping_api_key', terminal:'jm_shipping_terminal', client:'jm_shipping_client_id', queue:'jm_shipping_pending_queue'};
+  const $ = id => document.getElementById(id);
+  const scanner=$('scanner'), statusEl=$('status'), dialog=$('settingsDialog');
+  let idleTimer=null, sending=false, completing=false, currentState=null, scanSerial=0, latestScanSerial=0;
+  let queue = safeJson(localStorage.getItem(LS.queue), []);
+  const seenRaw = new Set();
+  let buffer='';
 
-const work = document.createElement('canvas');
-work.width = 240; work.height = 180;
-const wctx = work.getContext('2d', { willReadFrequently:true });
+  const clientId = localStorage.getItem(LS.client) || (()=>{const v='c_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,9);localStorage.setItem(LS.client,v);return v;})();
 
-function setPhase(text, cls=''){
-  phaseEl.textContent = text;
-  phaseEl.className = 'status ' + cls;
-}
+  window.addEventListener('load', async()=>{
+    loadSettingsForm();
+    document.body.addEventListener('click', e=>{if(!e.target.closest('button')&&!e.target.closest('input')&&!e.target.closest('dialog')) focusScanner();});
+    focusScanner();
+    if (!configured()) { dialog.showModal(); setStatus('最初に接続設定をしてください', 'warning'); return; }
+    setStatus('読み取り待機中','');
+    await refreshState();
+    pumpQueue();
+  });
 
-function resize(){
-  overlay.width = overlay.clientWidth * devicePixelRatio;
-  overlay.height = overlay.clientHeight * devicePixelRatio;
-}
-window.addEventListener('resize', resize); resize();
+  // USBキーボード型リーダーの文字だけを蓄積。Enter/Tab等は終了判定に使わない。
+  scanner.addEventListener('keydown', e=>{
+    if (e.key === 'Enter' || e.key === 'Tab' || e.key === 'Escape') { e.preventDefault(); return; }
+  });
+  scanner.addEventListener('input', ()=>{
+    const added = scanner.value;
+    scanner.value='';
+    if (!added) return;
+    if (!buffer) clearPreviousFeedbackForNewScan();
+    buffer += added;
+    scheduleFinalize();
+  });
+  // ペースト試験にも対応
+  scanner.addEventListener('paste', e=>{
+    e.preventDefault();
+    const t=(e.clipboardData||window.clipboardData).getData('text');
+    if (!buffer) clearPreviousFeedbackForNewScan();
+    buffer += t;
+    scheduleFinalize();
+  });
 
-async function startCamera(){
-  try{
-    const stream = await navigator.mediaDevices.getUserMedia({
-      video:{ facingMode:{ideal:'environment'}, width:{ideal:1920}, height:{ideal:1080} }, audio:false
+  function scheduleFinalize(){
+    clearTimeout(idleTimer);
+    const n = normalizeRaw(buffer);
+    if (n.length === 141) { finalizeScan(); return; }
+    idleTimer=setTimeout(finalizeScan,IDLE_MS);
+  }
+
+  function finalizeScan(){
+    clearTimeout(idleTimer); idleTimer=null;
+    let raw=normalizeRaw(buffer); buffer=''; scanner.value=''; focusScanner();
+    if(!raw) return;
+    const parsed=parseBarcode(raw);
+    $('diag').textContent = `受信長: ${raw.length}\n種別: ${parsed.type}\n解析状態: ${parsed.parseStatus}\nRAW:\n${visibleRaw(raw)}`;
+    if(parsed.parseStatus!=='OK'){
+      setStatus(`⚠ 読み取り失敗（${raw.length}文字）\nもう一度QRを読み取ってください`, 'error'); hideParsed(); beep(180,.18); setTimeout(()=>beep(180,.18),220); return;
+    }
+    if(seenRaw.has(raw)){ setStatus('⚠ すでに読み取り済みです。記録しません。','duplicate'); hideParsed(); beep(260,.15); return; }
+    seenRaw.add(raw);
+    const seq=++scanSerial; latestScanSerial=seq;
+    showParsed(parsed); setStatus(`✓ ${parsed.partNo}　読み取りOK\nGoogleへ保存中…`,'ok'); beep(880,.06);
+    queue.push({raw,seq,parsed,createdAt:Date.now()}); saveQueue(); renderPending(); pumpQueue();
+  }
+
+  async function pumpQueue(){
+    if(sending||completing||!configured()||!queue.length){updateCompleteButton();return;}
+    sending=true; renderPending(); updateCompleteButton();
+    const item=queue[0];
+    try{
+      const r=await api('scan',{raw:item.raw});
+      if(r.status==='ok'||r.status==='warning'||r.status==='duplicate'){
+        queue.shift(); saveQueue();
+        currentState=r; renderState(r);
+        if(r.status==='duplicate') seenRaw.add(item.raw);
+        if(item.seq===latestScanSerial){
+          if(r.status==='duplicate'){setStatus('⚠ すでに読み取り済みです。記録しません。','duplicate');hideParsed();}
+          else {setStatus(`✓ ${r.parsed?.partNo||item.parsed.partNo}　保存完了`,'ok');showParsed(r.parsed||item.parsed);}
+        }
+      } else if(r.status==='invalid'||r.status==='error'){
+        queue.shift(); saveQueue(); seenRaw.delete(item.raw);
+        if(item.seq===latestScanSerial){setStatus(r.message||'保存エラー','error');hideParsed();}
+      } else throw new Error(r.message||'不明な応答');
+      setSync(true,'接続中');
+    }catch(err){
+      setSync(false,'通信待ち');
+      setStatus(`⚠ Googleへ送信できません。端末に保留中です\n${err.message||err}`,'warning');
+      setTimeout(pumpQueue,3000);
+      sending=false; renderPending(); updateCompleteButton(); return;
+    }
+    sending=false; renderPending(); updateCompleteButton();
+    if(queue.length) setTimeout(pumpQueue,0);
+  }
+
+  async function refreshState(){
+    try{const r=await api('state',{});currentState=r;renderState(r);setSync(true,'接続中');}
+    catch(e){setSync(false,'未接続');setStatus('⚠ GASへ接続できません。設定を確認してください','error');}
+  }
+
+  async function completeShipment(){
+    if(completing||sending||queue.length) return;
+    if(!currentState?.currentShipmentId){setStatus('まだバーコードが読み取られていません。','warning');return;}
+    completing=true; updateCompleteButton();
+    try{
+      const r=await api('complete',{});
+      if(r.status!=='completed') throw new Error(r.message||'完了できませんでした');
+      const s=r.completedShipment; $('overlayId').textContent=s.shipmentId; $('overlayCount').textContent=s.count; $('overlayQty').textContent=s.totalQuantity; $('overlay').style.display='flex';
+      currentState=r; renderState(r); seenRaw.clear();
+      setTimeout(()=>{$('overlay').style.display='none';setStatus('次の便：最初のQRを読み取ってください','');focusScanner();},1600);
+      beep(1050,.08); setTimeout(()=>beep(1320,.1),110);
+    }catch(e){setStatus('⚠ '+(e.message||e),'error');}
+    completing=false; updateCompleteButton();
+  }
+  $('completeBtn').addEventListener('click',completeShipment);
+
+  function api(action, params){
+    return new Promise((resolve,reject)=>{
+      const url=localStorage.getItem(LS.url)||''; const key=localStorage.getItem(LS.key)||'';
+      if(!url||!key){reject(new Error('接続設定がありません'));return;}
+      const cb='__jmcb_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2);
+      const q=new URLSearchParams({action,callback:cb,key,clientId,terminal:localStorage.getItem(LS.terminal)||'',_t:String(Date.now()),...params});
+      const script=document.createElement('script'); let done=false;
+      const timer=setTimeout(()=>finish(new Error('GAS応答タイムアウト')),12000);
+      function finish(err,data){if(done)return;done=true;clearTimeout(timer);try{script.remove();}catch{};try{delete window[cb];}catch{};err?reject(err):resolve(data);}
+      window[cb]=data=>finish(null,data);
+      script.onerror=()=>finish(new Error('GASへ接続できません'));
+      script.src=url+(url.includes('?')?'&':'?')+q.toString(); document.head.appendChild(script);
     });
-    video.srcObject = stream;
-    running = true;
-    setPhase(silhouettes.top ? '上面検査中' : 'カメラOK/STL待ち');
-    requestAnimationFrame(loop);
-  }catch(e){
-    alert('カメラ起動失敗: ' + e.message);
   }
-}
 
-document.getElementById('camBtn').onclick = startCamera;
-document.getElementById('topBtn').onclick = ()=>switchView('top');
-document.getElementById('sideBtn').onclick = ()=>switchView('side');
-document.getElementById('resetBtn').onclick = ()=>{
-  topOK=false; sideOK=false; topState.textContent='未'; sideState.textContent='未'; switchView('top');
-};
-
-function switchView(v){
-  currentView = v;
-  viewLabel.textContent = v==='top' ? 'TOP' : 'SIDE';
-  if(v==='top') setPhase(topOK ? '上面OK済' : '上面検査中');
-  if(v==='side') setPhase(sideOK ? '側面OK済' : '側面検査中');
-}
-
-['dragenter','dragover'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault(); drop.style.borderColor='#00ff88';}));
-['dragleave','drop'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault(); drop.style.borderColor='#6e8194';}));
-drop.addEventListener('drop', async e=>{
-  e.preventDefault();
-  const file = e.dataTransfer.files[0];
-  if(!file) return;
-  if(!file.name.toLowerCase().endsWith('.stl')){ alert('STLを入れてね'); return; }
-  setPhase('STL解析中');
-  const buf = await file.arrayBuffer();
-  await buildSilhouettes(buf);
-  drop.classList.add('hide');
-  switchView('top');
-  setPhase('上面検査中');
-});
-
-async function buildSilhouettes(arrayBuffer){
-  const loader = new STLLoader();
-  const geo = loader.parse(arrayBuffer);
-  geo.computeBoundingBox();
-  geo.computeVertexNormals();
-  const mesh = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({color:0xffffff}));
-  centerAndScale(mesh);
-  silhouettes.top = renderSilhouette(mesh, 'top');
-  silhouettes.side = renderSilhouette(mesh, 'side');
-}
-
-function centerAndScale(mesh){
-  const box = new THREE.Box3().setFromObject(mesh);
-  const center = new THREE.Vector3(); box.getCenter(center);
-  mesh.position.sub(center);
-  const size = new THREE.Vector3(); box.getSize(size);
-  const maxDim = Math.max(size.x,size.y,size.z) || 1;
-  mesh.scale.setScalar(2.6/maxDim);
-}
-
-function renderSilhouette(mesh, view){
-  const W=512,H=512;
-  const scene = new THREE.Scene();
-  const clone = mesh.clone();
-  scene.add(clone);
-  const renderer = new THREE.WebGLRenderer({alpha:true, antialias:false, preserveDrawingBuffer:true});
-  renderer.setSize(W,H,false);
-  renderer.setClearColor(0x000000,0);
-  const cam = new THREE.OrthographicCamera(-1.7,1.7,1.7,-1.7,0.1,10);
-  if(view==='top') cam.position.set(0,0,5);       // XY投影
-  else cam.position.set(0,-5,0);                 // XZ投影
-  cam.lookAt(0,0,0);
-  renderer.render(scene,cam);
-
-  const c=document.createElement('canvas'); c.width=W; c.height=H;
-  const ctx=c.getContext('2d', {willReadFrequently:true});
-  ctx.drawImage(renderer.domElement,0,0);
-  renderer.dispose();
-
-  // アルファ境界から輪郭線を作る
-  const img=ctx.getImageData(0,0,W,H);
-  const out=ctx.createImageData(W,H);
-  const d=img.data, od=out.data;
-  for(let y=1;y<H-1;y++){
-    for(let x=1;x<W-1;x++){
-      const i=(y*W+x)*4;
-      const a=d[i+3];
-      if(a<20) continue;
-      const edge = d[i-4+3]<20 || d[i+4+3]<20 || d[i-W*4+3]<20 || d[i+W*4+3]<20;
-      if(edge){ od[i]=0; od[i+1]=255; od[i+2]=136; od[i+3]=255; }
-    }
+  function parseBarcode(raw){
+    if(raw.length===141) return parseFixed141(raw);
+    const h=parseHonda(raw); if(h) return h;
+    return {type:'未判定',partNo:'',partName:'',quantity:null,orderNo:'',ticketDate:'',fNo:'',machineCode:'',nextProcess:'',tailCode:'',parseStatus:'要確認'};
   }
-  ctx.clearRect(0,0,W,H);
-  ctx.putImageData(out,0,0);
-  return c;
-}
-
-function loop(){
-  resize();
-  drawOverlay();
-  if(running && silhouettes[currentView] && video.readyState>=2){
-    const score = matchFrame(silhouettes[currentView]);
-    scoreEl.textContent = Math.round(score*100) + '%';
-    if(score >= threshold && performance.now()-lastOkTime > 1800){
-      handleOK(score);
-    }
+  function parseFixed141(raw){
+    const orderRaw=raw.slice(0,8).trim(), dateRaw=raw.slice(8,16).trim(), partNo=raw.slice(16,46).trim(), partName=raw.slice(46,76).trim();
+    const qtyZone=raw.slice(76,92), qtyMatch=qtyZone.match(/\d+/), nextMatch=qtyZone.match(/[A-Z]\d{2}/), machineCode=raw.slice(112,120).trim(), fNo=raw.slice(125,133).trim(), tailCode=raw.slice(133,141).trim();
+    let type='固定長141票'; if(nextMatch&&/^S\d{2}$/.test(nextMatch[0])) type='J-MAX 現品票(溶接)'; else if(/^TR/i.test(machineCode)) type='J-MAX 現品票(プレス品)'; else if(!machineCode) type='外製搬入伝票(支払い用)';
+    return {type,partNo,partName,quantity:qtyMatch?Number(qtyMatch[0]):null,orderNo:orderRaw.replace(/^0+/,''),ticketDate:ymd(dateRaw),fNo,machineCode,nextProcess:nextMatch?nextMatch[0]:'',tailCode,parseStatus:(partNo&&partName&&qtyMatch)?'OK':'要確認'};
   }
-  requestAnimationFrame(loop);
-}
-
-function drawOverlay(){
-  const W=overlay.width,H=overlay.height;
-  octx.clearRect(0,0,W,H);
-  const sil = silhouettes[currentView];
-  if(!sil) return;
-  const s = Math.min(W,H)*0.72;
-  const x=(W-s)/2, y=(H-s)/2;
-  octx.save();
-  octx.globalAlpha=0.78;
-  octx.drawImage(sil,x,y,s,s);
-  octx.restore();
-  // 中央ガイド
-  octx.strokeStyle='rgba(255,255,255,.35)'; octx.lineWidth=2*devicePixelRatio;
-  octx.setLineDash([8*devicePixelRatio,8*devicePixelRatio]);
-  octx.strokeRect(x,y,s,s);
-  octx.setLineDash([]);
-}
-
-function matchFrame(sil){
-  // PoC簡易：カメラ中心領域のエッジ量とCAD線の重なりを評価
-  wctx.clearRect(0,0,work.width,work.height);
-  wctx.drawImage(video,0,0,work.width,work.height);
-  const v = wctx.getImageData(0,0,work.width,work.height);
-
-  const sc=document.createElement('canvas'); sc.width=work.width; sc.height=work.height;
-  const sctx=sc.getContext('2d',{willReadFrequently:true});
-  sctx.drawImage(sil,0,0,work.width,work.height);
-  const sdata=sctx.getImageData(0,0,work.width,work.height).data;
-
-  const d=v.data;
-  let hit=0,total=0;
-  for(let y=1;y<work.height-1;y+=2){
-    for(let x=1;x<work.width-1;x+=2){
-      const i=(y*work.width+x)*4;
-      if(sdata[i+3] < 80) continue;
-      total++;
-      const gx = Math.abs(d[i+4]-d[i-4]) + Math.abs(d[i+5]-d[i-3]) + Math.abs(d[i+6]-d[i-2]);
-      const gy = Math.abs(d[i+work.width*4]-d[i-work.width*4]) + Math.abs(d[i+work.width*4+1]-d[i-work.width*4+1]) + Math.abs(d[i+work.width*4+2]-d[i-work.width*4+2]);
-      if(gx+gy > 90) hit++;
-    }
+  function parseHonda(raw){
+    const text=String(raw);
+    const pm=text.match(/(\d{5})\s*[- ]?\s*([0-9A-Z]{3})\s*[- ]?\s*([0-9A-Z]{4})\s*[- ]?\s*([0-9A-Z]{2})/i);
+    if(!pm)return null;
+    const partNo=[pm[1],pm[2],pm[3],pm[4]].join('-').toUpperCase();
+    let partName='',nameEnd=-1; const re=/[A-Z][A-Z .\/-]{1,28},[A-Z][A-Z .\/,\-]{1,28}/g; let m;
+    while((m=re.exec(text))){const c=m[0].trim();if(!/J-MAX|CO\.?[, ]?LTD/i.test(c)){partName=c;nameEnd=m.index+m[0].length;break;}}
+    let quantity=null;
+    if(nameEnd>=0){const after=text.slice(nameEnd,nameEnd+50);const q=after.match(/^\D*(\d{8})/);if(q)quantity=Number(q[1]);}
+    if(quantity===null){const q=text.match(/0{5,}(\d{1,3})/);if(q)quantity=Number(q[1]);}
+    const eights=text.match(/\d{8}/g)||[]; let fNo='';for(const x of eights){if(!/^0{4,}\d{1,4}$/.test(x)){fNo=x;break;}}
+    return {type:'Honda 現品票',partNo,partName,quantity,orderNo:'',ticketDate:'',fNo,machineCode:'',nextProcess:'',tailCode:'',parseStatus:(partName&&quantity!==null)?'OK':'要確認'};
   }
-  if(total===0) return 0;
-  const raw = hit/total;
-  // 見た目用に少し伸ばす
-  return Math.min(1, raw*2.2);
-}
-
-function handleOK(score){
-  lastOkTime = performance.now();
-  if(currentView==='top' && !topOK){
-    topOK=true; topState.textContent='OK';
-    flash('上面 OK','ok');
-    setTimeout(()=>switchView('side'),900);
-  }else if(currentView==='side' && !sideOK){
-    sideOK=true; sideState.textContent='OK';
-    flash('最終 OK','ok');
-    setPhase('検査完了','ok');
+  function normalizeRaw(v){
+    let s=String(v??''); s=s.replace(/[\x00-\x1F\x7F]/g,'').replace(/\u3000|\u00A0/g,' '); s=s.replace(/[！-～]/g,ch=>String.fromCharCode(ch.charCodeAt(0)-0xFEE0)); return s;
   }
-}
+  function ymd(s){return /^\d{8}$/.test(s)?`${s.slice(0,4)}/${s.slice(4,6)}/${s.slice(6,8)}`:s;}
+  function visibleRaw(s){return s.replace(/ /g,'·');}
 
-function flash(text, cls){
-  big.textContent=text; big.className=cls;
-  setTimeout(()=>{big.className=''; big.textContent='';},750);
-}
+  function renderState(state){
+    if(!state)return; currentState=state; const sid=state.currentShipmentId||''; $('shipmentId').textContent=sid||'最初のQRを読み取ってください'; $('count').textContent=state.count||0; $('totalQty').textContent=state.totalQuantity||0; renderItems(state.items||[]); updateCompleteButton();
+  }
+  function renderItems(items){const tb=$('tbody');tb.innerHTML='';$('empty').style.display=items.length?'none':'block';for(const it of items){const tr=document.createElement('tr');tr.innerHTML=`<td>${esc(timeOnly(it.scannedAt))}</td><td>${esc(it.type)}</td><td><b>${esc(it.partNo)}</b></td><td>${esc(it.partName)}</td><td class="td-num">${esc(it.quantity)}</td><td>${esc(it.fNo)}</td>`;tb.appendChild(tr);}}
+  function showParsed(p){$('last').style.display='grid';$('lastPart').textContent=p?.partNo||'—';$('lastName').textContent=p?.partName||'—';$('lastQty').textContent=p?.quantity??'—';}
+  function hideParsed(){$('last').style.display='none';}
+  function clearPreviousFeedbackForNewScan(){setStatus('読み取り中…','');hideParsed();}
+  function setStatus(t,c){statusEl.textContent=t;statusEl.className='status'+(c?' '+c:'');}
+  function setSync(ok,t){$('syncText').textContent=t;$('syncText').className='sync'+(ok?'':' bad');}
+  function renderPending(){$('pendingText').textContent=queue.length?`送信待ち ${queue.length}件`:'';saveQueue();}
+  function updateCompleteButton(){$('completeBtn').disabled=!currentState?.currentShipmentId||sending||queue.length||completing;}
+  function saveQueue(){localStorage.setItem(LS.queue,JSON.stringify(queue));}
+  function focusScanner(){setTimeout(()=>scanner.focus(),10);}
+  function timeOnly(s){const m=String(s||'').match(/(\d{2}:\d{2}:\d{2})$/);return m?m[1]:s||'';}
+  function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+  function safeJson(s,d){try{const v=JSON.parse(s);return Array.isArray(v)?v:d}catch{return d}}
+  function beep(freq,dur){try{const A=window.AudioContext||window.webkitAudioContext;const c=new A(),o=c.createOscillator(),g=c.createGain();o.frequency.value=freq;o.connect(g);g.connect(c.destination);g.gain.setValueAtTime(.05,c.currentTime);o.start();o.stop(c.currentTime+dur);o.onended=()=>c.close();}catch{}}
 
+  $('settingsBtn').addEventListener('click',()=>{loadSettingsForm();dialog.showModal();});
+  $('saveBtn').addEventListener('click',async()=>{saveSettingsForm();dialog.close();setStatus('接続確認中…','');await refreshState();pumpQueue();focusScanner();});
+  $('testBtn').addEventListener('click',async()=>{saveSettingsForm();$('settingMsg').textContent='接続確認中…';try{const r=await api('ping',{});$('settingMsg').textContent=`✓ 接続OK / API ${r.version||''}`;}catch(e){$('settingMsg').textContent='✕ '+(e.message||e);}});
+  function configured(){return !!(localStorage.getItem(LS.url)&&localStorage.getItem(LS.key));}
+  function loadSettingsForm(){$('gasUrl').value=localStorage.getItem(LS.url)||'';$('apiKey').value=localStorage.getItem(LS.key)||'';$('terminalName').value=localStorage.getItem(LS.terminal)||'';$('settingMsg').textContent='';}
+  function saveSettingsForm(){localStorage.setItem(LS.url,$('gasUrl').value.trim());localStorage.setItem(LS.key,$('apiKey').value.trim());localStorage.setItem(LS.terminal,$('terminalName').value.trim());}
+})();
 </script>
 </body>
 </html>
