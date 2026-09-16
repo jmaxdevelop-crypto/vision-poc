@@ -18,7 +18,7 @@
   .last{margin-top:12px;display:none;grid-template-columns:1fr 1.25fr .5fr;gap:10px}.last>div{border:1px solid var(--line);border-radius:8px;padding:10px;background:#fff}.last b{display:block;font-size:11px;color:#617080;margin-bottom:4px}.last span{font-weight:850;overflow-wrap:anywhere}
   .actions{display:flex;gap:10px;margin-top:14px}.btn{border:0;border-radius:10px;padding:13px 18px;font-weight:800;cursor:pointer}.btn-primary{background:var(--blue);color:#fff;flex:1;font-size:18px}.btn-secondary{background:#e8eef4;color:#27445d}.btn:disabled{opacity:.45;cursor:not-allowed}
   .list-card{margin-top:14px;overflow:hidden}.list-head{padding:13px 15px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}.table-wrap{max-height:420px;overflow:auto}table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:9px 10px;border-bottom:1px solid #edf1f4;text-align:left}th{position:sticky;top:0;background:#f8fafc;color:#52606d}.td-num{text-align:right;font-weight:800}.empty{padding:28px;text-align:center;color:#7b8793}
-  .sync{font-size:12px;color:#697887}.sync.bad{color:var(--err);font-weight:700}
+  .sync{font-size:12px;color:#697887}.sync.bad{color:var(--err);font-weight:700}.save-ok{color:var(--ok);font-weight:800;white-space:nowrap}.save-pending{color:var(--warn);font-weight:800;white-space:nowrap}
   dialog{border:0;border-radius:12px;padding:0;max-width:620px;width:calc(100% - 30px);box-shadow:0 18px 60px #0005}dialog::backdrop{background:#0006}.dlg{padding:18px}.dlg h2{margin:0 0 12px}.field{margin:12px 0}.field label{display:block;font-size:12px;font-weight:700;color:#566575;margin-bottom:5px}.field input{width:100%;padding:10px 11px;border:1px solid #b9c6d2;border-radius:8px;font:14px monospace}.dlg-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
   details.diag{margin-top:14px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 12px}details.diag pre{white-space:pre-wrap;word-break:break-all;font-size:11px;background:#f7f9fb;padding:10px;border-radius:8px;max-height:180px;overflow:auto}
   .overlay{display:none;position:fixed;inset:0;background:#0d2740e8;z-index:30;align-items:center;justify-content:center}.overlay-box{background:white;border-radius:16px;padding:30px 36px;text-align:center;min-width:320px}.overlay-box .ov-id{font-size:32px;font-weight:900;color:var(--navy)}.overlay-box p{font-size:18px;margin:10px 0 0}
@@ -26,7 +26,7 @@
 </style>
 </head>
 <body>
-<header><h1>J-MAX Shipping</h1><div><span class="ver">GitHub Pages v3.0</span>　<button class="btn btn-secondary" style="padding:7px 10px" id="settingsBtn">設定</button></div></header>
+<header><h1>J-MAX Shipping</h1><div><span class="ver">GitHub Pages v3.5</span>　<button class="btn btn-secondary" style="padding:7px 10px" id="settingsBtn">設定</button></div></header>
 <div class="wrap">
   <section class="card top">
     <div class="metric"><b>現在の便</b><div id="shipmentId" class="shipment-id">最初のQRを読み取ってください</div></div>
@@ -45,7 +45,7 @@
 
   <section class="card list-card">
     <div class="list-head"><strong>現在便の積載リスト</strong><span id="pendingText" class="sync"></span></div>
-    <div class="table-wrap"><table><thead><tr><th>時刻</th><th>種別</th><th>品番</th><th>品名</th><th>数量</th><th>エフNo.</th></tr></thead><tbody id="tbody"></tbody></table><div id="empty" class="empty">まだ読み取りはありません</div></div>
+    <div class="table-wrap"><table><thead><tr><th>時刻</th><th>種別</th><th>品番</th><th>品名</th><th>数量</th><th>エフNo.</th><th>保存</th></tr></thead><tbody id="tbody"></tbody></table><div id="empty" class="empty">まだ読み取りはありません</div></div>
   </section>
 </div>
 
@@ -60,13 +60,16 @@
 <script>
 (() => {
   'use strict';
-  const APP_VERSION = '3.0';
+  const APP_VERSION = '3.5';
+  const BATCH_MAX = 20;
+  const BATCH_DELAY_MS = 700;
   const IDLE_MS = 500;
   const LS = {url:'jm_shipping_gas_url', key:'jm_shipping_api_key', terminal:'jm_shipping_terminal', client:'jm_shipping_client_id', queue:'jm_shipping_pending_queue'};
   const $ = id => document.getElementById(id);
   const scanner=$('scanner'), statusEl=$('status'), dialog=$('settingsDialog');
   let idleTimer=null, sending=false, completing=false, currentState=null, scanSerial=0, latestScanSerial=0;
   let retryTimer=null, retryAttempts=0, statusSerial=0;
+  let flushTimer=null, sendingPromise=null;
   let queue = safeJson(localStorage.getItem(LS.queue), []);
   const seenRaw = new Set();
 
@@ -118,19 +121,31 @@
     document.body.addEventListener('click', e=>{if(!e.target.closest('button')&&!e.target.closest('input')&&!e.target.closest('dialog')) focusScanner();});
     focusScanner();
     if (!configured()) { dialog.showModal(); setStatus('最初に接続設定をしてください', 'warning'); return; }
+
+    // v3.1: 旧版で画面には載ったのにGoogleへ未保存だった行を、
+    // localState の raw/eventId から送信キューへ復元する。
     restoreLocalState();
+    const recovered=recoverQueueFromLocalState();
+    const localSid=currentState?.currentShipmentId||'';
     const qfix=pruneInvalidQueue();
+
+    // 「現在便の積載リスト」は以後サーバ確認済みを基準にする。
+    // 旧localStateの行は pending queue として保存状態を明示して表示する。
+    currentState={status:'state',currentShipmentId:localSid,count:0,totalQuantity:0,items:[]};
+    saveLocalState();
     for(const q of queue){ if(q && q.raw) seenRaw.add(normalizeRaw(q.raw)); }
-    for(const it of (currentState?.items||[])){ if(it && it.raw) seenRaw.add(normalizeRaw(it.raw)); }
-    if(qfix.purged>0 || qfix.collapsed>0){
-      const msgs=[]; if(qfix.purged>0) msgs.push(`読み取り不全 ${qfix.purged}件削除`); if(qfix.collapsed>0) msgs.push(`重複送信待ち ${qfix.collapsed}件整理`);
-      setStatus(`旧キャッシュを整理しました：${msgs.join(' / ')}`,'warning');
-      setTimeout(()=>{ if(!sending&&!scanStartedAt) setStatus('読み取り待機中',''); },1200);
-    } else {
-      setStatus('読み取り待機中','');
-    }
-    if(!queue.length || !currentState?.currentShipmentId) await refreshState();
-    else setSync(false,'送信待ちあり');
+    renderView();
+
+    const msgs=[];
+    if(recovered>0) msgs.push(`未保存候補 ${recovered}件を再送キューへ復元`);
+    if(qfix.purged>0) msgs.push(`読み取り不全 ${qfix.purged}件削除`);
+    if(qfix.collapsed>0) msgs.push(`重複送信待ち ${qfix.collapsed}件整理`);
+    if(msgs.length){
+      setStatus(`キャッシュ確認：${msgs.join(' / ')}`,'warning');
+      setTimeout(()=>{ if(!sending&&!scanStartedAt) setStatus('読み取り待機中',''); },1400);
+    } else setStatus('読み取り待機中','');
+
+    await refreshState();
     pumpQueue();
   });
 
@@ -214,79 +229,110 @@
     const seq=++scanSerial; latestScanSerial=seq;
     const shipmentId=ensureLocalShipmentId();
     const eventId=clientId+'_'+Date.now().toString(36)+'_'+seq;
-    applyLocalScan(parsed,raw,eventId);
-    showParsed(parsed); setStatus(`✓ ${parsed.partNo}　読み取りOK\nGoogleへ保存中…`,'ok'); beep(880,.06);
-    queue.push({raw,seq,parsed,shipmentId,eventId,createdAt:Date.now()}); saveQueue(); renderPending(); pumpQueue();
+    showParsed(parsed); setStatus(`✓ ${parsed.partNo}　読み取りOK`,'ok'); beep(880,.06);
+    queue.push({raw,seq,parsed,shipmentId,eventId,createdAt:Date.now()}); saveQueue(); renderPending(); renderView(); scheduleBatchFlush();
+  }
+
+  function scheduleBatchFlush(delay=BATCH_DELAY_MS){
+    pruneInvalidQueue();
+    if(!queue.length || completing || !configured()) return;
+    if(flushTimer) clearTimeout(flushTimer);
+    // ある程度たまったら即送信。通常は700msだけまとめて1回のGoogle書込みにする。
+    if(queue.filter(isValidQueueItem).length>=BATCH_MAX) delay=0;
+    flushTimer=setTimeout(()=>{flushTimer=null; pumpQueue();}, Math.max(0,delay));
+  }
+
+  function firstBatch_(){
+    const first=queue.find(isValidQueueItem);
+    if(!first) return [];
+    const sid=String(first.shipmentId||'');
+    const out=[];
+    for(const q of queue){
+      if(!isValidQueueItem(q)) continue;
+      if(String(q.shipmentId||'')!==sid) continue;
+      out.push(q);
+      if(out.length>=BATCH_MAX) break;
+    }
+    return out;
   }
 
   async function pumpQueue(){
-    // 旧版由来の不完全キャッシュは送信対象にしない。
     pruneInvalidQueue();
-    if(sending||completing||!configured()||!queue.length){updateCompleteButton();return;}
+    if(completing || !configured() || !queue.length){updateCompleteButton();return null;}
+    if(sendingPromise) return sendingPromise;
     if(retryTimer){ clearTimeout(retryTimer); retryTimer=null; }
+    if(flushTimer){ clearTimeout(flushTimer); flushTimer=null; }
 
+    const batch=firstBatch_();
+    if(!batch.length){updateCompleteButton();return null;}
     sending=true;
-    renderPending();
-    updateCompleteButton();
-    const item=queue[0];
-    setSync(false, retryAttempts ? `再送中 ${queue.length}件` : 'Google保存中…');
+    renderPending(); updateCompleteButton();
+    setSync(false, retryAttempts ? `再送中 ${queue.length}件` : `Google保存中 ${batch.length}件`);
 
-    try{
-      const r=await api('scan',{raw:item.raw,shipmentId:item.shipmentId||currentState?.currentShipmentId||'',eventId:item.eventId||''});
-      if(r.status==='ok'||r.status==='warning'||r.status==='duplicate'||r.status==='sent_unconfirmed'){
-        queue.shift(); saveQueue();
-        retryAttempts=0;
-        if(r.status!=='sent_unconfirmed'){ currentState=r; renderState(r); }
-        if(r.status==='duplicate') seenRaw.add(item.raw);
+    sendingPromise=(async()=>{
+      try{
+        const r=await api('batch_scan',{
+          shipmentId:batch[0].shipmentId||currentState?.currentShipmentId||'',
+          items:batch.map(x=>({raw:x.raw,eventId:x.eventId||'',createdAt:x.createdAt||0}))
+        });
+        if(r.status!=='ok') throw new Error(r.message||'一括保存に失敗しました');
 
-        if(item.seq===latestScanSerial){
-          if(r.status==='duplicate'){
-            setTransientStatus('⚠ すでに読み取り済みです。記録しません。','duplicate',1100);
-            hideParsed();
-          }else{
-            const suffix = r.status==='sent_unconfirmed' ? '送信済み' : (r.replay ? '保存確認OK' : '保存完了');
-            setTransientStatus(`✓ ${r.parsed?.partNo||item.parsed.partNo}　${suffix}`,'ok',900);
-            showParsed(r.parsed||item.parsed);
-          }
+        const results=Array.isArray(r.results)?r.results:[];
+        const finished=new Set();
+        const duplicateIds=new Set();
+        const invalidIds=new Set();
+        for(const x of results){
+          const id=String(x&&x.eventId||''); if(!id) continue;
+          if(x.status==='ok'||x.status==='replay'||x.status==='duplicate'||x.status==='invalid') finished.add(id);
+          if(x.status==='duplicate') duplicateIds.add(id);
+          if(x.status==='invalid') invalidIds.add(id);
         }
-      } else if(r.status==='invalid'||r.status==='error'){
-        // サーバが明示的に拒否したデータは再送しない。
-        queue.shift(); saveQueue(); seenRaw.delete(item.raw);
+        // ACKが返った項目だけキューから除去。通信失敗時は1件も消さない。
+        const latestWasDup=duplicateIds.has(String(batch[batch.length-1]?.eventId||''));
+        const latestWasInvalid=invalidIds.has(String(batch[batch.length-1]?.eventId||''));
+        if(finished.size){
+          queue=queue.filter(q=>!finished.has(String(q.eventId||'')));
+          saveQueue();
+        }
         retryAttempts=0;
-        if(item.seq===latestScanSerial){setTransientStatus(r.message||'保存エラー','error',1400);hideParsed();}
-      } else {
-        throw new Error(r.message||'不明な応答');
-      }
+        if(r.state){ currentState=r.state; renderState(r.state); }
+        else renderView();
 
-      sending=false;
-      renderPending();
-      updateCompleteButton();
-      if(queue.length){
-        setSync(false,`続けて送信中 ${queue.length}件`);
-        setTimeout(pumpQueue,0);
-      }else{
-        setSync(true,'接続中');
-        clearCommunicationWarningIfStale();
-      }
-    }catch(err){
-      sending=false;
-      retryAttempts++;
-      renderPending();
-      updateCompleteButton();
-      setSync(false,`再送中 ${queue.length}件`);
+        if(latestWasDup){ setTransientStatus('⚠ すでに読み取り済みです。記録しません。','duplicate',900); }
+        else if(latestWasInvalid){ setTransientStatus('⚠ Google側で解析NGになったデータを除外しました。','error',1100); }
 
-      // 大きな警告は短時間だけ。以後は右上の「再送中」で状態を示す。
-      setTransientStatus(`⚠ Google保存を再試行します（${retryAttempts}回目）`,'warning',1200);
-      scheduleRetry();
-    }
+        setSync(true, queue.length?`保存済 / 待ち ${queue.length}件`:'接続中');
+      }catch(err){
+        retryAttempts++;
+        setSync(false,`再送待ち ${queue.length}件`);
+        // 読取操作は止めない。大きな警告は短時間だけ表示し、その後は右上だけで状態表示。
+        setTransientStatus(`⚠ Google保存をバックグラウンド再試行します`,'warning',900);
+        scheduleRetry();
+      }finally{
+        sending=false; sendingPromise=null; renderPending(); updateCompleteButton();
+        if(queue.length && !retryTimer && !completing) scheduleBatchFlush(120);
+      }
+    })();
+    return sendingPromise;
   }
 
   function scheduleRetry(){
     if(retryTimer || !queue.length || completing) return;
-    retryTimer=setTimeout(()=>{
-      retryTimer=null;
-      pumpQueue();
-    },3000);
+    const wait=Math.min(10000, 1200 + retryAttempts*800);
+    retryTimer=setTimeout(()=>{ retryTimer=null; pumpQueue(); },wait);
+  }
+
+  async function flushAllPending(){
+    pruneInvalidQueue();
+    if(flushTimer){clearTimeout(flushTimer);flushTimer=null;}
+    if(retryTimer){clearTimeout(retryTimer);retryTimer=null;}
+    let guard=0;
+    while(queue.some(isValidQueueItem)){
+      if(++guard>200) throw new Error('送信待ちが多すぎます。通信状態を確認してください。');
+      if(sendingPromise) await sendingPromise;
+      else await pumpQueue();
+      if(queue.some(isValidQueueItem) && retryAttempts>0) throw new Error(`Google保存待ちが ${queue.filter(isValidQueueItem).length}件あります。通信を確認してください。`);
+    }
   }
 
   async function refreshState(){
@@ -295,46 +341,34 @@
   }
 
   async function completeShipment(){
-    // 旧版由来の不完全読取キャッシュはここでも必ず掃除する。
-    const purged=pruneInvalidQueue();
-    if(completing||sending) return;
-    if(queue.length){
-      setStatus(`Googleへの正常データ送信待ちが ${queue.length}件あります。送信完了後に積載完了できます。`,'warning');
-      pumpQueue();
-      return;
-    }
-    if(!currentState?.currentShipmentId){setStatus('まだバーコードが読み取られていません。','warning');return;}
+    pruneInvalidQueue();
+    if(completing) return;
+    const sid=currentState?.currentShipmentId || queue.find(isValidQueueItem)?.shipmentId || '';
+    if(!sid){setStatus('まだバーコードが読み取られていません。','warning');return;}
 
-    // 前回の読取エラー/警告を、積載完了操作に持ち越さない。
     clearTimeout(idleTimer); idleTimer=null;
-    scanner.value='';
-    scanStartedAt=0; lastKeyAt=0; maxKeyGap=0; receivedKeys=0; lastTerminator=''; ignoredTerminators=0;
+    scanner.value=''; scanStartedAt=0; lastKeyAt=0; maxKeyGap=0; receivedKeys=0; lastTerminator=''; ignoredTerminators=0;
     hideParsed();
-    setStatus('積載完了処理中…','');
-
     completing=true; updateCompleteButton();
-    const localSummary={shipmentId:currentState.currentShipmentId,count:Number(currentState.count||0),totalQuantity:Number(currentState.totalQuantity||0)};
     try{
-      const r=await api('complete',{shipmentId:currentState.currentShipmentId});
-      const s=(r.status==='completed'&&r.completedShipment)?r.completedShipment:localSummary;
-      if(r.status!=='completed'&&r.status!=='sent_unconfirmed') throw new Error(r.message||'完了できませんでした');
-
-      // 完了した瞬間に必ず成功表示へ上書きする。
-      // これで直前の「読み取り失敗」「通信エラー」が画面へ残らない。
-      setStatus(`✓ 積載完了　${s.shipmentId}`,'ok');
-      hideParsed();
-      $('diag').textContent='—';
+      // ボタン1回で「未送信を一括保存 → 便完了」まで自動実行する。
+      if(queue.some(isValidQueueItem)){
+        setStatus(`積載完了前に ${queue.filter(isValidQueueItem).length}件をGoogleへ一括保存中…`,'');
+        completing=false; // pumpQueueが動けるよう一時解除
+        await flushAllPending();
+        completing=true;
+      }
+      setStatus('積載完了処理中…','');
+      const r=await api('complete',{shipmentId:sid});
+      const s=(r.status==='completed'&&r.completedShipment)?r.completedShipment:{shipmentId:sid,count:Number(currentState?.count||0),totalQuantity:Number(currentState?.totalQuantity||0)};
+      if(r.status!=='completed') throw new Error(r.message||'完了できませんでした');
+      setStatus(`✓ 積載完了　${s.shipmentId}`,'ok'); hideParsed(); $('diag').textContent='—';
       $('overlayId').textContent=s.shipmentId; $('overlayCount').textContent=s.count; $('overlayQty').textContent=s.totalQuantity; $('overlay').style.display='flex';
       currentState={status:'state',currentShipmentId:'',count:0,totalQuantity:0,items:[]}; renderState(currentState); seenRaw.clear(); saveLocalState();
-      setTimeout(()=>{
-        $('overlay').style.display='none';
-        setStatus('次の便：最初のQRを読み取ってください','');
-        hideParsed();
-        focusScanner();
-      },1600);
+      setTimeout(()=>{$('overlay').style.display='none';setStatus('次の便：最初のQRを読み取ってください','');hideParsed();focusScanner();},1600);
       beep(1050,.08); setTimeout(()=>beep(1320,.1),110);
     }catch(e){setStatus('⚠ '+(e.message||e),'error');}
-    completing=false; updateCompleteButton();
+    finally{completing=false;updateCompleteButton();}
   }
   $('completeBtn').addEventListener('click',completeShipment);
 
@@ -343,50 +377,34 @@
     const key=(localStorage.getItem(LS.key)||'').trim();
     if(!url||!key) throw new Error('接続設定がありません');
     const payload={action,key,clientId,terminal:localStorage.getItem(LS.terminal)||'',_t:String(Date.now()),...params};
-    const q=new URLSearchParams();
-    Object.entries(payload).forEach(([k,v])=>q.set(k,String(v??'')));
-    const reqUrl=url+(url.includes('?')?'&':'?')+q.toString();
 
-    // まずInspect/Visitorと同じ直接GETでACKを取りに行く。
-    try{
-      const controller=new AbortController(); const timer=setTimeout(()=>controller.abort(),6000);
-      try{
-        const res=await fetch(reqUrl,{cache:'no-store',credentials:'omit',signal:controller.signal});
-        if(!res.ok) throw new Error('GAS HTTP '+res.status);
-        const text=await res.text(); let data;
-        try{data=JSON.parse(text)}catch(_){throw new Error('GAS応答がJSONではありません')}
-        if(data && data.status==='error') throw new Error(data.message||'GASエラー');
-        return data;
-      } finally { clearTimeout(timer); }
-    }catch(firstErr){
-      // 書込み系は、応答取得に失敗したらMasterで実績のあるhidden form POSTへフォールバック。
-      // 同じeventIdを送るので、最初のGETが実は保存済みでもGAS側で二重登録されない。
-      if(action==='scan' || action==='complete'){
-        await submitHiddenForm(url,payload);
-        return {status:'sent_unconfirmed',message:'Googleへ送信済み'};
-      }
-      if(firstErr && firstErr.name==='AbortError') throw new Error('GAS応答タイムアウト');
-      throw firstErr;
-    }
+    // v3.1: CORS/Google複数ログインに依存しない ACK 方式。
+    // hidden form POST → GASのHtmlService → parent.postMessage で確定応答を受ける。
+    return await submitPostMessage(url,payload);
   }
 
-  function submitHiddenForm(url,payload){
+  function submitPostMessage(url,payload){
     return new Promise((resolve,reject)=>{
-      if(navigator.onLine===false){ reject(new Error('ネットワークがオフラインです')); return; }
-      const frameName='jm_ship_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,7);
-      const frame=document.createElement('iframe');
-      frame.name=frameName; frame.style.display='none';
-      const form=document.createElement('form');
-      form.method='POST'; form.action=url; form.target=frameName; form.style.display='none';
-      const ta=document.createElement('textarea'); ta.name='payload'; ta.value=JSON.stringify(payload); form.appendChild(ta);
-      let submitted=false, done=false;
-      const cleanup=()=>{try{form.remove()}catch{};try{frame.remove()}catch{}};
-      const finish=(ok,err)=>{if(done)return;done=true;clearTimeout(timer);cleanup();ok?resolve():reject(err||new Error('GAS送信失敗'));};
-      frame.addEventListener('load',()=>{ if(submitted) finish(true); });
-      const timer=setTimeout(()=>finish(false,new Error('GAS送信タイムアウト')),7000);
+      if(navigator.onLine===false){reject(new Error('ネットワークがオフラインです'));return;}
+      const requestId='req_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,9);
+      const frameName='jm_ship_'+requestId;
+      const frame=document.createElement('iframe'); frame.name=frameName; frame.style.display='none';
+      const form=document.createElement('form'); form.method='POST'; form.action=url; form.target=frameName; form.style.display='none';
+      const ta=document.createElement('textarea'); ta.name='payload'; ta.value=JSON.stringify({...payload,replyMode:'postMessage',requestId}); form.appendChild(ta);
+      let done=false;
+      const cleanup=()=>{window.removeEventListener('message',onMessage);try{form.remove()}catch{};try{frame.remove()}catch{}};
+      const finish=(err,data)=>{if(done)return;done=true;clearTimeout(timer);cleanup();err?reject(err):resolve(data);};
+      const onMessage=(ev)=>{
+        const d=ev&&ev.data;
+        if(!d||d.source!=='JMAX_SHIPPING_GAS'||d.requestId!==requestId)return;
+        const data=d.data||{};
+        if(data.status==='error') finish(new Error(data.message||'GASエラー'));
+        else finish(null,data);
+      };
+      window.addEventListener('message',onMessage);
+      const timer=setTimeout(()=>finish(new Error('GAS確定応答タイムアウト')),10000);
       document.body.appendChild(frame); document.body.appendChild(form);
-      submitted=true;
-      try{ form.submit(); }catch(e){ finish(false,e); }
+      try{form.submit();}catch(e){finish(e);}
     });
   }
 
@@ -418,9 +436,9 @@
     }
     if(nameStart<0) return null;
     const candidates=[];
-    const pr=/(\d{5})([A-Z]{3})\s*([0-9A-Z]{4})\s+([0-9A-Z]{2})/g;
+    const pr=/(\d{5})([0-9A-Z]{3})\s*([0-9A-Z]{4})\s*([0-9A-Z]{2})/g;
     let pm;
-    while((pm=pr.exec(text))){ if(pm.index<nameStart) candidates.push(pm); }
+    while((pm=pr.exec(text))){ if(pm.index<nameStart && /[A-Z]/.test(pm[2]) && (nameStart-(pm.index+pm[0].length))<=80) candidates.push(pm); }
     if(!candidates.length) return null;
     const best=candidates[candidates.length-1];
     const partNo=[best[1],best[2],best[3],best[4]].join('-').toUpperCase();
@@ -469,18 +487,70 @@
     saveLocalState(); renderState(currentState); return currentState.currentShipmentId;
   }
   function applyLocalScan(parsed,raw,eventId){
-    if(!currentState) currentState={status:'state',currentShipmentId:'',count:0,totalQuantity:0,items:[]};
-    const item={scannedAt:new Date().toLocaleString('ja-JP',{hour12:false}),type:parsed.type,partNo:parsed.partNo,partName:parsed.partName,quantity:parsed.quantity,fNo:parsed.fNo||'',raw:raw||'',eventId:eventId||''};
-    currentState.items=[item,...(currentState.items||[])].slice(0,100); currentState.count=Number(currentState.count||0)+1; currentState.totalQuantity=Number(currentState.totalQuantity||0)+(Number(parsed.quantity)||0);
-    saveLocalState(); renderState(currentState);
+    // v3.1: 読んだだけでは「保存済みリスト」に入れない。
+    // queue に存在する間は renderView() が「送信待ち」として表示する。
+    renderView();
   }
   function saveLocalState(){try{localStorage.setItem('jm_shipping_local_state',JSON.stringify(currentState||{}));}catch{}}
-  function restoreLocalState(){try{const x=JSON.parse(localStorage.getItem('jm_shipping_local_state')||'null');if(x&&x.currentShipmentId){currentState=x;renderState(x);}}catch{}}
+  function restoreLocalState(){try{const x=JSON.parse(localStorage.getItem('jm_shipping_local_state')||'null');if(x&&x.currentShipmentId){currentState=x;}}catch{}}
+
+  function recoverQueueFromLocalState(){
+    if(!currentState?.currentShipmentId || !Array.isArray(currentState.items)) return 0;
+    const sid=currentState.currentShipmentId;
+    const existing=new Set(queue.map(q=>String(q.shipmentId||'')+'\u0001'+normalizeRaw(q.raw||'')));
+    let added=0;
+    // 古い表示は新しい順なので、再送は古い順に積む。
+    for(const it of [...currentState.items].reverse()){
+      const raw=normalizeRaw(it?.raw||'');
+      if(!raw) continue;
+      const parsed=parseBarcode(raw);
+      if(parsed.parseStatus!=='OK') continue;
+      const key=sid+'\u0001'+raw;
+      if(existing.has(key)) continue;
+      const eventId=String(it.eventId||'') || (clientId+'_recover_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,8));
+      queue.push({raw,seq:++scanSerial,parsed,shipmentId:sid,eventId,createdAt:Date.now(),recovered:true});
+      existing.add(key); added++;
+    }
+    if(added) saveQueue();
+    return added;
+  }
 
   function renderState(state){
-    if(!state)return; currentState=state; saveLocalState(); const sid=state.currentShipmentId||''; $('shipmentId').textContent=sid||'最初のQRを読み取ってください'; $('count').textContent=state.count||0; $('totalQty').textContent=state.totalQuantity||0; renderItems(state.items||[]); updateCompleteButton();
+    if(!state)return; currentState=state; saveLocalState(); renderView();
   }
-  function renderItems(items){const tb=$('tbody');tb.innerHTML='';$('empty').style.display=items.length?'none':'block';for(const it of items){const tr=document.createElement('tr');tr.innerHTML=`<td>${esc(timeOnly(it.scannedAt))}</td><td>${esc(it.type)}</td><td><b>${esc(it.partNo)}</b></td><td>${esc(it.partName)}</td><td class="td-num">${esc(it.quantity)}</td><td>${esc(it.fNo)}</td>`;tb.appendChild(tr);}}
+  function combinedRows(){
+    const confirmed=Array.isArray(currentState?.items)?currentState.items:[];
+    const confirmedKeys=new Set();
+    const rows=[];
+    for(const it of confirmed){
+      const k=String(it.eventId||'') || ('raw:'+String(it.raw||''));
+      if(k) confirmedKeys.add(k);
+      if(it.raw) confirmedKeys.add('raw:'+String(it.raw));
+      rows.push({...it,_save:'ok'});
+    }
+    for(const q of queue){
+      if(!isValidQueueItem(q)) continue;
+      const k=String(q.eventId||'') || ('raw:'+String(q.raw||''));
+      const rawKey='raw:'+String(q.raw||'');
+      if(confirmedKeys.has(k)||confirmedKeys.has(rawKey)) continue;
+      const p=q.parsed||parseBarcode(normalizeRaw(q.raw||''));
+      rows.push({scannedAt:q.createdAt?new Date(q.createdAt).toLocaleString('ja-JP',{hour12:false}):'',type:p.type,partNo:p.partNo,partName:p.partName,quantity:p.quantity,fNo:p.fNo||'',raw:q.raw||'',eventId:q.eventId||'',_save:'pending'});
+    }
+    rows.sort((a,b)=>String(b.scannedAt||'').localeCompare(String(a.scannedAt||'')));
+    return rows.slice(0,100);
+  }
+  function renderView(){
+    const rows=combinedRows();
+    const sid=currentState?.currentShipmentId || queue[0]?.shipmentId || '';
+    let total=0; for(const it of rows){const q=Number(it.quantity);if(!isNaN(q))total+=q;}
+    $('shipmentId').textContent=sid||'最初のQRを読み取ってください';
+    $('count').textContent=rows.length; $('totalQty').textContent=total;
+    renderItems(rows); updateCompleteButton();
+  }
+  function renderItems(items){
+    const tb=$('tbody');tb.innerHTML='';$('empty').style.display=items.length?'none':'block';
+    for(const it of items){const tr=document.createElement('tr');const st=it._save==='pending'?'<span class="save-pending">送信待ち</span>':'<span class="save-ok">保存済</span>';tr.innerHTML=`<td>${esc(timeOnly(it.scannedAt))}</td><td>${esc(it.type)}</td><td><b>${esc(it.partNo)}</b></td><td>${esc(it.partName)}</td><td class="td-num">${esc(it.quantity)}</td><td>${esc(it.fNo)}</td><td>${st}</td>`;tb.appendChild(tr);}
+  }
   function showParsed(p){$('last').style.display='grid';$('lastPart').textContent=p?.partNo||'—';$('lastName').textContent=p?.partName||'—';$('lastQty').textContent=p?.quantity??'—';}
   function hideParsed(){$('last').style.display='none';}
   function clearPreviousFeedbackForNewScan(){setStatus('読み取り中…','');hideParsed();}
@@ -507,13 +577,14 @@
   function renderPending(){
     const invalid=queue.filter(x=>!isValidQueueItem(x)).length;
     const valid=Math.max(0,queue.length-invalid);
-    $('pendingText').textContent=valid ? (sending?`Google保存中 ${valid}件`:`Google再送中 ${valid}件`) : '';
+    $('pendingText').textContent=valid ? (sending?`一括保存中 ${valid}件`:`未送信 ${valid}件`) : '';
     saveQueue();
+    renderView();
   }
   function updateCompleteButton(){
-    // 不完全キャッシュは完了可否の条件にしない。正常な未送信データだけをブロックする。
-    const validPending=queue.some(isValidQueueItem);
-    $('completeBtn').disabled=!currentState?.currentShipmentId||sending||validPending||completing;
+    // 未送信があってもボタンは押せる。押下時に一括保存してから自動で便完了する。
+    const sid=currentState?.currentShipmentId || queue.find(isValidQueueItem)?.shipmentId || '';
+    $('completeBtn').disabled=!sid||completing;
   }
   function saveQueue(){localStorage.setItem(LS.queue,JSON.stringify(queue));}
   function focusScanner(){setTimeout(()=>{try{if(!dialog.open)scanner.focus({preventScroll:true});}catch{}},20);}
@@ -523,8 +594,8 @@
   function beep(freq,dur){try{const A=window.AudioContext||window.webkitAudioContext;const c=new A(),o=c.createOscillator(),g=c.createGain();o.frequency.value=freq;o.connect(g);g.connect(c.destination);g.gain.setValueAtTime(.05,c.currentTime);o.start();o.stop(c.currentTime+dur);o.onended=()=>c.close();}catch{}}
 
   $('settingsBtn').addEventListener('click',()=>{scanner.blur();loadSettingsForm();dialog.showModal();});
-  $('saveBtn').addEventListener('click',async()=>{saveSettingsForm();dialog.close();setStatus('接続確認中…','');await refreshState();pumpQueue();focusScanner();});
-  $('testBtn').addEventListener('click',async()=>{saveSettingsForm();$('settingMsg').textContent='接続確認中…';try{const r=await api('ping',{});$('settingMsg').textContent=`✓ 接続OK / API ${r.version||''}`;}catch(e){$('settingMsg').textContent='△ 応答確認は不可。保存時は自動フォールバックします。';}});
+  $('saveBtn').addEventListener('click',async()=>{saveSettingsForm();dialog.close();setStatus('接続確認中…','');await refreshState();scheduleBatchFlush(0);focusScanner();});
+  $('testBtn').addEventListener('click',async()=>{saveSettingsForm();$('settingMsg').textContent='接続確認中…';try{const r=await api('ping',{});$('settingMsg').textContent=`✓ 接続OK / API ${r.version||''}`;}catch(e){$('settingMsg').textContent='✕ GASから確定応答を受け取れません。URL/デプロイを確認してください。';}});
   function configured(){return !!(localStorage.getItem(LS.url)&&localStorage.getItem(LS.key));}
   function loadSettingsForm(){$('gasUrl').value=localStorage.getItem(LS.url)||'';$('apiKey').value=localStorage.getItem(LS.key)||'';$('terminalName').value=localStorage.getItem(LS.terminal)||'';$('settingMsg').textContent='';}
   function saveSettingsForm(){localStorage.setItem(LS.url,$('gasUrl').value.trim());localStorage.setItem(LS.key,$('apiKey').value.trim());localStorage.setItem(LS.terminal,$('terminalName').value.trim());}
