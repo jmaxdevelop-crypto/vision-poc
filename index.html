@@ -60,7 +60,7 @@
 <script>
 (() => {
   'use strict';
-  const APP_VERSION = '2.5';
+  const APP_VERSION = '2.6';
   const IDLE_MS = 500;
   const LS = {url:'jm_shipping_gas_url', key:'jm_shipping_api_key', terminal:'jm_shipping_terminal', client:'jm_shipping_client_id', queue:'jm_shipping_pending_queue'};
   const $ = id => document.getElementById(id);
@@ -228,34 +228,36 @@
     const key=(localStorage.getItem(LS.key)||'').trim();
     if(!url||!key) throw new Error('接続設定がありません');
     const payload={action,key,clientId,terminal:localStorage.getItem(LS.terminal)||'',_t:String(Date.now()),...params};
+    const q=new URLSearchParams();
+    Object.entries(payload).forEach(([k,v])=>q.set(k,String(v??'')));
+    const reqUrl=url+(url.includes('?')?'&':'?')+q.toString();
 
-    if(action==='scan' || action==='complete'){
-      try{
-        const controller=new AbortController(); const timer=setTimeout(()=>controller.abort(),12000);
-        try{
-          const res=await fetch(url,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload),cache:'no-store',redirect:'follow',credentials:'omit',signal:controller.signal});
-          const text=await res.text(); let data;
-          try{data=JSON.parse(text)}catch(_){throw new Error('GAS応答がJSONではありません')}
-          if(data && data.status==='error') throw new Error(data.message||'GASエラー');
-          return data;
-        }finally{clearTimeout(timer)}
-      }catch(firstErr){
-        await fetch(url,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload),cache:'no-store',redirect:'follow',credentials:'omit'});
-        return {status:'sent_unconfirmed',message:'Googleへ送信しました（応答確認なし）'};
-      }
-    }
-
-    const q=new URLSearchParams(payload);
-    const controller=new AbortController(); const timer=setTimeout(()=>controller.abort(),8000);
+    // Inspect と同じ、公開GAS /exec への単純GETを最優先。
+    // QRは最大でも数百文字なのでURL長には十分余裕がある。
     try{
-      const res=await fetch(url+(url.includes('?')?'&':'?')+q.toString(),{method:'GET',cache:'no-store',redirect:'follow',credentials:'omit',signal:controller.signal});
-      if(!res.ok) throw new Error('GAS HTTP '+res.status);
-      const text=await res.text(); let data;
-      try{data=JSON.parse(text)}catch(_){throw new Error('GAS応答がJSONではありません')}
-      if(data && data.status==='error') throw new Error(data.message||'GASエラー');
-      return data;
-    }catch(e){if(e && e.name==='AbortError') throw new Error('GAS応答タイムアウト'); throw e;}
-    finally{clearTimeout(timer)}
+      const controller=new AbortController(); const timer=setTimeout(()=>controller.abort(),10000);
+      try{
+        const res=await fetch(reqUrl,{cache:'no-store',credentials:'omit',signal:controller.signal});
+        if(!res.ok) throw new Error('GAS HTTP '+res.status);
+        const text=await res.text(); let data;
+        try{data=JSON.parse(text)}catch(_){throw new Error('GAS応答がJSONではありません')}
+        if(data && data.status==='error') throw new Error(data.message||'GASエラー');
+        return data;
+      } finally { clearTimeout(timer); }
+    } catch(firstErr) {
+      // scan/complete は応答を読めなくても匿名GETを実行できれば送信済み扱い。
+      // 通常ウィンドウのGoogle複数ログイン/CORSの影響を受けにくくする。
+      if(action==='scan' || action==='complete'){
+        try{
+          await fetch(reqUrl,{method:'GET',mode:'no-cors',cache:'no-store',credentials:'omit'});
+          return {status:'sent_unconfirmed',message:'Googleへ送信しました（応答確認なし）'};
+        }catch(secondErr){
+          throw new Error('GAS送信失敗: '+(secondErr?.message||firstErr?.message||secondErr||firstErr));
+        }
+      }
+      if(firstErr && firstErr.name==='AbortError') throw new Error('GAS応答タイムアウト');
+      throw firstErr;
+    }
   }
 
   function parseBarcode(raw){
@@ -286,7 +288,7 @@
     }
     if(nameStart<0) return null;
     const candidates=[];
-    const pr=/(\d{5})([A-Z]{3})\s+([0-9A-Z]{4})\s+([0-9A-Z]{2})/g;
+    const pr=/(\d{5})([A-Z]{3})\s*([0-9A-Z]{4})\s+([0-9A-Z]{2})/g;
     let pm;
     while((pm=pr.exec(text))){ if(pm.index<nameStart) candidates.push(pm); }
     if(!candidates.length) return null;
@@ -313,7 +315,15 @@
     return {type:'Honda 現品票',partNo,partName,quantity,orderNo:'',ticketDate:'',fNo,machineCode:'',nextProcess:'',tailCode:'',parseStatus:(partName&&quantity!==null)?'OK':'要確認'};
   }
   function normalizeRaw(v){
-    let s=String(v??''); s=s.replace(/[\x00-\x1F\x7F]/g,'').replace(/\u3000|\u00A0/g,' '); s=s.replace(/[！-～]/g,ch=>String.fromCharCode(ch.charCodeAt(0)-0xFEE0)); return s;
+    let s=String(v??'');
+    // リーダー末尾のサフィックス(CR/LF/TAB等)だけは除去する。
+    s=s.replace(/[\x00-\x1F\x7F]+$/g,'');
+    // QR内部の制御区切りは「削除」すると前後フィールドが連結される。
+    // Excel相当の区切りとして1文字=1スペースへ置換して位置/分離を保持する。
+    s=s.replace(/[\x00-\x1F\x7F]/g,' ');
+    s=s.replace(/\u3000|\u00A0/g,' ');
+    s=s.replace(/[！-～]/g,ch=>String.fromCharCode(ch.charCodeAt(0)-0xFEE0));
+    return s;
   }
   function ymd(s){return /^\d{8}$/.test(s)?`${s.slice(0,4)}/${s.slice(4,6)}/${s.slice(6,8)}`:s;}
   function visibleRaw(s){return s.replace(/ /g,'·');}
