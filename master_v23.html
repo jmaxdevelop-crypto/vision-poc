@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="ja"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>J-MAX Master v32</title><style>
+<title>J-MAX Master v33</title><style>
 :root{--bg:#071225;--card:#101c34;--line:#29436d;--txt:#eef6ff;--muted:#9fb4d9;--cyan:#35dcff;--green:#35f078;--red:#ff4b5f;--yellow:#ffd84d}
 *{box-sizing:border-box}body{margin:0;background:linear-gradient(135deg,#071225,#111b34);color:var(--txt);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}header{padding:12px 16px;border-bottom:1px solid #20375f;background:#081226cc;position:sticky;top:0;z-index:5}h1{font-size:19px;margin:0}.sub{font-size:12px;color:var(--muted);margin-top:4px}main{display:grid;grid-template-columns:330px 1fr;gap:12px;padding:12px;max-width:1500px;margin:auto}.card{background:rgba(16,28,52,.94);border:1px solid var(--line);border-radius:14px;padding:12px;box-shadow:0 12px 30px #0005}label{display:block;font-size:12px;color:#c8d8fa;margin:10px 0 5px}input,select{width:100%;padding:8px;border-radius:10px;border:1px solid #31517e;background:#071226;color:var(--txt)}button{width:100%;border:0;border-radius:11px;padding:11px 12px;margin-top:9px;background:linear-gradient(90deg,#2aa7ff,#39e0ff);font-weight:800;color:#001225;cursor:pointer}button.secondary{background:#26395f;color:#eef6ff}button.danger{background:#62283a;color:white}.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.box{background:#020711;border:1px solid #27436f;border-radius:12px;padding:9px}.box h3{font-size:13px;margin:0 0 6px}.box canvas{width:100%;height:auto;background:#111;border-radius:8px;display:block}.big{grid-column:1/-1}.status{font-size:12px;color:#c6d8ff;white-space:pre-line;line-height:1.45;margin-top:10px}.roiList{margin-top:10px;border-top:1px solid #2a416b;padding-top:8px;max-height:220px;overflow:auto}.roiItem{display:flex;justify-content:space-between;gap:8px;border-bottom:1px solid #20375f;padding:6px 0;font-size:12px}.decision{font-size:76px;font-weight:1000;text-align:center;border-radius:16px;padding:18px 12px;margin-bottom:10px;letter-spacing:.10em;line-height:1}.decision::before{content:"総合判定";display:block;font-size:14px;letter-spacing:.12em;margin-bottom:8px;color:#c8d8fa}.decision.wait{background:#26395f;color:#dce8ff;border:2px solid #405b8d}.decision.ok{background:#0f3d25;color:#35f078;border:3px solid #35f078}.decision.ng{background:#451520;color:#ff4b5f;border:3px solid #ff4b5f}.metrics{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:10px}.metric{background:#071226;border:1px solid #29436d;border-radius:10px;padding:9px;text-align:center}.metric b{display:block;font-size:22px}.metric small{color:#aabde0}.on{outline:2px solid var(--yellow);background:#ffd84d!important;color:#111!important}.flowBlock{border:1px solid #20375f;background:rgba(7,18,38,.58);border-radius:12px;padding:10px;margin:0 0 12px}.flowTitle{font-size:13px;font-weight:900;color:#dff8ff;margin:0 0 8px;letter-spacing:.04em}.flowNote{font-size:11px;color:#9fb4d9;line-height:1.45;margin:4px 0 0}.primarySave{font-size:15px;padding:13px 12px;margin-top:12px}.hiddenGas{display:none}.barcodeBox{margin-top:8px;padding:9px;border:1px dashed #31517e;border-radius:10px;background:rgba(2,7,17,.55)}.barcodeBox input{font-family:ui-monospace,Consolas,monospace;font-size:13px}.barcodeState{font-size:11px;color:#9fb4d9;margin-top:5px;white-space:pre-line}.barcodeReady{outline:2px solid var(--yellow)!important;box-shadow:0 0 0 3px rgba(255,216,77,.18)}.scanOverlay{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:99;display:none;align-items:center;justify-content:center;padding:14px}.scanOverlay.on{display:flex}.scanBox{width:min(760px,100%);background:#081226;border:1px solid #31517e;border-radius:16px;padding:12px;box-shadow:0 20px 60px #000a}.scanHead{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:8px}.scanTitle{font-weight:900;color:#dff8ff}.scanClose{width:auto;margin:0;padding:8px 12px;background:#62283a;color:white}.scanStage{position:relative;background:#000;border-radius:12px;overflow:hidden;border:1px solid #20375f}.scanStage video{
     width:100%;
@@ -17,7 +17,7 @@
 @media(max-width:900px){main{grid-template-columns:1fr}.grid{grid-template-columns:1fr}.metrics{grid-template-columns:1fr 1fr}.decision{font-size:52px}.mobileImageEditing #pointSettingsBlock{display:block}.mobileImageEditing .canvasHint{margin-top:8px}/* v25 fix: canvasCard自体をmobileCanvasSlotへ移動するため、中のdesktopCanvasSlotは隠さない */.desktopCanvasSlot{display:block}.mobileCanvasSlot{display:block;margin:0 0 12px}.mobileCanvasSlot .card{padding:0;border:0;background:transparent;box-shadow:none}.mobileCanvasSlot .box{border-color:#31517e}.box canvas{touch-action:none}.flowBlock{margin-bottom:10px}}
 </style></head>
 <body>
-<header><h1>J-MAX Master v32</h1><div class="sub">最初に「新規登録」または「登録済み修正」を選択。必要な入力だけ表示します。画像は圧縮してGoogle Driveへ保存。</div></header>
+<header><h1>J-MAX Master v33</h1><div class="sub">最初に「新規登録」または「登録済み修正」を選択。必要な入力だけ表示します。画像は圧縮してGoogle Driveへ保存。</div></header>
 <main>
 <section class="card">
 <input id="gasUrl" class="hiddenGas" type="hidden" value="https://script.google.com/macros/s/AKfycbzhTwzLskVh0lRNegdW0FnmL-dedZ6LIps2NP9mRrXsPp0aC93ziLRAMUTEmzFiiU_3/exec">
@@ -38,7 +38,8 @@
     <div class="flowTitle">2. QR読取</div>
     <div class="barcodeBox">
       <label>QR読取</label>
-      <input id="barcodeInput" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="USBリーダーで読取、QRカメラ、または手入力">
+      <button id="usbReaderModeBtn" class="secondary" type="button" aria-pressed="true">USB読取 ON（手入力に切替）</button>
+      <input readonly inputmode="none" id="barcodeInput" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="USBリーダーで読取、QRカメラ、または手入力">
       <div class="row"><button id="cameraBarcodeBtn" class="barcodeScanBtn" type="button">QRカメラで読取</button><button id="manualBarcodeBtn" class="secondary" type="button">手入力確定</button></div>
       <div id="barcodeState" class="barcodeState">新規登録モードを選択すると読取待ちになります。</div>
     </div>
@@ -119,7 +120,7 @@
 
 const $=id=>document.getElementById(id);
 const DEFAULT_GAS_URL='https://script.google.com/macros/s/AKfycbzhTwzLskVh0lRNegdW0FnmL-dedZ6LIps2NP9mRrXsPp0aC93ziLRAMUTEmzFiiU_3/exec';
-const MASTER_VERSION='v32-hid-zoom3-torch';
+const MASTER_VERSION='v33-hid-ime-safe';
 let loadedTopFileId='';
 function log(s){$('status').textContent=s}
 function getGasUrl(){return ($('gasUrl')?.value || localStorage.getItem('PIROENS_GAS_URL') || DEFAULT_GAS_URL).trim()}
@@ -565,6 +566,7 @@ function normalizeBarcodeValue(s){
   return String(s||'').replace(/[\r\n]+/g,'').trim();
 }
 function focusBarcodeReader(){
+  setUsbReaderModeV33(true);
   const inp=$('barcodeInput');
   if(!inp)return;
   inp.value='';
@@ -584,27 +586,48 @@ function acceptBarcodeValue(raw){
   log('QR読取OK\n品番キー: '+key+'\n次にマスター画像を選択してください。');
 }
 
-// USB HID: 新規登録で画面上のボタン/余白にフォーカスがあっても受信。
-// メモ・数値など他の入力欄での編集を奪わない。
-const masterHidV32={buffer:'',lastAt:0};
+// USB読取は専用入力経路。readonlyでIMEによる合成を防ぎ、物理キーも補助利用する。
+let usbReaderModeV33=true;
+const masterHidV33={buffer:'',lastAt:0};
+function setUsbReaderModeV33(on){
+  usbReaderModeV33=!!on;masterHidV33.buffer='';masterHidV33.lastAt=0;
+  const bi=$('barcodeInput'),btn=$('usbReaderModeBtn');
+  bi.readOnly=usbReaderModeV33;bi.inputMode=usbReaderModeV33?'none':'text';
+  btn.textContent=usbReaderModeV33?'USB読取 ON（手入力に切替）':'手入力 ON（USB読取に切替）';
+  btn.setAttribute('aria-pressed',String(usbReaderModeV33));
+  bi.focus();
+}
+function scannerCharV33(e){
+  if(e.key?.length===1&&!e.isComposing)return e.key;
+  if(/^Key[A-Z]$/.test(e.code||''))return e.code.slice(3);
+  if(/^Digit[0-9]$/.test(e.code||''))return e.code.slice(5);
+  if(/^Numpad[0-9]$/.test(e.code||''))return e.code.slice(6);
+  return ({Minus:'-',NumpadSubtract:'-',Space:' ',Period:'.',NumpadDecimal:'.',Comma:',',Slash:'/',Semicolon:':',Equal:'='})[e.code]||'';
+}
+$('usbReaderModeBtn').onclick=()=>setUsbReaderModeV33(!usbReaderModeV33);
 document.addEventListener('keydown',e=>{
-  const h=masterHidV32,bi=$('barcodeInput'),target=e.target;
-  if(currentMode!=='new'||scanBusy||$('scanOverlay').classList.contains('on')){h.buffer='';return;}
-  if(target===bi){h.buffer='';return;}
-  if(target?.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(target?.tagName||'')){h.buffer='';return;}
-  if(e.ctrlKey||e.altKey||e.metaKey||e.isComposing)return;
-  const now=performance.now();if(now-h.lastAt>180)h.buffer='';
-  if(e.key==='Enter'||e.key==='Tab'){
-    if(h.buffer.length>=3){e.preventDefault();e.stopImmediatePropagation();acceptBarcodeValue(h.buffer);}
-    h.buffer='';return;
+  const h=masterHidV33,bi=$('barcodeInput'),target=e.target;
+  if(!usbReaderModeV33||currentMode!=='new'||scanBusy||$('scanOverlay').classList.contains('on')){h.buffer='';return;}
+  if(target!==bi&&(target?.isContentEditable||/^(INPUT|TEXTAREA|SELECT)$/.test(target?.tagName||''))){h.buffer='';return;}
+  if(e.ctrlKey||e.altKey||e.metaKey)return;
+  const now=performance.now();
+  if(now-h.lastAt>1000)h.buffer='';
+  const finish=['Enter','Tab','NumpadEnter'].includes(e.code)||['Enter','Tab'].includes(e.key);
+  if(finish){
+    e.preventDefault();e.stopImmediatePropagation();
+    if(h.buffer){acceptBarcodeValue(h.buffer);h.buffer='';}
+    return;
   }
-  if(e.key.length===1){h.buffer+=e.key;h.lastAt=now;e.preventDefault();e.stopPropagation();}
+  const c=scannerCharV33(e);
+  if(c){
+    e.preventDefault();e.stopImmediatePropagation();
+    h.buffer+=c;h.lastAt=now;bi.value=h.buffer;
+    $('barcodeState').textContent='USB読取中... '+h.buffer.length+'文字';
+  }
 },true);
-
 $('barcodeInput').addEventListener('keydown',e=>{
-  if(e.key==='Enter'||e.key==='Tab'){
-    e.preventDefault();
-    acceptBarcodeValue(e.currentTarget.value);
+  if(!usbReaderModeV33&&!e.isComposing&&(e.key==='Enter'||e.key==='Tab')){
+    e.preventDefault();acceptBarcodeValue(e.currentTarget.value);
   }
 });
 $('barcodeInput').addEventListener('paste',()=>setTimeout(()=>acceptBarcodeValue($('barcodeInput').value),30));
