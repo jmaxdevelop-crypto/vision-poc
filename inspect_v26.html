@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>J-MAX Inspect v55</title>
+<title>J-MAX Inspect v56</title>
 <style>
 :root{--bg:#06101f;--panel:rgba(5,12,26,.88);--txt:#eef6ff;--muted:#9fb4d9;--green:#35f078;--red:#ff4b5f;--yellow:#ffd84d;--cyan:#35dcff;--line:#29436d}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;width:100%;min-height:100%;background:#000;color:var(--txt);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;overflow-x:hidden;overflow-y:auto}.app{position:relative;width:100%;height:100dvh;min-height:100vh;background:#000;overflow:hidden}.topbar{position:absolute;z-index:10;left:0;right:0;top:0;padding:10px max(10px,env(safe-area-inset-left)) 10px max(10px,env(safe-area-inset-right));background:linear-gradient(180deg,rgba(0,0,0,.88),rgba(0,0,0,.30),transparent);display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}.brand{font-weight:900;letter-spacing:.06em;font-size:14px;color:#dff8ff}.selectRow{display:flex;gap:8px;align-items:center}.selectRow select{flex:1;min-width:0;padding:11px 12px;border-radius:12px;border:1px solid #31517e;background:#071226;color:var(--txt);font-size:15px}.selectRow button,.cameraBtn{border:0;border-radius:12px;padding:11px 14px;background:linear-gradient(90deg,#2aa7ff,#39e0ff);font-weight:900;color:#001225;font-size:14px}.cameraBtn{white-space:nowrap}.photoInput{display:none}.canvasWrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#020711}canvas{width:100%;height:100%;object-fit:contain;display:block}.empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;color:#aabde0;padding:24px;font-size:15px;line-height:1.7}.resultBanner{position:absolute;z-index:12;left:12px;right:12px;top:88px;border-radius:18px;padding:18px 14px;text-align:center;font-size:72px;font-weight:1000;letter-spacing:.14em;line-height:1;box-shadow:0 18px 40px rgba(0,0,0,.45);display:none}.resultBanner::before{content:'総合判定';display:block;font-size:13px;letter-spacing:.16em;margin-bottom:8px;color:#d9e9ff}.resultBanner.ok{display:block;background:rgba(9,65,37,.92);border:3px solid var(--green);color:var(--green)}.resultBanner.ng{display:block;background:rgba(73,18,31,.94);border:3px solid var(--red);color:var(--red)}.bottom{position:absolute;z-index:10;left:0;right:0;bottom:0;padding:10px max(10px,env(safe-area-inset-left)) max(12px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-right));background:linear-gradient(0deg,rgba(0,0,0,.92),rgba(0,0,0,.46),transparent)}.status{background:rgba(7,18,38,.86);border:1px solid var(--line);border-radius:14px;padding:10px 12px;color:#c6d8ff;font-size:12px;line-height:1.45;white-space:pre-line;max-height:160px;overflow:auto}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:7px}.stat{background:rgba(7,18,38,.82);border:1px solid var(--line);border-radius:12px;padding:8px;text-align:center}.stat small{display:block;color:#aabde0;font-size:10px}.stat b{display:block;font-size:18px;margin-top:2px}.okText{color:var(--green)}.ngText{color:var(--red)}.waitText{color:var(--yellow)}.loading{position:absolute;z-index:15;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:#dff8ff}.loading.on{display:flex}.debugPanel{min-height:100dvh;background:#050b16;padding:18px max(14px,env(safe-area-inset-left)) max(28px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-right));border-top:1px solid #20385f}.debugHead{display:flex;align-items:end;justify-content:space-between;gap:10px;margin-bottom:12px}.debugHead h2{margin:0;font-size:20px;letter-spacing:.08em}.debugHint{color:#9fb4d9;font-size:12px}.debugGrid{display:grid;grid-template-columns:1fr;gap:10px}.debugCard{background:rgba(7,18,38,.88);border:1px solid var(--line);border-radius:14px;padding:12px}.debugCard h3{margin:0 0 8px;font-size:14px;color:#dff8ff}.debugPre{margin:0;white-space:pre-wrap;word-break:break-word;color:#c6d8ff;font-size:12px;line-height:1.5}.debugCanvasWrap{background:#020711;border:1px solid #20385f;border-radius:12px;overflow:hidden}.debugCanvasWrap canvas{width:100%;height:auto;display:block}.debugBadge{display:inline-block;padding:3px 8px;border-radius:999px;border:1px solid #31517e;color:#9fb4d9;font-size:11px;margin-left:6px}.barcodeInput{min-width:180px;max-width:260px;padding:11px 12px;border-radius:12px;border:1px solid #31517e;background:#071226;color:var(--txt);font-size:15px}.scanOverlay{position:fixed;z-index:30;inset:0;background:#020711;display:none;align-items:center;justify-content:center;flex-direction:column;padding:max(18px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) max(18px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left));gap:12px}.scanOverlay.on{display:flex}.scanBox{position:relative;width:min(92vw,720px);aspect-ratio:4/3;border:2px solid #31517e;border-radius:18px;overflow:hidden;background:#000;box-shadow:0 20px 60px #000a}.scanBox video,.scanBox canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.scanGuide{position:absolute;left:50%;top:50%;width:min(64%,360px);aspect-ratio:1/1;height:auto;transform:translate(-50%,-50%);border:4px solid var(--cyan);border-radius:16px;box-shadow:0 0 0 999px rgba(0,0,0,.28);pointer-events:none}.scanTitle{font-size:20px;font-weight:900;color:#dff8ff}.scanStatus{color:#c6d8ff;font-size:14px;text-align:center;min-height:1.6em;white-space:pre-line}.scanClose{width:min(92vw,360px);border:0;border-radius:14px;padding:13px 18px;background:#26395f;color:#eef6ff;font-weight:900;font-size:16px}@media(max-width:480px){.topbar{grid-template-columns:1fr}.resultBanner{font-size:58px;top:118px}.brand{display:none}.selectRow select{font-size:14px}.barcodeInput{min-width:0;max-width:none;width:100%;font-size:14px}.stats{grid-template-columns:repeat(3,1fr)}.stat b{font-size:16px}}
@@ -40,7 +40,7 @@
 <body class="masterNotReady">
 <div class="app">
   <div class="topbar">
-    <div class="brand">J-MAX Inspect v55</div>
+    <div class="brand">J-MAX Inspect v56</div>
     <div class="selectRow">
       <div class="barcodeGroupV54"><button id="usbModeBtnV54" type="button" aria-pressed="true">USB ON</button><input readonly id="barcodeInput" class="barcodeInput" type="text" autocomplete="off" inputmode="none" placeholder="USBリーダーで読取"></div>
       <select id="partSelect"><option>マスター読込中...</option></select>
@@ -106,7 +106,7 @@
 // 例: const GAS_URL = 'https://script.google.com/macros/s/xxxxxxx/exec';
 // =====================================================
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbzhTwzLskVh0lRNegdW0FnmL-dedZ6LIps2NP9mRrXsPp0aC93ziLRAMUTEmzFiiU_3/exec'; // ←ここを今井さんのGAS URLに置き換え
-const INSPECT_VERSION = 'v55-qr-zoom3-torch';
+const INSPECT_VERSION = 'v56-qr-parser-unified';
 
 // 固定設定：現場用なので画面には出さない
 const CONFIG = {
@@ -360,9 +360,16 @@ function formatCompactPartNo(code){
   return code;
 }
 function parseQRCode(raw){
-  const rawText=String(raw||'').trim();
-  const line=normalizeCodeText(rawText);
+  // v56/v34 共通パーサ
+  // 解析失敗時に「QR全文を品番」として採用しない。
+  const rawText=String(raw??'');
+  const cleaned=rawText
+    .replace(/[\x00-\x1F\x7F]/g,'')
+    .replace(/\u3000|\u00A0/g,' ')
+    .replace(/[！-～]/g,ch=>String.fromCharCode(ch.charCodeAt(0)-0xFEE0));
+  const line=cleaned.trim();
   const compact=line.replace(/\s+/g,' ');
+
   const data={
     raw:rawText,
     normalized:compact,
@@ -379,67 +386,114 @@ function parseQRCode(raw){
     format:'unknown'
   };
 
-  // 共通：5桁から始まるハイフン付き品番。
-  // 例：80239-7NA0A-RE / 66100-3BW-J000-AS など、ブロック数違いを許容。
+  const normalizePartNoCandidate=(v)=>{
+    const s=String(v||'').toUpperCase().trim();
+    if(!s)return '';
+
+    // 既にハイフン付き
+    const hm=s.match(/\d{5}(?:-[A-Z0-9]{2,6}){1,5}(?![A-Z0-9-])/);
+    if(hm)return hm[0];
+
+    // Honda/J-MAX系: 66100 3BW J000 AS / 661003BWJ000AS
+    const h=s.match(/(\d{5})\s*[- ]?\s*([0-9A-Z]{3})\s*[- ]?\s*([0-9A-Z]{4})\s*[- ]?\s*([0-9A-Z]{2})(?![0-9A-Z])/);
+    if(h)return [h[1],h[2],h[3],h[4]].join('-');
+
+    // 802397NA0A -> 80239-7NA0A
+    const short=s.replace(/[^0-9A-Z]/g,'');
+    if(/^\d{5}[0-9A-Z]{5}$/.test(short)){
+      return short.slice(0,5)+'-'+short.slice(5);
+    }
+
+    // 661003BWJ000AS のような 5+3+4+2
+    if(/^\d{5}[0-9A-Z]{9}$/.test(short)){
+      return short.slice(0,5)+'-'+short.slice(5,8)+'-'+short.slice(8,12)+'-'+short.slice(12,14);
+    }
+    return '';
+  };
+
+  // 1) 固定長系現品票。
+  // 末尾空白をHID/browserが落としても、先頭92文字まであれば固定位置は維持される。
+  if(line.length>=92 && /^\d{16}/.test(line)){
+    const partField=line.slice(16,46).trim();
+    const fixedPart=normalizePartNoCandidate(partField);
+    if(fixedPart){
+      const name=line.slice(46,76).trim();
+      const qtyZone=line.slice(76,92);
+      const qtyMatch=qtyZone.match(/\d+/);
+      const nextMatch=qtyZone.match(/[A-Z]\d{2}/i);
+      data.orderNo=line.slice(0,8).trim().replace(/^0+/,'');
+      data.issueDate=formatDate8(line.slice(8,16));
+      data.partNo=fixedPart;
+      data.partName=name;
+      data.qty=qtyMatch?qtyMatch[0]:'';
+      data.process=nextMatch?nextMatch[0].toUpperCase():'';
+      data.traceNo=line.length>=133?line.slice(125,133).trim():'';
+      const machine=line.length>=120?line.slice(112,120).trim():'';
+      const tail=line.length>=141?line.slice(133,141).trim():'';
+      data.extra=[machine,tail].filter(Boolean).join(' / ');
+      data.format='fixed-width-ticket';
+      return data;
+    }
+  }
+
+  // 2) 従来のハイフン付き品番が全文内に含まれるQR。
+  // 例: 80239-7NA0A-RE / 66100-3BW-J000-AS
   const PARTNO_RE=/\d{5}(?:-[A-Z0-9]{2,6}){1,5}(?![A-Z0-9-])/i;
-  const pn=line.match(PARTNO_RE) || compact.match(PARTNO_RE);
+  const pn=line.match(PARTNO_RE);
   if(pn){
     data.partNo=pn[0].toUpperCase();
-    const blocks=data.partNo.split('-').length;
-    data.format=blocks>=4 ? 'topre-detail-hyphen-multi' : 'topre-detail-hyphen';
+    data.format=data.partNo.split('-').length>=4?'detail-hyphen-multi':'detail-hyphen';
 
-    const src = line.match(PARTNO_RE) ? line : compact;
-    const idx = src.search(PARTNO_RE);
-    const head=src.slice(0,idx).replace(/\s+/g,'');
+    const idx=line.search(PARTNO_RE);
+    const head=line.slice(0,idx).replace(/\s+/g,'');
     const hm=head.match(/^(\d{8})(\d{8})/);
-    if(hm){ data.orderNo=hm[1]; data.issueDate=formatDate8(hm[2]); }
+    if(hm){data.orderNo=hm[1];data.issueDate=formatDate8(hm[2]);}
 
-    const tail=src.slice(idx+data.partNo.length).trim();
+    const tail=line.slice(idx+data.partNo.length).trim();
     const fields=tail.split(/\s{2,}/).map(v=>v.trim()).filter(Boolean);
     data.partName=fields[0]||'';
-
     const qtyIdx=fields.findIndex((v,i)=>i>0 && /^\d+$/.test(v));
-    if(qtyIdx>=0){ data.qty=fields[qtyIdx].match(/\d+/)[0]; }
-
-    const afterQty = qtyIdx>=0 ? fields.slice(qtyIdx+1) : fields.slice(1);
-    let shipField='';
-    for(const f of afterQty){ if(/^\d{8}/.test(f)){ shipField=f; break; } }
-    if(shipField){
-      const dm=shipField.match(/^(\d{8})(.*)$/);
-      if(dm){ data.shipDate=formatDate8(dm[1]); data.planNo=(dm[2]||'').trim(); }
-    }
-
-    for(const f of afterQty){
-      if(f===shipField) continue;
-      if(!data.process && /^[A-Z]\d{1,3}$/i.test(f)){ data.process=f.toUpperCase(); continue; }
-      if(!data.traceNo){
-        const lm=f.match(/^(\d{8})(.*)$/);
-        if(lm){ data.traceNo=lm[1]; data.extra=(lm[2]||'').trim(); continue; }
-      }
-    }
+    if(qtyIdx>=0)data.qty=fields[qtyIdx];
     return data;
   }
 
-  // TS系の簡易QR：TS + 数字群 + ハイフンなし品番 + 数量表記
+  // 3) Honda/J-MAX系。空白区切り・ハイフン無しも許可。
+  const hp=line.match(/(\d{5})\s*[- ]?\s*([0-9A-Z]{3})\s*[- ]?\s*([0-9A-Z]{4})\s*[- ]?\s*([0-9A-Z]{2})(?![0-9A-Z])/i);
+  if(hp){
+    data.partNo=[hp[1],hp[2],hp[3],hp[4]].join('-').toUpperCase();
+    data.format='honda-jmax';
+    const after=line.slice((hp.index||0)+hp[0].length);
+    const nameMatch=after.match(/[A-Z][A-Z .\/-]{1,28},[A-Z][A-Z .\/,\-]{1,28}/i);
+    if(nameMatch)data.partName=nameMatch[0].trim();
+    const q=line.match(/0{5,}(\d{1,3})(?!\d)/);
+    if(q)data.qty=q[1];
+    return data;
+  }
+
+  // 4) TS系簡易QR
   const simple=compact.match(/TS\d{8}([0-9A-Z]{9,20})/i);
   if(simple){
-    data.format='topre-simple-qr';
-    data.partNo=formatCompactPartNo(simple[1]);
-    const q=compact.match(/(\d+)\s*\/\s*(\d+)/);
-    if(q) data.qty=q[1];
-    return data;
+    const p=normalizePartNoCandidate(simple[1]) || formatCompactPartNo(simple[1]);
+    if(p){
+      data.format='topre-simple-qr';
+      data.partNo=p;
+      const q=compact.match(/(\d+)\s*\/\s*(\d+)/);
+      if(q)data.qty=q[1];
+      return data;
+    }
   }
 
-  // 既に品番だけの場合
-  const direct=compact.match(/^(\d{5}(?:-[A-Z0-9]{2,6}){1,5})$/i);
+  // 5) 品番単体入力
+  const direct=normalizePartNoCandidate(compact);
   if(direct){
     data.format='partNo';
-    data.partNo=direct[1].toUpperCase();
+    data.partNo=direct;
     return data;
   }
 
-  // 最終フォールバック：読めた文字列をそのままキー候補にする
-  data.partNo=compact;
+  // 解析失敗。生データを品番キーには絶対にしない。
+  data.format='unrecognized';
+  data.partNo='';
   return data;
 }
 function barcodeInfoSummary(info){
@@ -458,39 +512,51 @@ async function selectMasterByBarcode(raw){
   const rawText=normalizeBarcodeText(raw);
   if(!rawText){ log('読取データが空です'); return false; }
   const info=parseQRCode(rawText);
-  const key=normalizeBarcodeText(info.partNo || rawText);
-  if(!key){ log('品番を抽出できませんでした。\n読取: '+rawText); return false; }
-  const bi0=$('barcodeInput'); if(bi0) bi0.value=key;
+  const key=normalizeBarcodeText(info.partNo||'');
   currentBarcodeRaw=rawText;
   currentBarcodeInfo=info;
   lastInspectionRecord=null; ngLoggedForCurrent=false; okLoggedForCurrent=false; logSending=false;
-  let idx=parts.findIndex(p=>String(p.partNo)===key);
+
+  if(!key){
+    hideResultAction();
+    currentPart=null; masterImg=null; inspectImg=null; points=[];
+    setBanner('WAIT');
+    setStat('alignStat','--'); setStat('outerStat','--'); setStat('pointStat','--');
+    const bi=$('barcodeInput'); if(bi) bi.value='';
+    log('QRは読めましたが、品番を識別できません。\n形式: '+(info.format||'unknown')+
+        '\n文字数: '+rawText.length+
+        '\n\n※QR全文を品番キーとして扱う処理は停止しました。');
+    updateActionState();
+    return false;
+  }
+
+  const bi0=$('barcodeInput'); if(bi0) bi0.value=key;
+  let idx=parts.findIndex(p=>String(p.partNo).trim().toUpperCase()===key.toUpperCase());
   if(idx<0){
     await loadParts();
-    idx=parts.findIndex(p=>String(p.partNo)===key);
+    idx=parts.findIndex(p=>String(p.partNo).trim().toUpperCase()===key.toUpperCase());
   }
   if(idx<0){
     hideResultAction();
     currentPart=null; masterImg=null; inspectImg=null; points=[];
     setBanner('WAIT');
     setStat('alignStat','--'); setStat('outerStat','--'); setStat('pointStat','--');
-    const canvas=$('viewCanvas');
-    if(canvas) drawImageFit(canvas,null);
+    const canvas=$('viewCanvas'); if(canvas) drawImageFit(canvas,null);
     const emp=$('empty');
     if(emp){
       emp.style.display='flex';
-      emp.innerHTML='マスター登録がありません。<br><br><span style="color:#ffd84d">抽出品番</span><br>'+escapeHtml(key)+'<br><br><span style="color:#9fb4d9">QR全文はログ用に保持します</span>';
+      emp.innerHTML='マスター登録がありません。<br><br><span style="color:#ffd84d">抽出品番</span><br>'+escapeHtml(key);
     }
     const ps=$('partSelect'); if(ps) ps.value='';
-    const bi=$('barcodeInput'); if(bi) bi.value=key;
-    log('マスター登録がありません。\n抽出品番: '+key+'\n'+barcodeInfoSummary(info)+'\n\nMaster側で品番を登録してください。');
+    log('QR識別OK / マスター登録なし\n抽出品番: '+key+'\n'+barcodeInfoSummary(info));
     updateActionState();
     return false;
   }
+
   $('partSelect').value=parts[idx].partNo;
   playScanBeep();
   await loadSelectedPart();
-  log('バーコード読取OK\n'+barcodeInfoSummary(info)+'\n\n対応マスター読込完了\n撮影準備OK');
+  log('QR識別OK\n'+barcodeInfoSummary(info)+'\n形式: '+info.format+'\n\n対応マスター読込完了\n撮影準備OK');
   return true;
 }
 
