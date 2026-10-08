@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>J-MAX Inspect v58</title>
+<title>J-MAX Inspect v60</title>
 <style>
 :root{--bg:#06101f;--panel:rgba(5,12,26,.88);--txt:#eef6ff;--muted:#9fb4d9;--green:#35f078;--red:#ff4b5f;--yellow:#ffd84d;--cyan:#35dcff;--line:#29436d}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;width:100%;min-height:100%;background:#000;color:var(--txt);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;overflow-x:hidden;overflow-y:auto}.app{position:relative;width:100%;height:100dvh;min-height:100vh;background:#000;overflow:hidden}.topbar{position:absolute;z-index:10;left:0;right:0;top:0;padding:10px max(10px,env(safe-area-inset-left)) 10px max(10px,env(safe-area-inset-right));background:linear-gradient(180deg,rgba(0,0,0,.88),rgba(0,0,0,.30),transparent);display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}.brand{font-weight:900;letter-spacing:.06em;font-size:14px;color:#dff8ff}.selectRow{display:flex;gap:8px;align-items:center}.selectRow select{flex:1;min-width:0;padding:11px 12px;border-radius:12px;border:1px solid #31517e;background:#071226;color:var(--txt);font-size:15px}.selectRow button,.cameraBtn{border:0;border-radius:12px;padding:11px 14px;background:linear-gradient(90deg,#2aa7ff,#39e0ff);font-weight:900;color:#001225;font-size:14px}.cameraBtn{white-space:nowrap}.photoInput{display:none}.canvasWrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#020711}canvas{width:100%;height:100%;object-fit:contain;display:block}.empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;color:#aabde0;padding:24px;font-size:15px;line-height:1.7}.resultBanner{position:absolute;z-index:12;left:12px;right:12px;top:88px;border-radius:18px;padding:18px 14px;text-align:center;font-size:72px;font-weight:1000;letter-spacing:.14em;line-height:1;box-shadow:0 18px 40px rgba(0,0,0,.45);display:none}.resultBanner::before{content:'総合判定';display:block;font-size:13px;letter-spacing:.16em;margin-bottom:8px;color:#d9e9ff}.resultBanner.ok{display:block;background:rgba(9,65,37,.92);border:3px solid var(--green);color:var(--green)}.resultBanner.ng{display:block;background:rgba(73,18,31,.94);border:3px solid var(--red);color:var(--red)}.bottom{position:absolute;z-index:10;left:0;right:0;bottom:0;padding:10px max(10px,env(safe-area-inset-left)) max(12px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-right));background:linear-gradient(0deg,rgba(0,0,0,.92),rgba(0,0,0,.46),transparent)}.status{background:rgba(7,18,38,.86);border:1px solid var(--line);border-radius:14px;padding:10px 12px;color:#c6d8ff;font-size:12px;line-height:1.45;white-space:pre-line;max-height:160px;overflow:auto}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:7px}.stat{background:rgba(7,18,38,.82);border:1px solid var(--line);border-radius:12px;padding:8px;text-align:center}.stat small{display:block;color:#aabde0;font-size:10px}.stat b{display:block;font-size:18px;margin-top:2px}.okText{color:var(--green)}.ngText{color:var(--red)}.waitText{color:var(--yellow)}.loading{position:absolute;z-index:15;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:#dff8ff}.loading.on{display:flex}.debugPanel{min-height:100dvh;background:#050b16;padding:18px max(14px,env(safe-area-inset-left)) max(28px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-right));border-top:1px solid #20385f}.debugHead{display:flex;align-items:end;justify-content:space-between;gap:10px;margin-bottom:12px}.debugHead h2{margin:0;font-size:20px;letter-spacing:.08em}.debugHint{color:#9fb4d9;font-size:12px}.debugGrid{display:grid;grid-template-columns:1fr;gap:10px}.debugCard{background:rgba(7,18,38,.88);border:1px solid var(--line);border-radius:14px;padding:12px}.debugCard h3{margin:0 0 8px;font-size:14px;color:#dff8ff}.debugPre{margin:0;white-space:pre-wrap;word-break:break-word;color:#c6d8ff;font-size:12px;line-height:1.5}.debugCanvasWrap{background:#020711;border:1px solid #20385f;border-radius:12px;overflow:hidden}.debugCanvasWrap canvas{width:100%;height:auto;display:block}.debugBadge{display:inline-block;padding:3px 8px;border-radius:999px;border:1px solid #31517e;color:#9fb4d9;font-size:11px;margin-left:6px}.barcodeInput{min-width:180px;max-width:260px;padding:11px 12px;border-radius:12px;border:1px solid #31517e;background:#071226;color:var(--txt);font-size:15px}.scanOverlay{position:fixed;z-index:30;inset:0;background:#020711;display:none;align-items:center;justify-content:center;flex-direction:column;padding:max(18px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) max(18px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left));gap:12px}.scanOverlay.on{display:flex}.scanBox{position:relative;width:min(92vw,720px);aspect-ratio:4/3;border:2px solid #31517e;border-radius:18px;overflow:hidden;background:#000;box-shadow:0 20px 60px #000a}.scanBox video,.scanBox canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.scanGuide{position:absolute;left:50%;top:50%;width:min(64%,360px);aspect-ratio:1/1;height:auto;transform:translate(-50%,-50%);border:4px solid var(--cyan);border-radius:16px;box-shadow:0 0 0 999px rgba(0,0,0,.28);pointer-events:none}.scanTitle{font-size:20px;font-weight:900;color:#dff8ff}.scanStatus{color:#c6d8ff;font-size:14px;text-align:center;min-height:1.6em;white-space:pre-line}.scanClose{width:min(92vw,360px);border:0;border-radius:14px;padding:13px 18px;background:#26395f;color:#eef6ff;font-weight:900;font-size:16px}@media(max-width:480px){.topbar{grid-template-columns:1fr}.resultBanner{font-size:58px;top:118px}.brand{display:none}.selectRow select{font-size:14px}.barcodeInput{min-width:0;max-width:none;width:100%;font-size:14px}.stats{grid-template-columns:repeat(3,1fr)}.stat b{font-size:16px}}
@@ -41,7 +41,7 @@
 <body class="masterNotReady">
 <div class="app">
   <div class="topbar">
-    <div class="brand">J-MAX Inspect v58</div>
+    <div class="brand">J-MAX Inspect v60</div>
     <div class="selectRow">
       <div class="barcodeGroupV54"><button id="usbModeBtnV54" type="button" aria-pressed="true">USB ON</button><input readonly id="barcodeInput" class="barcodeInput" type="text" autocomplete="off" inputmode="none" placeholder="USBリーダーで読取"></div>
       <select id="partSelect"><option>マスター読込中...</option></select>
@@ -108,7 +108,7 @@
 // 例: const GAS_URL = 'https://script.google.com/macros/s/xxxxxxx/exec';
 // =====================================================
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbzhTwzLskVh0lRNegdW0FnmL-dedZ6LIps2NP9mRrXsPp0aC93ziLRAMUTEmzFiiU_3/exec'; // ←ここを今井さんのGAS URLに置き換え
-const INSPECT_VERSION = 'v58-drive-csv-save';
+const INSPECT_VERSION = 'v60-fixed-drive-csv';
 
 // 固定設定：現場用なので画面には出さない
 const CONFIG = {
@@ -147,13 +147,13 @@ function getDeviceId(){
   return id;
 }
 async function sendInspectionLog(record){
-  if(!record)return false;
+  if(!record)return null;
   const payload=encodeURIComponent(JSON.stringify(record));
   const url=GAS_URL+'?action=logInspection&payload='+payload+'&v='+Date.now();
   const res=await fetch(url,{cache:'no-store'});
   const js=await res.json();
   if(!js.ok) throw new Error(js.error||'ログ保存失敗');
-  return true;
+  return js;
 }
 async function saveInspectionCsvToDrive(){
   const btn=$('csvBtn');
@@ -165,12 +165,12 @@ async function saveInspectionCsvToDrive(){
     if(!res.ok)throw new Error('CSV保存失敗 HTTP '+res.status);
     const js=await res.json();
     if(!js || !js.ok)throw new Error((js&&js.error)||'CSV保存失敗');
-    const msg='Google Drive保存完了\n'+(js.folderName||'JMAX_Inspection_CSV')+' / '+(js.fileName||'CSV')+'\nログ件数: '+(js.rows??'--');
+    const msg='Google Drive上書き完了\n'+(js.folderName||'JMAX_Inspection_CSV')+' / '+(js.fileName||'JMAX_InspectionLog.csv')+'\nログ件数: '+(js.rows??'--')+'\n同一ファイルID維持';
     log(msg);
     dbg('CSV Drive保存',js);
   }catch(e){
     console.error(e);
-    log('CSV保存エラー: '+e.message+'\nGAS v11以降がデプロイされているか確認してください。');
+    log('CSV保存エラー: '+e.message+'\nGAS v13以降がデプロイされているか確認してください。');
     dbg('CSV Drive保存エラー',{message:e.message});
   }finally{
     if(btn){btn.disabled=false;btn.textContent=oldText;}
@@ -179,10 +179,14 @@ async function saveInspectionCsvToDrive(){
 async function recordInspection(action){
   if(!lastInspectionRecord)return false;
 
-  // v21 fix1: 同じ検査結果の二重送信防止
-  // OK登録ボタン連打で同じログが複数行入るのを防ぐ。
-  if(action==='OK_REGISTER' && okLoggedForCurrent){
+  // v60: 1回の判定につき1回だけ保存。OK/NGとも判定直後に自動保存し、固定CSVを同一fileIdで更新する。
+  const result=String(lastInspectionRecord.result||'').toUpperCase();
+  if(result==='OK' && okLoggedForCurrent){
     dbg('検査ログ保存スキップ',{reason:'OK already logged'});
+    return true;
+  }
+  if(result==='NG' && ngLoggedForCurrent){
+    dbg('検査ログ保存スキップ',{reason:'NG already logged'});
     return true;
   }
   if(logSending){
@@ -192,28 +196,22 @@ async function recordInspection(action){
 
   const rec={...lastInspectionRecord, action:action||''};
   logSending=true;
-  const reg=$('actionRegisterBtn');
-  const oldText=reg?reg.textContent:'';
-  if(action==='OK_REGISTER' && reg){
-    reg.disabled=true;
-    reg.textContent='登録中...';
-  }
   try{
-    await sendInspectionLog(rec);
-    if(action==='OK_REGISTER') okLoggedForCurrent=true;
-    dbg('検査ログ保存OK',rec);
+    const js=await sendInspectionLog(rec);
+    if(result==='OK') okLoggedForCurrent=true;
+    if(result==='NG') ngLoggedForCurrent=true;
+    dbg('検査ログ自動保存OK',{record:rec,server:js});
+    if(js && js.csvSaved===false){
+      log(($('status').textContent||'')+'\nCSV自動更新警告: '+(js.csvError||'Google Drive CSV更新失敗'));
+    }
     return true;
   }catch(e){
     console.error(e);
     dbg('検査ログ保存エラー',{message:e.message});
-    log(($('status').textContent||'')+'\n\n検査ログ保存エラー: '+e.message);
+    log(($('status').textContent||'')+'\n\n検査ログ自動保存エラー: '+e.message);
     return false;
   }finally{
     logSending=false;
-    if(action==='OK_REGISTER' && reg && !okLoggedForCurrent){
-      reg.disabled=false;
-      reg.textContent=oldText||'登録';
-    }
   }
 }
 function hideResultAction(){
@@ -226,13 +224,17 @@ function showResultAction(ok){
   if(!p||!msg||!buttons)return;
   p.className='actionPanel on '+(ok?'ok':'ng');
   if(ok){
-    msg.textContent='バーコードと製品が一致しました。\nOKで登録します。よろしいですか？';
+    msg.textContent=okLoggedForCurrent
+      ? 'OK判定を自動保存しました。\n次の検査へ進みます。'
+      : 'OK判定です。\n自動保存に失敗しました。再保存しますか？';
     buttons.className='actionButtons';
-    if(reg){ reg.style.display='block'; reg.disabled=!!okLoggedForCurrent; reg.textContent=okLoggedForCurrent?'登録済み':'登録'; }
+    if(reg){ reg.style.display='block'; reg.disabled=false; reg.textContent=okLoggedForCurrent?'次へ':'再保存'; }
     if(retry) retry.style.display='none';
     if(end) end.style.display='none';
   }else{
-    msg.textContent='バーコードと製品が違います。\n再撮影しますか？';
+    msg.textContent=ngLoggedForCurrent
+      ? 'NG判定を自動保存しました。\n再撮影しますか？'
+      : 'NG判定です。\n自動保存に失敗しました。再撮影しますか？';
     buttons.className='actionButtons two';
     if(reg) reg.style.display='none';
     if(retry) retry.style.display='block';
@@ -966,18 +968,31 @@ $('qrPhotoInput').onchange=async e=>{const f=e.target.files&&e.target.files[0]; 
 $('barcodeInput').addEventListener('keydown',async e=>{ if(!usbModeV54&&!e.isComposing&&(e.key==='Enter'||e.key==='Tab')){ e.preventDefault(); await commitHidScanV43(e.target.value); }});
 $('actionRegisterBtn').onclick=async()=>{
   const btn=$('actionRegisterBtn');
-  if(logSending || okLoggedForCurrent){ return; }
-  if(btn) btn.disabled=true;
-  const ok=await recordInspection('OK_REGISTER');
-  if(ok){
+  if(logSending) return;
+  if(okLoggedForCurrent){
+    endInspectionToScanMode();
+    return;
+  }
+  if(btn){ btn.disabled=true; btn.textContent='再保存中...'; }
+  const saved=await recordInspection('OK_RETRY');
+  if(saved){
     endInspectionToScanMode();
   }else{
-    if(btn) btn.disabled=false;
+    if(btn){ btn.disabled=false; btn.textContent='再保存'; }
     alert('検査ログを保存できませんでした。通信/GASを確認してください。');
   }
 };
-$('actionRetryBtn').onclick=()=>{ hideResultAction(); if(currentPart&&masterImg){ $('inspectFile').click(); } };
-$('actionEndBtn').onclick=()=>{ endInspectionToScanMode(); };
+$('actionRetryBtn').onclick=async()=>{
+  if(logSending)return;
+  if(lastInspectionRecord?.result==='NG' && !ngLoggedForCurrent) await recordInspection('NG_RETRY');
+  hideResultAction();
+  if(currentPart&&masterImg){ $('inspectFile').click(); }
+};
+$('actionEndBtn').onclick=async()=>{
+  if(logSending)return;
+  if(lastInspectionRecord?.result==='NG' && !ngLoggedForCurrent) await recordInspection('NG_RETRY');
+  endInspectionToScanMode();
+};
 $('inspectFile').onchange=async e=>{ const f=e.target.files&&e.target.files[0]; if(!f)return; inspectImg=await loadImageFromFile(f); drawImageFit($('viewCanvas'),inspectImg); $('empty').style.display='none'; await runInspect(); e.target.value=''; };
 
 function matFromImage(img,maxW){ const scale=Math.min(1,maxW/img.width); const c=document.createElement('canvas'); c.width=Math.round(img.width*scale); c.height=Math.round(img.height*scale); const x=c.getContext('2d'); x.drawImage(img,0,0,c.width,c.height); let src=cv.imread(c); let gray=new cv.Mat(); cv.cvtColor(src,gray,cv.COLOR_RGBA2GRAY); return{src,gray,scale,w:c.width,h:c.height,canvas:c}; }
@@ -1443,7 +1458,7 @@ async function runInspect(){
   hideResultAction();
   lastInspectionRecord=null; DEBUG.points=[];
   setStat('alignStat','--'); setStat('outerStat','--'); setStat('pointStat','--');
-  okLoggedForCurrent=false; logSending=false;
+  okLoggedForCurrent=false; ngLoggedForCurrent=false; logSending=false;
   setLoading(true); setBanner('WAIT');
   if(!cvLoaded){
     log('OpenCV.js準備中... 最大20秒待機します');
@@ -1527,11 +1542,12 @@ async function runInspect(){
 検査ポイント: ${points.length?res.pointOk+'/'+points.length:'なし（外形のみ）'}`);
     dbg('解析完了',{ok,outerMatch:res.outerMatch,outerDiff:res.outerDiff,pointOk:res.pointOk,points:res.details});
     renderDebug();
+    // v60: 判定直後にOK/NGどちらもInspectionLogへ記録し、GAS側で同じ固定CSVを同一fileIdのまま更新する。
+    await recordInspection(ok?'OK_AUTO':'NG_AUTO');
     showResultAction(ok);
-    if(!ok && !ngLoggedForCurrent){ ngLoggedForCurrent=true; recordInspection('NG_AUTO'); }
 
   }catch(e){
-    console.error(e); lastInspectionRecord=null; DEBUG.points=[];
+    console.error(e); DEBUG.points=[];
     // 成立していない変換を検査に使用しない。重ね画像は未補正の参考表示。
     if(m&&i){
       let preview=new cv.Mat();
@@ -1543,7 +1559,42 @@ async function runInspect(){
     setBanner('NG'); setStat('alignStat','NG','ngText');
     setStat('outerStat','未判定','waitText'); setStat('pointStat','未判定','waitText');
     log('総合: NG\n'+e.message+'\n位置合わせが成立しないため、外形・検査ポイントは未判定です。');
-    dbg('解析NG',{message:e.message,stack:e.stack}); showResultAction(false);
+
+    // 位置合わせ失敗も正式なNG結果として自動保存する。
+    const a=DEBUG.align||{};
+    lastInspectionRecord={
+      barcodeRaw: currentBarcodeRaw || currentPart?.partNo || '',
+      masterKey: currentPart?.partNo || '',
+      partNo: currentBarcodeInfo?.partNo || currentPart?.partNo || '',
+      partName: currentBarcodeInfo?.partName || '',
+      qty: currentBarcodeInfo?.qty || '',
+      shipDate: currentBarcodeInfo?.shipDate || '',
+      issueDate: currentBarcodeInfo?.issueDate || '',
+      orderNo: currentBarcodeInfo?.orderNo || '',
+      planNo: currentBarcodeInfo?.planNo || '',
+      process: currentBarcodeInfo?.process || '',
+      traceNo: currentBarcodeInfo?.traceNo || '',
+      barcodeFormat: currentBarcodeInfo?.format || '',
+      result: 'NG',
+      outerMatch: '',
+      outerDiff: '',
+      pointOk: '',
+      pointTotal: points.length,
+      inliers: a.inliers ?? '',
+      total: a.total ?? '',
+      inlierRatio: a.ratio ?? '',
+      scale: a.scale ?? '',
+      alignOk: false,
+      outerOk: false,
+      pointsOk: false,
+      deviceId: getDeviceId(),
+      inspectVersion: INSPECT_VERSION,
+      memo: '位置合わせNG: '+e.message,
+      pointDetails: []
+    };
+    dbg('解析NG',{message:e.message,stack:e.stack});
+    await recordInspection('NG_AUTO');
+    showResultAction(false);
   }finally{
     for(const obj of [warped,H,i?.gray,i?.src,m?.gray,m?.src])if(obj)obj.delete();
     inspectBusyV50=false; setLoading(false);
